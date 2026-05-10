@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -10,6 +11,40 @@ import {
   Palette,
   RefreshCw,
 } from "lucide-react"
+
+function GlareCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setPosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+      className={`relative overflow-hidden rounded-xl ${className}`}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-10"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255, 215, 0, 0.1), transparent 40%)`,
+        }}
+      />
+      {children}
+    </div>
+  );
+}
 
 const services = [
   {
@@ -84,19 +119,21 @@ export function Services() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-secondary border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
-                <CardContent className="p-6 lg:p-8 space-y-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-light/10 flex items-center justify-center border border-gold/30 group-hover:border-gold/50 transition-colors">
-                    <service.icon className="w-7 h-7 text-gold" />
-                  </div>
-                  <h3 className="font-serif text-xl font-semibold text-foreground">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {service.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <GlareCard>
+                <Card className="h-full bg-secondary/80 backdrop-blur-sm border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
+                  <CardContent className="p-6 lg:p-8 space-y-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-light/10 flex items-center justify-center border border-gold/30 group-hover:border-gold/50 transition-colors">
+                      <service.icon className="w-7 h-7 text-gold" />
+                    </div>
+                    <h3 className="font-serif text-xl font-semibold text-foreground">
+                      {service.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {service.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </GlareCard>
             </motion.div>
           ))}
         </div>

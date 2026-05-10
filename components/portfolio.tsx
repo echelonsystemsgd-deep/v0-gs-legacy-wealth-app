@@ -87,21 +87,29 @@ export function Portfolio() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <div className="glass rounded-xl p-4">
-                  <p className="text-sm text-gold mb-1">{item.category}</p>
-                  <h3 className="font-serif text-lg font-semibold text-foreground">
-                    {item.title}
-                  </h3>
+              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20">
+                <div className="glass rounded-xl p-4 flex justify-between items-end">
+                  <div>
+                    <p className="text-sm text-gold mb-1">{item.category}</p>
+                    <h3 className="font-serif text-lg font-semibold text-foreground">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <Button size="sm" variant="outline" className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10">
+                    <span className="text-xs">View Case Study</span>
+                  </Button>
                 </div>
               </div>
 
               {/* Always visible on mobile */}
-              <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background to-transparent">
+              <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background to-transparent z-10">
                 <p className="text-sm text-gold mb-1">{item.category}</p>
-                <h3 className="font-serif text-lg font-semibold text-foreground">
+                <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
                   {item.title}
                 </h3>
+                <Button size="sm" variant="outline" className="h-8 rounded-full w-full border-gold/30">
+                  <span className="text-xs">View Case Study</span>
+                </Button>
               </div>
             </motion.div>
           ))}

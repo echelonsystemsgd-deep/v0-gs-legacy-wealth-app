@@ -40,8 +40,8 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="#home" className="flex items-center gap-3">
-            <div className="relative h-16 w-48 sm:w-64 transition-transform hover:scale-105 duration-300">
+          <Link href="#home" className="flex items-center gap-3 group">
+            <div className="relative h-12 w-12 sm:h-16 sm:w-16 transition-transform group-hover:scale-105 duration-300">
               <Image 
                 src="/GS_Legacy_Wealth-removebg-preview.png" 
                 alt="GS Legacy Wealth" 
@@ -50,6 +50,9 @@ export function Navbar() {
                 priority
               />
             </div>
+            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-gold hidden sm:block">
+              GS Legacy Wealth
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

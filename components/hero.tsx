@@ -70,7 +70,13 @@ export function Hero() {
 
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-balance">
                 <span className="text-foreground">Luxury Websites Built to </span>
-                <span className="text-gradient-gold">Scale Your Business.</span>
+                <motion.span 
+                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                  className="text-gradient-gold bg-[length:200%_auto]"
+                >
+                  Scale Your Business.
+                </motion.span>
               </h1>
 
               <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
@@ -79,26 +85,38 @@ export function Hero() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="text-base px-8 py-6"
-              >
-                <Link href="#contact" className="flex items-center gap-2">
-                  Book Your Free Strategy Call
-                  <ArrowRight size={18} />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="default"
-                className="text-base px-8 py-6"
-              >
-                <Link href="#portfolio">View Our Work</Link>
-              </Button>
+            <div className="flex flex-col space-y-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  variant="default"
+                  className="text-base px-8 py-6"
+                >
+                  <Link href="#contact" className="flex items-center gap-2">
+                    Book Your Free Strategy Call
+                    <ArrowRight size={18} />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="text-base px-8 py-6"
+                >
+                  <Link href="#contact">Get Free AI Website Audit</Link>
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2 pl-2">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-6 h-6 rounded-full border-2 border-background bg-secondary flex items-center justify-center text-[10px] text-gold font-bold">
+                      {String.fromCharCode(64 + i)}
+                    </div>
+                  ))}
+                </div>
+                <span>Trusted by 50+ 7-figure brands</span>
+              </div>
             </div>
 
             {/* Trust Indicators */}

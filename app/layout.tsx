@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Playfair_Display, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import { CustomCursor } from '@/components/custom-cursor'
+import { StickyCTAButton } from '@/components/sticky-cta-button'
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
@@ -47,6 +49,8 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
+        <CustomCursor />
+        <StickyCTAButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

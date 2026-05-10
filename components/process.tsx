@@ -64,19 +64,35 @@ export function Process() {
                 <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0" />
               )}
 
-              <div className="relative p-6 lg:p-8 rounded-2xl bg-secondary border border-gold/10 hover:border-gold/30 transition-all duration-300 h-full">
-                <div className="mb-6">
-                  <span className="font-serif text-5xl lg:text-6xl font-bold text-gradient-gold opacity-40 group-hover:opacity-60 transition-opacity">
+              <motion.div
+                className="relative p-6 lg:p-8 rounded-2xl bg-secondary border border-gold/10 transition-all duration-500 h-full overflow-hidden"
+                whileInView={{
+                  borderColor: "rgba(255, 215, 0, 0.4)",
+                  boxShadow: "0 0 20px rgba(255, 215, 0, 0.1)",
+                }}
+                viewport={{ once: false, amount: 0.5 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                {/* Glow Background */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0"
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: false, amount: 0.5 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                />
+
+                <div className="relative z-10 mb-6">
+                  <span className="font-serif text-5xl lg:text-6xl font-bold text-gradient-gold opacity-40 group-hover:opacity-100 transition-opacity duration-300">
                     {step.number}
                   </span>
                 </div>
-                <h3 className="font-serif text-xl font-semibold text-foreground mb-3">
+                <h3 className="relative z-10 font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-gold transition-colors">
                   {step.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="relative z-10 text-muted-foreground leading-relaxed">
                   {step.description}
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>

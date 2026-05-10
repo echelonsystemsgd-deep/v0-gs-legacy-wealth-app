@@ -70,19 +70,55 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="pt-4"
+            className="pt-8 mx-auto max-w-xl"
           >
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="text-lg px-10 py-7"
-            >
-              <Link href="https://calendly.com" target="_blank" className="flex items-center gap-3">
-                Book Your Free Strategy Call
-                <ArrowRight size={20} />
-              </Link>
-            </Button>
+            <div className="glass rounded-3xl p-6 md:p-8 text-left border border-gold/20 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <div className="w-32 h-32 rounded-full border-4 border-gold border-dashed animate-[spin_10s_linear_infinite]" />
+              </div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-lg">
+                  <span className="font-serif font-bold text-background">GS</span>
+                </div>
+                <div>
+                  <h3 className="font-serif font-semibold text-foreground text-lg">AI Concierge</h3>
+                  <p className="text-xs text-gold flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    Online & Ready
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-background/50 rounded-2xl p-5 mb-6 border border-border/50">
+                <p className="text-sm md:text-base text-foreground leading-relaxed">
+                  "Hello. Let our AI analyze your current brand and architecture. We'll identify exactly where you're losing high-ticket conversions and build a custom strategy to scale."
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  asChild
+                  size="lg"
+                  variant="default"
+                  className="flex-1 text-base py-6 shadow-[0_0_15px_rgba(255,215,0,0.2)]"
+                >
+                  <Link href="https://calendly.com" target="_blank" className="flex items-center justify-center gap-2">
+                    Start Free Analysis
+                    <ArrowRight size={18} />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="text-base py-6 border-gold/20 hover:bg-gold/5"
+                >
+                  <Link href="#portfolio" className="flex items-center justify-center">
+                    See Examples
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </motion.div>
 
           <p className="text-sm text-muted-foreground">
