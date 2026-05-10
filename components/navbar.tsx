@@ -43,7 +43,7 @@ export function Navbar() {
           <Link href="#home" className="flex items-center gap-3">
             <div className="relative h-16 w-48 sm:w-64 transition-transform hover:scale-105 duration-300">
               <Image 
-                src="/logo.png" 
+                src="/GS_Legacy_Wealth-removebg-preview.png" 
                 alt="GS Legacy Wealth" 
                 fill
                 className="object-contain object-left"

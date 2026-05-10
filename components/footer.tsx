@@ -40,7 +40,7 @@ export function Footer() {
             <Link href="#home" className="flex flex-col items-center gap-4 mb-6">
               <div className="relative h-32 w-64 md:h-40 md:w-80 transition-transform hover:scale-105 duration-300">
                 <Image 
-                  src="/logo.png" 
+                  src="/GS_Legacy_Wealth-removebg-preview.png" 
                   alt="GS Legacy Wealth" 
                   fill
                   className="object-contain"
