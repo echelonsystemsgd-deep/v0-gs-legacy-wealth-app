@@ -83,7 +83,8 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90 glow-gold-intense text-base px-8 py-6"
+                variant="outline"
+                className="text-base px-8 py-6"
               >
                 <Link href="#contact" className="flex items-center gap-2">
                   Book Your Free Strategy Call
@@ -93,8 +94,8 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold text-base px-8 py-6"
+                variant="default"
+                className="text-base px-8 py-6"
               >
                 <Link href="#portfolio">View Our Work</Link>
               </Button>

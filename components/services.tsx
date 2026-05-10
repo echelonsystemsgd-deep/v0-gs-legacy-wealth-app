@@ -84,7 +84,7 @@ export function Services() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-card/50 border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
+              <Card className="h-full bg-secondary border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
                 <CardContent className="p-6 lg:p-8 space-y-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-light/10 flex items-center justify-center border border-gold/30 group-hover:border-gold/50 transition-colors">
                     <service.icon className="w-7 h-7 text-gold" />

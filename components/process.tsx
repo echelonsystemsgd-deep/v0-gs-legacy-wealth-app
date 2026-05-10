@@ -64,7 +64,7 @@ export function Process() {
                 <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0" />
               )}
 
-              <div className="relative p-6 lg:p-8 rounded-2xl bg-background/50 border border-gold/10 hover:border-gold/30 transition-all duration-300 h-full">
+              <div className="relative p-6 lg:p-8 rounded-2xl bg-secondary border border-gold/10 hover:border-gold/30 transition-all duration-300 h-full">
                 <div className="mb-6">
                   <span className="font-serif text-5xl lg:text-6xl font-bold text-gradient-gold opacity-40 group-hover:opacity-60 transition-opacity">
                     {step.number}

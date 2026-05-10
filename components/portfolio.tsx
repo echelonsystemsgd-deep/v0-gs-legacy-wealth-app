@@ -117,7 +117,7 @@ export function Portfolio() {
           <Button
             asChild
             size="lg"
-            className="bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90 glow-gold"
+            variant="outline"
           >
             <Link href="#contact" className="flex items-center gap-2">
               Request a Custom Website

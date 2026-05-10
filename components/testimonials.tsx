@@ -59,7 +59,7 @@ export function Testimonials() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-background/50 border-gold/10 hover:border-gold/30 transition-all duration-300 group">
+              <Card className="h-full bg-secondary border-gold/10 hover:border-gold/30 transition-all duration-300 group">
                 <CardContent className="p-6 lg:p-8 space-y-6">
                   <Quote className="w-10 h-10 text-gold/40 group-hover:text-gold/60 transition-colors" />
                   

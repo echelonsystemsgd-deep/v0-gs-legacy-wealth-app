@@ -75,7 +75,8 @@ export function CTA() {
             <Button
               asChild
               size="lg"
-              className="bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90 glow-gold-intense text-lg px-10 py-7"
+              variant="outline"
+              className="text-lg px-10 py-7"
             >
               <Link href="https://calendly.com" target="_blank" className="flex items-center gap-3">
                 Book Your Free Strategy Call

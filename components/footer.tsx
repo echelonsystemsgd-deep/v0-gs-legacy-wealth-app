@@ -35,22 +35,28 @@ export function Footer() {
     <footer className="relative bg-card border-t border-gold/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="py-16 lg:py-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
-            {/* Brand Column */}
-            <div className="col-span-2 md:col-span-1">
-              <Link href="#home" className="flex items-center gap-3 mb-6">
-                <div className="relative h-10 w-10">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold to-gold-light opacity-20 blur-lg" />
-                  <div className="relative flex h-full w-full items-center justify-center rounded-full border border-gold/30 bg-background">
-                    <span className="font-serif text-lg font-bold text-gradient-gold">GS</span>
-                  </div>
+          <div className="flex flex-col items-center mb-16 text-center">
+            <Link href="#home" className="flex flex-col items-center gap-4 mb-6">
+              <div className="relative h-16 w-16">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold to-gold-light opacity-20 blur-lg" />
+                <div className="relative flex h-full w-full items-center justify-center rounded-full border border-gold/30 bg-background">
+                  <span className="font-serif text-2xl font-bold text-gradient-gold">GS</span>
                 </div>
-                <div>
-                  <span className="font-serif text-lg font-semibold text-foreground">Legacy Wealth</span>
-                  <span className="ml-1 text-sm text-gold">AI</span>
-                </div>
-              </Link>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-serif text-2xl font-semibold text-foreground">Legacy Wealth</span>
+                <span className="text-sm tracking-widest text-gold uppercase mt-1">AI</span>
+              </div>
+            </Link>
+            <p className="text-sm md:text-base tracking-widest text-gold uppercase font-medium mt-2">
+              BUILDING WEALTH. CREATING LEGACY. GIVING BACK.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 text-center md:text-left">
+            {/* Brand/Socials Column */}
+            <div className="col-span-2 md:col-span-1 flex flex-col items-center md:items-start">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-xs text-center md:text-left">
                 We engineer digital assets that create authority, automate growth, and generate revenue.
               </p>
               <div className="flex gap-4">

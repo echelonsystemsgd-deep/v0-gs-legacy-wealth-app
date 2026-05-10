@@ -50,7 +50,7 @@ export function Pricing() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-lg mx-auto"
         >
-          <Card className="relative bg-background/50 border-gold/30 glow-gold overflow-hidden">
+          <Card className="relative bg-secondary border-gold/30 glow-gold overflow-hidden">
             {/* Premium Badge */}
             <div className="absolute top-0 right-0 bg-gradient-to-br from-gold to-gold-light text-primary-foreground px-4 py-2 rounded-bl-2xl">
               <div className="flex items-center gap-2">
@@ -89,7 +89,8 @@ export function Pricing() {
               <Button
                 asChild
                 size="lg"
-                className="w-full bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90 glow-gold-intense py-6 text-base"
+                variant="outline"
+                className="w-full py-6 text-base"
               >
                 <Link href="#contact">Apply to Work With Us</Link>
               </Button>

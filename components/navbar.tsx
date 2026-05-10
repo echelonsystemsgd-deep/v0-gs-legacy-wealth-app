@@ -69,7 +69,7 @@ export function Navbar() {
           <div className="hidden lg:block">
             <Button
               asChild
-              className="bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90 glow-gold"
+              variant="outline"
             >
               <Link href="#contact">Book a Strategy Call</Link>
             </Button>
@@ -108,7 +108,8 @@ export function Navbar() {
               ))}
               <Button
                 asChild
-                className="w-full bg-gradient-to-r from-gold to-gold-light text-primary-foreground hover:opacity-90"
+                variant="outline"
+                className="w-full"
               >
                 <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
                   Book a Strategy Call
