@@ -15,9 +15,9 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Testimonials />
-      <Services />
-      <Process />
-      <Portfolio />
+      <Services limit={3} />
+      <Process limit={3} />
+      <Portfolio limit={2} />
       <Pricing />
       <FAQ />
       <CTA />

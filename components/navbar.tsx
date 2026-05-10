@@ -8,12 +8,13 @@ import Link from "next/link"
 import Image from "next/image"
 
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#process", label: "Process" },
-  { href: "#portfolio", label: "Portfolio" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#contact", label: "Contact" },
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/process", label: "Process" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/#testimonials", label: "Testimonials" },
+  { href: "/#contact", label: "Contact" },
 ]
 
 export function Navbar() {
@@ -40,7 +41,7 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="#home" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-12 w-12 sm:h-16 sm:w-16 transition-transform group-hover:scale-105 duration-300">
               <Image 
                 src="/GS_Legacy_Wealth-removebg-preview.png" 
@@ -74,7 +75,7 @@ export function Navbar() {
               asChild
               variant="outline"
             >
-              <Link href="#contact">Book a Strategy Call</Link>
+              <Link href="/#contact">Book a Strategy Call</Link>
             </Button>
           </div>
 
@@ -114,7 +115,7 @@ export function Navbar() {
                 variant="outline"
                 className="w-full"
               >
-                <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>
                   Book a Strategy Call
                 </Link>
               </Button>

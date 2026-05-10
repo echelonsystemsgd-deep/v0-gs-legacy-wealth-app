@@ -85,7 +85,11 @@ const services = [
   },
 ]
 
-export function Services() {
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+
+export function Services({ limit }: { limit?: number }) {
+  const displayServices = limit ? services.slice(0, limit) : services;
   return (
     <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
@@ -111,7 +115,7 @@ export function Services() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {services.map((service, index) => (
+          {displayServices.map((service, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -137,6 +141,25 @@ export function Services() {
             </motion.div>
           ))}
         </div>
+
+        {limit && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-12 text-center"
+          >
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-gold/30 hover:bg-gold/10"
+            >
+              <Link href="/services">View All Services</Link>
+            </Button>
+          </motion.div>
+        )}
       </div>
     </section>
   )

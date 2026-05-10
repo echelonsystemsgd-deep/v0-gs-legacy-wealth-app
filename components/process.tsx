@@ -25,7 +25,11 @@ const steps = [
   },
 ]
 
-export function Process() {
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+
+export function Process({ limit }: { limit?: number }) {
+  const displaySteps = limit ? steps.slice(0, limit) : steps;
   return (
     <section id="process" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
@@ -50,7 +54,7 @@ export function Process() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {steps.map((step, index) => (
+          {displaySteps.map((step, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -96,6 +100,25 @@ export function Process() {
             </motion.div>
           ))}
         </div>
+
+        {limit && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-16 text-center"
+          >
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-gold/30 hover:bg-gold/10"
+            >
+              <Link href="/process">Explore Full Process</Link>
+            </Button>
+          </motion.div>
+        )}
       </div>
     </section>
   )

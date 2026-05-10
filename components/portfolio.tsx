@@ -28,7 +28,8 @@ const portfolioItems = [
   },
 ]
 
-export function Portfolio() {
+export function Portfolio({ limit }: { limit?: number }) {
+  const displayItems = limit ? portfolioItems.slice(0, limit) : portfolioItems;
   return (
     <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
@@ -53,7 +54,7 @@ export function Portfolio() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 gap-6 lg:gap-8 mb-12">
-          {portfolioItems.map((item, index) => (
+          {displayItems.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -127,10 +128,17 @@ export function Portfolio() {
             size="lg"
             variant="outline"
           >
-            <Link href="#contact" className="flex items-center gap-2">
-              Request a Custom Website
-              <ArrowRight size={18} />
-            </Link>
+            {limit ? (
+              <Link href="/portfolio" className="flex items-center gap-2">
+                View Full Portfolio
+                <ArrowRight size={18} />
+              </Link>
+            ) : (
+              <Link href="/#contact" className="flex items-center gap-2">
+                Request a Custom Website
+                <ArrowRight size={18} />
+              </Link>
+            )}
           </Button>
         </motion.div>
       </div>
