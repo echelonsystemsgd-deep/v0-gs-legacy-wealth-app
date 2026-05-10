@@ -33,7 +33,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative bg-card border-t border-gold/10">
+    <footer className="relative bg-background border-t border-gold/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="py-16 lg:py-20">
           <div className="flex flex-col items-center mb-16 text-center">
