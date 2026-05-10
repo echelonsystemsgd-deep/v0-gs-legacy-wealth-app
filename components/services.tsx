@@ -10,6 +10,7 @@ import {
   Calendar,
   Palette,
   RefreshCw,
+  Check,
 } from "lucide-react"
 
 function GlareCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
@@ -52,36 +53,72 @@ const services = [
     title: "AI-Powered Business Websites",
     description:
       "Stunning websites enhanced with AI features that engage visitors and convert them into clients.",
+    deliverables: [
+      "Custom Luxury Design",
+      "Next.js Performance",
+      "AI Feature Integration",
+      "Mobile Optimisation",
+    ],
   },
   {
     icon: Rocket,
     title: "High-Converting Landing Pages",
     description:
       "Strategic landing pages designed to capture leads and drive high-ticket sales.",
+    deliverables: [
+      "Direct Response Copy",
+      "A/B Testing Ready",
+      "Lead Magnet Setup",
+      "CRM Integration",
+    ],
   },
   {
     icon: Bot,
-    title: "Automated Lead Generation Systems",
+    title: "Automated Lead Generation",
     description:
       "Smart automation that captures, qualifies, and nurtures leads while you sleep.",
+    deliverables: [
+      "AI Chat Concierge",
+      "Lead Scoring Logic",
+      "Email Automation",
+      "Analytics Dashboard",
+    ],
   },
   {
     icon: Calendar,
     title: "Booking & CRM Automation",
     description:
       "Seamless scheduling and client management systems that save hours every week.",
+    deliverables: [
+      "Calendly Integration",
+      "Client Portal Setup",
+      "Automated Follow-ups",
+      "Payment Processing",
+    ],
   },
   {
     icon: Palette,
     title: "Branding & Digital Presence",
     description:
       "Cohesive brand identity that positions you as the premium choice in your market.",
+    deliverables: [
+      "Visual Identity Suite",
+      "Typography & Colors",
+      "Social Media Assets",
+      "Brand Guidelines",
+    ],
   },
   {
     icon: RefreshCw,
     title: "Luxury Website Redesigns",
     description:
       "Transform your existing website into a premium digital asset that commands attention.",
+    deliverables: [
+      "UX/UI Audit",
+      "SEO Migration",
+      "Performance Boost",
+      "Modern Tech Stack",
+    ],
   },
 ]
 
@@ -135,6 +172,19 @@ export function Services({ limit }: { limit?: number }) {
                     <p className="text-muted-foreground leading-relaxed">
                       {service.description}
                     </p>
+                    {!limit && service.deliverables && (
+                      <div className="pt-4 space-y-2 border-t border-gold/10 mt-4">
+                        <p className="text-xs font-bold text-gold uppercase tracking-wider">Includes:</p>
+                        <ul className="space-y-2">
+                          {service.deliverables.map((item, i) => (
+                            <li key={i} className="flex items-center gap-2">
+                              <Check className="w-3 h-3 text-gold shrink-0" />
+                              <span className="text-sm text-muted-foreground">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </GlareCard>

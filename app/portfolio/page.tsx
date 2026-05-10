@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Portfolio } from "@/components/portfolio"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
+import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
   title: "Portfolio | GS Legacy Wealth",
@@ -12,9 +13,12 @@ export default function PortfolioPage() {
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-20">
-        <Portfolio />
-      </div>
+      <PageHeader 
+        title="Our Digital"
+        highlight="Masterpieces"
+        subtitle="A showcase of high-end digital assets crafted to command attention and drive exceptional business results."
+      />
+      <Portfolio />
       <CTA />
       <Footer />
     </main>

@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Services } from "@/components/services"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
+import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
   title: "Services | GS Legacy Wealth",
@@ -12,9 +13,12 @@ export default function ServicesPage() {
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
-      <div className="pt-20">
-        <Services />
-      </div>
+      <PageHeader 
+        title="Our Premium"
+        highlight="Solutions"
+        subtitle="Strategic AI-powered services engineered to create authority, automate growth, and generate elite revenue."
+      />
+      <Services />
       <CTA />
       <Footer />
     </main>

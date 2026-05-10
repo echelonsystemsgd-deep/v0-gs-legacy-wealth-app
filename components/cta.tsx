@@ -113,7 +113,7 @@ export function CTA() {
                   variant="outline"
                   className="text-base py-6 border-gold/20 hover:bg-gold/5"
                 >
-                  <Link href="#portfolio" className="flex items-center justify-center">
+                  <Link href="/portfolio" className="flex items-center justify-center">
                     See Examples
                   </Link>
                 </Button>

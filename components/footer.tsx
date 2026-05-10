@@ -7,21 +7,21 @@ import { Instagram, Linkedin, Twitter } from "lucide-react"
 
 const navigation = {
   services: [
-    { name: "AI Websites", href: "#services" },
-    { name: "Landing Pages", href: "#services" },
-    { name: "Lead Generation", href: "#services" },
-    { name: "Automation", href: "#services" },
+    { name: "AI Websites", href: "/services" },
+    { name: "Landing Pages", href: "/services" },
+    { name: "Lead Generation", href: "/services" },
+    { name: "Automation", href: "/services" },
   ],
   company: [
-    { name: "About", href: "#home" },
-    { name: "Process", href: "#process" },
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Testimonials", href: "#testimonials" },
+    { name: "About", href: "/" },
+    { name: "Process", href: "/process" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Testimonials", href: "/#testimonials" },
   ],
   resources: [
-    { name: "FAQ", href: "#faq" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Contact", href: "#contact" },
+    { name: "FAQ", href: "/#faq" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Contact", href: "/#contact" },
   ],
 }
 
