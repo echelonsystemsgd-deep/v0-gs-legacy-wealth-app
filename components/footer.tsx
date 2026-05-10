@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Instagram, Linkedin, Twitter } from "lucide-react"
 
 const navigation = {
@@ -37,20 +38,15 @@ export function Footer() {
         <div className="py-16 lg:py-20">
           <div className="flex flex-col items-center mb-16 text-center">
             <Link href="#home" className="flex flex-col items-center gap-4 mb-6">
-              <div className="relative h-16 w-16">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold to-gold-light opacity-20 blur-lg" />
-                <div className="relative flex h-full w-full items-center justify-center rounded-full border border-gold/30 bg-background">
-                  <span className="font-serif text-2xl font-bold text-gradient-gold">GS</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-serif text-2xl font-semibold text-foreground">Legacy Wealth</span>
-                <span className="text-sm tracking-widest text-gold uppercase mt-1">AI</span>
+              <div className="relative h-32 w-64 md:h-40 md:w-80 transition-transform hover:scale-105 duration-300">
+                <Image 
+                  src="/logo.png" 
+                  alt="GS Legacy Wealth" 
+                  fill
+                  className="object-contain"
+                />
               </div>
             </Link>
-            <p className="text-sm md:text-base tracking-widest text-gold uppercase font-medium mt-2">
-              BUILDING WEALTH. CREATING LEGACY. GIVING BACK.
-            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 text-center md:text-left">

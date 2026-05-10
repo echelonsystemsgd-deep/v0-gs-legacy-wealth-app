@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -40,15 +41,14 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="#home" className="flex items-center gap-3">
-            <div className="relative h-10 w-10">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold to-gold-light opacity-20 blur-lg" />
-              <div className="relative flex h-full w-full items-center justify-center rounded-full border border-gold/30 bg-card">
-                <span className="font-serif text-lg font-bold text-gradient-gold">GS</span>
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-serif text-lg font-semibold text-foreground">Legacy Wealth</span>
-              <span className="ml-1 text-sm text-gold">AI</span>
+            <div className="relative h-16 w-48 sm:w-64 transition-transform hover:scale-105 duration-300">
+              <Image 
+                src="/logo.png" 
+                alt="GS Legacy Wealth" 
+                fill
+                className="object-contain object-left"
+                priority
+              />
             </div>
           </Link>
 
