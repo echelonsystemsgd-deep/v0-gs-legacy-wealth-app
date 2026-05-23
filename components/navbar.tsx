@@ -42,7 +42,7 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 w-12 sm:h-16 sm:w-16 transition-transform group-hover:scale-105 duration-300">
+            <div className={`relative transition-all duration-300 group-hover:scale-105 ${isScrolled ? "h-8 w-8 sm:h-10 sm:w-10" : "h-12 w-12 sm:h-16 sm:w-16"}`}>
               <Image 
                 src="/GS_Legacy_Wealth-removebg-preview.png" 
                 alt="GS Legacy Wealth" 
@@ -51,7 +51,7 @@ export function Navbar() {
                 priority
               />
             </div>
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-gold hidden sm:block">
+            <span className={`font-serif tracking-tight text-foreground transition-all duration-300 group-hover:text-gold hidden sm:block ${isScrolled ? "text-lg sm:text-xl" : "text-xl sm:text-2xl font-bold"}`}>
               GS Legacy Wealth
             </span>
           </Link>

@@ -38,7 +38,7 @@ export function Footer() {
         <div className="py-16 lg:py-20">
           <div className="flex flex-col items-center mb-16 text-center">
             <Link href="/" className="flex flex-col items-center gap-4 mb-6">
-              <div className="relative h-32 w-64 md:h-40 md:w-80 transition-transform hover:scale-105 duration-300">
+              <div className="relative h-32 w-64 md:h-40 md:w-80 transition-all hover:scale-105 duration-300 opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
                 <Image 
                   src="/GS_Legacy_Wealth-removebg-preview.png" 
                   alt="GS Legacy Wealth" 
