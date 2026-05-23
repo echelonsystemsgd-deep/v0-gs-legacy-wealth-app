@@ -23,7 +23,7 @@ export function Watermark({ position = "center", className = "", opacity = 0.03 
   }
 
   return (
-    <div className={`absolute pointer-events-none z-0 ${getPositionClasses()} ${className}`}>
+    <div className={`fixed pointer-events-none z-0 ${getPositionClasses()} ${className}`}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: opacity, scale: 1 }}

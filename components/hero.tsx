@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Bot, Smartphone, Zap, Target, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { Watermark } from "./watermark"
 
 const trustIndicators = [
   { icon: Bot, label: "AI Powered" },
@@ -48,7 +47,6 @@ export function Hero() {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold/3 rounded-full blur-3xl" />
       <GoldParticles />
-      <Watermark position="center" opacity={0.03} />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">

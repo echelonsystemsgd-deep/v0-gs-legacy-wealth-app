@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Check, Crown, HelpCircle, Calculator, ChevronDown, RefreshCw, Zap, Clock, ShieldCheck } from "lucide-react"
 import Link from "next/link"
-import { Watermark } from "./watermark"
-
 // -------------------------------------------------------------
 // Interactive 3D Tilt Card Component
 // -------------------------------------------------------------
@@ -261,8 +259,6 @@ export function Pricing() {
       {/* Background Decor */}
       <div className="absolute inset-0 bg-background" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-      <Watermark position="center" opacity={0.02} />
-      
       {/* Decorative Orbs */}
       <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
