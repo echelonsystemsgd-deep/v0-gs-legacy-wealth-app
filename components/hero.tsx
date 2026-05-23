@@ -93,7 +93,7 @@ export function Hero() {
                   variant="default"
                   className="text-base px-8 py-6"
                 >
-                  <Link href="/#contact" className="flex items-center gap-2">
+                  <Link href="/book" className="flex items-center gap-2">
                     Book Your Free Strategy Call
                     <ArrowRight size={18} />
                   </Link>
@@ -104,7 +104,7 @@ export function Hero() {
                   variant="outline"
                   className="text-base px-8 py-6"
                 >
-                  <Link href="/#contact">Get Free AI Website Audit</Link>
+                  <Link href="/book">Get Free AI Website Audit</Link>
                 </Button>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2 pl-2">

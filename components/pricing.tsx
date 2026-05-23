@@ -509,7 +509,7 @@ export function Pricing() {
                         variant={tier.featured ? "default" : "outline"}
                         className={`w-full group rounded-xl transition-all duration-300 font-bold ${
                           tier.featured
-                            ? "bg-gradient-to-r from-gold to-gold-light hover:scale-102 hover:shadow-[0_4px_20px_rgba(212,175,55,0.4)]"
+                            ? "bg-gradient-to-r from-gold to-gold-light hover:scale-102 hover:shadow-[0_4px_20px_rgba(212,175,55,0.4)] text-black font-extrabold tracking-wide"
                             : "hover:border-gold hover:text-gold"
                         }`}
                       >

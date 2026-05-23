@@ -26,9 +26,9 @@ const navigation = {
 }
 
 const socialLinks = [
-  { name: "Instagram", icon: Instagram, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
+  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
 ]
 
 export function Footer() {
@@ -37,7 +37,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="py-16 lg:py-20">
           <div className="flex flex-col items-center mb-16 text-center">
-            <Link href="#home" className="flex flex-col items-center gap-4 mb-6">
+            <Link href="/" className="flex flex-col items-center gap-4 mb-6">
               <div className="relative h-32 w-64 md:h-40 md:w-80 transition-transform hover:scale-105 duration-300">
                 <Image 
                   src="/GS_Legacy_Wealth-removebg-preview.png" 
@@ -60,6 +60,8 @@ export function Footer() {
                   <Link
                     key={social.name}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center text-muted-foreground hover:text-gold hover:border-gold/50 transition-colors"
                     aria-label={social.name}
                   >
@@ -134,10 +136,10 @@ export function Footer() {
               © {new Date().getFullYear()} GS Legacy Wealth AI. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+              <Link href="/terms" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                 Terms of Service
               </Link>
             </div>

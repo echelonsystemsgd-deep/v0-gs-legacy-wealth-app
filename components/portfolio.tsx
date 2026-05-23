@@ -134,7 +134,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                 <ArrowRight size={18} />
               </Link>
             ) : (
-              <Link href="/#contact" className="flex items-center gap-2">
+              <Link href="/book" className="flex items-center gap-2">
                 Request a Custom Website
                 <ArrowRight size={18} />
               </Link>
