@@ -28,7 +28,7 @@ export function Watermark({ position = "center", className = "", opacity = 0.03 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: opacity, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-        className="relative w-[600px] h-[600px] md:w-[800px] md:h-[800px] lg:w-[1200px] lg:h-[1200px]"
+        className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] mix-blend-screen"
       >
         <Image
           src="/GS_Legacy_Wealth_Watermark-removebg-preview.png"

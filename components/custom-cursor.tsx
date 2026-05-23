@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -53,7 +53,7 @@ export function CustomCursor() {
         transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-gold/50 pointer-events-none z-[100] hidden md:block"
+        className="fixed top-0 left-0 w-10 h-10 rounded-full border border-gold/50 flex items-center justify-center pointer-events-none z-[100] hidden md:block"
         animate={{
           x: mousePosition.x - 20,
           y: mousePosition.y - 20,
@@ -61,7 +61,20 @@ export function CustomCursor() {
           backgroundColor: isHovering ? "rgba(255, 215, 0, 0.1)" : "rgba(255, 215, 0, 0)",
         }}
         transition={{ type: "spring", stiffness: 250, damping: 20, mass: 0.5 }}
-      />
+      >
+        <AnimatePresence>
+          {isHovering && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="text-[8px] font-serif font-bold text-gold opacity-50"
+            >
+              GS
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </>
   )
 }

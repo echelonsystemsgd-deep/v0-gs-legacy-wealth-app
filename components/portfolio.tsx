@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Crown } from "lucide-react"
 import Link from "next/link"
 
 const portfolioItems = [
@@ -63,7 +63,27 @@ export function Portfolio({ limit }: { limit?: number }) {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300"
             >
-              <div className={`aspect-[16/10] bg-gradient-to-br ${item.gradient} relative`}>
+              {/* Legacy Partner Badge */}
+              <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                <Crown size={10} className="text-gold" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gold">Legacy Partner</span>
+              </div>
+
+              {/* Subtle GS Watermark */}
+              <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
+                <span className="font-serif text-9xl font-bold text-gold">GS</span>
+              </div>
+
+              {/* Scanning Animation */}
+              <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <motion.div
+                  className="absolute left-0 right-0 h-[1px] bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]"
+                  animate={{ top: ["0%", "100%", "0%"] }}
+                  transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+                />
+              </div>
+
+              <div className={`aspect-[16/10] bg-gradient-to-br ${item.gradient} relative z-10`}>
                 {/* Mockup Content */}
                 <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
                   <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">

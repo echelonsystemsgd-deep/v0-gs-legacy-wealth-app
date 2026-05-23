@@ -490,7 +490,11 @@ export function Pricing() {
                           {tier.features.map((feature, i) => (
                             <div key={i} className="flex items-start gap-3">
                               <div className="h-5 w-5 rounded-full bg-gold/10 flex items-center justify-center shrink-0 mt-0.5 border border-gold/25">
-                                <Check size={12} className="text-gold" />
+                                {tier.featured || tier.tag === "Elite" ? (
+                                  <Crown size={12} className="text-gold" />
+                                ) : (
+                                  <ShieldCheck size={12} className="text-gold" />
+                                )}
                               </div>
                               <span className="text-sm text-muted-foreground font-medium leading-normal">
                                 {feature}

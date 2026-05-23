@@ -5,6 +5,7 @@ import './globals.css'
 import { CustomCursor } from '@/components/custom-cursor'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
+import { TabRetention } from '@/components/tab-retention'
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
@@ -50,7 +51,8 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
-        <Watermark position="center" opacity={0.03} />
+        <Watermark position="center" opacity={0.06} />
+        <TabRetention />
         <CustomCursor />
         <StickyCTAButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
