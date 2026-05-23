@@ -75,7 +75,7 @@ export function Navbar() {
               asChild
               variant="outline"
             >
-              <Link href="/#contact">Book a Strategy Call</Link>
+              <Link href="/book">Book a Strategy Call</Link>
             </Button>
           </div>
 
@@ -115,7 +115,7 @@ export function Navbar() {
                 variant="outline"
                 className="w-full"
               >
-                <Link href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
                   Book a Strategy Call
                 </Link>
               </Button>

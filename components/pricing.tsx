@@ -513,7 +513,7 @@ export function Pricing() {
                             : "hover:border-gold hover:text-gold"
                         }`}
                       >
-                        <Link href="/#contact">
+                        <Link href={`/book?tier=${tier.tag}`}>
                           <span>{tier.cta}</span>
                         </Link>
                       </Button>
@@ -587,7 +587,7 @@ export function Pricing() {
                       <ShieldCheck size={14} className="text-gold" />
                       All core designs include speed and performance guarantees.
                     </span>
-                    <Link href="/#contact" className="text-gold hover:underline">
+                    <Link href="/book" className="text-gold hover:underline">
                       Request custom specs
                     </Link>
                   </div>
@@ -598,7 +598,7 @@ export function Pricing() {
         </div>
 
         <p className="text-center text-sm text-muted-foreground relative z-10">
-          Looking for a custom enterprise integration? <Link href="/#contact" className="text-gold hover:underline font-semibold">Start the conversation.</Link>
+          Looking for a custom enterprise integration? <Link href="/book" className="text-gold hover:underline font-semibold">Start the conversation.</Link>
         </p>
       </div>
     </section>

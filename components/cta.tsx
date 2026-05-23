@@ -102,7 +102,7 @@ export function CTA() {
                   variant="default"
                   className="flex-1 text-base py-6 shadow-[0_0_15px_rgba(255,215,0,0.2)]"
                 >
-                  <Link href="https://calendly.com" target="_blank" className="flex items-center justify-center gap-2">
+                  <Link href="/book" className="flex items-center justify-center gap-2">
                     Start Free Analysis
                     <ArrowRight size={18} />
                   </Link>
