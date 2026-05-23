@@ -10,34 +10,34 @@ import {
 
 const faqs = [
   {
-    question: "How long does the process take?",
+    question: "Are the prices one-time fees or monthly subscriptions?",
     answer:
-      "Most projects are completed within 2-4 weeks, depending on the scope and complexity. We work efficiently while maintaining the highest quality standards to ensure your website is ready to generate results quickly.",
+      "Our main packages (Launch, Legacy, and Elite) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Ascent, Sovereign, and Apex) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
   },
   {
-    question: "Do you work with all industries?",
+    question: "What is your standard payment structure?",
     answer:
-      "We specialise in working with ambitious businesses, personal brands, consultants, gyms, estate agents, and high-ticket service providers. If you're serious about positioning your business as a premium brand, we'd love to hear from you.",
+      "For setup projects, we operate on a premium 50/50 milestone basis: a 50% initial commitment fee to reserve your scheduling slot and begin interactive wireframing, and the remaining 50% upon final client sign-off, testing clearance, and full handover.",
   },
   {
-    question: "Can you redesign existing websites?",
+    question: "How long does the system build take?",
     answer:
-      "Absolutely. We offer luxury website redesigns that transform outdated sites into premium digital assets. We'll analyse your current site and create a strategic plan to elevate your online presence.",
+      "Most core projects are completed within 2 to 4 weeks, depending on the complexity of custom AI integrations and pages. We work efficiently while maintaining the highest possible quality standards to ensure your digital asset is ready to generate high-value results swiftly.",
   },
   {
-    question: "Do you offer AI automation?",
+    question: "Do you build custom AI automations beyond chatbots?",
     answer:
-      "Yes, AI automation is at the core of what we do. From AI-powered chatbots to automated lead generation and booking systems, we integrate cutting-edge AI technology to help your business operate more efficiently.",
+      "Yes, absolutely. Under our Legacy and Elite tiers (as well as Sovereign and Apex retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
   },
   {
-    question: "Is hosting included?",
+    question: "Will the website work flawlessly on mobile?",
     answer:
-      "We can recommend and set up premium hosting solutions as part of your package. Our recommendations are tailored to your specific needs, ensuring fast load times and reliable performance for your visitors.",
+      "Yes, 100%. Every single project we architect is built with a responsive, mobile-first philosophy. We prioritize fluid grid layouts, high-performance visual compression, and lightning-fast loading to ensure a flawless experience across all mobile, tablet, and desktop screens.",
   },
   {
-    question: "Will the website work on mobile devices?",
+    question: "Do you offer custom redesigns for existing websites?",
     answer:
-      "100%. Every website we build is fully mobile-optimised and responsive. We design mobile-first to ensure a flawless experience on all devices, from smartphones to desktop computers.",
+      "We do. We specialize in transforming outdated or generic websites into luxury digital assets that build authority. We will conduct a thorough audit of your current traffic and UX before crafting a customized plan to transition your brand to our premium AI-powered systems.",
   },
 ]
 
@@ -60,7 +60,7 @@ export function FAQ() {
             <span className="text-gradient-gold">Questions</span>
           </h2>
           <p className="text-muted-foreground">
-            Everything you need to know about working with us.
+            Everything you need to know about our premium investment models.
           </p>
         </motion.div>
 
