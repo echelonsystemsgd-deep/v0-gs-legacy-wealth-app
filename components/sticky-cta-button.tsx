@@ -32,7 +32,7 @@ export function StickyCTAButton() {
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           className="fixed bottom-6 right-6 z-50 md:bottom-10 md:right-10"
         >
-          <Link href="#contact" className="group">
+          <Link href="/#contact" className="group">
             <div className="flex items-center gap-3 bg-secondary/80 backdrop-blur-md border border-gold/30 hover:border-gold px-4 py-3 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_30px_rgba(255,215,0,0.3)] transition-all duration-300 overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-r from-gold/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
               

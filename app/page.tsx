@@ -14,7 +14,7 @@ export default function Home() {
       <Hero />
       <Services limit={3} />
       <Portfolio limit={2} />
-      <Process limit={3} />
+      <Process />
       <Testimonials />
       <CTA />
       <Footer />

@@ -64,7 +64,7 @@ export function Process({ limit }: { limit?: number }) {
               className="relative group"
             >
               {/* Connector Line */}
-              {index < steps.length - 1 && (
+              {index < displaySteps.length - 1 && (
                 <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0" />
               )}
 
@@ -101,7 +101,7 @@ export function Process({ limit }: { limit?: number }) {
           ))}
         </div>
 
-        {limit && (
+        {limit && limit < steps.length && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
