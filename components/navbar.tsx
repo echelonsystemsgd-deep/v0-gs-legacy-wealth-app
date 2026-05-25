@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { SocialMediaLinks } from "@/components/social-media-links"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -165,6 +166,9 @@ export function Navbar() {
                     Book a Strategy Call
                   </Link>
                 </Button>
+                <div className="flex justify-center pt-6 border-t border-gold/10">
+                  <SocialMediaLinks />
+                </div>
               </div>
             </motion.div>
           </>

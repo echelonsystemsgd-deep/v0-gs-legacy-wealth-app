@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Linkedin, Twitter } from "lucide-react"
+import { SocialMediaLinks } from "@/components/social-media-links"
 
 const navigation = {
   services: [
@@ -24,12 +24,6 @@ const navigation = {
     { name: "Contact", href: "/#contact" },
   ],
 }
-
-const socialLinks = [
-  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
-  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
-]
 
 export function Footer() {
   return (
@@ -56,20 +50,7 @@ export function Footer() {
               <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-xs text-center md:text-left">
                 We engineer digital assets that create authority, automate growth, and generate revenue.
               </p>
-              <div className="flex gap-4">
-                {socialLinks.map((social) => (
-                  <Link
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center text-muted-foreground hover:text-gold hover:border-gold/50 transition-colors"
-                    aria-label={social.name}
-                  >
-                    <social.icon size={18} />
-                  </Link>
-                ))}
-              </div>
+              <SocialMediaLinks />
             </div>
 
             {/* Services */}
