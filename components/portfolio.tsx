@@ -61,21 +61,21 @@ export function Portfolio({ limit }: { limit?: number }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300"
+              className="group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300 touch-manipulation"
             >
               {/* Legacy Partner Badge */}
-              <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+              <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
                 <Crown size={10} className="text-gold" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-gold">Legacy Partner</span>
               </div>
 
               {/* Subtle GS Watermark */}
-              <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
+              <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
                 <span className="font-serif text-9xl font-bold text-gold">GS</span>
               </div>
 
               {/* Scanning Animation */}
-              <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
                 <motion.div
                   className="absolute left-0 right-0 h-[1px] bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]"
                   animate={{ top: ["0%", "100%", "0%"] }}
@@ -105,10 +105,10 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </div>
 
                 {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20">
+              <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 z-20 hidden sm:block">
                 <div className="glass rounded-xl p-4 flex justify-between items-end">
                   <div>
                     <p className="text-sm text-gold mb-1">{item.category}</p>
@@ -116,19 +116,19 @@ export function Portfolio({ limit }: { limit?: number }) {
                       {item.title}
                     </h3>
                   </div>
-                  <Button size="sm" variant="outline" className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10">
+                  <Button size="sm" variant="outline" className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation">
                     <span className="text-xs">View Case Study</span>
                   </Button>
                 </div>
               </div>
 
               {/* Always visible on mobile */}
-              <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background to-transparent z-10">
+              <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] to-transparent z-10">
                 <p className="text-sm text-gold mb-1">{item.category}</p>
                 <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
                   {item.title}
                 </h3>
-                <Button size="sm" variant="outline" className="h-8 rounded-full w-full border-gold/30">
+                <Button size="sm" variant="outline" className="h-8 rounded-full w-full border-gold/30 touch-manipulation">
                   <span className="text-xs">View Case Study</span>
                 </Button>
               </div>

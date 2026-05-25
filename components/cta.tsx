@@ -26,25 +26,35 @@ export function CTA() {
 
       {/* Animated particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full bg-gold/20"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -40, 0],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 5 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
+        {[...Array(15)].map((_, i) => {
+          // Deterministic seed properties to prevent SSR mismatch
+          const left = `${(i * 17) % 100}%`
+          const top = `${(i * 23) % 100}%`
+          const delay = (i * 0.43) % 3
+          const duration = 5 + ((i * 0.79) % 3)
+          // Hide particles index >= 6 on mobile screens
+          const isMobileHidden = i >= 6
+
+          return (
+            <motion.div
+              key={i}
+              className={`absolute w-1.5 h-1.5 rounded-full bg-gold/20 ${isMobileHidden ? "hidden md:block" : ""}`}
+              style={{
+                left,
+                top,
+              }}
+              animate={{
+                y: [0, -40, 0],
+                opacity: [0.2, 0.6, 0.2],
+              }}
+              transition={{
+                duration,
+                repeat: Infinity,
+                delay,
+              }}
+            />
+          )
+        })}
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
@@ -73,7 +83,7 @@ export function CTA() {
             className="pt-8 mx-auto max-w-xl"
           >
             <div className="glass rounded-3xl p-6 md:p-8 text-left border border-gold/20 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
+              <div className="absolute top-0 right-0 p-4 opacity-10 hidden sm:block">
                 <div className="w-32 h-32 rounded-full border-4 border-gold border-dashed animate-[spin_10s_linear_infinite]" />
               </div>
               <div className="flex items-center gap-4 mb-6">

@@ -6,8 +6,33 @@ import { motion, AnimatePresence } from "framer-motion"
 export function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(true) // Default to true on server to prevent flash
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const checkDevice = () => {
+      const isCoarse = window.matchMedia("(pointer: coarse)").matches
+      const isSmallScreen = window.innerWidth < 768
+      setIsTouchDevice(isCoarse || isSmallScreen)
+    }
+
+    checkDevice()
+
+    const mediaQuery = window.matchMedia("(pointer: coarse)")
+    
+    // Add event listeners for device changes
+    mediaQuery.addEventListener("change", checkDevice)
+    window.addEventListener("resize", checkDevice)
+
+    // If it's a touch device or small screen, don't add mouse listeners
+    if (mediaQuery.matches || window.innerWidth < 768) {
+      return () => {
+        mediaQuery.removeEventListener("change", checkDevice)
+        window.removeEventListener("resize", checkDevice)
+      }
+    }
+
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
@@ -31,14 +56,15 @@ export function CustomCursor() {
     window.addEventListener("mouseover", handleMouseOver)
 
     return () => {
+      mediaQuery.removeEventListener("change", checkDevice)
+      window.removeEventListener("resize", checkDevice)
       window.removeEventListener("mousemove", updateMousePosition)
       window.removeEventListener("mouseover", handleMouseOver)
     }
   }, [])
 
-  // Do not render custom cursor on mobile
-  if (typeof window !== "undefined" && window.innerWidth < 768) {
-    return null;
+  if (isTouchDevice) {
+    return null
   }
 
   return (

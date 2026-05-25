@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -20,6 +21,13 @@ const navLinks = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+
+  const isActive = (href: string) => {
+    if (href.startsWith("/#")) return false // Section hashes don't highlight as active pages
+    return pathname === href
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +36,24 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  // Outside click handler for mobile menu drawer
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(e.target as Node) &&
+        !(e.target as HTMLElement).closest('button[aria-label="Toggle menu"]')
+      ) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [isMobileMenuOpen])
 
   return (
     <motion.header
@@ -41,13 +67,13 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group active:scale-98 transition-transform">
             <div className={`relative transition-all duration-300 group-hover:scale-105 ${isScrolled ? "h-8 w-8 sm:h-10 sm:w-10" : "h-12 w-12 sm:h-16 sm:w-16"}`}>
               <Image 
                 src="/GS_Legacy_Wealth-removebg-preview.png" 
                 alt="GS Legacy Wealth" 
                 fill
-                className="object-contain object-left"
+                className="object-contain"
                 priority
               />
             </div>
@@ -62,7 +88,11 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted-foreground transition-colors hover:text-gold"
+                className={`text-sm transition-colors hover:text-gold active:scale-95 transition-transform ${
+                  isActive(link.href) 
+                    ? "text-gold font-semibold drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]" 
+                    : "text-muted-foreground"
+                }`}
               >
                 {link.label}
               </Link>
@@ -74,6 +104,7 @@ export function Navbar() {
             <Button
               asChild
               variant="outline"
+              className="active:scale-95 transition-transform"
             >
               <Link href="/book">Book a Strategy Call</Link>
             </Button>
@@ -82,7 +113,7 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-foreground p-2"
+            className="lg:hidden text-foreground p-2 active:scale-95 transition-transform"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -93,34 +124,50 @@ export function Navbar() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="glass lg:hidden"
-          >
-            <div className="px-4 py-6 space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm text-muted-foreground transition-colors hover:text-gold py-2"
+          <>
+            {/* Backdrop Overlay with Blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 top-20 bg-background/60 backdrop-blur-sm z-40 lg:hidden"
+            />
+            {/* Mobile Drawer */}
+            <motion.div
+              ref={mobileMenuRef}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute left-0 right-0 top-20 glass border-t border-gold/10 z-50 lg:hidden overflow-y-auto max-h-[calc(100vh-5rem)]"
+              style={{
+                paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+              }}
+            >
+              <div className="px-4 py-6 space-y-4">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block text-sm transition-colors hover:text-gold py-2 active:scale-98 transition-transform ${
+                      isActive(link.href) ? "text-gold font-semibold" : "text-muted-foreground"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Button
+                  asChild
+                  className="w-full bg-gradient-to-r from-gold to-gold-light text-black font-extrabold active:scale-[0.98] transition-transform"
                 >
-                  {link.label}
-                </Link>
-              ))}
-              <Button
-                asChild
-                variant="outline"
-                className="w-full"
-              >
-                <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
-                  Book a Strategy Call
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
+                  <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
+                    Book a Strategy Call
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.header>

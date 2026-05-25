@@ -163,6 +163,7 @@ function BookingFlowInner() {
   const [step, setStep] = useState<1 | 2>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const [calendlyHeight, setCalendlyHeight] = useState("700px")
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -224,6 +225,18 @@ function BookingFlowInner() {
   })
   const calendlyUrl = `${calendlyBase}?${calendlyParams.toString()}`
 
+  // Listen to Calendly's postMessage height events to adjust frame height dynamically
+  useEffect(() => {
+    const handleCalendlyMessage = (e: MessageEvent) => {
+      if (e.origin === "https://calendly.com" && e.data && e.data.event === "calendly.page_height") {
+        const height = e.data.payload.height
+        setCalendlyHeight(`${height}px`)
+      }
+    }
+    window.addEventListener("message", handleCalendlyMessage)
+    return () => window.removeEventListener("message", handleCalendlyMessage)
+  }, [])
+
   // Re-init the Calendly inline widget whenever step 2 is shown
   const calendlyContainerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -238,6 +251,7 @@ function BookingFlowInner() {
         ;(window as any).Calendly.initInlineWidget({
           url: calendlyUrl,
           parentElement: calendlyContainerRef.current,
+          resize: true, // Enable native auto-resize support in Calendly
           prefill: {
             name: formData.fullName,
             email: formData.email,
@@ -255,7 +269,7 @@ function BookingFlowInner() {
   return (
     <div className="w-full max-w-2xl mx-auto">
       {/* ---- Step Indicator ---- */}
-      <div className="flex items-center gap-3 mb-10">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
         {[1, 2].map((s) => (
           <div key={s} className="flex items-center gap-3">
             <motion.div
@@ -403,7 +417,7 @@ function BookingFlowInner() {
                       type="button"
                       id="billing-one-time"
                       onClick={() => updateField("billingType", "one-time")}
-                      className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 ${
+                      className={`relative px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
                         formData.billingType === "one-time"
                           ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
@@ -415,7 +429,7 @@ function BookingFlowInner() {
                       type="button"
                       id="billing-monthly"
                       onClick={() => updateField("billingType", "monthly")}
-                      className={`relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 ${
+                      className={`relative flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
                         formData.billingType === "monthly"
                           ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
@@ -446,7 +460,7 @@ function BookingFlowInner() {
                         type="button"
                         id={`tier-${tierKey}`}
                         onClick={() => updateField("selectedTier", tierKey)}
-                        className={`relative text-left p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold/40 ${
+                        className={`relative text-left p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-[0.98] touch-manipulation ${
                           selected
                             ? "border-gold bg-gold/10"
                             : "border-gold/15 bg-background/40 hover:border-gold/40 hover:bg-gold/5"
@@ -634,7 +648,7 @@ function BookingFlowInner() {
                 ref={calendlyContainerRef}
                 className="calendly-inline-widget relative z-10"
                 data-url={calendlyUrl}
-                style={{ minWidth: "320px", height: "700px" }}
+                style={{ minWidth: "320px", height: calendlyHeight }}
               />
             </div>
 

@@ -38,11 +38,12 @@ export function Footer() {
         <div className="py-16 lg:py-20">
           <div className="flex flex-col items-center mb-16 text-center">
             <Link href="/" className="flex flex-col items-center gap-4 mb-6">
-              <div className="relative h-32 w-64 md:h-40 md:w-80 transition-all hover:scale-105 duration-300 opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
+              <div className="relative h-20 w-40 sm:h-32 sm:w-64 md:h-40 md:w-80 transition-all hover:scale-105 duration-300 opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
                 <Image 
                   src="/GS_Legacy_Wealth-removebg-preview.png" 
                   alt="GS Legacy Wealth" 
                   fill
+                  sizes="(max-width: 640px) 160px, 320px"
                   className="object-contain"
                 />
               </div>
@@ -129,7 +130,7 @@ export function Footer() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="border-t border-gold/10 py-8"
+          className="border-t border-gold/10 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))]"
         >
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">

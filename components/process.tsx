@@ -65,7 +65,9 @@ export function Process({ limit }: { limit?: number }) {
             >
               {/* Connector Line */}
               {index < displaySteps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0" />
+                <div className={`absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0 hidden ${
+                  index % 2 === 0 ? "sm:block lg:hidden" : ""
+                } lg:block`} />
               )}
 
               <motion.div

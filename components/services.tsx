@@ -162,7 +162,7 @@ export function Services({ limit }: { limit?: number }) {
             >
               <GlareCard>
                 <Card className="h-full bg-secondary/80 backdrop-blur-sm border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
-                  <CardContent className="p-6 lg:p-8 space-y-4">
+                  <CardContent className="p-5 sm:p-6 lg:p-8 space-y-4">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-light/10 flex items-center justify-center border border-gold/30 group-hover:border-gold/50 transition-colors">
                       <service.icon className="w-7 h-7 text-gold" />
                     </div>

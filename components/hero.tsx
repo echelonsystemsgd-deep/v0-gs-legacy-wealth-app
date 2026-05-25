@@ -15,26 +15,37 @@ const trustIndicators = [
 function GoldParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-gold/30"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, Math.random() * 20 - 10, 0],
-            opacity: [0.3, 0.8, 0.3],
-          }}
-          transition={{
-            duration: 4 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
+      {[...Array(20)].map((_, i) => {
+        // Deterministic position and animations based on index to prevent SSR hydration mismatch
+        const left = `${(i * 17) % 100}%`
+        const top = `${(i * 23) % 100}%`
+        const delay = (i * 0.37) % 2
+        const duration = 4 + ((i * 0.73) % 2)
+        const xOffset = ((i * 29) % 20) - 10
+        // Hide particles index >= 8 on mobile to boost performance
+        const isMobileHidden = i >= 8
+
+        return (
+          <motion.div
+            key={i}
+            className={`absolute w-1 h-1 rounded-full bg-gold/30 ${isMobileHidden ? "hidden md:block" : ""}`}
+            style={{
+              left,
+              top,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, xOffset, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration,
+              repeat: Infinity,
+              delay,
+            }}
+          />
+        )
+      })}
     </div>
   )
 }
@@ -68,7 +79,7 @@ export function Hero() {
                 <span className="text-sm text-gold">The Digital Legacy Architect</span>
               </motion.div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-balance">
+              <h1 className="font-serif text-3xl min-[360px]:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-balance">
                 <span className="text-foreground">Luxury Websites Built to </span>
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
@@ -91,7 +102,7 @@ export function Hero() {
                   asChild
                   size="lg"
                   variant="default"
-                  className="text-base px-8 py-6"
+                  className="text-base px-8 py-6 active:scale-95 transition-transform"
                 >
                   <Link href="/book" className="flex items-center gap-2">
                     Book Your Free Strategy Call
@@ -102,7 +113,7 @@ export function Hero() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="text-base px-8 py-6"
+                  className="text-base px-8 py-6 active:scale-95 transition-transform"
                 >
                   <Link href="/book">Get Free AI Website Audit</Link>
                 </Button>
@@ -140,7 +151,7 @@ export function Hero() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="relative"
+            className="relative hidden lg:block"
           >
             <div className="relative">
               {/* Glow Effect */}
@@ -178,7 +189,7 @@ export function Hero() {
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -top-6 -right-6 glass rounded-2xl p-4 border border-gold/30"
+                  className="absolute hidden sm:block -top-6 -right-6 glass rounded-2xl p-4 border border-gold/30"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
@@ -194,7 +205,7 @@ export function Hero() {
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 5, repeat: Infinity }}
-                  className="absolute -bottom-4 -left-4 glass rounded-xl p-3 border border-gold/30"
+                  className="absolute hidden sm:block -bottom-4 -left-4 glass rounded-xl p-3 border border-gold/30"
                 >
                   <div className="flex items-center gap-2">
                     <Zap size={16} className="text-gold" />

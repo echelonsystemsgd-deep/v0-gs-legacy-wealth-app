@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,6 +11,13 @@ import Link from "next/link"
 // -------------------------------------------------------------
 function TiltCard({ children, featured }: { children: React.ReactNode; featured: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches)
+    }
+  }, [])
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -54,15 +61,16 @@ function TiltCard({ children, featured }: { children: React.ReactNode; featured:
   return (
     <motion.div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={isTouchDevice ? undefined : handleMouseMove}
+      onMouseEnter={isTouchDevice ? undefined : handleMouseEnter}
+      onMouseLeave={isTouchDevice ? undefined : handleMouseLeave}
+      whileHover={isTouchDevice ? { scale: 1.02 } : undefined}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: isTouchDevice ? 0 : rotateX,
+        rotateY: isTouchDevice ? 0 : rotateY,
         transformStyle: "preserve-3d",
       }}
-      className={`relative h-full bg-secondary/20 backdrop-blur-md border border-gold/10 hover:border-gold/30 rounded-2xl transition-colors duration-300 ${
+      className={`relative h-full bg-secondary/20 backdrop-blur-md border border-gold/10 hover:border-gold/30 rounded-2xl transition-all duration-300 ${
         featured ? "border-gold/40 glow-gold md:scale-105 z-10 bg-secondary/40" : ""
       }`}
     >
@@ -397,6 +405,13 @@ export function Pricing() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
+              {billingCycle === "setup" && (
+                <motion.div
+                  layoutId="activeBillingCycleBg"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gold to-gold-light z-[-1]"
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                />
+              )}
               One-Time Setup
             </button>
             <button
@@ -407,26 +422,22 @@ export function Pricing() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
+              {billingCycle === "retainer" && (
+                <motion.div
+                  layoutId="activeBillingCycleBg"
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gold to-gold-light z-[-1]"
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                />
+              )}
               Continuous Growth Support
             </button>
-
-            {/* Sliding Gold Background */}
-            <motion.div
-              layoutId="billingToggleBg"
-              className="absolute top-1.5 bottom-1.5 left-1.5 rounded-full bg-gradient-to-r from-gold to-gold-light"
-              animate={{
-                x: billingCycle === "setup" ? 0 : "99%",
-                width: billingCycle === "setup" ? "142px" : "228px"
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            />
           </div>
         </div>
 
         {/* -------------------------------------------------------------
             Pricing Grid (Framer Motion Animation)
             ------------------------------------------------------------- */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
           <AnimatePresence mode="wait">
             {activeTiers.map((tier, index) => {
               const isRecommended = recommendedTier === tier.tag
@@ -437,7 +448,7 @@ export function Pricing() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -40 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex flex-col h-full"
+                  className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <TiltCard featured={tier.featured}>
                     <CardContent className="p-8 flex flex-col h-full justify-between">
@@ -554,44 +565,46 @@ export function Pricing() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden mt-8"
               >
-                <div className="glass rounded-2xl p-6 border border-gold/15 overflow-x-auto">
-                  <table className="w-full text-left border-collapse min-w-[600px]">
-                    <thead>
-                      <tr className="border-b border-gold/15">
-                        <th className="py-4 text-xs uppercase tracking-widest text-gold font-bold w-1/3">Feature Category</th>
-                        <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Launch Setup</th>
-                        <th className="py-4 text-xs uppercase tracking-widest text-gold font-bold text-center w-1/6">Legacy System</th>
-                        <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Elite Suite</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {comparisonCategories.map((cat, idx) => (
-                        <tr key={idx} className="contents">
-                          <tr className="bg-gold/5">
-                            <td colSpan={4} className="py-3 px-2 text-xs font-bold uppercase text-gold tracking-widest">
-                              {cat.category}
-                            </td>
-                          </tr>
-                          {cat.items.map((item, itemIdx) => (
-                            <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
-                              <td className="py-4 px-2 text-sm font-medium text-foreground">{item.name}</td>
-                              <td className="py-4 text-sm text-muted-foreground text-center">{item.launch}</td>
-                              <td className="py-4 text-sm text-gold font-semibold text-center">{item.legacy}</td>
-                              <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
-                            </tr>
-                          ))}
+                <div className="relative group">
+                  <div className="glass rounded-2xl p-6 border border-gold/15 overflow-x-auto">
+                    <table className="w-full text-left border-collapse min-w-[600px]">
+                      <thead>
+                        <tr className="border-b border-gold/15">
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-gold font-bold w-1/3 sticky left-0 bg-[#050505] z-20 border-r border-gold/15">Feature Category</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Launch Setup</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-gold font-bold text-center w-1/6">Legacy System</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Elite Suite</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground px-2">
-                    <span className="flex items-center gap-1.5">
-                      <ShieldCheck size={14} className="text-gold" />
-                      All core designs include speed and performance guarantees.
-                    </span>
-                    <Link href="/book" className="text-gold hover:underline">
-                      Request custom specs
-                    </Link>
+                      </thead>
+                      <tbody>
+                        {comparisonCategories.map((cat, idx) => (
+                          <tr key={idx} className="contents">
+                            <tr className="bg-gold/5">
+                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-gold tracking-widest sticky left-0 bg-[#050505] z-10">
+                                {cat.category}
+                              </td>
+                            </tr>
+                            {cat.items.map((item, itemIdx) => (
+                              <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
+                                <td className="py-4 px-4 text-sm font-medium text-foreground sticky left-0 bg-[#050505] z-10 border-r border-gold/10">{item.name}</td>
+                                <td className="py-4 text-sm text-muted-foreground text-center">{item.launch}</td>
+                                <td className="py-4 text-sm text-gold font-semibold text-center">{item.legacy}</td>
+                                <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
+                              </tr>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div className="mt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 px-2">
+                      <span className="flex items-center gap-1.5">
+                        <ShieldCheck size={14} className="text-gold" />
+                        All core designs include speed and performance guarantees.
+                      </span>
+                      <Link href="/book" className="text-gold hover:underline">
+                        Request custom specs
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </motion.div>

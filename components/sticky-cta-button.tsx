@@ -29,8 +29,9 @@ export function StickyCTAButton() {
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="fixed bottom-6 right-6 z-50 md:bottom-10 md:right-10"
+          className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-50 md:bottom-10 md:right-10"
         >
           <Link href="/book" className="group flex items-center">
             <div className="flex items-center gap-3 bg-secondary/90 backdrop-blur-md border border-gold/40 hover:border-gold p-2 md:p-3 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_30px_rgba(255,215,0,0.3)] transition-all duration-300 overflow-hidden relative">

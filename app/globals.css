@@ -166,3 +166,72 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Responsive, accessibility & touch improvements */
+
+/* Disable or simplify animations if prefers-reduced-motion is enabled */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* Eliminate 300ms tap delay and tap highlights on iOS/touch devices */
+a,
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom styles for range slider hit targets (min 44px hit box via transparent border) */
+input[type="range"] {
+  touch-action: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #D4AF37;
+  border: 12px solid transparent;
+  background-clip: padding-box;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  background-color: #F5D76E;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #D4AF37;
+  border: 12px solid transparent;
+  background-clip: padding-box;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  background-color: #F5D76E;
+}
+
+input[type="range"]::-moz-range-thumb:active {
+  transform: scale(0.95);
+}
