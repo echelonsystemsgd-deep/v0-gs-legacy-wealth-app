@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSearchParams } from "next/navigation"
+import Script from "next/script"
 import { Button } from "@/components/ui/button"
 import {
   ArrowRight,
@@ -173,6 +174,31 @@ function BookingFlowInner() {
     a2: formData.selectedTier,
   })
   const calendlyUrl = `${calendlyBase}?${calendlyParams.toString()}`
+
+  // Re-init the Calendly inline widget whenever step 2 is shown
+  const calendlyContainerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (step !== 2) return
+    // Give the DOM a tick to paint the container, then init
+    const timer = setTimeout(() => {
+      if (
+        typeof window !== "undefined" &&
+        (window as any).Calendly &&
+        calendlyContainerRef.current
+      ) {
+        ;(window as any).Calendly.initInlineWidget({
+          url: calendlyUrl,
+          parentElement: calendlyContainerRef.current,
+          prefill: {
+            name: formData.fullName,
+            email: formData.email,
+          },
+        })
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step])
 
   // -------------------------------------------------------------------
   // Render
@@ -463,19 +489,37 @@ function BookingFlowInner() {
               )}
             </div>
 
-            {/* Calendly iframe */}
+            {/* Calendly JS widget — official embed method */}
+            <Script
+              src="https://assets.calendly.com/assets/external/widget.js"
+              strategy="lazyOnload"
+              onLoad={() => {
+                if (
+                  typeof window !== "undefined" &&
+                  (window as any).Calendly &&
+                  calendlyContainerRef.current
+                ) {
+                  ;(window as any).Calendly.initInlineWidget({
+                    url: calendlyUrl,
+                    parentElement: calendlyContainerRef.current,
+                    prefill: {
+                      name: formData.fullName,
+                      email: formData.email,
+                    },
+                  })
+                }
+              }}
+            />
             <div className="relative rounded-2xl overflow-hidden border border-gold/20 bg-[#050505] shadow-2xl">
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
                 <Loader2 size={24} className="text-gold/40 animate-spin" />
               </div>
-              <iframe
-                src={calendlyUrl}
-                width="100%"
-                height="700"
-                frameBorder="0"
-                title="Schedule a Strategy Call"
-                className="relative z-10"
-                style={{ minHeight: "700px" }}
+              {/* The Calendly widget renders into this div */}
+              <div
+                ref={calendlyContainerRef}
+                className="calendly-inline-widget relative z-10"
+                data-url={calendlyUrl}
+                style={{ minWidth: "320px", height: "700px" }}
               />
             </div>
 
