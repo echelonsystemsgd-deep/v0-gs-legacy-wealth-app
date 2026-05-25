@@ -14,7 +14,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/company/gslegacywealth",
+    href: "https://www.linkedin.com/in/gs-legacy-wealth",
     iconName: "Linkedin",
     ariaLabel: "Connect with GS Legacy Wealth on LinkedIn",
   },
