@@ -160,7 +160,7 @@ function BookingFlowInner() {
   // -------------------------------------------------------------------
   // Build Calendly URL with pre-fill and custom styling
   // -------------------------------------------------------------------
-  const calendlyBase = "https://calendly.com/gs-legacy/strategy"
+  const calendlyBase = "https://calendly.com/gslegacywealth/30min"
   const calendlyParams = new URLSearchParams({
     background_color: "050505",
     text_color: "F5F5F5",
