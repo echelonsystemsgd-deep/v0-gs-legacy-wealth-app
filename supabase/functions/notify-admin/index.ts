@@ -1,0 +1,110 @@
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  try {
+    const payload = await req.json()
+    const { table, type, record } = payload
+
+    if (!record) {
+      return new Response(JSON.stringify({ error: 'Missing record' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    const discordWebhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL')
+    const slackWebhookUrl = Deno.env.get('SLACK_WEBHOOK_URL')
+
+    if (!discordWebhookUrl && !slackWebhookUrl) {
+      console.log('Notification skipped: Neither DISCORD_WEBHOOK_URL nor SLACK_WEBHOOK_URL environment variable is set.')
+      return new Response(JSON.stringify({ success: true, message: 'No webhook endpoints configured' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    let message = ''
+    let embeds = []
+
+    if (table === 'leads' && type === 'INSERT') {
+      message = `✨ **New Inbound Lead Received!**`
+      embeds = [
+        {
+          title: `Project Inquiry Application: ${record.name}`,
+          color: 13938487, // Gold #D4AF37
+          fields: [
+            { name: 'Business Name', value: record.business_name || '—', inline: true },
+            { name: 'Email Address', value: record.email || '—', inline: true },
+            { name: 'Service Interested', value: record.service_interested || '—', inline: false },
+            { name: 'Source', value: record.source || 'website', inline: true },
+            { name: 'Website', value: record.website || '—', inline: true },
+            { name: 'Message Notes', value: record.notes || 'No message provided', inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
+    } else if (table === 'strategy_sessions' && type === 'INSERT') {
+      message = `📅 **New Strategy Session Booked!**`
+      embeds = [
+        {
+          title: `Calendly Schedule Confirmed`,
+          color: 44256, // Green #00AC40
+          fields: [
+            { name: 'Scheduled Date', value: new Date(record.scheduled_at).toLocaleString(), inline: false },
+            { name: 'Status', value: record.status || 'Scheduled', inline: true },
+            { name: 'Event reference', value: record.calendly_event_id || '—', inline: true },
+            { name: 'Notes', value: record.notes || '—', inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
+    } else {
+      // Catch-all system fallback
+      message = `🔔 DB Trigger Event: ${type} on table "${table}"`
+    }
+
+    // 1. Send Discord alert if configured
+    if (discordWebhookUrl) {
+      const response = await fetch(discordWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: message,
+          embeds: embeds.length > 0 ? embeds : undefined
+        })
+      })
+      if (!response.ok) {
+        console.error(`Discord response error: ${response.status} ${await response.text()}`)
+      }
+    }
+
+    // 2. Send Slack alert if configured
+    if (slackWebhookUrl) {
+      const response = await fetch(slackWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: `${message}\n${embeds.map(e => `*${e.title}*\n${e.fields.map(f => `> *${f.name}*: ${f.value}`).join('\n')}`).join('\n')}`
+        })
+      })
+      if (!response.ok) {
+        console.error(`Slack response error: ${response.status} ${await response.text()}`)
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500,
+    })
+  }
+})
