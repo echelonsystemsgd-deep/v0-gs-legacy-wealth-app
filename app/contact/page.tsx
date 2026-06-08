@@ -7,14 +7,6 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, Phone, MapPin, Send, Loader2, Sparkles, CheckCircle2 } from 'lucide-react'
 
-const SERVICES = [
-  'Premium Business Website',
-  'AI Chatbot & Automation',
-  'Lead Generation System',
-  'Branding & Digital Presence',
-  'Website Redesign & Optimization'
-]
-
 export default function ContactPage() {
   const router = useRouter()
   const supabase = createClient()
@@ -22,10 +14,9 @@ export default function ContactPage() {
     name: '',
     business_name: '',
     email: '',
-    phone: '',
     website: '',
-    service_interested: 'Premium Business Website',
-    notes: ''
+    biggest_challenge: '',
+    preferred_contact_time: ''
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -33,6 +24,14 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!form.biggest_challenge) {
+      setErrorMsg('Please select your biggest challenge.')
+      return
+    }
+    if (!form.preferred_contact_time) {
+      setErrorMsg('Please select a preferred contact time.')
+      return
+    }
     setLoading(true)
     setErrorMsg(null)
 
@@ -40,10 +39,8 @@ export default function ContactPage() {
       name: form.name,
       business_name: form.business_name,
       email: form.email,
-      phone: form.phone || null,
       website: form.website || null,
-      service_interested: form.service_interested,
-      notes: form.notes || null,
+      notes: `Challenge: ${form.biggest_challenge} | Preferred time: ${form.preferred_contact_time}`,
       source: 'contact',
       status: 'New'
     })
@@ -149,27 +146,15 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Work Email *</label>
-                    <input
-                      required
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Phone Number</label>
-                    <input
-                      type="tel"
-                      value={form.phone}
-                      onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
-                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
-                    />
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Work Email *</label>
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -185,26 +170,43 @@ export default function ContactPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Service Required</label>
+                    <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Biggest Challenge *</label>
                     <select
-                      value={form.service_interested}
-                      onChange={(e) => setForm((p) => ({ ...p, service_interested: e.target.value }))}
+                      required
+                      value={form.biggest_challenge}
+                      onChange={(e) => setForm((p) => ({ ...p, biggest_challenge: e.target.value }))}
                       className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
                     >
-                      {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+                      <option value="" disabled>Select your biggest challenge</option>
+                      <option value="No website yet">No website yet</option>
+                      <option value="Outdated website">Outdated website</option>
+                      <option value="Not getting leads">Not getting leads</option>
+                      <option value="Want to modernise / add AI features">Want to modernise / add AI features</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Project Details & Objectives</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell us about your brand's goals, timeline, and dynamic requirements..."
-                    value={form.notes}
-                    onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
-                  />
+                <div className="space-y-2">
+                  <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Preferred Contact Time *</label>
+                  <div className="inline-flex w-full items-center bg-background/60 border border-gold/15 rounded-xl p-1 gap-1">
+                    {(['Morning', 'Afternoon', 'Evening'] as const).map((time) => {
+                      const selected = form.preferred_contact_time === time
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => setForm((p) => ({ ...p, preferred_contact_time: time }))}
+                          className={`flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 active:scale-95 touch-manipulation ${
+                            selected
+                              ? 'bg-gradient-to-r from-gold to-gold-light text-background shadow-sm font-bold'
+                              : 'text-muted-foreground hover:text-foreground'
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="pt-2">
@@ -216,6 +218,9 @@ export default function ContactPage() {
                     {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                     Submit Application
                   </button>
+                  <p className="text-center text-xs text-muted-foreground mt-3">
+                    No commitment. We&apos;ll review your business and give you honest feedback in 20 minutes — completely free.
+                  </p>
                 </div>
               </form>
             )}

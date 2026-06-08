@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useSearchParams } from "next/navigation"
 import Script from "next/script"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,125 +13,44 @@ import {
   CheckCircle2,
   ChevronRight,
   Loader2,
-  Sparkles,
-  Crown,
-  Zap,
-  Settings,
-  RefreshCw,
+  Clock,
 } from "lucide-react"
 
 // -------------------------------------------------------------------
 // Types
 // -------------------------------------------------------------------
-type Tier = "Launch" | "Legacy" | "Elite" | "Custom"
-type BillingType = "one-time" | "monthly"
-type Obstacle = "Design Upgrade" | "Automation Systems" | "Full Brand Takeover" | "Other"
+type Challenge = "No website yet" | "Outdated website" | "Not getting leads" | "Want to modernise / add AI features"
+type ContactTime = "Morning" | "Afternoon" | "Evening"
 
 interface FormData {
   fullName: string
   email: string
   websiteUrl: string
   companyName: string
-  selectedTier: Tier | ""
-  billingType: BillingType
-  topObstacle: Obstacle | ""
+  biggestChallenge: Challenge | ""
+  preferredContactTime: ContactTime | ""
 }
 
-// -------------------------------------------------------------------
-// Tier option config — prices differ by billing type
-// -------------------------------------------------------------------
-const tierMeta: Record<
-  Tier,
+const challengeOptions: { value: Challenge; label: string; description: string }[] = [
   {
-    icon: React.ReactNode
-    oneTime: { price: string; interval: string; planName: string; description: string }
-    monthly: { price: string; interval: string; planName: string; description: string }
-  }
-> = {
-  Launch: {
-    icon: <Zap size={16} />,
-    oneTime: {
-      price: "£1,500",
-      interval: "one-time investment",
-      planName: "Launch Setup",
-      description: "Premium 3-page digital presence",
-    },
-    monthly: {
-      price: "£499",
-      interval: "billed monthly",
-      planName: "Ascent Retainer",
-      description: "Hosting, weekly audits & priority dev hours",
-    },
-  },
-  Legacy: {
-    icon: <Crown size={16} />,
-    oneTime: {
-      price: "£3,500",
-      interval: "one-time investment",
-      planName: "Legacy System",
-      description: "AI-powered full system build",
-    },
-    monthly: {
-      price: "£1,299",
-      interval: "billed monthly",
-      planName: "Sovereign Retainer",
-      description: "Growth campaigns, AI tuning & SEO strategy",
-    },
-  },
-  Elite: {
-    icon: <Sparkles size={16} />,
-    oneTime: {
-      price: "£7,000",
-      interval: "one-time investment",
-      planName: "Elite Suite",
-      description: "Complete brand & automation takeover",
-    },
-    monthly: {
-      price: "£2,999",
-      interval: "billed monthly",
-      planName: "Apex Retainer",
-      description: "Full fractional tech & marketing team",
-    },
-  },
-  Custom: {
-    icon: <Settings size={16} />,
-    oneTime: {
-      price: "Let's Talk",
-      interval: "bespoke project",
-      planName: "Custom Build",
-      description: "Enterprise or bespoke requirements",
-    },
-    monthly: {
-      price: "Let's Talk",
-      interval: "bespoke retainer",
-      planName: "Custom Retainer",
-      description: "Ongoing enterprise partnership",
-    },
-  },
-}
-
-const tierKeys: Tier[] = ["Launch", "Legacy", "Elite", "Custom"]
-
-const obstacleOptions: { value: Obstacle; label: string; description: string }[] = [
-  {
-    value: "Design Upgrade",
-    label: "Design Upgrade",
-    description: "My brand looks outdated and doesn't convert",
+    value: "No website yet",
+    label: "No website yet",
+    description: "I need a brand new website built from scratch",
   },
   {
-    value: "Automation Systems",
-    label: "Automation Systems",
-    description: "I need AI workflows to save time & capture leads",
+    value: "Outdated website",
+    label: "Outdated website",
+    description: "My design and copy need a premium modern update",
   },
   {
-    value: "Full Brand Takeover",
-    label: "Full Brand Takeover",
-    description: "I need a complete identity & digital overhaul",
+    value: "Not getting leads",
+    label: "Not getting leads",
+    description: "My site exists but isn't converting traffic into clients",
   },
   {
-    value: "Other",
-    label: "Something Else",
-    description: "I have a unique challenge to discuss",
+    value: "Want to modernise / add AI features",
+    label: "Add AI & automation",
+    description: "I want to integrate AI chatbots, calendars or CRM automation",
   },
 ]
 
@@ -148,8 +66,8 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
     errors.email = "Please enter a valid email address."
   }
   if (!data.companyName.trim()) errors.companyName = "Company / brand name is required."
-  if (!data.selectedTier) errors.selectedTier = "Please select an investment tier."
-  if (!data.topObstacle) errors.topObstacle = "Please select your primary objective."
+  if (!data.biggestChallenge) errors.biggestChallenge = "Please select your biggest challenge."
+  if (!data.preferredContactTime) errors.preferredContactTime = "Please select your preferred contact time."
   return errors
 }
 
@@ -157,9 +75,6 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
 // Inner component (uses useSearchParams — must be inside Suspense)
 // -------------------------------------------------------------------
 function BookingFlowInner() {
-  const searchParams = useSearchParams()
-  const tierParam = searchParams.get("tier") as Tier | null
-
   const [step, setStep] = useState<1 | 2>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
@@ -170,17 +85,9 @@ function BookingFlowInner() {
     email: "",
     websiteUrl: "",
     companyName: "",
-    selectedTier: tierParam && ["Launch", "Legacy", "Elite", "Custom"].includes(tierParam) ? tierParam : "",
-    billingType: "one-time",
-    topObstacle: "",
+    biggestChallenge: "",
+    preferredContactTime: "",
   })
-
-  // Sync tier from URL when it changes
-  useEffect(() => {
-    if (tierParam && ["Launch", "Legacy", "Elite", "Custom"].includes(tierParam)) {
-      setFormData((prev) => ({ ...prev, selectedTier: tierParam }))
-    }
-  }, [tierParam])
 
   const updateField = <K extends keyof FormData>(key: K, value: FormData[K]) => {
     setFormData((prev) => ({ ...prev, [key]: value }))
@@ -208,10 +115,6 @@ function BookingFlowInner() {
   // Build Calendly URL with pre-fill and custom styling
   // -------------------------------------------------------------------
   const calendlyBase = "https://calendly.com/gslegacywealth/30min"
-  const activePlan =
-    formData.selectedTier
-      ? tierMeta[formData.selectedTier as Tier][formData.billingType === "monthly" ? "monthly" : "oneTime"].planName
-      : ""
   const calendlyParams = new URLSearchParams({
     background_color: "050505",
     text_color: "F5F5F5",
@@ -221,7 +124,7 @@ function BookingFlowInner() {
     name: formData.fullName,
     email: formData.email,
     a1: formData.websiteUrl,
-    a2: `${formData.selectedTier} – ${activePlan} (${formData.billingType === "monthly" ? "Monthly" : "One-Time"})`,
+    a2: `${formData.biggestChallenge} — Preferred time: ${formData.preferredContactTime}`,
   })
   const calendlyUrl = `${calendlyBase}?${calendlyParams.toString()}`
 
@@ -405,115 +308,18 @@ function BookingFlowInner() {
                 </div>
               </div>
 
-              {/* -- Tier Selection -- */}
-              <div className="glass rounded-2xl p-6 border border-gold/15 space-y-5">
-                {/* Header row: label + billing toggle */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <p className="text-xs uppercase tracking-widest text-gold font-bold">Investment Tier</p>
-
-                  {/* Billing frequency pill toggle */}
-                  <div className="inline-flex items-center self-start sm:self-auto bg-background/60 border border-gold/15 rounded-full p-1 gap-1">
-                    <button
-                      type="button"
-                      id="billing-one-time"
-                      onClick={() => updateField("billingType", "one-time")}
-                      className={`relative px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
-                        formData.billingType === "one-time"
-                          ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      One-Time
-                    </button>
-                    <button
-                      type="button"
-                      id="billing-monthly"
-                      onClick={() => updateField("billingType", "monthly")}
-                      className={`relative flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
-                        formData.billingType === "monthly"
-                          ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      <RefreshCw size={11} />
-                      Monthly
-                    </button>
-                  </div>
-                </div>
-
-                {/* Billing type context line */}
-                <p className="text-xs text-muted-foreground -mt-1">
-                  {formData.billingType === "one-time"
-                    ? "A single project investment — full build, no ongoing commitment."
-                    : "Ongoing monthly retainer — continuous growth, support & AI optimisation."}
-                </p>
-
-                {/* Tier cards */}
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {tierKeys.map((tierKey) => {
-                    const meta = tierMeta[tierKey]
-                    const billing = formData.billingType === "monthly" ? meta.monthly : meta.oneTime
-                    const selected = formData.selectedTier === tierKey
-                    return (
-                      <button
-                        key={tierKey}
-                        type="button"
-                        id={`tier-${tierKey}`}
-                        onClick={() => updateField("selectedTier", tierKey)}
-                        className={`relative text-left p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-[0.98] touch-manipulation ${
-                          selected
-                            ? "border-gold bg-gold/10"
-                            : "border-gold/15 bg-background/40 hover:border-gold/40 hover:bg-gold/5"
-                        }`}
-                      >
-                        {/* Tier name + price */}
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <span className={`flex items-center gap-1.5 text-sm font-bold font-serif leading-tight ${
-                            selected ? "text-gold" : "text-foreground"
-                          }`}>
-                            {meta.icon} {tierKey}
-                          </span>
-                          <span className="text-xs font-bold text-gold shrink-0">{billing.price}</span>
-                        </div>
-                        {/* Plan name badge */}
-                        <span className={`inline-block text-xxs font-semibold uppercase tracking-wider mb-1.5 px-1.5 py-0.5 rounded ${
-                          selected ? "bg-gold/20 text-gold" : "bg-secondary/60 text-muted-foreground"
-                        }`}>
-                          {billing.planName}
-                        </span>
-                        {/* Description */}
-                        <p className="text-xs text-muted-foreground leading-snug">{billing.description}</p>
-                        {/* Interval */}
-                        <p className={`text-xxs mt-1.5 font-medium ${
-                          selected ? "text-gold/70" : "text-muted-foreground/60"
-                        }`}>{billing.interval}</p>
-                        {selected && (
-                          <motion.div
-                            layoutId="tierSelectedDot"
-                            className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-gold"
-                          />
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
-                {errors.selectedTier && (
-                  <p className="text-xs text-red-400">{errors.selectedTier}</p>
-                )}
-              </div>
-
-              {/* -- Top Obstacle -- */}
+              {/* -- Biggest Challenge -- */}
               <div className="glass rounded-2xl p-6 border border-gold/15 space-y-4">
-                <p className="text-xs uppercase tracking-widest text-gold font-bold">Primary Objective</p>
+                <p className="text-xs uppercase tracking-widest text-gold font-bold">Biggest Challenge</p>
                 <div className="space-y-3">
-                  {obstacleOptions.map((opt) => {
-                    const selected = formData.topObstacle === opt.value
+                  {challengeOptions.map((opt) => {
+                    const selected = formData.biggestChallenge === opt.value
                     return (
                       <button
                         key={opt.value}
                         type="button"
-                        id={`obstacle-${opt.value.replace(/\s+/g, "-")}`}
-                        onClick={() => updateField("topObstacle", opt.value)}
+                        id={`challenge-${opt.value.replace(/\s+/g, "-")}`}
+                        onClick={() => updateField("biggestChallenge", opt.value)}
                         className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold/40 ${
                           selected
                             ? "border-gold bg-gold/10"
@@ -537,8 +343,43 @@ function BookingFlowInner() {
                     )
                   })}
                 </div>
-                {errors.topObstacle && (
-                  <p className="text-xs text-red-400">{errors.topObstacle}</p>
+                {errors.biggestChallenge && (
+                  <p className="text-xs text-red-400">{errors.biggestChallenge}</p>
+                )}
+              </div>
+
+              {/* -- Preferred Contact Time -- */}
+              <div className="glass rounded-2xl p-6 border border-gold/15 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-gold font-bold">Preferred Contact Time</p>
+                    <p className="text-xs text-muted-foreground mt-1">When is the best time to reach you?</p>
+                  </div>
+
+                  {/* 3-pill toggle, full-width on mobile */}
+                  <div className="inline-flex w-full sm:w-auto items-center bg-background/60 border border-gold/15 rounded-full p-1 gap-1">
+                    {(["Morning", "Afternoon", "Evening"] as ContactTime[]).map((time) => {
+                      const selected = formData.preferredContactTime === time
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          id={`contact-time-${time.toLowerCase()}`}
+                          onClick={() => updateField("preferredContactTime", time)}
+                          className={`flex-1 sm:flex-initial text-center px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
+                            selected
+                              ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+                {errors.preferredContactTime && (
+                  <p className="text-xs text-red-400 mt-1">{errors.preferredContactTime}</p>
                 )}
               </div>
 
@@ -564,7 +405,7 @@ function BookingFlowInner() {
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                Your details are captured instantly — even if you close the next page.
+                No commitment. We&apos;ll review your business and give you honest feedback in 20 minutes — completely free.
               </p>
             </form>
           </motion.div>
@@ -597,23 +438,15 @@ function BookingFlowInner() {
 
             {/* Selected Summary */}
             <div className="flex flex-wrap gap-2">
-              {formData.selectedTier && (
+              {formData.biggestChallenge && (
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/25 text-xs font-bold text-gold">
-                  <Crown size={11} />
-                  {tierMeta[formData.selectedTier as Tier][
-                    formData.billingType === "monthly" ? "monthly" : "oneTime"
-                  ].planName}
+                  {formData.biggestChallenge}
                 </span>
               )}
-              {formData.billingType && (
+              {formData.preferredContactTime && (
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/40 border border-gold/15 text-xs font-semibold text-gold">
-                  <RefreshCw size={11} />
-                  {formData.billingType === "monthly" ? "Monthly Retainer" : "One-Time Investment"}
-                </span>
-              )}
-              {formData.topObstacle && (
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/40 border border-border text-xs font-medium text-foreground">
-                  {formData.topObstacle}
+                  <Clock size={11} />
+                  {formData.preferredContactTime}
                 </span>
               )}
             </div>
