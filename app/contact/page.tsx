@@ -15,8 +15,7 @@ export default function ContactPage() {
     business_name: '',
     email: '',
     website: '',
-    biggest_challenge: '',
-    preferred_contact_time: ''
+    biggest_challenge: ''
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -28,10 +27,6 @@ export default function ContactPage() {
       setErrorMsg('Please select your biggest challenge.')
       return
     }
-    if (!form.preferred_contact_time) {
-      setErrorMsg('Please select a preferred contact time.')
-      return
-    }
     setLoading(true)
     setErrorMsg(null)
 
@@ -40,7 +35,7 @@ export default function ContactPage() {
       business_name: form.business_name,
       email: form.email,
       website: form.website || null,
-      notes: `Challenge: ${form.biggest_challenge} | Preferred time: ${form.preferred_contact_time}`,
+      notes: `Challenge: ${form.biggest_challenge}`,
       source: 'contact',
       status: 'New'
     })
@@ -186,28 +181,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Preferred Contact Time *</label>
-                  <div className="inline-flex w-full items-center bg-background/60 border border-gold/15 rounded-xl p-1 gap-1">
-                    {(['Morning', 'Afternoon', 'Evening'] as const).map((time) => {
-                      const selected = form.preferred_contact_time === time
-                      return (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setForm((p) => ({ ...p, preferred_contact_time: time }))}
-                          className={`flex-1 text-center py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 active:scale-95 touch-manipulation ${
-                            selected
-                              ? 'bg-gradient-to-r from-gold to-gold-light text-background shadow-sm font-bold'
-                              : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
+
 
                 <div className="pt-2">
                   <button

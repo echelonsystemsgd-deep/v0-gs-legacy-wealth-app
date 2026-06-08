@@ -13,14 +13,12 @@ import {
   CheckCircle2,
   ChevronRight,
   Loader2,
-  Clock,
 } from "lucide-react"
 
 // -------------------------------------------------------------------
 // Types
 // -------------------------------------------------------------------
 type Challenge = "No website yet" | "Outdated website" | "Not getting leads" | "Want to modernise / add AI features"
-type ContactTime = "Morning" | "Afternoon" | "Evening"
 
 interface FormData {
   fullName: string
@@ -28,7 +26,6 @@ interface FormData {
   websiteUrl: string
   companyName: string
   biggestChallenge: Challenge | ""
-  preferredContactTime: ContactTime | ""
 }
 
 const challengeOptions: { value: Challenge; label: string; description: string }[] = [
@@ -67,7 +64,6 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
   }
   if (!data.companyName.trim()) errors.companyName = "Company / brand name is required."
   if (!data.biggestChallenge) errors.biggestChallenge = "Please select your biggest challenge."
-  if (!data.preferredContactTime) errors.preferredContactTime = "Please select your preferred contact time."
   return errors
 }
 
@@ -86,7 +82,6 @@ function BookingFlowInner() {
     websiteUrl: "",
     companyName: "",
     biggestChallenge: "",
-    preferredContactTime: "",
   })
 
   const updateField = <K extends keyof FormData>(key: K, value: FormData[K]) => {
@@ -124,7 +119,7 @@ function BookingFlowInner() {
     name: formData.fullName,
     email: formData.email,
     a1: formData.websiteUrl,
-    a2: `${formData.biggestChallenge} — Preferred time: ${formData.preferredContactTime}`,
+    a2: formData.biggestChallenge,
   })
   const calendlyUrl = `${calendlyBase}?${calendlyParams.toString()}`
 
@@ -348,40 +343,7 @@ function BookingFlowInner() {
                 )}
               </div>
 
-              {/* -- Preferred Contact Time -- */}
-              <div className="glass rounded-2xl p-6 border border-gold/15 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-widest text-gold font-bold">Preferred Contact Time</p>
-                    <p className="text-xs text-muted-foreground mt-1">When is the best time to reach you?</p>
-                  </div>
 
-                  {/* 3-pill toggle, full-width on mobile */}
-                  <div className="inline-flex w-full sm:w-auto items-center bg-background/60 border border-gold/15 rounded-full p-1 gap-1">
-                    {(["Morning", "Afternoon", "Evening"] as ContactTime[]).map((time) => {
-                      const selected = formData.preferredContactTime === time
-                      return (
-                        <button
-                          key={time}
-                          type="button"
-                          id={`contact-time-${time.toLowerCase()}`}
-                          onClick={() => updateField("preferredContactTime", time)}
-                          className={`flex-1 sm:flex-initial text-center px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/40 active:scale-95 touch-manipulation ${
-                            selected
-                              ? "bg-gradient-to-r from-gold to-gold-light text-background shadow-sm"
-                              : "text-muted-foreground hover:text-foreground"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-                {errors.preferredContactTime && (
-                  <p className="text-xs text-red-400 mt-1">{errors.preferredContactTime}</p>
-                )}
-              </div>
 
               {/* -- Submit -- */}
               <Button
@@ -443,12 +405,7 @@ function BookingFlowInner() {
                   {formData.biggestChallenge}
                 </span>
               )}
-              {formData.preferredContactTime && (
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/40 border border-gold/15 text-xs font-semibold text-gold">
-                  <Clock size={11} />
-                  {formData.preferredContactTime}
-                </span>
-              )}
+
             </div>
 
             {/* Calendly JS widget — official embed method */}

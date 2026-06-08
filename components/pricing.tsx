@@ -106,7 +106,7 @@ const setupTiers = [
       "30 Days Dedicated Post-Launch Support",
       "Elite UI Styling & Smooth Animations",
     ],
-    cta: "Start Your Project",
+    cta: "Book Discovery Session",
     featured: false,
     tag: "Launch"
   },
@@ -123,7 +123,7 @@ const setupTiers = [
       "Advanced Premium SEO Strategy & Copywriting",
       "90 Days Dedicated Post-Launch Support",
     ],
-    cta: "Scale Your Brand",
+    cta: "Book Strategy Session",
     featured: true,
     tag: "Legacy"
   },
@@ -140,7 +140,7 @@ const setupTiers = [
       "Priority VIP Developer Access & Support",
       "Unlimited Fine-Tuning Revisions",
     ],
-    cta: "Request Consultation",
+    cta: "Book Strategy Session",
     featured: false,
     tag: "Elite"
   },
@@ -160,7 +160,7 @@ const retainerTiers = [
       "24/7 Critical System Monitoring",
       "Same-Day Urgent Edits Turnaround",
     ],
-    cta: "Secure Ascent Support",
+    cta: "Book Discovery Session",
     featured: false,
     tag: "Launch"
   },
@@ -177,7 +177,7 @@ const retainerTiers = [
       "Weekly Lead Funnel Optimization",
       "10 Dedicated Developer/Designer Hours/mo",
     ],
-    cta: "Accelerate with Sovereign",
+    cta: "Book Strategy Session",
     featured: true,
     tag: "Legacy"
   },
@@ -194,7 +194,7 @@ const retainerTiers = [
       "Bespoke Cold Email/Marketing System setups",
       "Direct Slack Hotline to Core Founders",
     ],
-    cta: "Partner at Apex Level",
+    cta: "Book Strategy Session",
     featured: false,
     tag: "Elite"
   },
