@@ -1,28 +1,39 @@
 # Sentry Setup Guide
 
-## 1. Create a Sentry Account
-- Go to [Sentry.io](https://sentry.io/signup/) and create an account.
-- Choose **React** (or your specific framework like **Next.js** / **Vite**) as your platform.
+> ✅ **Status: Complete** — Sentry is fully integrated into the GS Legacy Wealth app.
 
-## 2. Get Your DSN
-- Once your project is created in Sentry, navigate to **Settings > Projects > [Your Project] > Client Keys (DSN)**.
-- Copy the **DSN** URL.
+## What Was Set Up
 
-## 3. Add to Environment Variables
-- Add the DSN to your `.env` or `.env.local` file:
-  ```env
-  VITE_SENTRY_DSN=your_dsn_here
-  # or NEXT_PUBLIC_SENTRY_DSN=your_dsn_here
-  ```
+| File | Purpose |
+|---|---|
+| `sentry.client.config.ts` | Initializes Sentry on the browser (client-side) |
+| `sentry.server.config.ts` | Initializes Sentry on the Next.js server |
+| `sentry.edge.config.ts` | Initializes Sentry on the Edge runtime (middleware) |
+| `next.config.mjs` | Wrapped with `withSentryConfig` for source map uploads |
+| `.env` | Contains `NEXT_PUBLIC_SENTRY_DSN` (gitignored) |
 
-## 4. Install the SDK
-- Run the following command in your terminal:
-  ```bash
-  npm install @sentry/react @sentry/tracing
-  # or npx @sentry/wizard@latest -i nextjs
-  ```
+## Environment Variable
 
-## 5. Initialize Sentry
-- Add the initialization code as early as possible in your application's lifecycle (e.g., `main.tsx`, `index.tsx`, or `app.tsx`).
+```env
+# .env (gitignored — do not commit)
+NEXT_PUBLIC_SENTRY_DSN=your_dsn_here
+```
 
-For detailed documentation, visit the [Sentry Docs](https://docs.sentry.io/).
+## Re-setup (if needed on a new machine)
+
+Run the official wizard — it handles everything automatically:
+
+```bash
+npx @sentry/wizard@latest -i nextjs --saas --org gs-legacy-wealth --project gs-legacy-wealth
+```
+
+Then add your DSN to `.env`:
+```env
+NEXT_PUBLIC_SENTRY_DSN=https://<key>@<org>.ingest.de.sentry.io/<project-id>
+```
+
+
+## Useful Links
+
+- [Sentry Dashboard](https://gs-legacy-wealth.sentry.io/)
+- [Sentry Next.js Docs](https://docs.sentry.io/platforms/javascript/guides/nextjs/)
