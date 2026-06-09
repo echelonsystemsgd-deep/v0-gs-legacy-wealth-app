@@ -1,0 +1,23 @@
+allowBuilds:
+  '@sentry/cli': set this to true or false
+  sharp: set this to true or false
+minimumReleaseAgeExclude:
+  - '@sentry-internal/browser-utils@10.57.0'
+  - '@sentry-internal/feedback@10.57.0'
+  - '@sentry-internal/replay-canvas@10.57.0'
+  - '@sentry-internal/replay@10.57.0'
+  - '@sentry-internal/server-utils@10.57.0'
+  - '@sentry/browser@10.57.0'
+  - '@sentry/core@10.57.0'
+  - '@sentry/nextjs@10.57.0'
+  - '@sentry/node-core@10.57.0'
+  - '@sentry/node@10.57.0'
+  - '@sentry/opentelemetry@10.57.0'
+  - '@sentry/react@10.57.0'
+  - '@sentry/vercel-edge@10.57.0'
+  - '@supabase/auth-js@2.108.0'
+  - '@supabase/functions-js@2.108.0'
+  - '@supabase/postgrest-js@2.108.0'
+  - '@supabase/realtime-js@2.108.0'
+  - '@supabase/storage-js@2.108.0'
+  - '@supabase/supabase-js@2.108.0'
