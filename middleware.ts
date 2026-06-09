@@ -25,33 +25,54 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-
   // Refresh session tokens
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
+
+  // Helper to fetch user profile role
+  const getUserProfile = async () => {
+    if (!user) return null
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, is_suspended')
+      .eq('id', user.id)
+      .single()
+    return profile
+  }
 
   // Protect all /admin/* routes
   if (pathname.startsWith('/admin')) {
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url))
     }
-
-    // Check admin role from profiles table
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, is_suspended')
-      .eq('id', user.id)
-      .single()
-
+    const profile = await getUserProfile()
     if (!profile || profile.role !== 'admin' || profile.is_suspended) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      // If a standard user tries to access admin, redirect them to dashboard
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
   }
 
+  // Protect all /dashboard/* routes
+  if (pathname.startsWith('/dashboard')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    const profile = await getUserProfile()
+    if (profile?.is_suspended) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    // Admins can also access dashboard if they want, or we can leave it open for users
+  }
+
   // Redirect logged-in users away from login/auth pages
-  if ((pathname === '/login' || pathname === '/forgot-password') && user) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+  if ((pathname === '/login' || pathname === '/signup' || pathname === '/forgot-password') && user) {
+    const profile = await getUserProfile()
+    if (profile?.role === 'admin') {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    } else {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return supabaseResponse
@@ -60,7 +81,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin/:path*',
+    '/dashboard/:path*',
     '/login',
+    '/signup',
     '/forgot-password',
     '/reset-password',
   ],

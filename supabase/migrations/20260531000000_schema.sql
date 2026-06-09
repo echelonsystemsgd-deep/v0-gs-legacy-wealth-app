@@ -1,32 +1,26 @@
--- ============================================================
--- GS Legacy Wealth AI — Core Database Schema
--- Migration: 20260531000000_schema.sql
--- ============================================================
+-- Enums
+CREATE TYPE user_role AS ENUM ('admin', 'user');
+CREATE TYPE lead_status AS ENUM ('New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost');
+CREATE TYPE project_status AS ENUM ('Discovery', 'Design', 'Development', 'Revision', 'Complete');
+CREATE TYPE booking_status AS ENUM ('Scheduled', 'Canceled', 'No Show', 'Completed');
 
--- -------------------------
--- ENUMS
--- -------------------------
-CREATE TYPE public.user_role AS ENUM ('admin', 'user');
-CREATE TYPE public.lead_status AS ENUM ('New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost');
-CREATE TYPE public.project_status AS ENUM ('Discovery', 'Design', 'Development', 'Revision', 'Complete');
-CREATE TYPE public.booking_status AS ENUM ('Scheduled', 'Canceled', 'No Show', 'Completed');
-
--- -------------------------
--- PROFILES
--- -------------------------
+-- 1. profiles
 CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    full_name TEXT,
-    avatar_url TEXT,
-    role public.user_role DEFAULT 'user'::public.user_role NOT NULL,
+    first_name TEXT,
+    last_name TEXT,
+    phone_number TEXT,
+    address_line1 TEXT,
+    address_line2 TEXT,
+    post_code TEXT,
+    city TEXT,
+    role user_role DEFAULT 'user'::user_role NOT NULL,
     is_suspended BOOLEAN DEFAULT FALSE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- LEADS
--- -------------------------
+-- 2. leads
 CREATE TABLE public.leads (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
@@ -36,23 +30,21 @@ CREATE TABLE public.leads (
     website TEXT,
     service_interested TEXT,
     notes TEXT,
-    status public.lead_status DEFAULT 'New'::public.lead_status NOT NULL,
+    status lead_status DEFAULT 'New'::lead_status NOT NULL,
     source TEXT DEFAULT 'website' NOT NULL,
     is_archived BOOLEAN DEFAULT FALSE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- PROJECTS
--- -------------------------
+-- 3. projects
 CREATE TABLE public.projects (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_name TEXT NOT NULL,
     project_name TEXT NOT NULL,
     description TEXT,
     service_type TEXT,
-    status public.project_status DEFAULT 'Discovery'::public.project_status NOT NULL,
+    status project_status DEFAULT 'Discovery'::project_status NOT NULL,
     start_date DATE,
     target_launch_date DATE,
     notes TEXT,
@@ -61,9 +53,7 @@ CREATE TABLE public.projects (
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- PROJECT ASSETS
--- -------------------------
+-- 4. project_assets
 CREATE TABLE public.project_assets (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE NOT NULL,
@@ -75,9 +65,7 @@ CREATE TABLE public.project_assets (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- PORTFOLIO ITEMS
--- -------------------------
+-- 5. portfolio_items
 CREATE TABLE public.portfolio_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     project_name TEXT NOT NULL,
@@ -93,9 +81,7 @@ CREATE TABLE public.portfolio_items (
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- TESTIMONIALS
--- -------------------------
+-- 6. testimonials
 CREATE TABLE public.testimonials (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_name TEXT NOT NULL,
@@ -108,9 +94,7 @@ CREATE TABLE public.testimonials (
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- WEBSITE CONTENT
--- -------------------------
+-- 7. website_content
 CREATE TABLE public.website_content (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     section_key TEXT UNIQUE NOT NULL,
@@ -119,9 +103,7 @@ CREATE TABLE public.website_content (
     updated_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL
 );
 
--- -------------------------
--- MEDIA ASSETS
--- -------------------------
+-- 8. media_assets
 CREATE TABLE public.media_assets (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     bucket_name TEXT NOT NULL,
@@ -134,24 +116,20 @@ CREATE TABLE public.media_assets (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- STRATEGY SESSIONS
--- -------------------------
+-- 9. strategy_sessions
 CREATE TABLE public.strategy_sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     lead_id UUID REFERENCES public.leads(id) ON DELETE SET NULL,
     calendly_event_id TEXT UNIQUE,
     scheduled_at TIMESTAMPTZ NOT NULL,
-    status public.booking_status DEFAULT 'Scheduled'::public.booking_status NOT NULL,
+    status booking_status DEFAULT 'Scheduled'::booking_status NOT NULL,
     notes TEXT,
     outcomes TEXT,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- LOGIN HISTORY
--- -------------------------
+-- 10. login_history
 CREATE TABLE public.login_history (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
@@ -160,9 +138,7 @@ CREATE TABLE public.login_history (
     logged_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- ACTIVITY LOGS
--- -------------------------
+-- 11. activity_logs
 CREATE TABLE public.activity_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
@@ -173,9 +149,7 @@ CREATE TABLE public.activity_logs (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- -------------------------
--- INDEXES
--- -------------------------
+-- Indexes
 CREATE INDEX idx_leads_status_archived ON public.leads(status, is_archived);
 CREATE INDEX idx_leads_email ON public.leads(email);
 CREATE INDEX idx_projects_status_archived ON public.projects(status, is_archived);
@@ -184,30 +158,7 @@ CREATE INDEX idx_testimonials_featured_archived ON public.testimonials(is_featur
 CREATE INDEX idx_strategy_sessions_date ON public.strategy_sessions(scheduled_at);
 CREATE INDEX idx_activity_logs_user ON public.activity_logs(user_id, created_at DESC);
 
--- -------------------------
--- TRIGGERS
--- -------------------------
-
--- Auto-create profile on user registration
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO public.profiles (id, full_name, avatar_url, role)
-    VALUES (
-        new.id,
-        new.raw_user_meta_data->>'full_name',
-        new.raw_user_meta_data->>'avatar_url',
-        'user'::public.user_role
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-    AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- Auto-update updated_at timestamp
+-- Automatic Date Updater Trigger Function
 CREATE OR REPLACE FUNCTION public.set_current_timestamp_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -216,15 +167,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_profiles_updated_at BEFORE UPDATE ON public.profiles
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-CREATE TRIGGER set_leads_updated_at BEFORE UPDATE ON public.leads
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-CREATE TRIGGER set_projects_updated_at BEFORE UPDATE ON public.projects
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-CREATE TRIGGER set_portfolio_updated_at BEFORE UPDATE ON public.portfolio_items
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-CREATE TRIGGER set_testimonials_updated_at BEFORE UPDATE ON public.testimonials
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
-CREATE TRIGGER set_sessions_updated_at BEFORE UPDATE ON public.strategy_sessions
-    FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+-- Apply Date Updater Trigger to Tables
+CREATE TRIGGER on_profiles_updated BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_leads_updated BEFORE UPDATE ON public.leads FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_projects_updated BEFORE UPDATE ON public.projects FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_portfolio_items_updated BEFORE UPDATE ON public.portfolio_items FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_testimonials_updated BEFORE UPDATE ON public.testimonials FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_website_content_updated BEFORE UPDATE ON public.website_content FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+CREATE TRIGGER on_strategy_sessions_updated BEFORE UPDATE ON public.strategy_sessions FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+
+-- Automatic User Profile Generator (Triggered on Auth User Create)
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (
+        id,
+        first_name,
+        last_name,
+        role
+    )
+    VALUES (
+        new.id,
+        new.raw_user_meta_data->>'first_name',
+        new.raw_user_meta_data->>'last_name',
+        'user'::user_role -- Default role
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
