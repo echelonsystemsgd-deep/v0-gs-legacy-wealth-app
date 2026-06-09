@@ -33,7 +33,12 @@ When creating a new issue, use `github-mcp-server/issue_write` with `method: "cr
   - `refactor: <summary>` for non-breaking code structure changes
   - `docs: <summary>` for documentation updates
   - `chore: <summary>` for dependency updates or configuration changes
-* **Labels**: Apply relevant labels: `["feature"]`, `["bug"]`, `["refactor"]`, `["documentation"]`, `["enhancement"]`.
+* **Labels**: Apply these standard labels when creating issues:
+  - `enhancement` (New features or improvements)
+  - `bug` (Errors or broken functionality)
+  - `documentation` (Changes to README, guides, or code comments)
+  - `refactor` (Code cleanup without logic change)
+  - `urgent` (Blocks critical workflows)
 * **Assignees**: Assign the issue to the current logged-in username (returned by `get_me`).
 * **Issue Body Template**: Use the standard template below to format the description.
 
