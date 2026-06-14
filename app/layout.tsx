@@ -20,8 +20,46 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+  title: {
+    default: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+    template: '%s | GS Legacy Wealth AI'
+  },
   description: 'We engineer digital assets that create authority, automate growth, and generate revenue. Premium AI-powered websites for ambitious businesses.',
+  applicationName: 'GS Legacy Wealth',
+  keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
+  authors: [{ name: 'GS Legacy Wealth' }],
+  creator: 'GS Legacy Wealth AI',
+  publisher: 'GS Legacy Wealth AI',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+    description: 'Premium AI-powered websites for ambitious businesses. We engineer digital assets that create authority and generate revenue.',
+    url: 'https://gslegacywealth.com',
+    siteName: 'GS Legacy Wealth AI',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+    description: 'Premium AI-powered websites for ambitious businesses.',
+    creator: '@gslegacywealth',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   generator: 'v0.app',
   icons: {
     icon: [
