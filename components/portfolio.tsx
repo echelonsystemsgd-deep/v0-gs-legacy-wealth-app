@@ -4,13 +4,15 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Crown } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 const portfolioItems = [
   {
     title: "Stamp Valuation App",
     category: "Web Application",
     gradient: "from-blue-500/20 to-cyan-500/20",
-    href: "/stamp-app",
+    href: "https://v0-stamp-valuation-app.vercel.app",
+    image: "/stamp-app-preview.png",
   },
   {
     title: "Elite Fitness Studio",
@@ -90,25 +92,50 @@ export function Portfolio({ limit }: { limit?: number }) {
               </div>
 
               <div className={`aspect-[16/10] bg-gradient-to-br ${item.gradient} relative z-10`}>
-                {/* Mockup Content */}
-                <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                      <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                      <div className="w-2 h-2 rounded-full bg-green-500/50" />
+                {item.image ? (
+                  /* Real Screenshot Preview */
+                  <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 rounded-full bg-red-500/70" />
+                        <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
+                        <div className="w-2 h-2 rounded-full bg-green-500/70" />
+                      </div>
+                      <div className="flex-1 mx-2 h-4 bg-white/10 rounded-full text-[8px] text-white/40 flex items-center px-2 truncate">
+                        v0-stamp-valuation-app.vercel.app
+                      </div>
+                    </div>
+                    <div className="relative w-full" style={{height: 'calc(100% - 28px)'}}>
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
                     </div>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-gold/20 rounded w-2/3" />
-                    <div className="h-3 bg-secondary rounded w-full" />
-                    <div className="h-3 bg-secondary rounded w-4/5" />
-                    <div className="grid grid-cols-2 gap-2 pt-2">
-                      <div className="h-12 bg-secondary rounded-lg" />
-                      <div className="h-12 bg-secondary rounded-lg" />
+                ) : (
+                  /* Generic Wireframe Mockup */
+                  <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 rounded-full bg-red-500/50" />
+                        <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
+                        <div className="w-2 h-2 rounded-full bg-green-500/50" />
+                      </div>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      <div className="h-4 bg-gold/20 rounded w-2/3" />
+                      <div className="h-3 bg-secondary rounded w-full" />
+                      <div className="h-3 bg-secondary rounded w-4/5" />
+                      <div className="grid grid-cols-2 gap-2 pt-2">
+                        <div className="h-12 bg-secondary rounded-lg" />
+                        <div className="h-12 bg-secondary rounded-lg" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
@@ -124,8 +151,8 @@ export function Portfolio({ limit }: { limit?: number }) {
                   </div>
                   {item.href ? (
                     <Button asChild size="sm" variant="outline" className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation">
-                      <Link href={item.href} target="_blank">
-                        <span className="text-xs">View App</span>
+                      <Link href={item.href} target="_blank" rel="noopener noreferrer">
+                        <span className="text-xs">{item.image ? 'Visit Live Site' : 'View Case Study'}</span>
                       </Link>
                     </Button>
                   ) : (
@@ -144,8 +171,8 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </h3>
                 {item.href ? (
                   <Button asChild size="sm" variant="outline" className="h-8 rounded-full w-full border-gold/30 touch-manipulation">
-                    <Link href={item.href} target="_blank">
-                      <span className="text-xs">View App</span>
+                    <Link href={item.href} target="_blank" rel="noopener noreferrer">
+                      <span className="text-xs">{item.image ? 'Visit Live Site' : 'View Case Study'}</span>
                     </Link>
                   </Button>
                 ) : (
