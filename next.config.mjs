@@ -8,14 +8,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/stamp-app/:path*',
-        destination: 'https://v0-stamp-valuation-app.vercel.app/:path*',
-      },
-    ]
-  },
 }
 
 export default withSentryConfig(nextConfig, {
