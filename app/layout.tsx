@@ -69,6 +69,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  icons: {
+    icon: '/GS_Legacy_Wealth-removebg-preview.png?v=2',
+    shortcut: '/GS_Legacy_Wealth-removebg-preview.png?v=2',
+    apple: '/GS_Legacy_Wealth-removebg-preview.png?v=2',
+  },
 }
 
 export const viewport = {
