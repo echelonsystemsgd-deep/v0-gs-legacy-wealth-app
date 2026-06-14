@@ -40,6 +40,14 @@ export const metadata: Metadata = {
     description: 'Premium AI-powered websites for ambitious businesses. We engineer digital assets that create authority and generate revenue.',
     url: 'https://gslegacywealth.com',
     siteName: 'GS Legacy Wealth AI',
+    images: [
+      {
+        url: '/GS Legacy Wealth.png',
+        width: 1200,
+        height: 630,
+        alt: 'GS Legacy Wealth AI Website Preview',
+      },
+    ],
     locale: 'en_US',
     type: 'website',
   },
@@ -47,6 +55,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
     description: 'Premium AI-powered websites for ambitious businesses.',
+    images: ['/GS Legacy Wealth.png'],
     creator: '@gslegacywealth',
   },
   robots: {
@@ -60,23 +69,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/GS_Legacy_Wealth-removebg-preview.png',
+    shortcut: '/GS_Legacy_Wealth-removebg-preview.png',
+    apple: '/GS_Legacy_Wealth-removebg-preview.png',
   },
 }
 
