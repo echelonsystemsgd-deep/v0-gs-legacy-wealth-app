@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Script from "next/script"
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/client"
 import {
   ArrowRight,
   User,
@@ -71,6 +72,7 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
 // Inner component (uses useSearchParams — must be inside Suspense)
 // -------------------------------------------------------------------
 function BookingFlowInner() {
+  const supabase = createClient()
   const [step, setStep] = useState<1 | 2>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
@@ -99,8 +101,26 @@ function BookingFlowInner() {
     }
 
     setIsSubmitting(true)
-    // Simulate async lead capture (webhook / email would fire here)
-    await new Promise((res) => setTimeout(res, 900))
+
+    // Save lead to Supabase before advancing to Calendly
+    try {
+      await supabase.from('leads').upsert(
+        {
+          name: formData.fullName,
+          email: formData.email,
+          business_name: formData.companyName,
+          website: formData.websiteUrl || null,
+          notes: formData.biggestChallenge,
+          status: 'New',
+          source: 'booking_form',
+        },
+        { onConflict: 'email', ignoreDuplicates: false }
+      )
+    } catch {
+      // Non-blocking — if Supabase fails we still advance so the user can book
+      console.warn('Lead save failed; proceeding to Calendly anyway.')
+    }
+
     setIsSubmitting(false)
     setStep(2)
     window.scrollTo({ top: 0, behavior: "smooth" })
