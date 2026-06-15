@@ -1,21 +1,27 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Cormorant_Garamond, Outfit, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import { CustomCursor } from '@/components/custom-cursor'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 
-const playfair = Playfair_Display({ 
+const cormorant = Cormorant_Garamond({ 
   subsets: ["latin"],
-  variable: '--font-playfair',
+  variable: '--font-cormorant',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+});
+
+const outfit = Outfit({ 
+  subsets: ["latin"],
+  variable: '--font-outfit',
   display: 'swap',
 });
 
-const inter = Inter({ 
+const geistMono = Geist_Mono({ 
   subsets: ["latin"],
-  variable: '--font-inter',
+  variable: '--font-geist-mono',
   display: 'swap',
 });
 
@@ -88,12 +94,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} bg-background`}>
+    <html lang="en" className={`${cormorant.variable} ${outfit.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         <Watermark position="center" opacity={0.06} />
         <TabRetention />
-        <CustomCursor />
         <StickyCTAButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
