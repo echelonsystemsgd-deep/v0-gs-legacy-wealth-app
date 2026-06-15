@@ -20,25 +20,25 @@ const portfolioItems = [
     title: "Elite Fitness Studio",
     category: "Gym Website",
     gradient: "from-amber-500/20 to-orange-500/20",
-    underConstruction: false,
+    underConstruction: true,
   },
   {
     title: "Prestige Properties",
     category: "Estate Agent Website",
     gradient: "from-emerald-500/20 to-teal-500/20",
-    underConstruction: false,
+    underConstruction: true,
   },
   {
     title: "Strategic Growth Co.",
     category: "Consultant Landing Page",
     gradient: "from-blue-500/20 to-indigo-500/20",
-    underConstruction: false,
+    underConstruction: true,
   },
   {
     title: "AutoFlow Systems",
     category: "AI Automation Dashboard",
     gradient: "from-purple-500/20 to-pink-500/20",
-    underConstruction: false,
+    underConstruction: true,
   },
 ]
 
@@ -427,8 +427,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                         <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
                       </Button>
                     ) : (
-                      <Button size="sm" variant="outline" className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation">
-                        <span className="text-xs">View Case Study</span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                        onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
+                      >
+                        <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
                       </Button>
                     )}
                   </div>
@@ -450,8 +455,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
                     </Button>
                   ) : (
-                    <Button size="sm" variant="outline" className="h-8 rounded-full w-full border-gold/30 touch-manipulation">
-                      <span className="text-xs">View Case Study</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
+                      onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
+                    >
+                      <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
                     </Button>
                   )}
                 </div>
