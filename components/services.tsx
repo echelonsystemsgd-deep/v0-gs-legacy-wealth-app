@@ -1,55 +1,11 @@
 "use client"
 
-import React, { useRef, useState } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  Globe,
-  Rocket,
-  Bot,
-  Calendar,
-  Palette,
-  RefreshCw,
-  Check,
-} from "lucide-react"
-
-function GlareCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setPosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setOpacity(1)}
-      onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden rounded-xl ${className}`}
-    >
-      <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-10"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255, 215, 0, 0.1), transparent 40%)`,
-        }}
-      />
-      {children}
-    </div>
-  );
-}
 
 const services = [
   {
-    icon: Globe,
     title: "AI-Powered Business Websites",
     description:
       "Stunning websites enhanced with AI features that engage visitors and convert them into clients.",
@@ -61,7 +17,6 @@ const services = [
     ],
   },
   {
-    icon: Rocket,
     title: "High-Converting Landing Pages",
     description:
       "Strategic landing pages designed to capture leads and drive high-ticket sales.",
@@ -73,7 +28,6 @@ const services = [
     ],
   },
   {
-    icon: Bot,
     title: "Automated Lead Generation",
     description:
       "Smart automation that captures, qualifies, and nurtures leads while you sleep.",
@@ -85,7 +39,6 @@ const services = [
     ],
   },
   {
-    icon: Calendar,
     title: "Booking & CRM Automation",
     description:
       "Seamless scheduling and client management systems that save hours every week.",
@@ -97,7 +50,6 @@ const services = [
     ],
   },
   {
-    icon: Palette,
     title: "Branding & Digital Presence",
     description:
       "Cohesive brand identity that positions you as the premium choice in your market.",
@@ -109,7 +61,6 @@ const services = [
     ],
   },
   {
-    icon: RefreshCw,
     title: "Luxury Website Redesigns",
     description:
       "Transform your existing website into a premium digital asset that commands attention.",
@@ -131,8 +82,6 @@ export function Services({ limit }: { limit?: number }) {
     <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl -translate-y-1/2" />
-      <div className="absolute top-1/2 right-0 w-96 h-96 bg-gold/3 rounded-full blur-3xl -translate-y-1/2" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -160,34 +109,31 @@ export function Services({ limit }: { limit?: number }) {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <GlareCard>
-                <Card className="h-full bg-secondary/80 backdrop-blur-sm border-gold/10 hover:border-gold/30 hover:glow-gold transition-all duration-300 group">
-                  <CardContent className="p-5 sm:p-6 lg:p-8 space-y-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-gold-light/10 flex items-center justify-center border border-gold/30 group-hover:border-gold/50 transition-colors">
-                      <service.icon className="w-7 h-7 text-gold" />
-                    </div>
-                    <h3 className="font-serif text-xl font-semibold text-foreground">
+              <Card className="h-full bg-card/60 border border-border hover:border-primary/45 transition-all duration-300">
+                <CardContent className="p-5 sm:p-6 lg:p-8 space-y-4 flex flex-col justify-between h-full">
+                  <div className="space-y-4">
+                    <h3 className="font-serif text-2xl font-bold text-accent">
                       {service.title}
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
                       {service.description}
                     </p>
-                    {!limit && service.deliverables && (
-                      <div className="pt-4 space-y-2 border-t border-gold/10 mt-4">
-                        <p className="text-xs font-bold text-gold uppercase tracking-wider">Includes:</p>
-                        <ul className="space-y-2">
-                          {service.deliverables.map((item, i) => (
-                            <li key={i} className="flex items-center gap-2">
-                              <Check className="w-3 h-3 text-gold shrink-0" />
-                              <span className="text-sm text-muted-foreground">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </GlareCard>
+                  </div>
+                  {!limit && service.deliverables && (
+                    <div className="pt-4 space-y-2 border-t border-border mt-4">
+                      <p className="text-xs font-bold text-accent uppercase tracking-wider">Includes:</p>
+                      <ul className="space-y-2">
+                        {service.deliverables.map((item, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                            <span className="text-sm text-foreground">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
@@ -204,7 +150,6 @@ export function Services({ limit }: { limit?: number }) {
               asChild
               size="lg"
               variant="outline"
-              className="border-gold/30 hover:bg-gold/10"
             >
               <Link href="/services">View All Services</Link>
             </Button>

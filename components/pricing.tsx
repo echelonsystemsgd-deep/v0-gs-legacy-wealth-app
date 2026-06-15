@@ -1,97 +1,12 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Check, Crown, HelpCircle, Calculator, ChevronDown, RefreshCw, Zap, Clock, ShieldCheck } from "lucide-react"
+import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
-// -------------------------------------------------------------
-// Interactive 3D Tilt Card Component
-// -------------------------------------------------------------
-function TiltCard({ children, featured }: { children: React.ReactNode; featured: boolean }) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [isTouchDevice, setIsTouchDevice] = useState(false)
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches)
-    }
-  }, [])
-
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 25 })
-  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 25 })
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"])
-
-  const [glarePosition, setGlarePosition] = useState({ x: 0, y: 0 })
-  const [showGlare, setShowGlare] = useState(false)
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const width = rect.width
-    const height = rect.height
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-
-    const relativeX = mouseX / width - 0.5
-    const relativeY = mouseY / height - 0.5
-
-    x.set(relativeX)
-    y.set(relativeY)
-
-    setGlarePosition({ x: mouseX, y: mouseY })
-  }
-
-  const handleMouseEnter = () => {
-    setShowGlare(true)
-  }
-
-  const handleMouseLeave = () => {
-    setShowGlare(false)
-    x.set(0)
-    y.set(0)
-  }
-
-  return (
-    <motion.div
-      ref={cardRef}
-      onMouseMove={isTouchDevice ? undefined : handleMouseMove}
-      onMouseEnter={isTouchDevice ? undefined : handleMouseEnter}
-      onMouseLeave={isTouchDevice ? undefined : handleMouseLeave}
-      whileHover={isTouchDevice ? { scale: 1.02 } : undefined}
-      style={{
-        rotateX: isTouchDevice ? 0 : rotateX,
-        rotateY: isTouchDevice ? 0 : rotateY,
-        transformStyle: "preserve-3d",
-      }}
-      className={`relative h-full bg-secondary/20 backdrop-blur-md border border-gold/10 hover:border-gold/30 rounded-2xl transition-all duration-300 ${
-        featured ? "border-gold/40 glow-gold md:scale-105 z-10 bg-secondary/40" : ""
-      }`}
-    >
-      {showGlare && (
-        <div
-          className="pointer-events-none absolute inset-0 rounded-2xl z-20"
-          style={{
-            background: `radial-gradient(circle 150px at ${glarePosition.x}px ${glarePosition.y}px, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0) 80%)`,
-          }}
-        />
-      )}
-      <div style={{ transform: "translateZ(10px)" }} className="h-full">
-        {children}
-      </div>
-    </motion.div>
-  )
-}
-
-// -------------------------------------------------------------
-// Pricing Data
-// -------------------------------------------------------------
 const setupTiers = [
   {
     name: "Launch",
@@ -200,9 +115,6 @@ const retainerTiers = [
   },
 ]
 
-// -------------------------------------------------------------
-// Detailed Comparison Data
-// -------------------------------------------------------------
 const comparisonCategories = [
   {
     category: "Core Design & Strategy",
@@ -250,11 +162,10 @@ export function Pricing() {
 
   // Calculators
   const annualHoursSaved = Math.round(manualHours * 0.75 * 52)
-  const timeValue = annualHoursSaved * 75 // £75/hr value
+  const timeValue = annualHoursSaved * 75
   const projectedRevenueGrowth = Math.round(revenue * 0.15 * 12)
   const totalValueUnlocked = timeValue + projectedRevenueGrowth
 
-  // recommended package logic
   const recommendedTier = 
     revenue < 15000 
       ? "Launch" 
@@ -266,29 +177,26 @@ export function Pricing() {
     <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
       {/* Decorative Orbs */}
-      <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
-      <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
+      <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-primary/3 blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-primary/3 blur-[120px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* -------------------------------------------------------------
-            ROI & Automation Value Estimator (Calculator)
-            ------------------------------------------------------------- */}
+        {/* ROI Estimator */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 glass rounded-3xl p-6 sm:p-10 border border-gold/15 glow-gold/10"
+          className="mb-20 glass rounded-3xl p-6 sm:p-10"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
               <Calculator size={20} />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest text-gold font-bold">Interactive Estimator</span>
+              <span className="text-xs uppercase tracking-widest text-accent font-bold">Interactive Estimator</span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Bespoke System Return Calculator</h3>
             </div>
           </div>
@@ -304,7 +212,7 @@ export function Pricing() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Current Monthly Revenue</span>
-                  <span className="text-gold font-bold font-serif text-base">£{revenue.toLocaleString()}</span>
+                  <span className="text-accent font-bold font-serif text-base">£{revenue.toLocaleString()}</span>
                 </div>
                 <input
                   type="range"
@@ -313,9 +221,9 @@ export function Pricing() {
                   step="5000"
                   value={revenue}
                   onChange={(e) => setRevenue(Number(e.target.value))}
-                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-gold focus:outline-none"
+                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
                   style={{
-                    background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${((revenue - 5000) / 95000) * 100}%, #1a1a1a ${((revenue - 5000) / 95000) * 100}%, #1a1a1a 100%)`
+                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((revenue - 5000) / 95000) * 100}%, #1a1a1a ${((revenue - 5000) / 95000) * 100}%, #1a1a1a 100%)`
                   }}
                 />
               </div>
@@ -324,7 +232,7 @@ export function Pricing() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
-                  <span className="text-gold font-bold font-serif text-base">{manualHours} Hours</span>
+                  <span className="text-accent font-bold font-serif text-base">{manualHours} Hours</span>
                 </div>
                 <input
                   type="range"
@@ -333,20 +241,20 @@ export function Pricing() {
                   step="1"
                   value={manualHours}
                   onChange={(e) => setManualHours(Number(e.target.value))}
-                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-gold focus:outline-none"
+                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
                   style={{
-                    background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${((manualHours - 2) / 38) * 100}%, #1a1a1a ${((manualHours - 2) / 38) * 100}%, #1a1a1a 100%)`
+                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((manualHours - 2) / 38) * 100}%, #1a1a1a ${((manualHours - 2) / 38) * 100}%, #1a1a1a 100%)`
                   }}
                 />
               </div>
             </div>
 
             {/* Visual Gauges */}
-            <div className="lg:col-span-5 bg-card/60 rounded-2xl p-6 border border-gold/10 space-y-6">
+            <div className="lg:col-span-5 bg-card/60 rounded-2xl p-6 border border-border space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-background/50 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                    <Clock size={12} className="text-gold" />
+                    <Clock size={12} className="text-accent" />
                     <span>Annual Time Reclaimed</span>
                   </div>
                   <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
@@ -356,7 +264,7 @@ export function Pricing() {
 
                 <div className="p-4 bg-background/50 rounded-xl border border-border">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                    <Zap size={12} className="text-gold" />
+                    <Zap size={12} className="text-accent" />
                     <span>Est. Growth Lift (15%)</span>
                   </div>
                   <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
@@ -365,8 +273,8 @@ export function Pricing() {
                 </div>
               </div>
 
-              <div className="p-5 bg-gradient-to-br from-gold/10 to-transparent rounded-xl border border-gold/20">
-                <div className="text-xs text-gold uppercase tracking-wider font-bold mb-1">Total Est. Annual Value Unlocked</div>
+              <div className="p-5 bg-gradient-to-br from-primary/10 to-transparent rounded-xl border border-primary/20">
+                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1">Total Est. Annual Value Unlocked</div>
                 <div className="text-3xl font-bold font-serif text-gradient-gold">
                   £{totalValueUnlocked.toLocaleString()}
                 </div>
@@ -377,7 +285,7 @@ export function Pricing() {
 
               <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-xl text-xs">
                 <span className="text-muted-foreground">Recommended Alignment:</span>
-                <span className="flex items-center gap-1.5 font-bold text-gold">
+                <span className="flex items-center gap-1.5 font-bold text-accent">
                   <Crown size={12} />
                   {recommendedTier} System Tier
                 </span>
@@ -386,17 +294,15 @@ export function Pricing() {
           </div>
         </motion.div>
 
-        {/* -------------------------------------------------------------
-            Billing Cycle Switcher (Setup vs Retainer)
-            ------------------------------------------------------------- */}
+        {/* Switcher */}
         <div className="text-center mb-12 relative z-10">
-          <p className="text-xs uppercase tracking-widest text-gold font-bold mb-3">Tailored Options</p>
+          <p className="text-xs uppercase tracking-widest text-accent font-bold mb-3">Tailored Options</p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-foreground">Strategic </span>
             <span className="text-gradient-gold">Investment Models</span>
           </h2>
           
-          <div className="inline-flex items-center bg-secondary/60 p-1.5 rounded-full border border-gold/10 relative">
+          <div className="inline-flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
             <button
               onClick={() => setBillingCycle("setup")}
               className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
@@ -408,7 +314,7 @@ export function Pricing() {
               {billingCycle === "setup" && (
                 <motion.div
                   layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gold to-gold-light z-[-1]"
+                  className="absolute inset-0 rounded-full bg-primary z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -425,7 +331,7 @@ export function Pricing() {
               {billingCycle === "retainer" && (
                 <motion.div
                   layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-gold to-gold-light z-[-1]"
+                  className="absolute inset-0 rounded-full bg-primary z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -434,9 +340,7 @@ export function Pricing() {
           </div>
         </div>
 
-        {/* -------------------------------------------------------------
-            Pricing Grid (Framer Motion Animation)
-            ------------------------------------------------------------- */}
+        {/* Pricing Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
           <AnimatePresence mode="wait">
             {activeTiers.map((tier, index) => {
@@ -450,29 +354,33 @@ export function Pricing() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
                 >
-                  <TiltCard featured={tier.featured}>
+                  <div
+                    className={`relative h-full bg-card/60 border border-border hover:border-primary/45 rounded-2xl transition-all duration-300 ${
+                      tier.featured ? "border-primary/50 md:scale-105 z-10 bg-card/85" : ""
+                    }`}
+                  >
                     <CardContent className="p-8 flex flex-col h-full justify-between">
                       <div>
-                        {/* Featured Header */}
+                        {/* Tier Header */}
                         <div className="flex justify-between items-start mb-6">
                           <div>
                             <h3 className="font-serif text-2xl font-bold text-foreground mb-1">
                               {tier.name}
                             </h3>
-                            <p className="text-xxs text-gold font-bold uppercase tracking-wider">
+                            <p className="text-xxs text-accent font-bold uppercase tracking-wider">
                               {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
                             </p>
                           </div>
                           
                           {tier.featured && (
-                            <span className="bg-gradient-to-br from-gold to-gold-light text-primary-foreground px-3 py-1 rounded-full text-xxs font-extrabold flex items-center gap-1 glow-gold">
+                            <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xxs font-extrabold flex items-center gap-1">
                               <Crown size={10} />
                               Most Popular
                             </span>
                           )}
                           
                           {!tier.featured && isRecommended && (
-                            <span className="border border-gold/30 bg-gold/5 text-gold px-3 py-1 rounded-full text-xxs font-bold">
+                            <span className="border border-primary/30 bg-primary/5 text-accent px-3 py-1 rounded-full text-xxs font-bold">
                               Calculated Fit
                             </span>
                           )}
@@ -484,14 +392,14 @@ export function Pricing() {
                         </p>
 
                         {/* Pricing */}
-                        <div className="mb-8 border-y border-gold/10 py-5">
+                        <div className="mb-8 border-y border-border py-5">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-base text-muted-foreground">From</span>
                             <span className="text-4xl sm:text-5xl font-bold font-serif text-foreground tracking-tight">
                               £{tier.price}
                             </span>
                           </div>
-                          <span className="text-xs text-gold uppercase tracking-widest font-semibold block mt-1">
+                          <span className="text-xs text-accent uppercase tracking-widest font-semibold block mt-1">
                             {tier.interval}
                           </span>
                         </div>
@@ -500,12 +408,8 @@ export function Pricing() {
                         <div className="space-y-4 mb-10">
                           {tier.features.map((feature, i) => (
                             <div key={i} className="flex items-start gap-3">
-                              <div className="h-5 w-5 rounded-full bg-gold/10 flex items-center justify-center shrink-0 mt-0.5 border border-gold/25">
-                                {tier.featured || tier.tag === "Elite" ? (
-                                  <Crown size={12} className="text-gold" />
-                                ) : (
-                                  <ShieldCheck size={12} className="text-gold" />
-                                )}
+                              <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 border border-primary/20">
+                                <ShieldCheck size={12} className="text-accent" />
                               </div>
                               <span className="text-sm text-muted-foreground font-medium leading-normal">
                                 {feature}
@@ -522,8 +426,8 @@ export function Pricing() {
                         variant={tier.featured ? "default" : "outline"}
                         className={`w-full group rounded-xl transition-all duration-300 font-bold ${
                           tier.featured
-                            ? "bg-gradient-to-r from-gold to-gold-light hover:scale-102 hover:shadow-[0_4px_20px_rgba(212,175,55,0.4)] text-black font-extrabold tracking-wide"
-                            : "hover:border-gold hover:text-gold"
+                            ? "bg-primary text-primary-foreground font-extrabold tracking-wide hover:bg-primary/95"
+                            : ""
                         }`}
                       >
                         <Link href={`/book?tier=${tier.tag}`}>
@@ -531,21 +435,19 @@ export function Pricing() {
                         </Link>
                       </Button>
                     </CardContent>
-                  </TiltCard>
+                  </div>
                 </motion.div>
               )
             })}
           </AnimatePresence>
         </div>
 
-        {/* -------------------------------------------------------------
-            Expandable Comparison Grid
-            ------------------------------------------------------------- */}
+        {/* Detailed Comparison Grid */}
         <div className="mb-20 relative z-10 max-w-4xl mx-auto">
           <div className="text-center">
             <button
               onClick={() => setIsMatrixOpen(!isMatrixOpen)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-gold/20 bg-secondary/30 text-xs font-bold uppercase tracking-wider text-foreground hover:text-gold hover:border-gold/40 hover:bg-secondary/50 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-primary/20 bg-secondary/30 text-xs font-bold uppercase tracking-wider text-foreground hover:text-accent hover:border-primary/45 hover:bg-secondary/50 transition-all duration-300"
             >
               <span>{isMatrixOpen ? "Hide Detailed Features" : "Compare Features in Detail"}</span>
               <motion.div
@@ -566,29 +468,29 @@ export function Pricing() {
                 className="overflow-hidden mt-8"
               >
                 <div className="relative group">
-                  <div className="glass rounded-2xl p-6 border border-gold/15 overflow-x-auto">
+                  <div className="glass rounded-2xl p-6 overflow-x-auto">
                     <table className="w-full text-left border-collapse min-w-[600px]">
                       <thead>
-                        <tr className="border-b border-gold/15">
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-gold font-bold w-1/3 sticky left-0 bg-[#050505] z-20 border-r border-gold/15">Feature Category</th>
+                        <tr className="border-b border-border">
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent font-bold w-1/3 sticky left-0 bg-[#0A0A0A] z-20 border-r border-border">Feature Category</th>
                           <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Launch Setup</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-gold font-bold text-center w-1/6">Legacy System</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Legacy System</th>
                           <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Elite Suite</th>
                         </tr>
                       </thead>
                       <tbody>
                         {comparisonCategories.map((cat, idx) => (
                           <tr key={idx} className="contents">
-                            <tr className="bg-gold/5">
-                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-gold tracking-widest sticky left-0 bg-[#050505] z-10">
+                            <tr className="bg-primary/5">
+                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-accent tracking-widest sticky left-0 bg-[#0A0A0A] z-10">
                                 {cat.category}
                               </td>
                             </tr>
                             {cat.items.map((item, itemIdx) => (
                               <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
-                                <td className="py-4 px-4 text-sm font-medium text-foreground sticky left-0 bg-[#050505] z-10 border-r border-gold/10">{item.name}</td>
+                                <td className="py-4 px-4 text-sm font-medium text-foreground sticky left-0 bg-[#0A0A0A] z-10 border-r border-border">{item.name}</td>
                                 <td className="py-4 text-sm text-muted-foreground text-center">{item.launch}</td>
-                                <td className="py-4 text-sm text-gold font-semibold text-center">{item.legacy}</td>
+                                <td className="py-4 text-sm text-accent font-semibold text-center">{item.legacy}</td>
                                 <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
                               </tr>
                             ))}
@@ -598,10 +500,10 @@ export function Pricing() {
                     </table>
                     <div className="mt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 px-2">
                       <span className="flex items-center gap-1.5">
-                        <ShieldCheck size={14} className="text-gold" />
+                        <ShieldCheck size={14} className="text-accent" />
                         All core designs include speed and performance guarantees.
                       </span>
-                      <Link href="/book" className="text-gold hover:underline">
+                      <Link href="/book" className="text-accent hover:underline">
                         Request custom specs
                       </Link>
                     </div>
@@ -613,7 +515,7 @@ export function Pricing() {
         </div>
 
         <p className="text-center text-sm text-muted-foreground relative z-10">
-          Looking for a custom enterprise integration? <Link href="/book" className="text-gold hover:underline font-semibold">Start the conversation.</Link>
+          Looking for a custom enterprise integration? <Link href="/book" className="text-accent hover:underline font-semibold">Start the conversation.</Link>
         </p>
       </div>
     </section>

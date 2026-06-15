@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Crown, X, ExternalLink, Loader2, Wrench } from "lucide-react"
+import { ArrowRight, X, ExternalLink, Loader2, Wrench } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -253,7 +253,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-6xl h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-gold/20 shadow-2xl shadow-black/60"
+          className="relative z-10 w-full max-w-6xl h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-primary/20 bg-card shadow-2xl shadow-black/60"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Browser Chrome Bar */}
@@ -271,7 +271,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
 
             {/* Address bar */}
             <div className="flex-1 mx-2 h-7 bg-white/5 border border-white/10 rounded-lg flex items-center px-3 gap-2 min-w-0">
-              <div className="w-3 h-3 shrink-0 text-gold/60">
+              <div className="w-3 h-3 shrink-0 text-accent/60">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
@@ -286,7 +286,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[11px] text-gold/60 hover:text-gold transition-colors shrink-0 px-2 py-1 rounded-md hover:bg-gold/5"
+              className="flex items-center gap-1.5 text-[11px] text-accent/60 hover:text-accent transition-colors shrink-0 px-2 py-1 rounded-md hover:bg-white/5"
             >
               <ExternalLink size={12} />
               <span className="hidden sm:inline">Open in tab</span>
@@ -306,7 +306,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
           <div className="relative flex-1 bg-white">
             {isLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a14] gap-3 z-10">
-                <Loader2 size={28} className="text-gold animate-spin" />
+                <Loader2 size={28} className="text-accent animate-spin" />
                 <p className="text-sm text-muted-foreground">Loading {item.title}...</p>
               </div>
             )}
@@ -391,7 +391,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-md bg-[#0a0a0f] border border-gold/20 rounded-2xl overflow-hidden shadow-2xl p-6 md:p-8 text-center"
+          className="relative z-10 w-full max-w-md bg-card border border-primary/20 rounded-2xl overflow-hidden shadow-2xl p-6 md:p-8 text-center"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button in top corner */}
@@ -403,8 +403,8 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <X size={18} />
           </button>
 
-          {/* Construction icon with pulsing gold background */}
-          <div className="relative mx-auto w-16 h-16 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold mb-6 shadow-[0_0_20px_rgba(212,175,55,0.15)] animate-pulse">
+          {/* Construction icon */}
+          <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-accent mb-6">
             <Wrench size={28} />
           </div>
 
@@ -422,7 +422,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
               className="space-y-6 text-center"
             >
               <div className="py-4 px-3 bg-white/5 border border-white/10 rounded-xl space-y-3">
-                <p className="text-xs font-serif text-gold uppercase tracking-widest leading-none font-bold">
+                <p className="text-xs font-serif text-accent uppercase tracking-widest leading-none font-bold">
                   Registry Offline
                 </p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -433,22 +433,22 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
               <div className="space-y-3">
                 <button
                   onClick={handleCopy}
-                  className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-gradient-to-r from-gold/10 to-gold/20 border border-gold/30 hover:border-gold/60 text-gold transition-all cursor-pointer relative overflow-hidden group"
+                  className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-card border border-primary/20 hover:border-primary/45 text-accent transition-all cursor-pointer relative overflow-hidden group"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gold/60 leading-none">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent/60 leading-none">
                     Concierge Desk Email
                   </span>
-                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-gold transition-colors">
+                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-accent transition-colors">
                     gslegacywealth@gmail.com
                   </span>
-                  <span className="text-[10px] text-muted-foreground mt-1 underline decoration-gold/30 group-hover:decoration-gold transition-all">
+                  <span className="text-[10px] text-muted-foreground mt-1 underline decoration-primary/30 group-hover:decoration-primary transition-all">
                     {copied ? "✓ Copied to clipboard!" : "Click to copy email"}
                   </span>
                 </button>
 
                 <a
                   href="mailto:gslegacywealth@gmail.com?subject=Inquiry%20regarding%20Portfolio"
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/95 transition-all cursor-pointer"
                 >
                   <span>Open Mail Client</span>
                   <ArrowRight size={16} />
@@ -459,7 +459,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-4 px-3 bg-gold/5 border border-gold/20 rounded-xl text-sm text-gold"
+              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-accent"
             >
               <p className="font-bold mb-1">Thank you for your interest!</p>
               <p className="text-xs text-muted-foreground">We will notify you as soon as this site is live.</p>
@@ -474,7 +474,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                     placeholder="Enter your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 hover:border-gold/35 focus:border-gold/50 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
+                    className="w-full bg-white/5 border border-white/10 hover:border-primary/45 focus:border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
                   />
                 </div>
                 <div>
@@ -485,7 +485,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 hover:border-gold/35 focus:border-gold/50 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
+                    className="w-full bg-white/5 border border-white/10 hover:border-primary/45 focus:border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
                   />
                 </div>
               </div>
@@ -493,7 +493,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] disabled:opacity-50 transition-all cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/95 disabled:opacity-50 transition-all cursor-pointer"
               >
                 {isSubmitting ? (
                   <Loader2 size={16} className="animate-spin" />
@@ -531,7 +531,6 @@ export function Portfolio({ limit }: { limit?: number }) {
       <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-background" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -560,37 +559,17 @@ export function Portfolio({ limit }: { limit?: number }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className={`group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300 touch-manipulation ${
+                  className={`group relative overflow-hidden rounded-2xl border border-border hover:border-primary/45 transition-all duration-300 touch-manipulation ${
                     isLastSingle ? "sm:col-span-2" : ""
                   }`}
                 >
-                  {/* Legacy Partner Badge */}
-                  <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                    <Crown size={10} className="text-gold" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-gold">Legacy Partner</span>
-                  </div>
-
                   {/* Under Construction / Coming Soon Badge */}
                   {item.underConstruction && (
-                    <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-black/85 backdrop-blur-md border border-gold/30 px-2.5 py-1 rounded-full shadow-lg">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-gold">Coming Soon</span>
+                    <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-[#1F1A2B]/85 backdrop-blur-md border border-primary/20 px-2.5 py-1 rounded-full shadow-lg">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-accent">Coming Soon</span>
                     </div>
                   )}
-
-                  {/* Subtle GS Watermark */}
-                  <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
-                    <span className="font-serif text-9xl font-bold text-gold">GS</span>
-                  </div>
-
-                  {/* Scanning Animation */}
-                  <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-                    <motion.div
-                      className="absolute left-0 right-0 h-[1px] bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]"
-                      animate={{ top: ["0%", "100%", "0%"] }}
-                      transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-                    />
-                  </div>
 
                   <div className={`bg-gradient-to-br ${item.gradient} relative z-10 ${
                     isLastSingle ? "aspect-[16/10] sm:aspect-[32/10]" : "aspect-[16/10]"
@@ -630,7 +609,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                   <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 z-20 hidden sm:block">
                     <div className="glass rounded-xl p-4 flex justify-between items-end">
                       <div>
-                        <p className="text-sm text-gold mb-1">{item.category}</p>
+                        <p className="text-sm text-accent mb-1">{item.category}</p>
                         <h3 className="font-serif text-lg font-semibold text-foreground">
                           {item.title}
                         </h3>
@@ -639,7 +618,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                          className="shrink-0 h-8 rounded-full touch-manipulation"
                           onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
                         >
                           <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
@@ -648,7 +627,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                          className="shrink-0 h-8 rounded-full touch-manipulation"
                           onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
                         >
                           <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
@@ -659,7 +638,7 @@ export function Portfolio({ limit }: { limit?: number }) {
 
                   {/* Mobile always-visible footer */}
                   <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] to-transparent z-10">
-                    <p className="text-sm text-gold mb-1">{item.category}</p>
+                    <p className="text-sm text-accent mb-1">{item.category}</p>
                     <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
                       {item.title}
                     </h3>
@@ -667,7 +646,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
+                        className="h-8 rounded-full w-full touch-manipulation"
                         onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
                       >
                         <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
@@ -676,7 +655,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
+                        className="h-8 rounded-full w-full touch-manipulation"
                         onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
                       >
                         <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>

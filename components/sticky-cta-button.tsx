@@ -34,13 +34,11 @@ export function StickyCTAButton() {
           className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-50 md:bottom-10 md:right-10"
         >
           <Link href="/book" className="group flex items-center">
-            <div className="flex items-center gap-3 bg-secondary/90 backdrop-blur-md border border-gold/40 hover:border-gold p-2 md:p-3 rounded-full shadow-[0_0_20px_rgba(255,215,0,0.15)] hover:shadow-[0_0_30px_rgba(255,215,0,0.3)] transition-all duration-300 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-gold/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
-              
-              <div className="bg-gradient-to-br from-gold to-gold-light text-background w-10 h-10 rounded-full shadow-lg flex items-center justify-center glow-gold">
+            <div className="flex items-center gap-3 bg-foreground border border-accent/40 hover:border-primary/40 p-2 md:p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden relative">
+              <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
                 <span className="font-serif font-bold text-lg">GS</span>
               </div>
-              <span className="font-medium text-sm text-foreground pr-4 hidden sm:block whitespace-nowrap">
+              <span className="font-medium text-sm text-background pr-4 hidden sm:block whitespace-nowrap">
                 GS Concierge
               </span>
             </div>

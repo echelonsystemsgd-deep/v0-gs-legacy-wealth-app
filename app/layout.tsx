@@ -1,23 +1,28 @@
 import type { Metadata } from 'next'
-import { Cormorant_Garamond, Outfit, Geist_Mono } from 'next/font/google'
+import { Playfair_Display, Inter, Cinzel, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 
-const cormorant = Cormorant_Garamond({ 
-  subsets: ["latin"],
-  variable: '--font-cormorant',
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-});
+})
 
-const outfit = Outfit({ 
-  subsets: ["latin"],
-  variable: '--font-outfit',
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
   display: 'swap',
-});
+})
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-cinzel',
+  display: 'swap',
+})
 
 const geistMono = Geist_Mono({ 
   subsets: ["latin"],
@@ -94,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${outfit.variable} ${geistMono.variable} bg-background`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         <Watermark position="center" opacity={0.06} />
