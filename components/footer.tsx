@@ -16,12 +16,12 @@ const navigation = {
     { name: "About", href: "/" },
     { name: "Process", href: "/process" },
     { name: "Portfolio", href: "/portfolio" },
-    { name: "Testimonials", href: "/#testimonials" },
+    { name: "Testimonials", href: "/testimonials" },
   ],
   resources: [
     { name: "FAQ", href: "/#faq" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Contact", href: "/contact" },
   ],
 }
 
