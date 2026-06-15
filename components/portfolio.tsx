@@ -145,6 +145,17 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText("gslegacywealth@gmail.com")
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3000)
+    } catch (err) {
+      // Fallback
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -219,7 +230,47 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             This platform is being crafted with precision to deliver a premium experience. In the meantime, inquiries are offline.
           </p>
 
-          {submitted ? (
+          {errorMsg ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6 text-center"
+            >
+              <div className="py-4 px-3 bg-white/5 border border-white/10 rounded-xl space-y-3">
+                <p className="text-xs font-serif text-gold uppercase tracking-widest leading-none font-bold">
+                  Registry Offline
+                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Our automated invitation queue is currently undergoing scheduled refinement. To secure early access and submit your inquiry, please contact our concierge team directly.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleCopy}
+                  className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-gradient-to-r from-gold/10 to-gold/20 border border-gold/30 hover:border-gold/60 text-gold transition-all cursor-pointer relative overflow-hidden group"
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gold/60 leading-none">
+                    Concierge Desk Email
+                  </span>
+                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-gold transition-colors">
+                    gslegacywealth@gmail.com
+                  </span>
+                  <span className="text-[10px] text-muted-foreground mt-1 underline decoration-gold/30 group-hover:decoration-gold transition-all">
+                    {copied ? "✓ Copied to clipboard!" : "Click to copy email"}
+                  </span>
+                </button>
+
+                <a
+                  href="mailto:gslegacywealth@gmail.com?subject=Inquiry%20regarding%20Portfolio"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+                >
+                  <span>Open Mail Client</span>
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+            </motion.div>
+          ) : submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -230,12 +281,6 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {errorMsg && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 text-xs text-red-400 rounded-xl">
-                  {errorMsg}
-                </div>
-              )}
-              
               <div className="space-y-3 text-left">
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Your Name</label>
@@ -321,107 +366,141 @@ export function Portfolio({ limit }: { limit?: number }) {
           </motion.div>
 
           <div className="grid sm:grid-cols-2 gap-6 lg:gap-8 mb-12">
-            {displayItems.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300 touch-manipulation"
-              >
-                {/* Legacy Partner Badge */}
-                <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                  <Crown size={10} className="text-gold" />
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-gold">Legacy Partner</span>
-                </div>
-
-                {/* Under Construction / Coming Soon Badge */}
-                {item.underConstruction && (
-                  <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-black/85 backdrop-blur-md border border-gold/30 px-2.5 py-1 rounded-full shadow-lg">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-gold">Coming Soon</span>
+            {displayItems.map((item, index) => {
+              const isLastSingle = displayItems.length % 2 !== 0 && index === displayItems.length - 1;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className={`group relative overflow-hidden rounded-2xl border border-gold/10 hover:border-gold/30 transition-all duration-300 touch-manipulation ${
+                    isLastSingle ? "sm:col-span-2" : ""
+                  }`}
+                >
+                  {/* Legacy Partner Badge */}
+                  <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5 bg-background/80 backdrop-blur-md border border-gold/30 px-2 py-1 rounded-full opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                    <Crown size={10} className="text-gold" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gold">Legacy Partner</span>
                   </div>
-                )}
 
-                {/* Subtle GS Watermark */}
-                <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
-                  <span className="font-serif text-9xl font-bold text-gold">GS</span>
-                </div>
-
-                {/* Scanning Animation */}
-                <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-                  <motion.div
-                    className="absolute left-0 right-0 h-[1px] bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]"
-                    animate={{ top: ["0%", "100%", "0%"] }}
-                    transition={{ duration: 3, ease: "linear", repeat: Infinity }}
-                  />
-                </div>
-
-                <div className={`aspect-[16/10] bg-gradient-to-br ${item.gradient} relative z-10`}>
-                  {item.image ? (
-                    /* Real Screenshot Preview */
-                    <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
-                        <div className="flex gap-1">
-                          <div className="w-2 h-2 rounded-full bg-red-500/70" />
-                          <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
-                          <div className="w-2 h-2 rounded-full bg-green-500/70" />
-                        </div>
-                        <div className="flex-1 mx-2 h-4 bg-white/10 rounded-full text-[8px] text-white/40 flex items-center px-2 truncate">
-                          {item.href?.replace("https://", "")}
-                        </div>
-                      </div>
-                      <div className="relative flex-1">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover object-top"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    /* Generic Wireframe Mockup */
-                    <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
-                        <div className="flex gap-1">
-                          <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                          <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                          <div className="w-2 h-2 rounded-full bg-green-500/50" />
-                        </div>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 bg-gold/20 rounded w-2/3" />
-                        <div className="h-3 bg-secondary rounded w-full" />
-                        <div className="h-3 bg-secondary rounded w-4/5" />
-                        <div className="grid grid-cols-2 gap-2 pt-2">
-                          <div className="h-12 bg-secondary rounded-lg" />
-                          <div className="h-12 bg-secondary rounded-lg" />
-                        </div>
-                      </div>
+                  {/* Under Construction / Coming Soon Badge */}
+                  {item.underConstruction && (
+                    <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-black/85 backdrop-blur-md border border-gold/30 px-2.5 py-1 rounded-full shadow-lg">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-gold">Coming Soon</span>
                     </div>
                   )}
 
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
+                  {/* Subtle GS Watermark */}
+                  <div className="absolute inset-0 z-0 flex items-center justify-center opacity-0 sm:group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none mix-blend-screen">
+                    <span className="font-serif text-9xl font-bold text-gold">GS</span>
+                  </div>
 
-                {/* Desktop hover overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 z-20 hidden sm:block">
-                  <div className="glass rounded-xl p-4 flex justify-between items-end">
-                    <div>
-                      <p className="text-sm text-gold mb-1">{item.category}</p>
-                      <h3 className="font-serif text-lg font-semibold text-foreground">
-                        {item.title}
-                      </h3>
+                  {/* Scanning Animation */}
+                  <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+                    <motion.div
+                      className="absolute left-0 right-0 h-[1px] bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]"
+                      animate={{ top: ["0%", "100%", "0%"] }}
+                      transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+                    />
+                  </div>
+
+                  <div className={`bg-gradient-to-br ${item.gradient} relative z-10 ${
+                    isLastSingle ? "aspect-[16/10] sm:aspect-[32/10]" : "aspect-[16/10]"
+                  }`}>
+                    {item.image ? (
+                      /* Real Screenshot Preview */
+                      <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 rounded-full bg-red-500/70" />
+                            <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
+                            <div className="w-2 h-2 rounded-full bg-green-500/70" />
+                          </div>
+                          <div className="flex-1 mx-2 h-4 bg-white/10 rounded-full text-[8px] text-white/40 flex items-center px-2 truncate">
+                            {item.href?.replace("https://", "")}
+                          </div>
+                        </div>
+                        <div className="relative flex-1">
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className="object-cover object-top"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      /* Generic Wireframe Mockup */
+                      <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 rounded-full bg-red-500/50" />
+                            <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
+                            <div className="w-2 h-2 rounded-full bg-green-500/50" />
+                          </div>
+                        </div>
+                        <div className="p-4 space-y-3">
+                          <div className="h-4 bg-gold/20 rounded w-2/3" />
+                          <div className="h-3 bg-secondary rounded w-full" />
+                          <div className="h-3 bg-secondary rounded w-4/5" />
+                          <div className="grid grid-cols-2 gap-2 pt-2">
+                            <div className="h-12 bg-secondary rounded-lg" />
+                            <div className="h-12 bg-secondary rounded-lg" />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* Desktop hover overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 z-20 hidden sm:block">
+                    <div className="glass rounded-xl p-4 flex justify-between items-end">
+                      <div>
+                        <p className="text-sm text-gold mb-1">{item.category}</p>
+                        <h3 className="font-serif text-lg font-semibold text-foreground">
+                          {item.title}
+                        </h3>
+                      </div>
+                      {item.href ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                          onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
+                        >
+                          <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                          onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
+                        >
+                          <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
+                        </Button>
+                      )}
                     </div>
+                  </div>
+
+                  {/* Mobile always-visible footer */}
+                  <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] to-transparent z-10">
+                    <p className="text-sm text-gold mb-1">{item.category}</p>
+                    <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
+                      {item.title}
+                    </h3>
                     {item.href ? (
                       <Button
                         size="sm"
                         variant="outline"
-                        className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                        className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
                         onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
                       >
                         <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
@@ -430,43 +509,16 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="shrink-0 h-8 rounded-full border-gold/30 hover:bg-gold/10 touch-manipulation"
+                        className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
                         onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
                       >
                         <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
                       </Button>
                     )}
                   </div>
-                </div>
-
-                {/* Mobile always-visible footer */}
-                <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] to-transparent z-10">
-                  <p className="text-sm text-gold mb-1">{item.category}</p>
-                  <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
-                    {item.title}
-                  </h3>
-                  {item.href ? (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
-                      onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
-                    >
-                      <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 rounded-full w-full border-gold/30 touch-manipulation"
-                      onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
-                    >
-                      <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
-                    </Button>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
 
           <motion.div
