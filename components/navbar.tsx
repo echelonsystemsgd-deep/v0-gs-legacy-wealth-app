@@ -69,7 +69,7 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group active:scale-98 transition-transform">
-            <div className={`relative transition-all duration-300 group-hover:scale-105 ${isScrolled ? "h-8 w-8 sm:h-10 sm:w-10" : "h-12 w-12 sm:h-16 sm:w-16"}`}>
+            <div className={`relative transition-all duration-300 ${isScrolled ? "h-8 w-8 sm:h-10 sm:w-10" : "h-12 w-12 sm:h-16 sm:w-16"}`}>
               <Image 
                 src="/GS_Legacy_Wealth-removebg-preview.png" 
                 alt="GS Legacy Wealth" 
@@ -91,7 +91,7 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm transition-colors hover:text-gold active:scale-95 transition-transform ${
                   isActive(link.href) 
-                    ? "text-gold font-semibold drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]" 
+                    ? "text-gold font-semibold" 
                     : "text-muted-foreground"
                 }`}
               >
@@ -140,7 +140,7 @@ export function Navbar() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute left-0 right-0 top-20 glass border-t border-gold/10 z-50 lg:hidden overflow-y-auto max-h-[calc(100vh-5rem)]"
+              className="absolute left-0 right-0 top-20 glass border-t border-primary/10 z-50 lg:hidden overflow-y-auto max-h-[calc(100vh-5rem)]"
               style={{
                 paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))",
               }}
@@ -160,13 +160,14 @@ export function Navbar() {
                 ))}
                 <Button
                   asChild
-                  className="w-full bg-gradient-to-r from-gold to-gold-light text-black font-extrabold active:scale-[0.98] transition-transform"
+                  variant="outline"
+                  className="w-full active:scale-[0.98] transition-transform"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
                     Book a Strategy Call
                   </Link>
                 </Button>
-                <div className="flex justify-center pt-6 border-t border-gold/10">
+                <div className="flex justify-center pt-6 border-t border-primary/10">
                   <SocialMediaLinks />
                 </div>
               </div>

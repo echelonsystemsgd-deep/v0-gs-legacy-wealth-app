@@ -4,56 +4,57 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Luxury Dark Theme - Always dark */
-  --background: #0B0A09;
-  --foreground: #F5F2EB;
-  --card: #141312;
-  --card-foreground: #F5F2EB;
-  --popover: #141312;
-  --popover-foreground: #F5F2EB;
-  --primary: #C5A880;
-  --primary-foreground: #0B0A09;
+  /* Luxury Dark Theme - Always dark, rebranded with Royal Purple and Muted Gold */
+  --background: #0A0A0A;
+  --foreground: #F0EDE6;
+  --card: #0F0B1A;
+  --card-foreground: #F0EDE6;
+  --popover: #0F0B1A;
+  --popover-foreground: #F0EDE6;
+  --primary: #6D28D9;
+  --primary-foreground: #F0EDE6;
   --secondary: #1C1A18;
-  --secondary-foreground: #F5F2EB;
+  --secondary-foreground: #F0EDE6;
   --muted: #1C1A18;
-  --muted-foreground: #A39B94;
-  --accent: #C5A880;
-  --accent-foreground: #0B0A09;
+  --muted-foreground: #A39E96;
+  --accent: #B8952A;
+  --accent-foreground: #0A0A0A;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: #22201F;
-  --input: #22201F;
-  --ring: #C5A880;
-  --gold: #C5A880;
-  --gold-light: #E4D5C3;
+  --border: #261F35;
+  --input: #261F35;
+  --ring: #6D28D9;
+  --gold: #B8952A;
+  --gold-light: #C9A227;
   --radius: 0.625rem;
 }
 
 .dark {
-  --background: #0B0A09;
-  --foreground: #F5F2EB;
-  --card: #141312;
-  --card-foreground: #F5F2EB;
-  --popover: #141312;
-  --popover-foreground: #F5F2EB;
-  --primary: #C5A880;
-  --primary-foreground: #0B0A09;
+  --background: #0A0A0A;
+  --foreground: #F0EDE6;
+  --card: #0F0B1A;
+  --card-foreground: #F0EDE6;
+  --popover: #0F0B1A;
+  --popover-foreground: #F0EDE6;
+  --primary: #6D28D9;
+  --primary-foreground: #F0EDE6;
   --secondary: #1C1A18;
-  --secondary-foreground: #F5F2EB;
+  --secondary-foreground: #F0EDE6;
   --muted: #1C1A18;
-  --muted-foreground: #A39B94;
-  --accent: #C5A880;
-  --accent-foreground: #0B0A09;
+  --muted-foreground: #A39E96;
+  --accent: #B8952A;
+  --accent-foreground: #0A0A0A;
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: #22201F;
-  --input: #22201F;
-  --ring: #C5A880;
+  --border: #261F35;
+  --input: #261F35;
+  --ring: #6D28D9;
 }
 
 @theme inline {
-  --font-sans: var(--font-outfit), 'Outfit', sans-serif;
-  --font-serif: var(--font-cormorant), 'Cormorant Garamond', serif;
+  --font-sans: var(--font-inter), 'Inter', sans-serif;
+  --font-serif: var(--font-playfair), 'Playfair Display', serif;
+  --font-display: var(--font-cinzel), 'Cinzel', serif;
   --font-mono: var(--font-geist-mono), 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -125,41 +126,12 @@
   background-clip: text;
 }
 
-/* Gold glow effect */
-.glow-gold {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.1);
-}
-
-.glow-gold-intense {
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.2);
-}
-
-/* Glassmorphism */
+/* Glassmorphism with purple tint */
 .glass {
-  background: rgba(17, 17, 17, 0.7);
+  background: rgba(15, 11, 26, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-/* Animated gold particles background */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-  }
-  25% {
-    transform: translateY(-20px) translateX(10px);
-  }
-  50% {
-    transform: translateY(-10px) translateX(-10px);
-  }
-  75% {
-    transform: translateY(-30px) translateX(5px);
-  }
-}
-
-.particle {
-  animation: float 6s ease-in-out infinite;
+  border: 1px solid rgba(109, 40, 217, 0.15);
 }
 
 /* Smooth scroll */
@@ -200,7 +172,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #D4AF37;
+  background: var(--primary);
   border: 12px solid transparent;
   background-clip: padding-box;
   cursor: pointer;
@@ -209,7 +181,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
-  background-color: #F5D76E;
+  background-color: #8B5CF6;
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
@@ -220,7 +192,7 @@ input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #D4AF37;
+  background: var(--primary);
   border: 12px solid transparent;
   background-clip: padding-box;
   cursor: pointer;
@@ -229,7 +201,7 @@ input[type="range"]::-moz-range-thumb {
 
 input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.1);
-  background-color: #F5D76E;
+  background-color: #8B5CF6;
 }
 
 input[type="range"]::-moz-range-thumb:active {
