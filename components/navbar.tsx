@@ -15,8 +15,8 @@ const navLinks = [
   { href: "/process", label: "Process" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/#testimonials", label: "Testimonials" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/testimonials", label: "Testimonials" },
+  { href: "/contact", label: "Contact" },
 ]
 
 export function Navbar() {
@@ -26,8 +26,8 @@ export function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
   const isActive = (href: string) => {
-    if (href.startsWith("/#")) return false // Section hashes don't highlight as active pages
-    return pathname === href
+    if (href === "/") return pathname === "/"
+    return pathname.startsWith(href)
   }
 
   useEffect(() => {
