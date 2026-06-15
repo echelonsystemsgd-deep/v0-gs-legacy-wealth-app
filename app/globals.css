@@ -5,56 +5,56 @@
 
 :root {
   /* Luxury Dark Theme - Always dark */
-  --background: #050505;
-  --foreground: #F5F5F5;
-  --card: #111111;
-  --card-foreground: #F5F5F5;
-  --popover: #111111;
-  --popover-foreground: #F5F5F5;
-  --primary: #D4AF37;
-  --primary-foreground: #050505;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #F5F5F5;
-  --muted: #1a1a1a;
-  --muted-foreground: #B8B8B8;
-  --accent: #D4AF37;
-  --accent-foreground: #050505;
+  --background: #0B0A09;
+  --foreground: #F5F2EB;
+  --card: #141312;
+  --card-foreground: #F5F2EB;
+  --popover: #141312;
+  --popover-foreground: #F5F2EB;
+  --primary: #C5A880;
+  --primary-foreground: #0B0A09;
+  --secondary: #1C1A18;
+  --secondary-foreground: #F5F2EB;
+  --muted: #1C1A18;
+  --muted-foreground: #A39B94;
+  --accent: #C5A880;
+  --accent-foreground: #0B0A09;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: #2a2a2a;
-  --input: #2a2a2a;
-  --ring: #D4AF37;
-  --gold: #D4AF37;
-  --gold-light: #F5D76E;
+  --border: #22201F;
+  --input: #22201F;
+  --ring: #C5A880;
+  --gold: #C5A880;
+  --gold-light: #E4D5C3;
   --radius: 0.625rem;
 }
 
 .dark {
-  --background: #050505;
-  --foreground: #F5F5F5;
-  --card: #111111;
-  --card-foreground: #F5F5F5;
-  --popover: #111111;
-  --popover-foreground: #F5F5F5;
-  --primary: #D4AF37;
-  --primary-foreground: #050505;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #F5F5F5;
-  --muted: #1a1a1a;
-  --muted-foreground: #B8B8B8;
-  --accent: #D4AF37;
-  --accent-foreground: #050505;
+  --background: #0B0A09;
+  --foreground: #F5F2EB;
+  --card: #141312;
+  --card-foreground: #F5F2EB;
+  --popover: #141312;
+  --popover-foreground: #F5F2EB;
+  --primary: #C5A880;
+  --primary-foreground: #0B0A09;
+  --secondary: #1C1A18;
+  --secondary-foreground: #F5F2EB;
+  --muted: #1C1A18;
+  --muted-foreground: #A39B94;
+  --accent: #C5A880;
+  --accent-foreground: #0B0A09;
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: #2a2a2a;
-  --input: #2a2a2a;
-  --ring: #D4AF37;
+  --border: #22201F;
+  --input: #22201F;
+  --ring: #C5A880;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), 'Inter', sans-serif;
-  --font-serif: var(--font-playfair), 'Playfair Display', serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --font-sans: var(--font-outfit), 'Outfit', sans-serif;
+  --font-serif: var(--font-cormorant), 'Cormorant Garamond', serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -105,21 +105,21 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #111111;
+  background: var(--card);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4AF37;
+  background: var(--gold);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #F5D76E;
+  background: var(--gold-light);
 }
 
 /* Gold gradient text utility */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #D4AF37 0%, #F5D76E 50%, #D4AF37 100%);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

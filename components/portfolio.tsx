@@ -44,6 +44,191 @@ const portfolioItems = [
 
 type PortfolioItem = typeof portfolioItems[number]
 
+function PremiumMockup({ item }: { item: PortfolioItem }) {
+  if (item.title === "Elite Fitness Studio") {
+    return (
+      <div className="absolute inset-4 lg:inset-6 bg-[#0E0E10] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        {/* Browser Header */}
+        <div className="flex items-center justify-between px-3 py-2 bg-[#16161A] border-b border-white/5 shrink-0">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          </div>
+          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
+            elitefitness.com/dashboard
+          </div>
+          <div className="w-4" />
+        </div>
+        {/* Content Mockup */}
+        <div className="flex-1 p-3 flex flex-col gap-2 justify-between">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] font-bold text-amber-500 uppercase tracking-widest font-serif">ELITE FITNESS</span>
+            <div className="w-6 h-3 bg-amber-500/20 border border-amber-500/30 rounded-full" />
+          </div>
+          <div className="space-y-1">
+            <h4 className="text-[11px] font-bold text-white leading-tight">Sculpt Your Ultimate Physique</h4>
+            <p className="text-[7px] text-white/50 leading-relaxed max-w-[80%]">High-intensity training programs for high-performers.</p>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+              <span className="text-[7px] text-white/40 block font-mono">Daily Active</span>
+              <span className="text-[9px] font-bold text-amber-500">142</span>
+            </div>
+            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+              <span className="text-[7px] text-white/40 block font-mono">Booking Rate</span>
+              <span className="text-[9px] font-bold text-amber-500">94%</span>
+            </div>
+            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+              <span className="text-[7px] text-white/40 block font-mono">Retention</span>
+              <span className="text-[9px] font-bold text-amber-500">98%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (item.title === "Prestige Properties") {
+    return (
+      <div className="absolute inset-4 lg:inset-6 bg-[#0B0D0C] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#121614] border-b border-white/5 shrink-0">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          </div>
+          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
+            prestigeproperties.com
+          </div>
+          <div className="w-4" />
+        </div>
+        <div className="flex-1 p-3 flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest font-serif">PRESTIGE</span>
+            <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">ESTATES</span>
+          </div>
+          <div className="space-y-1">
+            <h4 className="text-[11px] font-bold text-white leading-tight">The Mayfair Penthouse</h4>
+            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Luxury architectural design with panoramic London views.</p>
+          </div>
+          <div className="bg-[#121614] border border-white/5 rounded p-2 flex justify-between items-center">
+            <div>
+              <span className="text-[6px] text-white/40 block font-mono">GUIDE PRICE</span>
+              <span className="text-[9px] font-bold text-[#f5f5f7]">£4,250,000</span>
+            </div>
+            <div className="w-8 h-3.5 bg-emerald-500/20 border border-emerald-500/40 rounded flex items-center justify-center">
+              <span className="text-[6px] text-emerald-400 font-bold font-mono">INQUIRE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (item.title === "Strategic Growth Co.") {
+    return (
+      <div className="absolute inset-4 lg:inset-6 bg-[#090A0F] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#12131C] border-b border-white/5 shrink-0">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          </div>
+          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
+            strategicgrowth.co/dashboard
+          </div>
+          <div className="w-4" />
+        </div>
+        <div className="flex-1 p-3 flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest font-mono">STRATEGIC</span>
+            <div className="flex gap-1">
+              <div className="w-1.5 h-1.5 bg-blue-500/20 rounded-full" />
+              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[6px] text-blue-400 block font-bold tracking-wider font-mono">ANNUAL METRICS</span>
+            <h4 className="text-[11px] font-bold text-white leading-tight">+238% Conversion Increase</h4>
+          </div>
+          {/* Mock Chart */}
+          <div className="h-10 flex items-end gap-1 px-1 bg-white/5 rounded border border-white/5 py-1">
+            <div className="bg-blue-500/20 w-full h-[30%] rounded-sm" />
+            <div className="bg-blue-500/40 w-full h-[55%] rounded-sm" />
+            <div className="bg-blue-500/60 w-full h-[45%] rounded-sm" />
+            <div className="bg-blue-500/80 w-full h-[70%] rounded-sm" />
+            <div className="bg-blue-500 w-full h-[95%] rounded-sm" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (item.title === "AutoFlow Systems") {
+    return (
+      <div className="absolute inset-4 lg:inset-6 bg-[#0E0B11] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#17121C] border-b border-white/5 shrink-0">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          </div>
+          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
+            autoflow.ai/canvas
+          </div>
+          <div className="w-4" />
+        </div>
+        <div className="flex-1 p-3 flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] font-bold text-purple-500 uppercase tracking-widest font-mono">AUTOFLOW</span>
+            <span className="text-[6px] text-purple-400 bg-purple-500/10 border border-purple-500/25 px-1 py-0.5 rounded font-mono">AI CORE v2</span>
+          </div>
+          <div className="space-y-1">
+            <h4 className="text-[11px] font-bold text-white leading-tight">Automated Sales Funnel</h4>
+            <p className="text-[7px] text-white/50 max-w-[90%] leading-relaxed">Sync leads directly to CRM and trigger custom email campaigns.</p>
+          </div>
+          {/* Visual node flowchart mockup */}
+          <div className="flex gap-1 justify-between items-center text-center">
+            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
+              <span className="text-[6px] font-bold text-purple-400 block font-mono">TRIGGER</span>
+              <span className="text-[5px] text-white/60">New Booking</span>
+            </div>
+            <div className="w-3 h-0.5 bg-purple-500/40" />
+            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
+              <span className="text-[6px] font-bold text-purple-400 block font-mono">AI AGENT</span>
+              <span className="text-[5px] text-white/60">Qualify</span>
+            </div>
+            <div className="w-3 h-0.5 bg-purple-500/40" />
+            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
+              <span className="text-[6px] font-bold text-purple-400 block font-mono">CRM SYNC</span>
+              <span className="text-[5px] text-white/60">Create Deal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Fallback wireframe
+  return (
+    <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
+      <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
+        <div className="flex gap-1">
+          <div className="w-2 h-2 rounded-full bg-red-500/50" />
+          <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
+          <div className="w-2 h-2 rounded-full bg-green-500/50" />
+        </div>
+      </div>
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gold/20 rounded w-2/3" />
+        <div className="h-3 bg-secondary rounded w-full" />
+        <div className="h-3 bg-secondary rounded w-4/5" />
+      </div>
+    </div>
+  )
+}
+
 function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
   const [isLoading, setIsLoading] = useState(true)
 
@@ -433,27 +618,9 @@ export function Portfolio({ limit }: { limit?: number }) {
                           />
                         </div>
                       </div>
-                    ) : (
-                      /* Generic Wireframe Mockup */
-                      <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
-                        <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
-                          <div className="flex gap-1">
-                            <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                            <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                            <div className="w-2 h-2 rounded-full bg-green-500/50" />
-                          </div>
-                        </div>
-                        <div className="p-4 space-y-3">
-                          <div className="h-4 bg-gold/20 rounded w-2/3" />
-                          <div className="h-3 bg-secondary rounded w-full" />
-                          <div className="h-3 bg-secondary rounded w-4/5" />
-                          <div className="grid grid-cols-2 gap-2 pt-2">
-                            <div className="h-12 bg-secondary rounded-lg" />
-                            <div className="h-12 bg-secondary rounded-lg" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                  ) : (
+                    <PremiumMockup item={item} />
+                  )}
 
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
