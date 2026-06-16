@@ -25,103 +25,112 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Form source identifier is required' }, { status: 400 })
     }
 
-    if (!supabaseAdmin) {
-      console.error('Supabase admin client not initialized. Missing environment variables.')
-      return NextResponse.json({ error: 'Database connection is not configured on the server' }, { status: 500 })
-    }
-
-    // 1. Persist submission in Supabase
+    // 1. Persist submission in Supabase (Non-blocking fallback if DB is not configured or fails)
     let dbError = null
     let insertedLead = null
+    let dbSaved = false
 
-    if (source === 'booking_form') {
-      // Check if lead already exists by email
-      const { data: existingLead, error: selectError } = await supabaseAdmin
-        .from('leads')
-        .select('*')
-        .eq('email', email)
-        .maybeSingle()
+    if (supabaseAdmin) {
+      try {
+        if (source === 'booking_form') {
+          // Check if lead already exists by email
+          const { data: existingLead, error: selectError } = await supabaseAdmin
+            .from('leads')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle()
 
-      if (selectError) {
-        dbError = selectError
-      } else if (existingLead) {
-        // Update existing lead
-        const { data, error } = await supabaseAdmin
-          .from('leads')
-          .update({
-            name: name || existingLead.name,
-            business_name: business_name || existingLead.business_name,
-            website: website || existingLead.website,
-            notes: notes || existingLead.notes,
-            status: 'New',
-            source: 'booking_form',
-          })
-          .eq('id', existingLead.id)
-          .select()
-          .single()
+          if (selectError) {
+            dbError = selectError
+          } else if (existingLead) {
+            // Update existing lead
+            const { data, error } = await supabaseAdmin
+              .from('leads')
+              .update({
+                name: name || existingLead.name,
+                business_name: business_name || existingLead.business_name,
+                website: website || existingLead.website,
+                notes: notes || existingLead.notes,
+                status: 'New',
+                source: 'booking_form',
+              })
+              .eq('id', existingLead.id)
+              .select()
+              .single()
 
-        dbError = error
-        insertedLead = data
-      } else {
-        // Create new lead
-        const { data, error } = await supabaseAdmin
-          .from('leads')
-          .insert({
-            name: name || 'Anonymous Scheduler',
+            dbError = error
+            insertedLead = data
+          } else {
+            // Create new lead
+            const { data, error } = await supabaseAdmin
+              .from('leads')
+              .insert({
+                name: name || 'Anonymous Scheduler',
+                email: email,
+                business_name: business_name || 'N/A (Booking Form)',
+                website: website || null,
+                notes: notes || 'Booking request qualification',
+                status: 'New',
+                source: 'booking_form',
+              })
+              .select()
+              .single()
+
+            dbError = error
+            insertedLead = data
+          }
+        } else if (source === 'contact_form') {
+          // Normal insert for contact form
+          const { data, error } = await supabaseAdmin.from('leads').insert({
+            name: name || 'Anonymous Contact',
             email: email,
-            business_name: business_name || 'N/A (Booking Form)',
-            website: website || null,
-            notes: notes || 'Booking request qualification',
+            business_name: business_name || 'N/A (Contact Form)',
+            phone: phone || null,
+            notes: notes || 'Contact Form Submission',
             status: 'New',
-            source: 'booking_form',
-          })
-          .select()
-          .single()
+            source: 'contact_form',
+          }).select().single()
 
-        dbError = error
-        insertedLead = data
+          dbError = error
+          insertedLead = data
+        } else if (source === 'portfolio_waitlist') {
+          // Insert for portfolio waitlist
+          const { data, error } = await supabaseAdmin.from('leads').insert({
+            name: name || 'Anonymous Visitor',
+            email: email,
+            business_name: 'N/A (Portfolio Waitlist)',
+            website: website || null, // Stores the portfolio item URL
+            notes: notes || 'Waitlist registration for under-construction site',
+            status: 'New',
+            source: 'portfolio_waitlist',
+          }).select().single()
+
+          dbError = error
+          insertedLead = data
+        } else {
+          return NextResponse.json({ error: `Unsupported form source: ${source}` }, { status: 400 })
+        }
+
+        if (dbError) {
+          console.error('Database write failed:', dbError.message)
+        } else {
+          dbSaved = true
+        }
+      } catch (err: any) {
+        console.error('Unhandled database error during lead submission:', err.message || err)
       }
-    } else if (source === 'contact_form') {
-      // Normal insert for contact form
-      const { data, error } = await supabaseAdmin.from('leads').insert({
-        name: name || 'Anonymous Contact',
-        email: email,
-        business_name: business_name || 'N/A (Contact Form)',
-        phone: phone || null,
-        notes: notes || 'Contact Form Submission',
-        status: 'New',
-        source: 'contact_form',
-      }).select().single()
-
-      dbError = error
-      insertedLead = data
-    } else if (source === 'portfolio_waitlist') {
-      // Insert for portfolio waitlist
-      const { data, error } = await supabaseAdmin.from('leads').insert({
-        name: name || 'Anonymous Visitor',
-        email: email,
-        business_name: 'N/A (Portfolio Waitlist)',
-        website: website || null, // Stores the portfolio item URL
-        notes: notes || 'Waitlist registration for under-construction site',
-        status: 'New',
-        source: 'portfolio_waitlist',
-      }).select().single()
-
-      dbError = error
-      insertedLead = data
     } else {
-      return NextResponse.json({ error: `Unsupported form source: ${source}` }, { status: 400 })
-    }
-
-    if (dbError) {
-      console.error('Database write failed:', dbError.message)
-      return NextResponse.json({ error: 'Failed to record submission in database' }, { status: 500 })
+      console.warn('Supabase admin client not initialized. Missing environment variables. Skipping database persistence.')
     }
 
     // 2. Email Notifications (Transactional via Resend)
     if (!resend) {
       console.warn('RESEND_API_KEY is not set. Skipping email alerts.')
-      return NextResponse.json({ success: true, message: 'Saved to DB (emails skipped: Resend API key missing)' })
+      return NextResponse.json({ 
+        success: true, 
+        message: dbSaved ? 'Saved to DB (emails skipped: Resend API key missing)' : 'Database not configured / failed & emails skipped',
+        dbSaved 
+      })
     }
 
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'GS Legacy Wealth <onboarding@resend.dev>'
