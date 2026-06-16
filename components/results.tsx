@@ -61,7 +61,7 @@ const mockLogs = [
 
 export function Results() {
   const [visibleLogs, setVisibleLogs] = useState<string[]>([])
-  const terminalEndRef = useRef<HTMLDivElement>(null)
+  const terminalContainerRef = useRef<HTMLDivElement>(null)
 
   // System log rotation loop
   useEffect(() => {
@@ -87,8 +87,11 @@ export function Results() {
 
   // Auto-scroll terminal log to bottom
   useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: "smooth" })
+    if (terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTo({
+        top: terminalContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      })
     }
   }, [visibleLogs])
 
@@ -153,7 +156,10 @@ export function Results() {
               </div>
 
               {/* Console Logs area */}
-              <div className="flex-1 p-5 overflow-y-auto space-y-2 select-none scrollbar-thin">
+              <div 
+                ref={terminalContainerRef}
+                className="flex-1 p-5 overflow-y-auto space-y-2 select-none scrollbar-thin"
+              >
                 {visibleLogs.map((log, index) => {
                   let colorClass = "text-white/60"
                   if (log.startsWith("[SUCCESS]")) colorClass = "text-green-400 font-bold"
@@ -173,7 +179,6 @@ export function Results() {
                     </motion.div>
                   )
                 })}
-                <div ref={terminalEndRef} />
               </div>
             </div>
           </div>

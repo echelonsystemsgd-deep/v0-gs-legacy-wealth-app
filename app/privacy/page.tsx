@@ -3,7 +3,7 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
-  title: "Privacy Policy | GS Legacy Wealth AI",
+  title: "Privacy Policy",
   description: "Our privacy policy outlines how we handle and protect your personal information.",
 }
 

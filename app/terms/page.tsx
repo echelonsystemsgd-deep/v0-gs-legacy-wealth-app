@@ -3,7 +3,7 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
-  title: "Terms of Service | GS Legacy Wealth AI",
+  title: "Terms of Service",
   description: "Read our Terms of Service to understand your rights and obligations when using our solutions.",
 }
 

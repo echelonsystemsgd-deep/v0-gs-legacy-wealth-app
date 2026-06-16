@@ -31,6 +31,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'https://gslegacywealth.com'
+  ),
   title: {
     default: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
     template: '%s | GS Legacy Wealth AI'

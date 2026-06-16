@@ -4,7 +4,7 @@ import { AdminSidebar } from '@/components/admin/sidebar'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard | GS Legacy Wealth AI',
+  title: 'Admin Dashboard',
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

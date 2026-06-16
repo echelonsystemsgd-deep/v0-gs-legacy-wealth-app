@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/page-header"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Client Testimonials | GS Legacy Wealth",
+  title: "Client Testimonials",
   description: "Real results from ambitious businesses we have partnered with. Hear directly from our elite clientele about the impact of our premium digital solutions.",
 }
 

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Admin Access | GS Legacy Wealth AI',
+  title: 'Admin Access',
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

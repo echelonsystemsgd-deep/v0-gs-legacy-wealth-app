@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
-  title: "Our Process | GS Legacy Wealth",
+  title: "Our Process",
   description: "Discover our proven 4-step process for delivering exceptional digital solutions and maximizing ROI.",
 }
 
