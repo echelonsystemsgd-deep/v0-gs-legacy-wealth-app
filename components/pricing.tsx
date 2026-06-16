@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
@@ -702,7 +702,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                       </thead>
                       <tbody>
                         {comparisonCategories.map((cat, idx) => (
-                          <tr key={idx} className="contents">
+                          <React.Fragment key={idx}>
                             <tr className="bg-primary/5">
                               <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-accent-gold tracking-widest sticky left-0 bg-bg-primary z-10">
                                 {cat.category}
@@ -716,7 +716,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                                 <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
                               </tr>
                             ))}
-                          </tr>
+                          </React.Fragment>
                         ))}
                       </tbody>
                     </table>

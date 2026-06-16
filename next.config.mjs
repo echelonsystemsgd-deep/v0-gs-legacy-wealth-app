@@ -18,6 +18,10 @@ export default withSentryConfig(nextConfig, {
 
   project: "gs-legacy-wealth",
 
+  // Disable Sentry plugin when SENTRY_AUTH_TOKEN is missing to prevent build crashes
+  disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN && !process.env.SENTRY_AUTH_TOKEN_BUILD,
+  disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN && !process.env.SENTRY_AUTH_TOKEN_BUILD,
+
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 

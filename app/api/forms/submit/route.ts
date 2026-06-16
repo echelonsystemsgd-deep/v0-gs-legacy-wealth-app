@@ -25,6 +25,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Form source identifier is required' }, { status: 400 })
     }
 
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not initialized. Missing environment variables.')
+      return NextResponse.json({ error: 'Database connection is not configured on the server' }, { status: 500 })
+    }
+
     // 1. Persist submission in Supabase
     let dbError = null
     let insertedLead = null
