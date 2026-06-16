@@ -73,7 +73,7 @@ export function Hero() {
             variant="outline"
             className="w-full sm:w-auto border-[#C9A227] hover:bg-[#C9A227] hover:text-black text-white bg-transparent rounded-none px-8 py-7 text-sm font-bold tracking-wider uppercase transition-colors"
           >
-            <Link href="#portfolio">See Our Work</Link>
+            <Link href="/portfolio">See Our Work</Link>
           </Button>
         </motion.div>
 

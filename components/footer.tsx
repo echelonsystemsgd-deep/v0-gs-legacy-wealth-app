@@ -11,6 +11,7 @@ export function Footer() {
     { name: "Process", href: "/process" },
     { name: "Portfolio", href: "/portfolio" },
     { name: "Pricing", href: "/pricing" },
+    { name: "Contact", href: "/contact" },
   ]
 
   return (
