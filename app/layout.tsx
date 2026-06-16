@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     siteName: 'GS Legacy Wealth AI',
     images: [
       {
-        url: '/GS Legacy Wealth.png',
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
         alt: 'GS Legacy Wealth AI Website Preview',
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
     description: 'Premium AI-powered websites for ambitious businesses.',
-    images: ['/GS Legacy Wealth.png'],
+    images: ['/twitter-image.png'],
     creator: '@gslegacywealth',
   },
   robots: {
