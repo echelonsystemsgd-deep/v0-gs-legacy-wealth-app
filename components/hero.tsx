@@ -85,7 +85,7 @@ export function Hero() {
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-[#A39E96] border-t border-white/10 pt-8 w-full max-w-3xl"
         >
           <span className="flex items-center gap-1.5">
-            <span className="text-[#C9A227]">✦</span> Trusted by 50+ premium brands
+            <span className="text-[#C9A227]">✦</span> 10+ prototype builds completed
           </span>
           <span className="hidden sm:inline text-white/20">|</span>
           <span className="flex items-center gap-1.5">
@@ -97,7 +97,7 @@ export function Hero() {
           </span>
           <span className="hidden sm:inline text-white/20">|</span>
           <span className="flex items-center gap-1.5">
-            <span className="text-[#C9A227]">✦</span> Fast Delivery
+            <span className="text-[#C9A227]">✦</span> Results-Focused
           </span>
         </motion.div>
       </div>

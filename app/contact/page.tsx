@@ -63,8 +63,11 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-[#A39E96]">Direct Call / WhatsApp</p>
-                    <a href="tel:+447700900077" className="text-sm font-semibold text-white hover:text-[#C9A227] transition-colors font-mono">
-                      +44 7700 900077
+                    <a href="tel:+447851055929" className="text-sm font-semibold text-white hover:text-[#C9A227] transition-colors font-mono">
+                      +44 7851 055929
+                    </a>
+                    <a href="https://wa.me/447851055929" target="_blank" rel="noopener noreferrer" className="block text-xs text-[#C9A227] hover:underline mt-1">
+                      Chat on WhatsApp →
                     </a>
                   </div>
                 </div>
@@ -94,7 +97,7 @@ export default function ContactPage() {
                     <span className="text-[#C9A227]">✦</span> Quick technical assessment of your current website/systems.
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-[#C9A227]">✦</span> A free 20-minute strategy call to design your automation opportunity map.
+                    <span className="text-[#C9A227]">✦</span> A free 30-minute strategy call to design your automation opportunity map.
                   </li>
                 </ul>
               </div>

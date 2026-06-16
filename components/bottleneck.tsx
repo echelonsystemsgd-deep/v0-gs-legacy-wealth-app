@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { AlertCircle, ArrowRight, ShieldCheck, Zap } from "lucide-react"
+import { AlertCircle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Bottleneck() {
@@ -23,26 +23,43 @@ export function Bottleneck() {
       <div 
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle at 30% 50%, rgba(109, 40, 217, 0.08) 0%, rgba(10, 10, 10, 0) 60%)"
+          background: "radial-gradient(circle at 50% 30%, rgba(109, 40, 217, 0.08) 0%, rgba(10, 10, 10, 0) 60%)"
         }}
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-          
-          {/* Left Column: Visual Chaos vs Order */}
-          <div className="lg:col-span-6 flex flex-col items-center space-y-8">
-            <div className="w-full text-center lg:text-left">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
-                The Bottleneck
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 leading-tight">
-                Is your business outgrowing your systems?
-              </h2>
-            </div>
 
-            {/* SVG Visualizer Container */}
-            <div className="relative w-full max-w-lg min-h-[440px] sm:min-h-[460px] md:aspect-square bg-[#111318] border border-white/5 p-6 rounded-none shadow-2xl flex flex-col justify-between items-center overflow-hidden group">
+        {/* ── Centered headline — reader absorbs the question first ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16 max-w-3xl mx-auto"
+        >
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+            The Bottleneck
+          </span>
+          <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
+            Is your business outgrowing your systems?
+          </h2>
+          <p className="font-sans text-base text-[#F0EDE6] opacity-75 leading-relaxed mt-6 max-w-2xl mx-auto">
+            When a business relies on manual effort for lead qualification, data transfer, and customer follow-ups, growth inevitably creates administrative friction. We replace manual bottlenecks with automated hubs so your team can focus on closing deals.
+          </p>
+        </motion.div>
+
+        {/* ── Visual + Cards side-by-side ── */}
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+          {/* Left Column: Interactive SVG Visualiser */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-5 flex justify-center"
+          >
+            <div className="relative w-full max-w-md min-h-[440px] sm:min-h-[460px] md:aspect-square bg-[#111318] border border-white/5 p-6 rounded-none shadow-2xl flex flex-col justify-between items-center overflow-hidden">
               <div className="absolute top-4 left-4 flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${isOrdered ? "bg-[#C9A227] animate-pulse" : "bg-red-500 animate-pulse"}`} />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#F0EDE6] opacity-70">
@@ -55,20 +72,17 @@ export function Bottleneck() {
                 <svg viewBox="0 0 400 400" className="w-full h-full max-h-[220px] xs:max-h-[260px] sm:max-h-[320px]">
                   {/* Connection Lines */}
                   {isOrdered ? (
-                    // Order Lines (Structured single pipeline flowing to hub)
                     <>
                       <motion.line x1="50" y1="200" x2="170" y2="200" stroke="rgba(201, 162, 39, 0.4)" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
                       <motion.line x1="170" y1="200" x2="290" y2="200" stroke="rgba(201, 162, 39, 0.4)" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5, delay: 0.2 }} />
                       <motion.line x1="200" y1="110" x2="170" y2="200" stroke="rgba(201, 162, 39, 0.4)" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
                       <motion.line x1="200" y1="290" x2="170" y2="200" stroke="rgba(201, 162, 39, 0.4)" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
-                      
                       {/* Flow pulse dots */}
                       <motion.circle r="4" fill="#C9A227" animate={{ cx: [50, 170], cy: [200, 200] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} />
                       <motion.circle r="4" fill="#C9A227" animate={{ cx: [200, 170], cy: [110, 200] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
                       <motion.circle r="4" fill="#C9A227" animate={{ cx: [200, 170], cy: [290, 200] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }} />
                     </>
                   ) : (
-                    // Chaos Lines (Messy intersections crossing everywhere)
                     <>
                       <line x1="80" y1="120" x2="220" y2="80" stroke="rgba(239, 68, 68, 0.25)" strokeWidth="1" />
                       <line x1="220" y1="80" x2="120" y2="280" stroke="rgba(239, 68, 68, 0.25)" strokeWidth="1" />
@@ -80,14 +94,7 @@ export function Bottleneck() {
 
                   {/* Nodes */}
                   {nodes.map((node) => (
-                    <motion.g
-                      key={node.id}
-                      animate={{
-                        cx: isOrdered ? node.order.x : node.chaos.x,
-                        cy: isOrdered ? node.order.y : node.chaos.y,
-                      }}
-                      transition={{ type: "spring", stiffness: 100, damping: 15 }}
-                    >
+                    <motion.g key={node.id}>
                       <motion.circle
                         cx={isOrdered ? node.order.x : node.chaos.x}
                         cy={isOrdered ? node.order.y : node.chaos.y}
@@ -95,11 +102,15 @@ export function Bottleneck() {
                         fill={isOrdered ? "#130D24" : "#0A0A0A"}
                         stroke={isOrdered ? "#C9A227" : "#ef4444"}
                         strokeWidth="2"
-                        className="transition-colors duration-300"
+                        animate={{
+                          cx: isOrdered ? node.order.x : node.chaos.x,
+                          cy: isOrdered ? node.order.y : node.chaos.y,
+                        }}
+                        transition={{ type: "spring", stiffness: 100, damping: 15 }}
                       />
                     </motion.g>
                   ))}
-                  
+
                   {/* Central Hub in Order state */}
                   {isOrdered && (
                     <motion.circle
@@ -134,14 +145,16 @@ export function Bottleneck() {
                 </Button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Column: Problem Cards */}
-          <div className="lg:col-span-6 space-y-6">
-            <p className="font-sans text-base text-[#F0EDE6] opacity-80 leading-relaxed mb-6">
-              When a business relies on manual effort for lead qualification, data transfer, and customer follow-ups, growth inevitably creates administrative friction. We replace manual bottlenecks with automated hubs so your team can focus on closing deals.
-            </p>
-
+          {/* Right Column: Problem / Solution Cards */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 space-y-5"
+          >
             {/* Card 1 */}
             <div className={`p-6 border transition-all duration-300 ${isOrdered ? "bg-[#130D24]/30 border-[#C9A227]/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
               <div className="flex items-start gap-4">
@@ -152,7 +165,7 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">Slipping Leads</h3>
                   <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We establish instant auto-engagement to capture leads. Benefit: 100% of leads engaged within 60 seconds."
+                      ? "Mechanism: We establish instant auto-engagement to capture leads. Benefit: Every lead engaged within 60 seconds of enquiry."
                       : "Delayed response times cause high-value prospects to drop off and switch to faster competitors before you reply."
                     }
                   </p>
@@ -170,7 +183,7 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">Wasted Hours</h3>
                   <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We wire automated data pipelines from capture to CRM. Benefit: Reclaim 20+ administrative hours every week."
+                      ? "Mechanism: We wire automated data pipelines from capture to CRM. Benefit: Reclaim significant administrative hours back every week."
                       : "Your team loses hours every week to manual data entry, lead formatting, and repetitive dashboard busywork."
                     }
                   </p>
@@ -188,15 +201,14 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">Missed Follow-Ups</h3>
                   <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We configure smart CRM follow-ups and lead-nurtures. Benefit: Secure 60% of pipeline revenue that is normally lost."
+                      ? "Mechanism: We configure smart CRM follow-ups and lead-nurtures. Benefit: Recover pipeline revenue that is normally lost to silence."
                       : "Without structured automatic nurturing, warm leads are neglected and get lost in the sales pipeline."
                     }
                   </p>
                 </div>
               </div>
             </div>
-
-          </div>
+          </motion.div>
 
         </div>
       </div>

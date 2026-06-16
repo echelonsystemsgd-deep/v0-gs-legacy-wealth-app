@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
 
 const navLinks = [
@@ -23,6 +23,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
   const isActive = (href: string) => {
@@ -65,7 +66,18 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo - Crest Only */}
-          <Link href="/" className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              if (pathname === "/") {
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              } else {
+                router.push("/")
+                setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
+              }
+            }}
+            className="flex items-center gap-3 cursor-pointer"
+            aria-label="Go to homepage top"
+          >
             <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-14 w-14"}`}>
               <Image 
                 src="/GS_Legacy_Wealth_Watermark-removebg-preview.png" 
@@ -75,7 +87,7 @@ export function Navbar() {
                 priority
               />
             </div>
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">

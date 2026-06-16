@@ -8,7 +8,7 @@ export function SocialProofStrip() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         {/* Label */}
         <p className="text-xxs sm:text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-4">
-          Trusted by ambitious businesses across the UK
+          Built with precision. Grounded in real work.
         </p>
 
         {/* Stats Row */}
@@ -20,8 +20,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2"
           >
-            <span className="text-[#C9A227] text-lg font-serif">50+</span>
-            <span className="text-xs uppercase tracking-wider text-[#A39E96]">Websites Built</span>
+            <span className="text-[#C9A227] text-lg font-serif">10+</span>
+            <span className="text-xs uppercase tracking-wider text-[#A39E96]">Prototypes Built</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>
@@ -33,8 +33,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex items-center gap-2"
           >
-            <span className="text-[#C9A227] text-lg font-serif">100%</span>
-            <span className="text-xs uppercase tracking-wider text-[#A39E96]">Client Satisfaction</span>
+            <span className="text-[#C9A227] text-lg font-serif">Live</span>
+            <span className="text-xs uppercase tracking-wider text-[#A39E96]">Client Results</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>
@@ -46,8 +46,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-2"
           >
-            <span className="text-[#C9A227] text-lg font-serif">48hr</span>
-            <span className="text-xs uppercase tracking-wider text-[#A39E96]">Turnaround</span>
+            <span className="text-[#C9A227] text-lg font-serif">AI</span>
+            <span className="text-xs uppercase tracking-wider text-[#A39E96]">-Powered Builds</span>
           </motion.div>
         </div>
       </div>

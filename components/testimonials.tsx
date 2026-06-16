@@ -40,7 +40,7 @@ export function Testimonials() {
           </h2>
           <div className="flex items-center justify-center gap-1.5 mt-4 text-[#C9A227]">
             <Star className="w-4 h-4 fill-[#C9A227] stroke-none" />
-            <span className="text-sm font-semibold">5.0 average across 40+ clients</span>
+            <span className="text-sm font-semibold">5.0 rating from our early clients</span>
           </div>
         </div>
 

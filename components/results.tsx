@@ -104,13 +104,13 @@ export function Results() {
           <div className="lg:col-span-6 space-y-12">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
-                Real Results
+                What Our Systems Are Built For
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-                Real Results for Real Businesses
+                Engineering For Measurable Outcomes
               </h2>
               <p className="font-sans text-sm text-[#F0EDE6] opacity-70 mt-4">
-                Every number below was earned by a real client — not a projection.
+                These are the outcomes our systems are architected to drive — built with precision, not guesswork.
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export function Results() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-white">Capture & Convert</p>
                 <p className="font-sans text-sm text-[#F0EDE6] opacity-80 mt-1 leading-relaxed max-w-md">
-                  Home services and real estate agencies using automated lead capture see a dramatic lift in qualified bookings — with zero extra headcount.
+                  AI-automated lead capture systems are engineered to significantly boost qualified bookings — without extra headcount. This is the lift our architecture is designed to unlock.
                 </p>
               </div>
             </div>
@@ -133,9 +133,9 @@ export function Results() {
                 <CountUp end={40} suffix="+" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-white">Eliminate Workload</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-white">Hours Reclaimed</p>
                 <p className="font-sans text-sm text-[#F0EDE6] opacity-80 mt-1 leading-relaxed max-w-md">
-                  E-commerce and retail brands automating inventory syncs and support tickets reclaim entire work weeks — redirected to growth, not busywork.
+                  Automating inventory syncs, data pipelines, and support workflows is built to reclaim entire work weeks — redirected to growth, not admin.
                 </p>
               </div>
             </div>

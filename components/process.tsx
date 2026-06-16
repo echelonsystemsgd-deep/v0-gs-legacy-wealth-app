@@ -9,7 +9,7 @@ const steps = [
     number: "01",
     title: "Discovery & Audit",
     sub: "We map every workflow bottleneck in your business",
-    details: "In a 45-minute deep-dive call, we dissect your operations step by step — identifying which processes are stealing the most time and money. We then produce a complete automation opportunity map ranked by impact and effort.",
+    details: "In a 30-minute deep-dive call, we dissect your operations step by step — identifying which processes are stealing the most time and money. We then produce a complete automation opportunity map ranked by impact and effort.",
     deliverable: "Automation Opportunity Report"
   },
   {
