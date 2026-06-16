@@ -99,7 +99,7 @@ export function ContactForm() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="glass rounded-3xl p-8 sm:p-12 border border-gold/30 text-center space-y-6 bg-[#130D24]/40"
+            className="glass rounded-3xl p-8 sm:p-12 border border-accent-gold/30 text-center space-y-6 bg-bg-tertiary/40"
           >
             <div className="mx-auto w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400">
               <CheckCircle2 size={32} />
@@ -117,13 +117,13 @@ export function ContactForm() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="glass rounded-3xl p-6 sm:p-10 border border-gold/15 bg-[#130D24]/10 space-y-6"
+            className="glass rounded-3xl p-6 sm:p-10 border border-border-brand/20 bg-bg-tertiary/10 space-y-6"
           >
             <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               {/* Full Name */}
               <div className="space-y-1.5">
                 <label htmlFor="fullName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <User size={14} className="text-[#C9A227]" /> Full Name *
+                  <User size={14} className="text-accent-gold" /> Full Name *
                 </label>
                 <input
                   id="fullName"
@@ -131,8 +131,8 @@ export function ContactForm() {
                   placeholder="e.g. John Doe"
                   value={formData.fullName}
                   onChange={(e) => updateField("fullName", e.target.value)}
-                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-primary/40 transition-all ${
-                    errors.fullName ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                    errors.fullName ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                   }`}
                 />
                 {errors.fullName && <p className="text-xs text-red-400 mt-1">{errors.fullName}</p>}
@@ -141,7 +141,7 @@ export function ContactForm() {
               {/* Email Address */}
               <div className="space-y-1.5">
                 <label htmlFor="email" className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <Mail size={14} className="text-[#C9A227]" /> Email Address *
+                  <Mail size={14} className="text-accent-gold" /> Email Address *
                 </label>
                 <input
                   id="email"
@@ -149,8 +149,8 @@ export function ContactForm() {
                   placeholder="e.g. john@yourbrand.com"
                   value={formData.email}
                   onChange={(e) => updateField("email", e.target.value)}
-                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-primary/40 transition-all ${
-                    errors.email ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                    errors.email ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                   }`}
                 />
                 {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
@@ -160,7 +160,7 @@ export function ContactForm() {
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <label htmlFor="companyName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Building2 size={14} className="text-[#C9A227]" /> Company / Brand
+                    <Building2 size={14} className="text-accent-gold" /> Company / Brand
                   </label>
                   <input
                     id="companyName"
@@ -168,13 +168,13 @@ export function ContactForm() {
                     placeholder="e.g. Acme Corp"
                     value={formData.companyName}
                     onChange={(e) => updateField("companyName", e.target.value)}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                    className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <label htmlFor="phone" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Phone size={14} className="text-[#C9A227]" /> Phone Number
+                    <Phone size={14} className="text-accent-gold" /> Phone Number
                   </label>
                   <input
                     id="phone"
@@ -182,7 +182,7 @@ export function ContactForm() {
                     placeholder="e.g. +44 7700 900077"
                     value={formData.phone}
                     onChange={(e) => updateField("phone", e.target.value)}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+                    className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
                   />
                 </div>
               </div>
@@ -190,7 +190,7 @@ export function ContactForm() {
               {/* Message */}
               <div className="space-y-1.5">
                 <label htmlFor="message" className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <MessageSquare size={14} className="text-[#C9A227]" /> How can we help? *
+                  <MessageSquare size={14} className="text-accent-gold" /> How can we help? *
                 </label>
                 <textarea
                   id="message"
@@ -198,8 +198,8 @@ export function ContactForm() {
                   placeholder="Tell us about your brand, what services you need, and any technical hurdles you are trying to overcome."
                   value={formData.message}
                   onChange={(e) => updateField("message", e.target.value)}
-                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-primary/40 transition-all resize-none ${
-                    errors.message ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                  className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all resize-none ${
+                    errors.message ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                   }`}
                 />
                 {errors.message && <p className="text-xs text-red-400 mt-1">{errors.message}</p>}
@@ -216,7 +216,7 @@ export function ContactForm() {
                 type="submit"
                 size="lg"
                 disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/95 text-white border border-[#C9A227] rounded-none py-6 text-sm font-bold uppercase tracking-wider transition-colors disabled:opacity-60"
+                className="w-full py-6 text-sm disabled:opacity-60"
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">

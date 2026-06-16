@@ -131,9 +131,9 @@ function BookingFlowInner() {
   // -------------------------------------------------------------------
   const calendlyBase = "https://calendly.com/gslegacywealth/30min"
   const calendlyParams = new URLSearchParams({
-    background_color: "050505",
-    text_color: "F5F5F5",
-    primary_color: "D4AF37",
+    background_color: "0A0A0A",
+    text_color: "F0EDE6",
+    primary_color: "C9A227",
     hide_landing_page_details: "1",
     hide_gdpr_banner: "1",
     name: formData.fullName,
@@ -192,16 +192,16 @@ function BookingFlowInner() {
           <div key={s} className="flex items-center gap-3">
             <motion.div
               animate={{
-                backgroundColor: step >= s ? "rgb(212, 175, 55)" : "rgba(212,175,55,0.15)",
-                borderColor: step >= s ? "rgb(212, 175, 55)" : "rgba(212,175,55,0.3)",
+                backgroundColor: step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
+                borderColor: step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
               }}
               className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
             >
               {step > s ? (
-                <CheckCircle2 size={18} className="text-background" />
+                <CheckCircle2 size={18} className="text-bg-primary" />
               ) : (
                 <span
-                  className={`text-sm font-bold font-serif ${step >= s ? "text-background" : "text-gold/60"}`}
+                  className={`text-sm font-bold font-serif ${step >= s ? "text-bg-primary" : "text-accent-gold/60"}`}
                 >
                   {s}
                 </span>
@@ -209,12 +209,12 @@ function BookingFlowInner() {
             </motion.div>
             <span
               className={`text-sm font-semibold tracking-wide transition-colors ${
-                step >= s ? "text-foreground" : "text-muted-foreground"
+                step >= s ? "text-foreground" : "text-text-secondary"
               }`}
             >
               {s === 1 ? "Qualification" : "Schedule Call"}
             </span>
-            {s < 2 && <ChevronRight size={16} className="text-gold/40 shrink-0" />}
+            {s < 2 && <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />}
           </div>
         ))}
       </div>
@@ -242,13 +242,13 @@ function BookingFlowInner() {
 
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               {/* -- Contact Details -- */}
-              <div className="glass rounded-2xl p-6 border border-gold/15 space-y-5">
-                <p className="text-xs uppercase tracking-widest text-gold font-bold">Contact Details</p>
+              <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-5">
+                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">Contact Details</p>
 
                 {/* Full Name */}
                 <div className="space-y-1.5">
                   <label htmlFor="fullName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <User size={14} className="text-gold" /> Full Name
+                    <User size={14} className="text-accent-gold" /> Full Name
                   </label>
                   <input
                     id="fullName"
@@ -256,8 +256,8 @@ function BookingFlowInner() {
                     placeholder="e.g. James Morgan"
                     value={formData.fullName}
                     onChange={(e) => updateField("fullName", e.target.value)}
-                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/40 transition-all ${
-                      errors.fullName ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                      errors.fullName ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                     }`}
                   />
                   {errors.fullName && (
@@ -268,7 +268,7 @@ function BookingFlowInner() {
                 {/* Email */}
                 <div className="space-y-1.5">
                   <label htmlFor="email" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Mail size={14} className="text-gold" /> Email Address
+                    <Mail size={14} className="text-accent-gold" /> Email Address
                   </label>
                   <input
                     id="email"
@@ -276,8 +276,8 @@ function BookingFlowInner() {
                     placeholder="e.g. james@yourbrand.com"
                     value={formData.email}
                     onChange={(e) => updateField("email", e.target.value)}
-                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/40 transition-all ${
-                      errors.email ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                      errors.email ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                     }`}
                   />
                   {errors.email && (
@@ -289,7 +289,7 @@ function BookingFlowInner() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label htmlFor="companyName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <Building2 size={14} className="text-gold" /> Company / Brand
+                      <Building2 size={14} className="text-accent-gold" /> Company / Brand
                     </label>
                     <input
                       id="companyName"
@@ -297,8 +297,8 @@ function BookingFlowInner() {
                       placeholder="e.g. Morgan Ventures"
                       value={formData.companyName}
                       onChange={(e) => updateField("companyName", e.target.value)}
-                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/40 transition-all ${
-                        errors.companyName ? "border-red-500/60" : "border-gold/15 hover:border-gold/30"
+                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                        errors.companyName ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
                       }`}
                     />
                     {errors.companyName && (
@@ -308,7 +308,7 @@ function BookingFlowInner() {
 
                   <div className="space-y-1.5">
                     <label htmlFor="websiteUrl" className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <Globe size={14} className="text-gold" /> Website{" "}
+                      <Globe size={14} className="text-accent-gold" /> Website{" "}
                       <span className="text-muted-foreground text-xs">(optional)</span>
                     </label>
                     <input
@@ -317,15 +317,15 @@ function BookingFlowInner() {
                       placeholder="https://yourbrand.com"
                       value={formData.websiteUrl}
                       onChange={(e) => updateField("websiteUrl", e.target.value)}
-                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/40 transition-all"
+                      className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
                     />
                   </div>
                 </div>
               </div>
 
               {/* -- Biggest Challenge -- */}
-              <div className="glass rounded-2xl p-6 border border-gold/15 space-y-4">
-                <p className="text-xs uppercase tracking-widest text-gold font-bold">Biggest Challenge</p>
+              <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-4">
+                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">Biggest Challenge</p>
                 <div className="space-y-3">
                   {challengeOptions.map((opt) => {
                     const selected = formData.biggestChallenge === opt.value
@@ -335,24 +335,24 @@ function BookingFlowInner() {
                         type="button"
                         id={`challenge-${opt.value.replace(/\s+/g, "-")}`}
                         onClick={() => updateField("biggestChallenge", opt.value)}
-                        className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold/40 ${
+                        className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-purple/40 ${
                           selected
-                            ? "border-gold bg-gold/10"
-                            : "border-gold/15 bg-background/40 hover:border-gold/40 hover:bg-gold/5"
+                            ? "border-accent-gold bg-accent-gold/10"
+                            : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
                         }`}
                       >
                         <div
                           className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
-                            selected ? "border-gold bg-gold" : "border-gold/40"
+                            selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
                           }`}
                         >
-                          {selected && <div className="w-1.5 h-1.5 rounded-full bg-background" />}
+                          {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
                         </div>
                         <div>
-                          <p className={`text-sm font-semibold ${selected ? "text-gold" : "text-foreground"}`}>
+                          <p className={`text-sm font-semibold ${selected ? "text-accent-gold" : "text-foreground"}`}>
                             {opt.label}
                           </p>
-                          <p className="text-xs text-muted-foreground">{opt.description}</p>
+                          <p className="text-xs text-text-secondary">{opt.description}</p>
                         </div>
                       </button>
                     )
@@ -371,7 +371,7 @@ function BookingFlowInner() {
                 size="lg"
                 disabled={isSubmitting}
                 id="booking-submit"
-                className="w-full bg-gradient-to-r from-gold to-gold-light text-background font-bold text-base py-6 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 disabled:opacity-60"
+                className="w-full py-6 text-base"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
@@ -406,13 +406,13 @@ function BookingFlowInner() {
             className="space-y-6"
           >
             {/* Success Banner */}
-            <div className="glass rounded-2xl p-5 border border-gold/30 flex items-center gap-4">
+            <div className="glass rounded-2xl p-5 border border-accent-gold/30 flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-green-500/15 border border-green-500/30 flex items-center justify-center shrink-0">
                 <CheckCircle2 size={20} className="text-green-400" />
               </div>
               <div>
                 <p className="text-sm font-bold text-foreground">Details captured, {formData.fullName.split(" ")[0]}!</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-text-secondary">
                   Now pick a time below. Your name and email are already pre-filled.
                 </p>
               </div>
@@ -421,7 +421,7 @@ function BookingFlowInner() {
             {/* Selected Summary */}
             <div className="flex flex-wrap gap-2">
               {formData.biggestChallenge && (
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/25 text-xs font-bold text-gold">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
                   {formData.biggestChallenge}
                 </span>
               )}
@@ -449,9 +449,9 @@ function BookingFlowInner() {
                 }
               }}
             />
-            <div className="relative rounded-2xl overflow-hidden border border-gold/20 bg-[#050505] shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden border border-border-brand/20 bg-bg-primary shadow-2xl">
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <Loader2 size={24} className="text-gold/40 animate-spin" />
+                <Loader2 size={24} className="text-accent-gold/40 animate-spin" />
               </div>
               {/* The Calendly widget renders into this div */}
               <div
@@ -464,7 +464,7 @@ function BookingFlowInner() {
 
             <button
               onClick={() => setStep(1)}
-              className="text-xs text-muted-foreground hover:text-gold transition-colors underline underline-offset-2"
+              className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-2"
             >
               ← Go back and edit my details
             </button>

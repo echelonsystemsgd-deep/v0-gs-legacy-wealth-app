@@ -36,7 +36,7 @@ export function FAQHome() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A] border-t border-white/5">
+    <section id="faq" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary border-t border-white/5">
       {/* Background Radial Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"
@@ -49,13 +49,13 @@ export function FAQHome() {
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
             FAQ
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
             System FAQs
           </h2>
-          <p className="font-sans text-sm text-[#F0EDE6] opacity-70 mt-4 max-w-lg mx-auto">
+          <p className="font-sans text-sm text-text-primary opacity-70 mt-4 max-w-lg mx-auto">
             Everything you need to know about our custom build models, timelines, and integration pipeline.
           </p>
         </div>
@@ -68,7 +68,7 @@ export function FAQHome() {
               <div 
                 key={index} 
                 className={`border transition-all duration-300 ${
-                  isOpen ? "border-[#C9A227] bg-[#130D24]/30" : "border-white/5 bg-[#0D0B12]/20 hover:border-white/10"
+                  isOpen ? "border-accent-gold bg-bg-tertiary/30" : "border-border-brand/20 bg-bg-tertiary/10 hover:border-border-brand/40"
                 }`}
               >
                 {/* Header Toggle */}
@@ -77,15 +77,15 @@ export function FAQHome() {
                   className="w-full flex items-center justify-between p-6 sm:p-7 text-left"
                 >
                   <div className="flex items-center gap-4 pr-4">
-                    <HelpCircle size={16} className={isOpen ? "text-[#C9A227]" : "text-purple-400/80"} />
-                    <span className="font-sans font-semibold text-sm sm:text-base text-white hover:text-[#C9A227] transition-colors duration-200">
+                    <HelpCircle size={16} className={isOpen ? "text-accent-gold" : "text-accent-purple/80"} />
+                    <span className="font-sans font-semibold text-sm sm:text-base text-white hover:text-accent-gold transition-colors duration-200">
                       {faq.question}
                     </span>
                   </div>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
-                    className="text-[#A39E96] shrink-0"
+                    className="text-text-secondary shrink-0"
                   >
                     <ChevronDown size={18} />
                   </motion.div>
@@ -102,7 +102,7 @@ export function FAQHome() {
                       className="overflow-hidden"
                     >
                       <div className="px-6 pb-6 sm:px-7 sm:pb-7 pt-0 border-t border-white/5">
-                        <p className="font-sans text-xs sm:text-sm text-[#F0EDE6] opacity-80 leading-relaxed pt-4">
+                        <p className="font-sans text-xs sm:text-sm text-text-primary opacity-80 leading-relaxed pt-4">
                           {faq.answer}
                         </p>
                       </div>

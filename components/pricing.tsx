@@ -212,12 +212,12 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
   if (isHomepage) {
     return (
-      <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
+      <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
 
           {/* Section Header */}
           <div className="text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
               Investment
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
@@ -235,7 +235,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 {billingCycle === "setup" && (
                   <motion.div
                     layoutId="homepageBillingBg"
-                    className="absolute inset-0 rounded-full bg-[#6D28D9] z-[-1]"
+                    className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
                 )}
@@ -250,7 +250,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 {billingCycle === "retainer" && (
                   <motion.div
                     layoutId="homepageBillingBg"
-                    className="absolute inset-0 rounded-full bg-[#6D28D9] z-[-1]"
+                    className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
                 )}
@@ -272,8 +272,8 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""}`}
                 >
                   <div
-                    className={`relative h-full bg-[#130D24] border rounded-none transition-all duration-300 ${
-                      tier.featured ? "border-[#C9A227]" : "border-white/5"
+                    className={`relative h-full bg-bg-tertiary border rounded-none transition-all duration-300 ${
+                      tier.featured ? "border-accent-gold" : "border-white/5"
                     }`}
                   >
                     <CardContent className="p-8 flex flex-col h-full justify-between space-y-8">
@@ -284,32 +284,32 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                             <h3 className="font-serif text-2xl font-bold text-white mb-1">
                               {tier.name}
                             </h3>
-                            <p className="text-[10px] text-[#C9A227] font-bold uppercase tracking-wider">
+                            <p className="text-[10px] text-accent-gold font-bold uppercase tracking-wider">
                               {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
                             </p>
                           </div>
 
                           {tier.featured && (
-                            <span className="bg-[#C9A227] text-black px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
+                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
                               Most Popular
                             </span>
                           )}
                         </div>
 
                         {/* Description */}
-                        <p className="text-sm text-[#F0EDE6] opacity-80 mb-6 min-h-12 leading-relaxed">
+                        <p className="text-sm text-text-primary opacity-80 mb-6 min-h-12 leading-relaxed">
                           {tier.description}
                         </p>
 
                         {/* Price */}
                         <div className="mb-6 border-y border-white/10 py-4">
                           <div className="flex items-baseline gap-1">
-                            <span className="text-sm text-[#F0EDE6] opacity-70">From</span>
+                            <span className="text-sm text-text-primary opacity-70">From</span>
                             <span className="text-4xl font-bold font-serif text-white">
                               £{tier.price}
                             </span>
                           </div>
-                          <span className="text-[10px] text-[#C9A227] uppercase tracking-wider font-semibold block mt-1">
+                          <span className="text-[10px] text-accent-gold uppercase tracking-wider font-semibold block mt-1">
                             {tier.interval}
                           </span>
                         </div>
@@ -318,8 +318,8 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                         <div className="space-y-3">
                           {tier.features.map((feature, i) => (
                             <div key={i} className="flex items-start gap-2.5">
-                              <span className="text-[#C9A227] text-sm shrink-0 mt-0.5">✦</span>
-                              <span className="text-xs text-[#F0EDE6] opacity-85 leading-normal">
+                              <span className="text-accent-gold text-sm shrink-0 mt-0.5">✦</span>
+                              <span className="text-xs text-text-primary opacity-85 leading-normal">
                                 {feature}
                               </span>
                             </div>
@@ -331,11 +331,8 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                       <Button
                         asChild
                         size="lg"
-                        className={`w-full rounded-none transition-all duration-300 font-bold uppercase tracking-wider text-xs py-5 ${
-                          tier.featured
-                            ? "bg-[#6D28D9] text-white hover:bg-[#5B21B6] border border-[#C9A227]"
-                            : "bg-transparent text-white border border-[#C9A227] hover:bg-[#C9A227] hover:text-black"
-                        }`}
+                        variant={tier.featured ? "default" : "outline"}
+                        className="w-full py-5 text-xs"
                       >
                         <Link href={`/book?tier=${tier.tag}`}>
                           <span>Book Strategy Session</span>
@@ -352,7 +349,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           <div className="text-center">
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A227] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-accent-gold hover:underline"
             >
               View full pricing breakdown →
             </Link>
@@ -364,7 +361,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
   // Full Retainer / Interactive Pricing view (Standalone page)
   return (
-    <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden bg-[#0A0A0A]">
+    <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden bg-bg-primary">
       <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-primary/3 blur-[120px] pointer-events-none" />
       <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-primary/3 blur-[120px] pointer-events-none" />
 
@@ -376,14 +373,14 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 glass rounded-3xl p-6 sm:p-10 bg-[#130D24]/10 border border-white/5"
+          className="mb-20 glass rounded-3xl p-6 sm:p-10 bg-bg-tertiary/10 border border-white/5"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
               <Calculator size={20} />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest text-[#C9A227] font-bold">Interactive Estimator</span>
+              <span className="text-xs uppercase tracking-widest text-accent-gold font-bold">Interactive Estimator</span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Bespoke System Return Calculator</h3>
             </div>
           </div>
@@ -391,9 +388,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           <div className="grid lg:grid-cols-12 gap-8 items-center">
 
             {/* Output Panel — appears FIRST on mobile, right column on desktop */}
-            <div className="lg:col-span-5 bg-[#130D24]/40 rounded-none p-6 border border-white/5 space-y-6 order-first lg:order-last">
+            <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-none p-6 border border-white/5 space-y-6 order-first lg:order-last">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-[#0A0A0A] rounded-none border border-white/5">
+                <div className="p-4 bg-bg-primary rounded-none border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Clock size={12} className="text-accent" />
                     <span>Annual Time Reclaimed</span>
@@ -403,7 +400,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#0A0A0A] rounded-none border border-white/5">
+                <div className="p-4 bg-bg-primary rounded-none border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Zap size={12} className="text-accent" />
                     <span>Est. Growth Lift (15%)</span>
@@ -414,9 +411,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 </div>
               </div>
 
-              <div className="p-5 bg-gradient-to-br from-[#6D28D9]/10 to-transparent rounded-none border border-[#6D28D9]/20">
-                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-[#C9A227]">Total Est. Annual Value Unlocked</div>
-                <div className="text-3xl font-bold font-serif text-[#C9A227]">
+              <div className="p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-none border border-accent-purple/20">
+                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-accent-gold">Total Est. Annual Value Unlocked</div>
+                <div className="text-3xl font-bold font-serif text-accent-gold">
                   <RollingNumber value={totalValueUnlocked} prefix="£" />
                 </div>
                 <p className="text-xxs text-muted-foreground mt-2 leading-tight">
@@ -426,7 +423,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
               <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-none text-xs">
                 <span className="text-muted-foreground">Recommended Alignment:</span>
-                <span className="flex items-center gap-1.5 font-bold text-accent text-[#C9A227]">
+                <span className="flex items-center gap-1.5 font-bold text-accent text-accent-gold">
                   <Crown size={12} />
                   {recommendedTier} System Tier
                 </span>
@@ -443,7 +440,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Current Monthly Revenue</span>
-                  <span className="text-accent font-bold font-serif text-base text-[#C9A227] hidden md:block">
+                  <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
                     £{revenue.toLocaleString()}
                   </span>
                 </div>
@@ -453,7 +450,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   <button
                     onClick={() => setRevenue(Math.max(5000, revenue - 5000))}
                     aria-label="Decrease revenue"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     −
                   </button>
@@ -463,7 +460,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   <button
                     onClick={() => setRevenue(Math.min(100000, revenue + 5000))}
                     aria-label="Increase revenue"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     +
                   </button>
@@ -479,7 +476,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   onChange={(e) => setRevenue(Number(e.target.value))}
                   className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
                   style={{
-                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((revenue - 5000) / 95000) * 100}%, #1a1a1a ${((revenue - 5000) / 95000) * 100}%, #1a1a1a 100%)`
+                    background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) 100%)`
                   }}
                 />
               </div>
@@ -488,7 +485,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
-                  <span className="text-accent font-bold font-serif text-base text-[#C9A227] hidden md:block">
+                  <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
                     {manualHours} Hours
                   </span>
                 </div>
@@ -498,7 +495,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   <button
                     onClick={() => setManualHours(Math.max(2, manualHours - 1))}
                     aria-label="Decrease hours"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     −
                   </button>
@@ -508,7 +505,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   <button
                     onClick={() => setManualHours(Math.min(40, manualHours + 1))}
                     aria-label="Increase hours"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     +
                   </button>
@@ -524,7 +521,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   onChange={(e) => setManualHours(Number(e.target.value))}
                   className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
                   style={{
-                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((manualHours - 2) / 38) * 100}%, #1a1a1a ${((manualHours - 2) / 38) * 100}%, #1a1a1a 100%)`
+                    background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) 100%)`
                   }}
                 />
               </div>
@@ -535,7 +532,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
         {/* Switcher */}
         <div className="text-center mb-12 relative z-10">
-          <p className="text-xs uppercase tracking-widest text-[#C9A227] font-bold mb-3">Tailored Options</p>
+          <p className="text-xs uppercase tracking-widest text-accent-gold font-bold mb-3">Tailored Options</p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-white">Strategic </span>
             <span className="text-gradient-gold">Investment Models</span>
@@ -551,7 +548,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               {billingCycle === "setup" && (
                 <motion.div
                   layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-primary z-[-1]"
+                  className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -566,7 +563,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               {billingCycle === "retainer" && (
                 <motion.div
                   layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-primary z-[-1]"
+                  className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -590,8 +587,8 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <div
-                    className={`relative h-full bg-[#130D24] border border-border hover:border-primary/45 rounded-none transition-all duration-300 ${
-                      tier.featured ? "border-[#C9A227] md:scale-105 z-10 bg-[#130D24]" : ""
+                    className={`relative h-full bg-bg-tertiary border border-border hover:border-accent-gold/45 rounded-none transition-all duration-300 ${
+                      tier.featured ? "border-accent-gold md:scale-105 z-10 bg-bg-tertiary" : ""
                     }`}
                   >
                     <CardContent className="p-8 flex flex-col h-full justify-between">
@@ -601,19 +598,19 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                             <h3 className="font-serif text-2xl font-bold text-white mb-1">
                               {tier.name}
                             </h3>
-                            <p className="text-[10px] text-[#C9A227] font-bold uppercase tracking-wider">
+                            <p className="text-[10px] text-accent-gold font-bold uppercase tracking-wider">
                               {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
                             </p>
                           </div>
                           
                           {tier.featured && (
-                            <span className="bg-[#C9A227] text-black px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
+                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
                               Most Popular
                             </span>
                           )}
                           
                           {!tier.featured && isRecommended && (
-                            <span className="border border-primary/30 bg-primary/5 text-accent px-3 py-1 rounded-full text-xxs font-bold">
+                            <span className="border border-accent-gold/30 bg-accent-gold/5 text-accent-gold px-3 py-1 rounded-full text-xxs font-bold">
                               Calculated Fit
                             </span>
                           )}
@@ -639,7 +636,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                           {tier.features.map((feature, i) => (
                             <div key={i} className="flex items-start gap-3">
                               <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 border border-primary/20">
-                                <ShieldCheck size={12} className="text-[#C9A227]" />
+                                <ShieldCheck size={12} className="text-accent-gold" />
                               </div>
                               <span className="text-sm text-[#F0EDE6] opacity-80 font-medium leading-normal">
                                 {feature}
@@ -653,11 +650,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                         asChild
                         size="lg"
                         variant={tier.featured ? "default" : "outline"}
-                        className={`w-full group rounded-none transition-all duration-300 font-bold ${
-                          tier.featured
-                            ? "bg-primary text-white font-extrabold tracking-wide hover:bg-primary/95"
-                            : "border-[#C9A227] text-white hover:bg-[#C9A227] hover:text-black"
-                        }`}
+                        className="w-full group font-bold"
                       >
                         <Link href={`/book?tier=${tier.tag}`}>
                           <span>{tier.cta}</span>
@@ -676,7 +669,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           <div className="text-center">
             <button
               onClick={() => setIsMatrixOpen(!isMatrixOpen)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-primary/20 bg-secondary/30 text-xs font-bold uppercase tracking-wider text-white hover:text-[#C9A227] hover:border-primary/45 hover:bg-secondary/50 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-primary/20 bg-secondary/30 text-xs font-bold uppercase tracking-wider text-white hover:text-accent-gold hover:border-accent-gold/45 hover:bg-secondary/50 transition-all duration-300"
             >
               <span>{isMatrixOpen ? "Hide Detailed Features" : "Compare Features in Detail"}</span>
               <motion.div
@@ -701,7 +694,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                     <table className="w-full text-left border-collapse min-w-[600px]">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-[#C9A227] font-bold w-1/3 sticky left-0 bg-[#0A0A0A] z-20 border-r border-border">Feature Category</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-bg-primary z-20 border-r border-border">Feature Category</th>
                           <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Launch Setup</th>
                           <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Legacy System</th>
                           <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Elite Suite</th>
@@ -711,15 +704,15 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                         {comparisonCategories.map((cat, idx) => (
                           <tr key={idx} className="contents">
                             <tr className="bg-primary/5">
-                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-[#C9A227] tracking-widest sticky left-0 bg-[#0A0A0A] z-10">
+                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-accent-gold tracking-widest sticky left-0 bg-bg-primary z-10">
                                 {cat.category}
                               </td>
                             </tr>
                             {cat.items.map((item, itemIdx) => (
                               <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
-                                <td className="py-4 px-4 text-sm font-medium text-white sticky left-0 bg-[#0A0A0A] z-10 border-r border-border">{item.name}</td>
+                                <td className="py-4 px-4 text-sm font-medium text-white sticky left-0 bg-bg-primary z-10 border-r border-border">{item.name}</td>
                                 <td className="py-4 text-sm text-muted-foreground text-center">{item.launch}</td>
-                                <td className="py-4 text-sm text-[#C9A227] font-semibold text-center">{item.legacy}</td>
+                                <td className="py-4 text-sm text-accent-gold font-semibold text-center">{item.legacy}</td>
                                 <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
                               </tr>
                             ))}
@@ -735,7 +728,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
         </div>
 
         <p className="text-center text-sm text-muted-foreground relative z-10">
-          Looking for a custom enterprise integration? <Link href="/book" className="text-[#C9A227] hover:underline font-semibold">Start the conversation.</Link>
+          Looking for a custom enterprise integration? <Link href="/book" className="text-accent-gold hover:underline font-semibold">Start the conversation.</Link>
         </p>
       </div>
     </section>

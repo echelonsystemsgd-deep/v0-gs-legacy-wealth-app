@@ -60,7 +60,7 @@ export function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-[#0D0B12] border-b border-gold/10" : "bg-transparent"
+        isScrolled ? "bg-bg-primary/95 border-b border-border-brand/25 backdrop-blur-md" : "bg-transparent"
       }`}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -95,10 +95,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm transition-colors duration-200 hover:text-gold ${
+                className={`text-sm transition-colors duration-200 hover:text-accent-gold ${
                   isActive(link.href) 
-                    ? "text-gold font-semibold" 
-                    : "text-muted-foreground"
+                    ? "text-accent-gold font-semibold" 
+                    : "text-text-secondary"
                 }`}
               >
                 {link.label}
@@ -111,7 +111,7 @@ export function Navbar() {
             <Button
               asChild
               variant="outline"
-              className="border-gold/60 text-gold hover:bg-gold hover:text-black transition-colors duration-300 bg-transparent rounded-none px-6 py-2"
+              className="px-6 py-2"
             >
               <Link href="/book">Book a Strategy Call</Link>
             </Button>
@@ -137,7 +137,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-20 bg-[#1A0A2E] z-50 lg:hidden overflow-y-auto flex flex-col"
+            className="fixed inset-0 top-20 bg-bg-secondary z-50 lg:hidden overflow-y-auto flex flex-col"
             style={{
               height: "calc(100vh - 5rem)",
             }}
@@ -148,8 +148,8 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block text-xl py-2 border-b border-white/5 transition-colors duration-200 hover:text-gold ${
-                    isActive(link.href) ? "text-gold font-semibold" : "text-muted-foreground"
+                  className={`block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold ${
+                    isActive(link.href) ? "text-accent-gold font-semibold" : "text-text-secondary"
                   }`}
                 >
                   {link.label}
@@ -159,7 +159,7 @@ export function Navbar() {
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full border-gold/60 text-gold hover:bg-gold hover:text-black transition-colors duration-300 bg-transparent rounded-none py-6 text-lg"
+                  className="w-full py-6 text-lg"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
                     Book a Strategy Call

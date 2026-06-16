@@ -27,19 +27,19 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
+    <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
         
         {/* Section Header */}
         <div className="text-center mb-20">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
             Testimonials
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
             Trusted by Ambitious Teams
           </h2>
-          <div className="flex items-center justify-center gap-1.5 mt-4 text-[#C9A227]">
-            <Star className="w-4 h-4 fill-[#C9A227] stroke-none" />
+          <div className="flex items-center justify-center gap-1.5 mt-4 text-accent-gold">
+            <Star className="w-4 h-4 fill-accent-gold stroke-none" />
             <span className="text-sm font-semibold">5.0 rating from our early clients</span>
           </div>
         </div>
@@ -54,26 +54,26 @@ export function Testimonials() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-[#130D24] border border-white/5 border-t-[3px] border-t-[#C9A227] rounded-none transition-all duration-300 hover:shadow-[0_10px_30px_rgba(109,40,217,0.15)]">
+              <Card className="h-full bg-bg-tertiary border border-border-brand/20 border-t-[3px] border-t-accent-gold rounded-none transition-all duration-300 hover:shadow-[0_10px_30px_rgba(109,40,217,0.1)]">
                 <CardContent className="p-8 space-y-6 flex flex-col justify-between h-full">
                   
                   <div className="space-y-6">
                     {/* Outcome Badge */}
-                    <div className="inline-flex px-3 py-1 border border-[#C9A227]/30 bg-transparent rounded-none">
-                      <span className="text-[9px] font-mono font-bold tracking-widest text-[#C9A227]">
+                    <div className="inline-flex px-3 py-1 border border-accent-gold/30 bg-transparent rounded-none">
+                      <span className="text-[9px] font-mono font-bold tracking-widest text-accent-gold">
                         {testimonial.badge}
                       </span>
                     </div>
 
                     {/* Stars */}
-                    <div className="flex items-center gap-0.5 text-[#C9A227]">
+                    <div className="flex items-center gap-0.5 text-accent-gold">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-[#C9A227] stroke-none" />
+                        <Star key={i} className="w-3.5 h-3.5 fill-accent-gold stroke-none" />
                       ))}
                     </div>
 
                     {/* Quote */}
-                    <p className="font-sans text-sm text-[#F0EDE6] opacity-90 leading-relaxed italic">
+                    <p className="font-sans text-sm text-text-primary opacity-90 leading-relaxed italic">
                       "{testimonial.content}"
                     </p>
                   </div>
@@ -81,14 +81,14 @@ export function Testimonials() {
                   {/* Client Info */}
                   <div className="pt-6 border-t border-white/5 flex items-center gap-4">
                     {/* Initial Circle Icon */}
-                    <div className="w-10 h-10 rounded-full bg-[#6D28D9]/20 border border-[#6D28D9]/40 flex items-center justify-center font-bold text-[#C9A227] font-serif text-sm">
+                    <div className="w-10 h-10 rounded-full bg-accent-purple/20 border border-accent-purple/40 flex items-center justify-center font-bold text-accent-gold font-serif text-sm">
                       {testimonial.name.split(" ").map(n => n[0]).join("")}
                     </div>
                     <div>
                       <p className="font-sans font-semibold text-white text-sm">
                         {testimonial.name}
                       </p>
-                      <p className="font-sans text-[10px] text-[#C9A227] tracking-wider uppercase">
+                      <p className="font-sans text-[10px] text-accent-gold tracking-wider uppercase">
                         {testimonial.role}
                       </p>
                     </div>

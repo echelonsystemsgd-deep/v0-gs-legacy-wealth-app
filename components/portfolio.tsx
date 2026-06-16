@@ -41,8 +41,8 @@ type PortfolioItem = typeof portfolioItems[number]
 function PremiumMockup({ item }: { item: PortfolioItem }) {
   if (item.title === "Elite Fitness Studio") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-[#0E0E10] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-[#16161A] border-b border-white/5 shrink-0">
+      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -63,15 +63,15 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
             <p className="text-[7px] text-white/50 leading-relaxed max-w-[80%]">High-intensity training programs for high-performers.</p>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
-            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
               <span className="text-[7px] text-white/40 block font-mono">Daily Active</span>
               <span className="text-[9px] font-bold text-amber-500">142</span>
             </div>
-            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
               <span className="text-[7px] text-white/40 block font-mono">Booking Rate</span>
               <span className="text-[9px] font-bold text-amber-500">94%</span>
             </div>
-            <div className="bg-[#16161A] border border-white/5 rounded p-1.5 text-center">
+            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
               <span className="text-[7px] text-white/40 block font-mono">Retention</span>
               <span className="text-[9px] font-bold text-amber-500">98%</span>
             </div>
@@ -83,8 +83,8 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
 
   if (item.title === "Prestige Properties") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-[#0B0D0C] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-[#121614] border-b border-white/5 shrink-0">
+      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -104,7 +104,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
             <h4 className="text-[11px] font-bold text-white leading-tight">The Mayfair Penthouse</h4>
             <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Luxury architectural design with panoramic London views.</p>
           </div>
-          <div className="bg-[#121614] border border-white/5 rounded p-2 flex justify-between items-center">
+          <div className="bg-bg-secondary border border-white/5 rounded p-2 flex justify-between items-center">
             <div>
               <span className="text-[6px] text-white/40 block font-mono">GUIDE PRICE</span>
               <span className="text-[9px] font-bold text-[#f5f5f7]">£4,250,000</span>
@@ -120,8 +120,8 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
 
   if (item.title === "Strategic Growth Co.") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-[#090A0F] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-[#12131C] border-b border-white/5 shrink-0">
+      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -166,7 +166,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
         </div>
       </div>
       <div className="p-4 space-y-3">
-        <div className="h-4 bg-gold/20 rounded w-2/3" />
+        <div className="h-4 bg-accent-gold/20 rounded w-2/3" />
         <div className="h-3 bg-secondary rounded w-full" />
         <div className="h-3 bg-secondary rounded w-4/5" />
       </div>
@@ -199,7 +199,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
           className="relative z-10 w-full max-w-6xl h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-primary/20 bg-card shadow-2xl shadow-black/60"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center gap-3 px-4 py-3 bg-[#0d0d0d] border-b border-white/10 shrink-0">
+          <div className="flex items-center gap-3 px-4 py-3 bg-bg-primary border-b border-white/10 shrink-0">
             <div className="flex gap-1.5">
               <button
                 onClick={onClose}
@@ -242,7 +242,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
 
           <div className="relative flex-1 bg-white">
             {isLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a14] gap-3 z-10">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-primary gap-3 z-10">
                 <Loader2 size={28} className="text-accent animate-spin" />
                 <p className="text-sm text-muted-foreground">Loading {item.title}...</p>
               </div>
@@ -337,11 +337,11 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <X size={18} />
           </button>
 
-          <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[#C9A227] mb-6">
+          <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-accent-gold mb-6">
             <Wrench size={28} />
           </div>
 
-          <h3 className="font-serif text-2xl font-bold text-[#f5f5f7] mb-3">
+          <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
             Currently Under Construction
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
@@ -368,10 +368,10 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   onClick={handleCopy}
                   className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-card border border-primary/20 hover:border-primary/45 text-accent transition-all cursor-pointer relative overflow-hidden group"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A227]/60 leading-none">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent-gold/60 leading-none">
                     Concierge Desk Email
                   </span>
-                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-[#C9A227] transition-colors">
+                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-accent-gold transition-colors">
                     gslegacywealth@gmail.com
                   </span>
                   <span className="text-[10px] text-muted-foreground mt-1 underline decoration-primary/30 group-hover:decoration-primary transition-all">
@@ -392,7 +392,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-[#C9A227]"
+              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-accent-gold"
             >
               <p className="font-bold mb-1">Thank you for your interest!</p>
               <p className="text-xs text-muted-foreground">We will notify you as soon as this site is live.</p>
@@ -461,12 +461,12 @@ export function Portfolio({ limit }: { limit?: number }) {
 
   return (
     <>
-      <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
+      <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
           
           {/* Section Header */}
           <div className="text-center mb-16">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold mb-3">
               Selected Work
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
@@ -483,13 +483,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-none border border-white/10 hover:border-[#C9A227] transition-all duration-300 bg-[#0E0E10] aspect-[16/10]"
+                className="group relative overflow-hidden rounded-none border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10]"
               >
                 {/* Visual Image / Mockup background */}
                 <div className="w-full h-full relative z-10">
                   {item.image ? (
                     <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-bg-secondary border-b border-border/50 shrink-0">
                         <div className="flex gap-1">
                           <div className="w-2 h-2 rounded-full bg-red-500/70" />
                           <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
@@ -498,11 +498,11 @@ export function Portfolio({ limit }: { limit?: number }) {
                       </div>
                       <div className="relative flex-1">
                         <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover object-top"
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                           src={item.image}
+                           alt={item.title}
+                           fill
+                           className="object-cover object-top"
+                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
                       </div>
                     </div>
@@ -514,7 +514,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                 {/* Hover Reveal Slide-Up Overlay — Desktop only */}
                 <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 hidden md:flex flex-col justify-center items-center p-8 text-center space-y-4">
                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 space-y-3">
-                    <p className="text-xs uppercase tracking-widest text-[#C9A227] font-semibold">
+                    <p className="text-xs uppercase tracking-widest text-accent-gold font-semibold">
                       {item.category}
                     </p>
                     <h3 className="font-serif text-2xl font-bold text-white">
@@ -524,7 +524,6 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-[#C9A227] text-white hover:bg-[#C9A227] hover:text-black rounded-none transition-colors"
                         onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
                       >
                         <span className="text-xs font-bold uppercase tracking-wider">
@@ -536,9 +535,9 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </div>
 
                 {/* Mobile Bottom Bar — always visible, hidden on desktop */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-[#C9A227]/30 backdrop-blur-sm">
+                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm">
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-widest text-[#C9A227] font-semibold leading-none mb-0.5 truncate">
+                    <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none mb-0.5 truncate">
                       {item.category}
                     </p>
                     <h3 className="font-serif text-sm font-bold text-white truncate">
@@ -546,7 +545,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                     </h3>
                   </div>
                   <button
-                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-black bg-[#C9A227] px-3 py-1.5 rounded-none active:opacity-80 transition-opacity"
+                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-none active:opacity-80 transition-opacity"
                     onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
                   >
                     View →
@@ -563,7 +562,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                 asChild 
                 size="lg" 
                 variant="outline"
-                className="border-[#C9A227] text-white hover:bg-[#C9A227] hover:text-black rounded-none px-8 py-6 text-sm font-bold tracking-wider uppercase transition-colors"
+                className="px-8 py-6 text-sm font-bold tracking-wider uppercase"
               >
                 <Link href="/portfolio" className="flex items-center gap-2">
                   View Full Portfolio

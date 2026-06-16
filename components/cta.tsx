@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 
 export function CTA() {
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden bg-[#1A0A2E]">
+    <section className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">
       {/* Background Radial Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"
@@ -33,7 +33,7 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-sans text-base sm:text-lg text-[#F0EDE6] opacity-90 max-w-xl leading-relaxed"
+          className="font-sans text-base sm:text-lg text-text-primary opacity-90 max-w-xl leading-relaxed"
         >
           Limited client spots available. We only work with businesses serious about growth.
         </motion.p>
@@ -49,7 +49,7 @@ export function CTA() {
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto bg-[#C9A227] hover:bg-[#B8952A] text-black border border-[#C9A227] rounded-none px-10 py-7 text-sm font-extrabold tracking-wider uppercase transition-colors"
+            className="w-full sm:w-auto px-10 py-7"
           >
             <Link href="/book">
               Book Your Free Strategy Call

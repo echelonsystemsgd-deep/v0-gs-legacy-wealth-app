@@ -96,32 +96,32 @@ export function Results() {
   }, [visibleLogs])
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A] border-y border-white/5">
+    <section className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary border-y border-white/5">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           
           {/* Left Column: Big Stats */}
           <div className="lg:col-span-6 space-y-12">
             <div>
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
                 What Our Systems Are Built For
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
                 Engineering For Measurable Outcomes
               </h2>
-              <p className="font-sans text-sm text-[#F0EDE6] opacity-70 mt-4">
+              <p className="font-sans text-sm text-text-primary opacity-70 mt-4">
                 These are the outcomes our systems are architected to drive — built with precision, not guesswork.
               </p>
             </div>
 
             {/* Stats block 1 */}
             <div className="space-y-3">
-              <div className="font-serif text-5xl sm:text-6xl font-bold text-[#C9A227] tracking-tight">
+              <div className="font-serif text-5xl sm:text-6xl font-bold text-accent-gold tracking-tight">
                 <CountUp end={35} suffix="%" />
               </div>
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-white">Capture & Convert</p>
-                <p className="font-sans text-sm text-[#F0EDE6] opacity-80 mt-1 leading-relaxed max-w-md">
+                <p className="font-sans text-sm text-text-primary opacity-80 mt-1 leading-relaxed max-w-md">
                   AI-automated lead capture systems are engineered to significantly boost qualified bookings — without extra headcount. This is the lift our architecture is designed to unlock.
                 </p>
               </div>
@@ -129,12 +129,12 @@ export function Results() {
 
             {/* Stats block 2 */}
             <div className="space-y-3">
-              <div className="font-serif text-5xl sm:text-6xl font-bold text-[#C9A227] tracking-tight">
+              <div className="font-serif text-5xl sm:text-6xl font-bold text-accent-gold tracking-tight">
                 <CountUp end={40} suffix="+" />
               </div>
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-white">Hours Reclaimed</p>
-                <p className="font-sans text-sm text-[#F0EDE6] opacity-80 mt-1 leading-relaxed max-w-md">
+                <p className="font-sans text-sm text-text-primary opacity-80 mt-1 leading-relaxed max-w-md">
                   Automating inventory syncs, data pipelines, and support workflows is built to reclaim entire work weeks — redirected to growth, not admin.
                 </p>
               </div>
@@ -143,14 +143,14 @@ export function Results() {
 
           {/* Right Column: Scrolling Terminal Console */}
           <div className="lg:col-span-6 w-full max-w-lg mx-auto">
-            <div className="bg-[#0D0B12] border border-[#C9A227]/20 rounded-none overflow-hidden shadow-2xl flex flex-col h-[320px] font-mono text-[11px] text-[#F0EDE6] relative">
+            <div className="bg-bg-tertiary border border-border-brand/30 rounded-none overflow-hidden shadow-2xl flex flex-col h-[320px] font-mono text-[11px] text-text-primary relative">
               
               {/* Terminal Title Bar */}
-              <div className="flex items-center gap-1.5 px-4 py-3 bg-[#111318] border-b border-white/5 shrink-0 select-none">
+              <div className="flex items-center gap-1.5 px-4 py-3 bg-bg-secondary border-b border-white/5 shrink-0 select-none">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                <span className="text-[9px] uppercase tracking-wider text-[#A39E96] ml-4 font-sans font-bold">
+                <span className="text-[9px] uppercase tracking-wider text-text-secondary ml-4 font-sans font-bold">
                   System Engine Monitor
                 </span>
               </div>
@@ -163,7 +163,7 @@ export function Results() {
                 {visibleLogs.map((log, index) => {
                   let colorClass = "text-white/60"
                   if (log.startsWith("[SUCCESS]")) colorClass = "text-green-400 font-bold"
-                  if (log.startsWith("[AI CONCIERGE]") || log.startsWith("[AI AGENT]")) colorClass = "text-[#C9A227]"
+                  if (log.startsWith("[AI CONCIERGE]") || log.startsWith("[AI AGENT]")) colorClass = "text-accent-gold"
                   if (log.startsWith("[CRM]") || log.startsWith("[CALENDAR]")) colorClass = "text-purple-400"
                   if (log.startsWith("[SYSTEM]")) colorClass = "text-blue-400"
                   

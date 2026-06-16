@@ -15,7 +15,7 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-[#F0EDE6] overflow-x-hidden font-sans">
+    <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden font-sans">
       <Navbar />
       <Hero />
       <SocialProofStrip />
