@@ -214,27 +214,61 @@ export function Pricing({ isHomepage = false }: PricingProps) {
     return (
       <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
-          
+
           {/* Section Header */}
-          <div className="text-center mb-20">
+          <div className="text-center mb-12">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
               Investment
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
               Transparent Pricing. Premium Results.
             </h2>
+
+            {/* Billing Toggle */}
+            <div className="inline-flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative mt-2">
+              <button
+                onClick={() => setBillingCycle("setup")}
+                className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                  billingCycle === "setup" ? "text-white font-bold" : "text-white/40"
+                }`}
+              >
+                {billingCycle === "setup" && (
+                  <motion.div
+                    layoutId="homepageBillingBg"
+                    className="absolute inset-0 rounded-full bg-[#6D28D9] z-[-1]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                One-Time Setup
+              </button>
+              <button
+                onClick={() => setBillingCycle("retainer")}
+                className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                  billingCycle === "retainer" ? "text-white font-bold" : "text-white/40"
+                }`}
+              >
+                {billingCycle === "retainer" && (
+                  <motion.div
+                    layoutId="homepageBillingBg"
+                    className="absolute inset-0 rounded-full bg-[#6D28D9] z-[-1]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                Monthly Retainer
+              </button>
+            </div>
           </div>
 
           {/* Pricing Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 items-stretch">
-            {setupTiers.map((tier, index) => {
-              return (
+            <AnimatePresence mode="wait">
+              {activeTiers.map((tier, index) => (
                 <motion.div
-                  key={tier.name}
+                  key={`homepage-${billingCycle}-${tier.name}`}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, delay: index * 0.08 }}
                   className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""}`}
                 >
                   <div
@@ -251,10 +285,10 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                               {tier.name}
                             </h3>
                             <p className="text-[10px] text-[#C9A227] font-bold uppercase tracking-wider">
-                              System Build
+                              {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
                             </p>
                           </div>
-                          
+
                           {tier.featured && (
                             <span className="bg-[#C9A227] text-black px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
                               Most Popular
@@ -310,17 +344,17 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                     </CardContent>
                   </div>
                 </motion.div>
-              )
-            })}
+              ))}
+            </AnimatePresence>
           </div>
 
           {/* Under Link */}
           <div className="text-center">
-            <Link 
-              href="/book" 
+            <Link
+              href="/pricing"
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A227] hover:underline"
             >
-              Not sure which plan? Book a free call and we'll advise.
+              View full pricing breakdown →
             </Link>
           </div>
         </div>

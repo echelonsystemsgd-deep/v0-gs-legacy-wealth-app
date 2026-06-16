@@ -511,8 +511,8 @@ export function Portfolio({ limit }: { limit?: number }) {
                   )}
                 </div>
 
-                {/* Hover Reveal Slide-Up Overlay */}
-                <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex flex-col justify-center items-center p-8 text-center space-y-4">
+                {/* Hover Reveal Slide-Up Overlay — Desktop only */}
+                <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 hidden md:flex flex-col justify-center items-center p-8 text-center space-y-4">
                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 space-y-3">
                     <p className="text-xs uppercase tracking-widest text-[#C9A227] font-semibold">
                       {item.category}
@@ -533,6 +533,24 @@ export function Portfolio({ limit }: { limit?: number }) {
                       </Button>
                     </div>
                   </div>
+                </div>
+
+                {/* Mobile Bottom Bar — always visible, hidden on desktop */}
+                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-[#C9A227]/30 backdrop-blur-sm">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-widest text-[#C9A227] font-semibold leading-none mb-0.5 truncate">
+                      {item.category}
+                    </p>
+                    <h3 className="font-serif text-sm font-bold text-white truncate">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <button
+                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-black bg-[#C9A227] px-3 py-1.5 rounded-none active:opacity-80 transition-opacity"
+                    onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
+                  >
+                    View →
+                  </button>
                 </div>
               </motion.div>
             ))}
