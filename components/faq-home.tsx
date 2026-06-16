@@ -1,0 +1,119 @@
+"use client"
+
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronDown, HelpCircle } from "lucide-react"
+
+const faqs = [
+  {
+    question: "How do custom AI automations actually save my business time?",
+    answer:
+      "We replace manual repetitive workflows (like copying data from lead forms to CRMs, scheduling calls, drafting standard emails, or formatting customer reports) with fully automated pipelines. For example, when a prospect submits a form, an AI qualifies them, syncs their profile to your CRM, books the call, and alerts your team via Slack—all in under a second. This typically reclaims 20 to 40 hours of admin time per week."
+  },
+  {
+    question: "What is the timeline for a custom platform and system build?",
+    answer:
+      "A standard high-performance authority platform with core CRM integrations and automated lead routing is fully built, tested, and launched within 2 to 4 weeks. High-ticket custom multi-system architectures under the Elite tier may require up to 6 weeks, which includes extensive validation and custom API connectivity."
+  },
+  {
+    question: "Are your pricing tiers one-time setups or recurring contracts?",
+    answer:
+      "Our core builds (Launch, Legacy, and Elite) are structured as one-time setup investments. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers (Ascent, Sovereign, and Apex) for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning."
+  },
+  {
+    question: "Will the custom website and dashboard run fast on mobile?",
+    answer:
+      "Yes, absolutely. We prioritize high-speed architecture, responsive fluid layouts, and server-side optimization to guarantee a Mobile Speed Score of 90+ on Google PageSpeed Insights. Your clients will experience instant loading times on any screen size."
+  },
+  {
+    question: "Do you build custom integrations for existing platforms?",
+    answer:
+      "Yes. We seamlessly connect your custom website and AI agents with existing CRM, calendar, and email software—including Salesforce, HubSpot, ActiveCampaign, Slack, Google Workspace, and Calendly. We construct custom webhooks to ensure flawless cross-platform data flow."
+  }
+]
+
+export function FAQHome() {
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+
+  return (
+    <section id="faq" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A] border-t border-white/5">
+      {/* Background Radial Glow */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          background: "radial-gradient(circle at 70% 80%, rgba(109, 40, 217, 0.06) 0%, rgba(10, 10, 10, 0) 60%)"
+        }}
+      />
+
+      <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
+        
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+            FAQ
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+            System FAQs
+          </h2>
+          <p className="font-sans text-sm text-[#F0EDE6] opacity-70 mt-4 max-w-lg mx-auto">
+            Everything you need to know about our custom build models, timelines, and integration pipeline.
+          </p>
+        </div>
+
+        {/* Custom Framer Motion Accordion Stack */}
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {faqs.map((faq, index) => {
+            const isOpen = index === expandedIndex
+            return (
+              <div 
+                key={index} 
+                className={`border transition-all duration-300 ${
+                  isOpen ? "border-[#C9A227] bg-[#130D24]/30" : "border-white/5 bg-[#0D0B12]/20 hover:border-white/10"
+                }`}
+              >
+                {/* Header Toggle */}
+                <button
+                  onClick={() => setExpandedIndex(isOpen ? null : index)}
+                  className="w-full flex items-center justify-between p-6 sm:p-7 text-left"
+                >
+                  <div className="flex items-center gap-4 pr-4">
+                    <HelpCircle size={16} className={isOpen ? "text-[#C9A227]" : "text-purple-400/80"} />
+                    <span className="font-sans font-semibold text-sm sm:text-base text-white hover:text-[#C9A227] transition-colors duration-200">
+                      {faq.question}
+                    </span>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-[#A39E96] shrink-0"
+                  >
+                    <ChevronDown size={18} />
+                  </motion.div>
+                </button>
+
+                {/* Expanding Content Panel */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-6 sm:px-7 sm:pb-7 pt-0 border-t border-white/5">
+                        <p className="font-sans text-xs sm:text-sm text-[#F0EDE6] opacity-80 leading-relaxed pt-4">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

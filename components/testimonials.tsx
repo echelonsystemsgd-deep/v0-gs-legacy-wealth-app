@@ -8,17 +8,20 @@ const testimonials = [
   {
     name: "James Carter",
     role: "Fitness Coach",
-    content: "GS Legacy Wealth completely transformed my online presence. The website instantly made my business feel premium and elevated my high-ticket leads.",
+    badge: "3 DAYS → 1 HOUR",
+    content: "GS Legacy Wealth completely transformed my online presence. What used to take 3 days of back-and-forth now happens in under an hour. The ROI was clear within the first month.",
   },
   {
     name: "Sophie Bennett",
     role: "Property Consultant",
-    content: "The automation systems alone saved me hours every week. Clients constantly compliment the visual design and ease of booking.",
+    badge: "30+ HRS/WK SAVED",
+    content: "We were skeptical about AI automation, but the results changed our mind completely. Our team recovered 30+ hours per week and customer satisfaction scores jumped 40%.",
   },
   {
     name: "Daniel Hayes",
     role: "E-Commerce Founder",
-    content: "The branding, design, and page structure were on another level. It feels like a high-end luxury consultancy now. The ROI has been immediate.",
+    badge: "LEADS WHILE YOU SLEEP",
+    content: "The lead automation system generates and qualifies leads around the clock. We closed 3 high-ticket client deals while on vacation — that's the power of this system.",
   },
 ]
 
@@ -29,12 +32,16 @@ export function Testimonials() {
         
         {/* Section Header */}
         <div className="text-center mb-20">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
-            Proof
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-            What Our Clients Say
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+            Testimonials
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+            Trusted by Ambitious Teams
           </h2>
+          <div className="flex items-center justify-center gap-1.5 mt-4 text-[#C9A227]">
+            <Star className="w-4 h-4 fill-[#C9A227] stroke-none" />
+            <span className="text-sm font-semibold">5.0 average across 40+ clients</span>
+          </div>
         </div>
 
         {/* Testimonials Grid */}
@@ -50,12 +57,18 @@ export function Testimonials() {
               <Card className="h-full bg-[#130D24] border border-white/5 border-t-[3px] border-t-[#C9A227] rounded-none transition-all duration-300 hover:shadow-[0_10px_30px_rgba(109,40,217,0.15)]">
                 <CardContent className="p-8 space-y-6 flex flex-col justify-between h-full">
                   
-                  {/* Testimonial Core */}
                   <div className="space-y-6">
+                    {/* Outcome Badge */}
+                    <div className="inline-flex px-3 py-1 border border-[#C9A227]/30 bg-transparent rounded-none">
+                      <span className="text-[9px] font-mono font-bold tracking-widest text-[#C9A227]">
+                        {testimonial.badge}
+                      </span>
+                    </div>
+
                     {/* Stars */}
-                    <div className="flex items-center gap-1 text-[#C9A227]">
+                    <div className="flex items-center gap-0.5 text-[#C9A227]">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-[#C9A227] stroke-none" />
+                        <Star key={i} className="w-3.5 h-3.5 fill-[#C9A227] stroke-none" />
                       ))}
                     </div>
 
@@ -66,13 +79,19 @@ export function Testimonials() {
                   </div>
 
                   {/* Client Info */}
-                  <div className="pt-6 border-t border-white/5">
-                    <p className="font-sans font-semibold text-white text-base">
-                      {testimonial.name}
-                    </p>
-                    <p className="font-sans text-xs text-[#C9A227] tracking-wider uppercase mt-1">
-                      {testimonial.role}
-                    </p>
+                  <div className="pt-6 border-t border-white/5 flex items-center gap-4">
+                    {/* Initial Circle Icon */}
+                    <div className="w-10 h-10 rounded-full bg-[#6D28D9]/20 border border-[#6D28D9]/40 flex items-center justify-center font-bold text-[#C9A227] font-serif text-sm">
+                      {testimonial.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <p className="font-sans font-semibold text-white text-sm">
+                        {testimonial.name}
+                      </p>
+                      <p className="font-sans text-[10px] text-[#C9A227] tracking-wider uppercase">
+                        {testimonial.role}
+                      </p>
+                    </div>
                   </div>
 
                 </CardContent>

@@ -1,80 +1,132 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronDown, Sparkles } from "lucide-react"
 
 const steps = [
   {
     number: "01",
-    title: "Strategy",
-    description: "Understanding the business, audience, and goals.",
+    title: "Discovery & Audit",
+    sub: "We map every workflow bottleneck in your business",
+    details: "In a 45-minute deep-dive call, we dissect your operations step by step — identifying which processes are stealing the most time and money. We then produce a complete automation opportunity map ranked by impact and effort.",
+    deliverable: "Automation Opportunity Report"
   },
   {
     number: "02",
-    title: "Design",
-    description: "Crafting a premium user experience and visual identity.",
+    title: "Strategy & Blueprint",
+    sub: "A custom roadmap built around your exact needs",
+    details: "We map out the system architecture, CRM pipeline routes, and design blueprints. You receive a structured development scope showing exactly how inputs convert to outputs with clear ROI projections.",
+    deliverable: "Bespoke System Architecture Blueprint"
   },
   {
     number: "03",
-    title: "Development",
-    description: "Building fast, AI-enhanced, mobile-optimised systems.",
+    title: "Build & Integrate",
+    sub: "We build, test, and connect everything to your systems",
+    details: "We code your custom high-converting web platform, build automated pipelines, implement AI chatbots, and wire integrations across your CRM, email, and calendars. Everything is rigorously tested for zero error rates.",
+    deliverable: "Verified Production Platform & AI Hub Sync"
   },
   {
     number: "04",
-    title: "Launch & Scale",
-    description: "Deploying the site and helping optimise conversions.",
+    title: "Launch & Handover",
+    sub: "Go live with full team training and documentation",
+    details: "We deploy the systems live. We set up analytics, verify speed scores, and conduct training sessions with your team. You receive a walkthrough document detailing the architecture, guaranteeing zero operational friction.",
+    deliverable: "Scalable Infrastructure & 30-Day Launch Care"
   },
 ]
 
 export function Process() {
+  const [expandedIndex, setExpandedIndex] = useState<number>(0)
+
   return (
     <section id="process" className="relative py-24 lg:py-32 overflow-hidden bg-[#111318]">
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+
+      <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
         
         {/* Section Header */}
         <div className="text-center mb-20">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
             Our Process
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-            From Vision to Revenue in 4 Steps
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+            From Kickoff to Full Automation
           </h2>
         </div>
 
-        {/* Timeline Container */}
-        <div className="relative mt-12">
-          {/* Connector Line (Desktop Only) */}
-          <div className="absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-[#C9A227]/30 z-0 hidden lg:block" />
-
-          {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 relative z-10">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
-                className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4"
+        {/* Vertical Accordion Stack */}
+        <div className="space-y-4">
+          {steps.map((step, index) => {
+            const isOpen = index === expandedIndex
+            return (
+              <div 
+                key={index} 
+                className={`border transition-colors duration-300 ${
+                  isOpen ? "border-[#C9A227] bg-[#130D24]/30" : "border-white/5 bg-[#0D0B12]/20 hover:border-white/10"
+                }`}
               >
-                {/* Step Circle/Number Container */}
-                <div className="relative flex items-center justify-center bg-[#111318] w-20 h-20 border border-[#C9A227]/20 rounded-full hover:border-[#C9A227] transition-colors duration-300">
-                  <span className="font-serif text-3xl font-bold text-[#6D28D9]">
-                    {step.number}
-                  </span>
-                </div>
+                {/* Header */}
+                <button
+                  onClick={() => setExpandedIndex(isOpen ? -1 : index)}
+                  className="w-full flex items-center justify-between p-6 sm:p-8 text-left"
+                >
+                  <div className="flex items-center gap-6">
+                    <span className={`font-serif text-2xl sm:text-3xl font-bold ${isOpen ? "text-[#C9A227]" : "text-[#6D28D9]"}`}>
+                      {step.number}
+                    </span>
+                    <div>
+                      <h3 className="font-sans font-semibold text-base sm:text-lg text-white">
+                        {step.title}
+                      </h3>
+                      <p className="text-xs text-[#F0EDE6] opacity-60 mt-1 sm:mt-0.5">
+                        {step.sub}
+                      </p>
+                    </div>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-[#A39E96]"
+                  >
+                    <ChevronDown size={20} />
+                  </motion.div>
+                </button>
 
-                {/* Text Details */}
-                <div className="space-y-2 max-w-xs">
-                  <h3 className="font-sans font-semibold text-lg text-white">
-                    {step.title}
-                  </h3>
-                  <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                {/* Content Panel */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-8 sm:px-8 sm:pb-8 pt-0 border-t border-white/5 space-y-4">
+                        <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed pt-4">
+                          {step.details}
+                        </p>
+                        
+                        {/* Deliverables Box */}
+                        <div className="p-4 bg-[#0A0A0A]/60 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <Sparkles size={14} className="text-[#C9A227]" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#A39E96]">
+                              DELIVERABLE:
+                            </span>
+                          </div>
+                          <span className="font-mono text-xs font-semibold text-[#C9A227]">
+                            {step.deliverable}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

@@ -1,11 +1,44 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
 import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
+
+// Helper component to smoothly animate output values when dragging sliders
+function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
+  const [displayValue, setDisplayValue] = useState(value)
+
+  useEffect(() => {
+    let start = displayValue
+    const end = value
+    if (start === end) return
+
+    const range = end - start
+    const duration = 250 // Fast 250ms roll animation for slider changes
+    const stepTime = 15
+    const steps = Math.ceil(duration / stepTime)
+    const increment = range / steps
+    let currentStep = 0
+
+    const timer = setInterval(() => {
+      currentStep++
+      start += increment
+      if (currentStep >= steps) {
+        setDisplayValue(end)
+        clearInterval(timer)
+      } else {
+        setDisplayValue(Math.round(start))
+      }
+    }, stepTime)
+
+    return () => clearInterval(timer)
+  }, [value])
+
+  return <span>{prefix}{displayValue.toLocaleString()}{suffix}</span>
+}
 
 const setupTiers = [
   {
@@ -184,10 +217,10 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           
           {/* Section Header */}
           <div className="text-center mb-20">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
               Investment
-            </p>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
               Transparent Pricing. Premium Results.
             </h2>
           </div>
@@ -309,28 +342,30 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 glass rounded-3xl p-6 sm:p-10"
+          className="mb-20 glass rounded-3xl p-6 sm:p-10 bg-[#130D24]/10 border border-white/5"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
               <Calculator size={20} />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest text-accent font-bold">Interactive Estimator</span>
+              <span className="text-xs uppercase tracking-widest text-[#C9A227] font-bold">Interactive Estimator</span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Bespoke System Return Calculator</h3>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-8">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Luxury platforms are digital investments. Slide the inputs below to calculate how much time and potential revenue our custom design and AI automations can unlock for your brand.
               </p>
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Current Monthly Revenue</span>
-                  <span className="text-accent font-bold font-serif text-base">£{revenue.toLocaleString()}</span>
+                  <span className="text-accent font-bold font-serif text-base text-[#C9A227]">
+                    £{revenue.toLocaleString()}
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -349,7 +384,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
-                  <span className="text-accent font-bold font-serif text-base">{manualHours} Hours</span>
+                  <span className="text-accent font-bold font-serif text-base text-[#C9A227]">
+                    {manualHours} Hours
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -366,42 +403,42 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-[#130D24]/40 rounded-2xl p-6 border border-border space-y-6">
+            <div className="lg:col-span-5 bg-[#130D24]/40 rounded-none p-6 border border-white/5 space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-[#0A0A0A] rounded-xl border border-border">
+                <div className="p-4 bg-[#0A0A0A] rounded-none border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Clock size={12} className="text-accent" />
                     <span>Annual Time Reclaimed</span>
                   </div>
                   <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
-                    {annualHoursSaved} <span className="text-xs text-muted-foreground">Hrs</span>
+                    <RollingNumber value={annualHoursSaved} suffix=" Hrs" />
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#0A0A0A] rounded-xl border border-border">
+                <div className="p-4 bg-[#0A0A0A] rounded-none border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Zap size={12} className="text-accent" />
                     <span>Est. Growth Lift (15%)</span>
                   </div>
                   <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
-                    £{projectedRevenueGrowth.toLocaleString()}
+                    <RollingNumber value={projectedRevenueGrowth} prefix="£" />
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 bg-gradient-to-br from-[#6D28D9]/10 to-transparent rounded-xl border border-[#6D28D9]/20">
-                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1">Total Est. Annual Value Unlocked</div>
-                <div className="text-3xl font-bold font-serif text-gradient-gold">
-                  £{totalValueUnlocked.toLocaleString()}
+              <div className="p-5 bg-gradient-to-br from-[#6D28D9]/10 to-transparent rounded-none border border-[#6D28D9]/20">
+                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-[#C9A227]">Total Est. Annual Value Unlocked</div>
+                <div className="text-3xl font-bold font-serif text-[#C9A227]">
+                  <RollingNumber value={totalValueUnlocked} prefix="£" />
                 </div>
                 <p className="text-xxs text-muted-foreground mt-2 leading-tight">
                   Value computed by applying 15% website conversion lift and valuation of manual hours saved at £75/hr.
                 </p>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-xl text-xs">
+              <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-none text-xs">
                 <span className="text-muted-foreground">Recommended Alignment:</span>
-                <span className="flex items-center gap-1.5 font-bold text-accent">
+                <span className="flex items-center gap-1.5 font-bold text-accent text-[#C9A227]">
                   <Crown size={12} />
                   {recommendedTier} System Tier
                 </span>
