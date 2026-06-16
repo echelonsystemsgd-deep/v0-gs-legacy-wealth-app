@@ -87,7 +87,7 @@ export default function LeadsPage() {
           </p>
         </div>
         <Link
-          href="/contact"
+          href="/book"
           target="_blank"
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gold/10 border border-gold/25 text-sm font-semibold text-gold hover:bg-gold/15 transition-all"
         >

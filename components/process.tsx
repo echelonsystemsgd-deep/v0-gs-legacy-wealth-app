@@ -25,102 +25,57 @@ const steps = [
   },
 ]
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-
-export function Process({ limit }: { limit?: number }) {
-  const displaySteps = limit ? steps.slice(0, limit) : steps;
+export function Process() {
   return (
-    <section id="process" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-card" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-            <span className="text-foreground">Our Proven </span>
-            <span className="text-gradient-gold">4-Step Process</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A refined approach that delivers exceptional results for every client.
+    <section id="process" className="relative py-24 lg:py-32 overflow-hidden bg-[#111318]">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+        
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+            Our Process
           </p>
-        </motion.div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+            From Vision to Revenue in 4 Steps
+          </h2>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {displaySteps.map((step, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="relative group"
-            >
-              {/* Connector Line */}
-              {index < displaySteps.length - 1 && (
-                <div className={`absolute top-12 left-full w-full h-px bg-gradient-to-r from-gold/30 to-transparent z-0 hidden ${
-                  index % 2 === 0 ? "sm:block lg:hidden" : ""
-                } lg:block`} />
-              )}
+        {/* Timeline Container */}
+        <div className="relative mt-12">
+          {/* Connector Line (Desktop Only) */}
+          <div className="absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-[#C9A227]/30 z-0 hidden lg:block" />
 
+          {/* Steps Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 relative z-10">
+            {steps.map((step, index) => (
               <motion.div
-                className="relative p-6 lg:p-8 rounded-2xl bg-secondary border border-gold/10 transition-all duration-500 h-full overflow-hidden"
-                whileInView={{
-                  borderColor: "rgba(255, 215, 0, 0.4)",
-                  boxShadow: "0 0 20px rgba(255, 215, 0, 0.1)",
-                }}
-                viewport={{ once: false, amount: 0.5 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4"
               >
-                {/* Glow Background */}
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0"
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false, amount: 0.5 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                />
-
-                <div className="relative z-10 mb-6">
-                  <span className="font-serif text-5xl lg:text-6xl font-bold text-gradient-gold opacity-40 group-hover:opacity-100 transition-opacity duration-300">
+                {/* Step Circle/Number Container */}
+                <div className="relative flex items-center justify-center bg-[#111318] w-20 h-20 border border-[#C9A227]/20 rounded-full hover:border-[#C9A227] transition-colors duration-300">
+                  <span className="font-serif text-3xl font-bold text-[#6D28D9]">
                     {step.number}
                   </span>
                 </div>
-                <h3 className="relative z-10 font-serif text-xl font-semibold text-foreground mb-3 group-hover:text-gold transition-colors">
-                  {step.title}
-                </h3>
-                <p className="relative z-10 text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
 
-        {limit && limit < steps.length && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-16 text-center"
-          >
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-gold/30 hover:bg-gold/10"
-            >
-              <Link href="/process">Explore Full Process</Link>
-            </Button>
-          </motion.div>
-        )}
+                {/* Text Details */}
+                <div className="space-y-2 max-w-xs">
+                  <h3 className="font-sans font-semibold text-lg text-white">
+                    {step.title}
+                  </h3>
+                  <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

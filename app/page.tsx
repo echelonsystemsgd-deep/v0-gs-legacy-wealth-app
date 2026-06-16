@@ -1,21 +1,27 @@
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
-import { Testimonials } from "@/components/testimonials"
+import { SocialProofStrip } from "@/components/social-proof-strip"
 import { Services } from "@/components/services"
 import { Process } from "@/components/process"
 import { Portfolio } from "@/components/portfolio"
+import { WhyGSLegacy } from "@/components/why-gs-legacy"
+import { Testimonials } from "@/components/testimonials"
+import { Pricing } from "@/components/pricing"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-[#0A0A0A] text-[#F0EDE6] overflow-x-hidden">
       <Navbar />
       <Hero />
+      <SocialProofStrip />
       <Services limit={3} />
-      <Portfolio limit={2} />
       <Process />
+      <Portfolio limit={4} />
+      <WhyGSLegacy />
       <Testimonials />
+      <Pricing isHomepage={true} />
       <CTA />
       <Footer />
     </main>

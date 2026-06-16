@@ -10,7 +10,7 @@ import Image from "next/image"
 const portfolioItems = [
   {
     title: "Stamp Valuation App",
-    category: "Web Application",
+    category: "AI Web App · Collector",
     gradient: "from-blue-500/20 to-cyan-500/20",
     href: "https://v0-stamp-valuation-app.vercel.app",
     image: "/stamp-app-preview.png",
@@ -18,26 +18,20 @@ const portfolioItems = [
   },
   {
     title: "Elite Fitness Studio",
-    category: "Gym Website",
+    category: "AI Website · Fitness",
     gradient: "from-amber-500/20 to-orange-500/20",
     underConstruction: true,
   },
   {
     title: "Prestige Properties",
-    category: "Estate Agent Website",
+    category: "Lead System · Real Estate",
     gradient: "from-emerald-500/20 to-teal-500/20",
     underConstruction: true,
   },
   {
     title: "Strategic Growth Co.",
-    category: "Consultant Landing Page",
+    category: "Landing Page · Consulting",
     gradient: "from-blue-500/20 to-indigo-500/20",
-    underConstruction: true,
-  },
-  {
-    title: "AutoFlow Systems",
-    category: "AI Automation Dashboard",
-    gradient: "from-purple-500/20 to-pink-500/20",
     underConstruction: true,
   },
 ]
@@ -48,7 +42,6 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
   if (item.title === "Elite Fitness Studio") {
     return (
       <div className="absolute inset-4 lg:inset-6 bg-[#0E0E10] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        {/* Browser Header */}
         <div className="flex items-center justify-between px-3 py-2 bg-[#16161A] border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -60,7 +53,6 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
           </div>
           <div className="w-4" />
         </div>
-        {/* Content Mockup */}
         <div className="flex-1 p-3 flex flex-col gap-2 justify-between">
           <div className="flex justify-between items-center">
             <span className="text-[9px] font-bold text-amber-500 uppercase tracking-widest font-serif">ELITE FITNESS</span>
@@ -152,7 +144,6 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
             <span className="text-[6px] text-blue-400 block font-bold tracking-wider font-mono">ANNUAL METRICS</span>
             <h4 className="text-[11px] font-bold text-white leading-tight">+238% Conversion Increase</h4>
           </div>
-          {/* Mock Chart */}
           <div className="h-10 flex items-end gap-1 px-1 bg-white/5 rounded border border-white/5 py-1">
             <div className="bg-blue-500/20 w-full h-[30%] rounded-sm" />
             <div className="bg-blue-500/40 w-full h-[55%] rounded-sm" />
@@ -165,52 +156,6 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
     )
   }
 
-  if (item.title === "AutoFlow Systems") {
-    return (
-      <div className="absolute inset-4 lg:inset-6 bg-[#0E0B11] rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-[#17121C] border-b border-white/5 shrink-0">
-          <div className="flex gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-          </div>
-          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
-            autoflow.ai/canvas
-          </div>
-          <div className="w-4" />
-        </div>
-        <div className="flex-1 p-3 flex flex-col justify-between">
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] font-bold text-purple-500 uppercase tracking-widest font-mono">AUTOFLOW</span>
-            <span className="text-[6px] text-purple-400 bg-purple-500/10 border border-purple-500/25 px-1 py-0.5 rounded font-mono">AI CORE v2</span>
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-white leading-tight">Automated Sales Funnel</h4>
-            <p className="text-[7px] text-white/50 max-w-[90%] leading-relaxed">Sync leads directly to CRM and trigger custom email campaigns.</p>
-          </div>
-          {/* Visual node flowchart mockup */}
-          <div className="flex gap-1 justify-between items-center text-center">
-            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
-              <span className="text-[6px] font-bold text-purple-400 block font-mono">TRIGGER</span>
-              <span className="text-[5px] text-white/60">New Booking</span>
-            </div>
-            <div className="w-3 h-0.5 bg-purple-500/40" />
-            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
-              <span className="text-[6px] font-bold text-purple-400 block font-mono">AI AGENT</span>
-              <span className="text-[5px] text-white/60">Qualify</span>
-            </div>
-            <div className="w-3 h-0.5 bg-purple-500/40" />
-            <div className="bg-white/5 border border-purple-500/30 rounded p-1 flex-1">
-              <span className="text-[6px] font-bold text-purple-400 block font-mono">CRM SYNC</span>
-              <span className="text-[5px] text-white/60">Create Deal</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Fallback wireframe
   return (
     <div className="absolute inset-4 lg:inset-6 bg-card rounded-xl border border-border overflow-hidden shadow-2xl">
       <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 border-b border-border">
@@ -243,10 +188,8 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
         className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
         onClick={onClose}
       >
-        {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
+        <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
 
-        {/* Modal Window */}
         <motion.div
           key="modal-window"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -256,9 +199,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
           className="relative z-10 w-full max-w-6xl h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-primary/20 bg-card shadow-2xl shadow-black/60"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Browser Chrome Bar */}
           <div className="flex items-center gap-3 px-4 py-3 bg-[#0d0d0d] border-b border-white/10 shrink-0">
-            {/* Traffic lights */}
             <div className="flex gap-1.5">
               <button
                 onClick={onClose}
@@ -269,7 +210,6 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
               <div className="w-3 h-3 rounded-full bg-green-500/50" />
             </div>
 
-            {/* Address bar */}
             <div className="flex-1 mx-2 h-7 bg-white/5 border border-white/10 rounded-lg flex items-center px-3 gap-2 min-w-0">
               <div className="w-3 h-3 shrink-0 text-accent/60">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -281,7 +221,6 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
               </span>
             </div>
 
-            {/* Open in new tab */}
             <a
               href={item.href}
               target="_blank"
@@ -292,7 +231,6 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
               <span className="hidden sm:inline">Open in tab</span>
             </a>
 
-            {/* Close button */}
             <button
               onClick={onClose}
               className="flex items-center justify-center w-7 h-7 rounded-md text-white/40 hover:text-white hover:bg-white/10 transition-colors shrink-0"
@@ -302,7 +240,6 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
             </button>
           </div>
 
-          {/* Iframe area */}
           <div className="relative flex-1 bg-white">
             {isLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a14] gap-3 z-10">
@@ -381,10 +318,8 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
         className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
         onClick={onClose}
       >
-        {/* Backdrop */}
         <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
 
-        {/* Modal Window */}
         <motion.div
           key="construction-window"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -394,7 +329,6 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           className="relative z-10 w-full max-w-md bg-card border border-primary/20 rounded-2xl overflow-hidden shadow-2xl p-6 md:p-8 text-center"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close button in top corner */}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white/40 hover:text-white hover:bg-white/10 transition-colors rounded-full p-1.5"
@@ -403,8 +337,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <X size={18} />
           </button>
 
-          {/* Construction icon */}
-          <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-accent mb-6">
+          <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[#C9A227] mb-6">
             <Wrench size={28} />
           </div>
 
@@ -435,10 +368,10 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   onClick={handleCopy}
                   className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-card border border-primary/20 hover:border-primary/45 text-accent transition-all cursor-pointer relative overflow-hidden group"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent/60 leading-none">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A227]/60 leading-none">
                     Concierge Desk Email
                   </span>
-                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-accent transition-colors">
+                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-[#C9A227] transition-colors">
                     gslegacywealth@gmail.com
                   </span>
                   <span className="text-[10px] text-muted-foreground mt-1 underline decoration-primary/30 group-hover:decoration-primary transition-all">
@@ -459,7 +392,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-accent"
+              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-[#C9A227]"
             >
               <p className="font-bold mb-1">Thank you for your interest!</p>
               <p className="text-xs text-muted-foreground">We will notify you as soon as this site is live.</p>
@@ -499,8 +432,8 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                    <span>Notify Me When Live</span>
-                    <ArrowRight size={16} />
+                     <span>Notify Me When Live</span>
+                     <ArrowRight size={16} />
                   </>
                 )}
               </Button>
@@ -528,166 +461,99 @@ export function Portfolio({ limit }: { limit?: number }) {
 
   return (
     <>
-      <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-background" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-              <span className="text-foreground">Designed to </span>
-              <span className="text-gradient-gold">Command Attention.</span>
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              A selection of premium websites crafted for ambitious businesses.
+      <section id="portfolio" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+          
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+              Selected Work
             </p>
-          </motion.div>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+              Websites That Mean Business
+            </h2>
+          </div>
 
-          <div className="grid sm:grid-cols-2 gap-6 lg:gap-8 mb-12">
-            {displayItems.map((item, index) => {
-              const isLastSingle = displayItems.length % 2 !== 0 && index === displayItems.length - 1;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className={`group relative overflow-hidden rounded-2xl border border-border hover:border-primary/45 transition-all duration-300 touch-manipulation ${
-                    isLastSingle ? "sm:col-span-2" : ""
-                  }`}
-                >
-                  {/* Under Construction / Coming Soon Badge */}
-                  {item.underConstruction && (
-                    <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-[#1F1A2B]/85 backdrop-blur-md border border-primary/20 px-2.5 py-1 rounded-full shadow-lg">
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-accent">Coming Soon</span>
-                    </div>
-                  )}
-
-                  <div className={`bg-gradient-to-br ${item.gradient} relative z-10 ${
-                    isLastSingle ? "aspect-[16/10] sm:aspect-[32/10]" : "aspect-[16/10]"
-                  }`}>
-                    {item.image ? (
-                      /* Real Screenshot Preview */
-                      <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
-                        <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
-                          <div className="flex gap-1">
-                            <div className="w-2 h-2 rounded-full bg-red-500/70" />
-                            <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
-                            <div className="w-2 h-2 rounded-full bg-green-500/70" />
-                          </div>
-                          <div className="flex-1 mx-2 h-4 bg-white/10 rounded-full text-[8px] text-white/40 flex items-center px-2 truncate">
-                            {item.href?.replace("https://", "")}
-                          </div>
-                        </div>
-                        <div className="relative flex-1">
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            className="object-cover object-top"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
+          {/* 2-Column Grid */}
+          <div className="grid sm:grid-cols-2 gap-8 mb-16">
+            {displayItems.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group relative overflow-hidden rounded-none border border-white/10 hover:border-[#C9A227] transition-all duration-300 bg-[#0E0E10] aspect-[16/10]"
+              >
+                {/* Visual Image / Mockup background */}
+                <div className="w-full h-full relative z-10">
+                  {item.image ? (
+                    <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-[#1a1a2e] border-b border-border/50 shrink-0">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 rounded-full bg-red-500/70" />
+                          <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
+                          <div className="w-2 h-2 rounded-full bg-green-500/70" />
                         </div>
                       </div>
+                      <div className="relative flex-1">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover object-top"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </div>
+                    </div>
                   ) : (
                     <PremiumMockup item={item} />
                   )}
+                </div>
 
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-
-                  {/* Desktop hover overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 z-20 hidden sm:block">
-                    <div className="glass rounded-xl p-4 flex justify-between items-end">
-                      <div>
-                        <p className="text-sm text-accent mb-1">{item.category}</p>
-                        <h3 className="font-serif text-lg font-semibold text-foreground">
-                          {item.title}
-                        </h3>
-                      </div>
-                      {item.href ? (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="shrink-0 h-8 rounded-full touch-manipulation"
-                          onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
-                        >
-                          <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="shrink-0 h-8 rounded-full touch-manipulation"
-                          onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
-                        >
-                          <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Mobile always-visible footer */}
-                  <div className="sm:hidden absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] to-transparent z-10">
-                    <p className="text-sm text-accent mb-1">{item.category}</p>
-                    <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
+                {/* Hover Reveal Slide-Up Overlay */}
+                <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex flex-col justify-center items-center p-8 text-center space-y-4">
+                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 space-y-3">
+                    <p className="text-xs uppercase tracking-widest text-[#C9A227] font-semibold">
+                      {item.category}
+                    </p>
+                    <h3 className="font-serif text-2xl font-bold text-white">
                       {item.title}
                     </h3>
-                    {item.href ? (
+                    <div className="pt-2">
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 rounded-full w-full touch-manipulation"
-                        onClick={() => item.underConstruction ? setConstructionModal(item) : setActiveModal(item)}
+                        className="border-[#C9A227] text-white hover:bg-[#C9A227] hover:text-black rounded-none transition-colors"
+                        onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
                       >
-                        <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Live Site"}</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">
+                          View Project →
+                        </span>
                       </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 rounded-full w-full touch-manipulation"
-                        onClick={() => item.underConstruction ? setConstructionModal(item) : undefined}
-                      >
-                        <span className="text-xs">{item.underConstruction ? "Coming Soon" : "View Case Study"}</span>
-                      </Button>
-                    )}
+                    </div>
                   </div>
-                </motion.div>
-              );
-            })}
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center"
-          >
-            <Button asChild size="lg" variant="outline">
-              {limit ? (
+          {/* Bottom Button */}
+          {limit && (
+            <div className="text-center">
+              <Button 
+                asChild 
+                size="lg" 
+                variant="outline"
+                className="border-[#C9A227] text-white hover:bg-[#C9A227] hover:text-black rounded-none px-8 py-6 text-sm font-bold tracking-wider uppercase transition-colors"
+              >
                 <Link href="/portfolio" className="flex items-center gap-2">
                   View Full Portfolio
-                  <ArrowRight size={18} />
+                  <ArrowRight size={16} />
                 </Link>
-              ) : (
-                <Link href="/book" className="flex items-center gap-2">
-                  Request a Custom Website
-                  <ArrowRight size={18} />
-                </Link>
-              )}
-            </Button>
-          </motion.div>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 

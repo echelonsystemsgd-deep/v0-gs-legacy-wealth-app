@@ -3,157 +3,101 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
+import { Globe, FileText, Zap } from "lucide-react"
+import Link from "next/link"
 
 const services = [
   {
     title: "AI-Powered Business Websites",
-    description:
-      "Stunning websites enhanced with AI features that engage visitors and convert them into clients.",
-    deliverables: [
-      "Custom Luxury Design",
-      "Next.js Performance",
-      "AI Feature Integration",
-      "Mobile Optimisation",
-    ],
+    description: "Stunning websites enhanced with AI features that engage visitors and convert them into clients.",
+    icon: Globe,
   },
   {
     title: "High-Converting Landing Pages",
-    description:
-      "Strategic landing pages designed to capture leads and drive high-ticket sales.",
-    deliverables: [
-      "Direct Response Copy",
-      "A/B Testing Ready",
-      "Lead Magnet Setup",
-      "CRM Integration",
-    ],
+    description: "Strategic landing pages designed to capture leads and drive high-ticket sales.",
+    icon: FileText,
   },
   {
     title: "Automated Lead Generation",
-    description:
-      "Smart automation that captures, qualifies, and nurtures leads while you sleep.",
-    deliverables: [
-      "AI Chat Concierge",
-      "Lead Scoring Logic",
-      "Email Automation",
-      "Analytics Dashboard",
-    ],
-  },
-  {
-    title: "Booking & CRM Automation",
-    description:
-      "Seamless scheduling and client management systems that save hours every week.",
-    deliverables: [
-      "Calendly Integration",
-      "Client Portal Setup",
-      "Automated Follow-ups",
-      "Payment Processing",
-    ],
-  },
-  {
-    title: "Branding & Digital Presence",
-    description:
-      "Cohesive brand identity that positions you as the premium choice in your market.",
-    deliverables: [
-      "Visual Identity Suite",
-      "Typography & Colors",
-      "Social Media Assets",
-      "Brand Guidelines",
-    ],
-  },
-  {
-    title: "Luxury Website Redesigns",
-    description:
-      "Transform your existing website into a premium digital asset that commands attention.",
-    deliverables: [
-      "UX/UI Audit",
-      "SEO Migration",
-      "Performance Boost",
-      "Modern Tech Stack",
-    ],
+    description: "Smart automation that captures, qualifies, and nurtures leads while you sleep.",
+    icon: Zap,
   },
 ]
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-
 export function Services({ limit }: { limit?: number }) {
-  const displayServices = limit ? services.slice(0, limit) : services;
+  const displayServices = limit ? services.slice(0, limit) : services
+
   return (
-    <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-background" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-            <span className="text-foreground">What We </span>
-            <span className="text-gradient-gold">Build</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Premium digital solutions engineered to create authority, automate growth, and generate revenue.
+    <section id="services" className="relative py-24 lg:py-32 overflow-hidden bg-[#0A0A0A]">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+        
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227] mb-3">
+            Our Services
           </p>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {displayServices.map((service, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <Card className="h-full bg-card/60 border border-border hover:border-primary/45 transition-all duration-300">
-                <CardContent className="p-5 sm:p-6 lg:p-8 space-y-4 flex flex-col justify-between h-full">
-                  <div className="space-y-4">
-                    <h3 className="font-serif text-2xl font-bold text-accent">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
-                  {!limit && service.deliverables && (
-                    <div className="pt-4 space-y-2 border-t border-border mt-4">
-                      <p className="text-xs font-bold text-accent uppercase tracking-wider">Includes:</p>
-                      <ul className="space-y-2">
-                        {service.deliverables.map((item, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                            <span className="text-sm text-foreground">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Premium Digital Solutions, Built to Perform
+          </h2>
         </div>
 
+        {/* 3-Column Card Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+          {displayServices.map((service, index) => {
+            const IconComponent = service.icon
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="h-full bg-[#130D24] border border-[#C9A227]/20 hover:border-[#C9A227] hover:shadow-[0_0_30px_rgba(109,40,217,0.25)] transition-all duration-300 rounded-none group">
+                  <CardContent className="p-8 flex flex-col justify-between h-full space-y-6">
+                    <div className="space-y-4">
+                      {/* Gold icon */}
+                      <div className="inline-flex items-center justify-center p-3 border border-[#C9A227]/30 bg-transparent text-[#C9A227]">
+                        <IconComponent className="w-6 h-6 stroke-[1.5]" />
+                      </div>
+                      
+                      {/* Title */}
+                      <h3 className="font-sans font-semibold text-xl text-white">
+                        {service.title}
+                      </h3>
+                      
+                      {/* Description */}
+                      <p className="font-sans text-sm text-[#F0EDE6] opacity-80 leading-relaxed min-h-[44px]">
+                        {service.description}
+                      </p>
+                    </div>
+
+                    {/* Learn More Link */}
+                    <div>
+                      <Link 
+                        href={`/services#${service.title.toLowerCase().replace(/\s+/g, "-")}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C9A227] hover:underline transition-all"
+                      >
+                        Learn More <span className="transition-transform group-hover:translate-x-1">→</span>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        {/* View All Services Link */}
         {limit && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-12 text-center"
-          >
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
+          <div className="text-center mt-12">
+            <Link 
+              href="/services" 
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A227] hover:underline"
             >
-              <Link href="/services">View All Services</Link>
-            </Button>
-          </motion.div>
+              View all services <span className="text-lg">→</span>
+            </Link>
+          </div>
         )}
       </div>
     </section>

@@ -1,136 +1,139 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import { SocialMediaLinks } from "@/components/social-media-links"
-
-const navigation = {
-  services: [
-    { name: "AI Websites", href: "/services" },
-    { name: "Landing Pages", href: "/services" },
-    { name: "Lead Generation", href: "/services" },
-    { name: "Automation", href: "/services" },
-  ],
-  company: [
-    { name: "About", href: "/" },
-    { name: "Process", href: "/process" },
-    { name: "Portfolio", href: "/portfolio" },
-    { name: "Testimonials", href: "/testimonials" },
-  ],
-  resources: [
-    { name: "FAQ", href: "/#faq" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Contact", href: "/contact" },
-  ],
-}
+import { Mail, Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
 
 export function Footer() {
+  const quickLinks = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
+    { name: "Process", href: "/process" },
+    { name: "Portfolio", href: "/portfolio" },
+    { name: "Pricing", href: "/pricing" },
+  ]
+
   return (
-    <footer className="relative bg-background border-t border-gold/10">
+    <footer className="relative bg-[#0A0A0A] border-t border-[#C9A227]/30 text-white py-16 lg:py-20 z-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="py-16 lg:py-20">
-          <div className="flex flex-col items-center mb-16 text-center">
-            <Link href="/" className="flex flex-col items-center gap-4 mb-6">
-              <div className="relative h-20 w-40 sm:h-32 sm:w-64 md:h-40 md:w-80 transition-all hover:scale-105 duration-300 opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
-                <Image 
-                  src="/GS_Legacy_Wealth-removebg-preview.png" 
-                  alt="GS Legacy Wealth" 
-                  fill
-                  sizes="(max-width: 640px) 160px, 320px"
-                  className="object-contain"
-                />
-              </div>
-            </Link>
+        
+        {/* 4-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+          
+          {/* Column 1: Logo & Tagline */}
+          <div className="space-y-4 flex flex-col items-start">
+            <div className="relative h-12 w-12">
+              <Image 
+                src="/GS_Legacy_Wealth_Watermark-removebg-preview.png" 
+                alt="GS Legacy Wealth Crest" 
+                fill
+                className="object-contain"
+              />
+            </div>
+            <p className="font-serif italic text-sm text-[#F0EDE6] opacity-80 leading-relaxed max-w-[200px]">
+              Building Wealth. Creating Legacy. Giving Back.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 text-center md:text-left">
-            {/* Brand/Socials Column */}
-            <div className="col-span-2 md:col-span-1 flex flex-col items-center md:items-start">
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-xs text-center md:text-left">
-                We engineer digital assets that create authority, automate growth, and generate revenue.
-              </p>
-              <SocialMediaLinks />
-            </div>
+          {/* Column 2: Quick Links */}
+          <div className="space-y-4">
+            <h4 className="font-sans font-bold text-xs uppercase tracking-widest text-[#C9A227]">
+              Quick Links
+            </h4>
+            <ul className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link 
+                    href={link.href}
+                    className="font-sans text-sm text-[#F0EDE6] opacity-70 hover:opacity-100 hover:text-[#C9A227] transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            {/* Services */}
-            <div>
-              <h3 className="font-serif font-semibold text-foreground mb-4">Services</h3>
-              <ul className="space-y-3">
-                {navigation.services.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-muted-foreground hover:text-gold transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          {/* Column 3: Contact */}
+          <div className="space-y-4">
+            <h4 className="font-sans font-bold text-xs uppercase tracking-widest text-[#C9A227]">
+              Contact Us
+            </h4>
+            <div className="space-y-3 font-sans text-sm text-[#F0EDE6] opacity-70">
+              <a 
+                href="mailto:gslegacywealth@gmail.com" 
+                className="flex items-center gap-2 hover:text-[#C9A227] hover:opacity-100 transition-colors"
+              >
+                <Mail size={16} className="text-[#C9A227]" />
+                <span>gslegacywealth@gmail.com</span>
+              </a>
+              <a 
+                href="tel:+447700900077" 
+                className="flex items-center gap-2 hover:text-[#C9A227] hover:opacity-100 transition-colors"
+              >
+                <Phone size={16} className="text-[#C9A227]" />
+                <span>+44 7700 900077</span>
+              </a>
             </div>
-
-            {/* Company */}
-            <div>
-              <h3 className="font-serif font-semibold text-foreground mb-4">Company</h3>
-              <ul className="space-y-3">
-                {navigation.company.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-muted-foreground hover:text-gold transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h3 className="font-serif font-semibold text-foreground mb-4">Resources</h3>
-              <ul className="space-y-3">
-                {navigation.resources.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-muted-foreground hover:text-gold transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+            <div className="flex items-center gap-3 pt-2 text-[#F0EDE6] opacity-70">
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-[#C9A227] transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram size={18} />
+              </a>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-[#C9A227] transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={18} />
+              </a>
             </div>
           </div>
+
+          {/* Column 4: Book a Call Mini-CTA */}
+          <div className="space-y-4">
+            <h4 className="font-sans font-bold text-xs uppercase tracking-widest text-[#C9A227]">
+              Start a Project
+            </h4>
+            <p className="font-sans text-xs text-[#F0EDE6] opacity-60 leading-relaxed">
+              Secure your strategy session to reserve your spot and design your legacy.
+            </p>
+            <div className="pt-2">
+              <Link 
+                href="/book" 
+                className="inline-flex items-center gap-2 px-4 py-2 border border-[#C9A227]/60 text-[#C9A227] hover:bg-[#C9A227] hover:text-black transition-colors duration-300 text-xs font-bold uppercase tracking-wider bg-transparent"
+              >
+                <span>Book a Call</span>
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+          </div>
+
         </div>
 
         {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="border-t border-gold/10 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))]"
-        >
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} GS Legacy Wealth AI. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-gold transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-sm text-muted-foreground hover:text-gold transition-colors">
-                Terms of Service
-              </Link>
-            </div>
+        <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-[#F0EDE6] opacity-65">
+          <p>
+            © {new Date().getFullYear()} GS Legacy Wealth · Privacy Policy · All Rights Reserved
+          </p>
+          <div className="flex justify-center gap-6 mt-4 md:mt-0">
+            <Link href="/privacy" className="hover:text-[#C9A227] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-[#C9A227] transition-colors">
+              Terms of Service
+            </Link>
           </div>
-        </motion.div>
-      </div>
+        </div>
 
-      {/* Bottom gradient line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+      </div>
     </footer>
   )
 }
