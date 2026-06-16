@@ -389,55 +389,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-8">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Luxury platforms are digital investments. Slide the inputs below to calculate how much time and potential revenue our custom design and AI automations can unlock for your brand.
-              </p>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center text-sm font-medium">
-                  <span className="text-foreground">Current Monthly Revenue</span>
-                  <span className="text-accent font-bold font-serif text-base text-[#C9A227]">
-                    £{revenue.toLocaleString()}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="5000"
-                  max="100000"
-                  step="5000"
-                  value={revenue}
-                  onChange={(e) => setRevenue(Number(e.target.value))}
-                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
-                  style={{
-                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((revenue - 5000) / 95000) * 100}%, #1a1a1a ${((revenue - 5000) / 95000) * 100}%, #1a1a1a 100%)`
-                  }}
-                />
-              </div>
 
-              <div className="space-y-3">
-                <div className="flex justify-between items-center text-sm font-medium">
-                  <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
-                  <span className="text-accent font-bold font-serif text-base text-[#C9A227]">
-                    {manualHours} Hours
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="2"
-                  max="40"
-                  step="1"
-                  value={manualHours}
-                  onChange={(e) => setManualHours(Number(e.target.value))}
-                  className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
-                  style={{
-                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((manualHours - 2) / 38) * 100}%, #1a1a1a ${((manualHours - 2) / 38) * 100}%, #1a1a1a 100%)`
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 bg-[#130D24]/40 rounded-none p-6 border border-white/5 space-y-6">
+            {/* Output Panel — appears FIRST on mobile, right column on desktop */}
+            <div className="lg:col-span-5 bg-[#130D24]/40 rounded-none p-6 border border-white/5 space-y-6 order-first lg:order-last">
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-[#0A0A0A] rounded-none border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
@@ -478,6 +432,104 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 </span>
               </div>
             </div>
+
+            {/* Inputs — appears SECOND on mobile, left column on desktop */}
+            <div className="lg:col-span-7 space-y-8 order-last lg:order-first">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Luxury platforms are digital investments. Adjust the inputs below to calculate how much time and potential revenue our custom design and AI automations can unlock for your brand.
+              </p>
+
+              {/* Revenue Input */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-foreground">Current Monthly Revenue</span>
+                  <span className="text-accent font-bold font-serif text-base text-[#C9A227] hidden md:block">
+                    £{revenue.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* Mobile Stepper */}
+                <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                  <button
+                    onClick={() => setRevenue(Math.max(5000, revenue - 5000))}
+                    aria-label="Decrease revenue"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                  >
+                    −
+                  </button>
+                  <span className="font-bold font-serif text-xl text-white tracking-tight">
+                    £{revenue.toLocaleString()}
+                  </span>
+                  <button
+                    onClick={() => setRevenue(Math.min(100000, revenue + 5000))}
+                    aria-label="Increase revenue"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Desktop Slider */}
+                <input
+                  type="range"
+                  min="5000"
+                  max="100000"
+                  step="5000"
+                  value={revenue}
+                  onChange={(e) => setRevenue(Number(e.target.value))}
+                  className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+                  style={{
+                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((revenue - 5000) / 95000) * 100}%, #1a1a1a ${((revenue - 5000) / 95000) * 100}%, #1a1a1a 100%)`
+                  }}
+                />
+              </div>
+
+              {/* Manual Hours Input */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
+                  <span className="text-accent font-bold font-serif text-base text-[#C9A227] hidden md:block">
+                    {manualHours} Hours
+                  </span>
+                </div>
+
+                {/* Mobile Stepper */}
+                <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                  <button
+                    onClick={() => setManualHours(Math.max(2, manualHours - 1))}
+                    aria-label="Decrease hours"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                  >
+                    −
+                  </button>
+                  <span className="font-bold font-serif text-xl text-white tracking-tight">
+                    {manualHours} hrs/wk
+                  </span>
+                  <button
+                    onClick={() => setManualHours(Math.min(40, manualHours + 1))}
+                    aria-label="Increase hours"
+                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-[#C9A227] border border-[#C9A227]/30 rounded-lg active:bg-[#C9A227]/20 transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Desktop Slider */}
+                <input
+                  type="range"
+                  min="2"
+                  max="40"
+                  step="1"
+                  value={manualHours}
+                  onChange={(e) => setManualHours(Number(e.target.value))}
+                  className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+                  style={{
+                    background: `linear-gradient(to right, #6D28D9 0%, #6D28D9 ${((manualHours - 2) / 38) * 100}%, #1a1a1a ${((manualHours - 2) / 38) * 100}%, #1a1a1a 100%)`
+                  }}
+                />
+              </div>
+            </div>
+
           </div>
         </motion.div>
 
