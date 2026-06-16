@@ -35,22 +35,52 @@ export async function POST(request: Request) {
     let insertedLead = null
 
     if (source === 'booking_form') {
-      // Upsert on email conflict for booking flow to avoid duplicate lead rows
-      const { data, error } = await supabaseAdmin.from('leads').upsert(
-        {
-          name: name || 'Anonymous Scheduler',
-          email: email,
-          business_name: business_name || 'N/A (Booking Form)',
-          website: website || null,
-          notes: notes || 'Booking request qualification',
-          status: 'New',
-          source: 'booking_form',
-        },
-        { onConflict: 'email', ignoreDuplicates: false }
-      ).select().single()
+      // Check if lead already exists by email
+      const { data: existingLead, error: selectError } = await supabaseAdmin
+        .from('leads')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle()
 
-      dbError = error
-      insertedLead = data
+      if (selectError) {
+        dbError = selectError
+      } else if (existingLead) {
+        // Update existing lead
+        const { data, error } = await supabaseAdmin
+          .from('leads')
+          .update({
+            name: name || existingLead.name,
+            business_name: business_name || existingLead.business_name,
+            website: website || existingLead.website,
+            notes: notes || existingLead.notes,
+            status: 'New',
+            source: 'booking_form',
+          })
+          .eq('id', existingLead.id)
+          .select()
+          .single()
+
+        dbError = error
+        insertedLead = data
+      } else {
+        // Create new lead
+        const { data, error } = await supabaseAdmin
+          .from('leads')
+          .insert({
+            name: name || 'Anonymous Scheduler',
+            email: email,
+            business_name: business_name || 'N/A (Booking Form)',
+            website: website || null,
+            notes: notes || 'Booking request qualification',
+            status: 'New',
+            source: 'booking_form',
+          })
+          .select()
+          .single()
+
+        dbError = error
+        insertedLead = data
+      }
     } else if (source === 'contact_form') {
       // Normal insert for contact form
       const { data, error } = await supabaseAdmin.from('leads').insert({
