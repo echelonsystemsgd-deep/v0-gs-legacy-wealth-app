@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+
 import {
   ArrowRight,
   User,
@@ -36,7 +36,7 @@ function validateContactForm(data: ContactFormData): Partial<Record<keyof Contac
 }
 
 export function ContactForm() {
-  const supabase = createClient()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({})
@@ -68,18 +68,22 @@ export function ContactForm() {
     setIsSubmitting(true)
 
     try {
-      const { error } = await supabase.from('leads').insert({
-        name: formData.fullName,
-        email: formData.email,
-        business_name: formData.companyName || "N/A (Contact Form)",
-        website: null,
-        notes: `Message: ${formData.message}${formData.phone ? `\nPhone: ${formData.phone}` : ''}`,
-        status: 'New',
-        source: 'contact_form',
+      const res = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'contact_form',
+          name: formData.fullName,
+          email: formData.email,
+          business_name: formData.companyName || "N/A (Contact Form)",
+          phone: formData.phone || null,
+          notes: formData.message,
+        }),
       })
 
-      if (error) {
-        throw error
+      const result = await res.json()
+      if (!res.ok) {
+        throw new Error(result.error || "Failed to submit. Please try again.")
       }
 
       setSubmitted(true)

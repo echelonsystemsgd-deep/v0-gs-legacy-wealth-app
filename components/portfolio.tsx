@@ -285,20 +285,23 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
     setIsSubmitting(true)
     setErrorMsg(null)
     try {
-      const { createClient } = await import("@/lib/supabase/client")
-      const supabase = createClient()
-      const { error } = await supabase.from("leads").insert({
-        name: name || "Anonymous Visitor",
-        business_name: "N/A (Portfolio Waitlist)",
-        email: email,
-        website: item.href || null,
-        notes: `Waitlist registration for under-construction site: ${item.title}`,
-        source: "portfolio_waitlist",
-        status: "New"
+      const res = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'portfolio_waitlist',
+          name: name || "Anonymous Visitor",
+          email: email,
+          website: item.href || null,
+          notes: `Waitlist registration for under-construction site: ${item.title}`,
+        }),
       })
-      if (error) {
-        throw error
+
+      const result = await res.json()
+      if (!res.ok) {
+        throw new Error(result.error || "Failed to register. Please try again.")
       }
+
       setSubmitted(true)
     } catch (err: any) {
       setErrorMsg(err.message || "Something went wrong. Please try again.")

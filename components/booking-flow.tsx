@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Script from "next/script"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+
 import {
   ArrowRight,
   User,
@@ -72,10 +72,10 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
 // Inner component (uses useSearchParams — must be inside Suspense)
 // -------------------------------------------------------------------
 function BookingFlowInner() {
-  const supabase = createClient()
   const [step, setStep] = useState<1 | 2>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [calendlyHeight, setCalendlyHeight] = useState("700px")
 
   const [formData, setFormData] = useState<FormData>({
@@ -94,6 +94,7 @@ function BookingFlowInner() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
     const validationErrors = validateForm(formData)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
@@ -102,28 +103,32 @@ function BookingFlowInner() {
 
     setIsSubmitting(true)
 
-    // Save lead to Supabase before advancing to Calendly
     try {
-      await supabase.from('leads').upsert(
-        {
+      const res = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'booking_form',
           name: formData.fullName,
           email: formData.email,
           business_name: formData.companyName,
           website: formData.websiteUrl || null,
           notes: formData.biggestChallenge,
-          status: 'New',
-          source: 'booking_form',
-        },
-        { onConflict: 'email', ignoreDuplicates: false }
-      )
-    } catch {
-      // Non-blocking — if Supabase fails we still advance so the user can book
-      console.warn('Lead save failed; proceeding to Calendly anyway.')
-    }
+        }),
+      })
 
-    setIsSubmitting(false)
-    setStep(2)
-    window.scrollTo({ top: 0, behavior: "smooth" })
+      const result = await res.json()
+      if (!res.ok) {
+        throw new Error(result.error || "Failed to record qualification details. Please try again.")
+      }
+
+      setIsSubmitting(false)
+      setStep(2)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    } catch (err: any) {
+      setIsSubmitting(false)
+      setSubmitError(err.message || "Failed to submit. Please try again or book directly.")
+    }
   }
 
   // -------------------------------------------------------------------
@@ -364,6 +369,12 @@ function BookingFlowInner() {
               </div>
 
 
+
+              {submitError && (
+                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl">
+                  {submitError}
+                </div>
+              )}
 
               {/* -- Submit -- */}
               <Button
