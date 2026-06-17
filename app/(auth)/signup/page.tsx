@@ -155,16 +155,23 @@ export default function SignupPage() {
           )}
         </button>
 
-        <div className="text-center">
+        <div className="flex flex-col gap-4 text-center border-t border-gold/10 pt-4 mt-2">
           <p className="text-xs text-muted-foreground">
             Already have an account?{' '}
             <Link
               href="/login"
-              className="text-gold hover:underline transition-colors underline-offset-2"
+              className="text-gold hover:text-gold-light transition-colors font-semibold underline underline-offset-2"
             >
               Log in instead
             </Link>
           </p>
+
+          <Link
+            href="/"
+            className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center justify-center gap-1.5"
+          >
+            ← Back to Homepage
+          </Link>
         </div>
       </form>
     </div>

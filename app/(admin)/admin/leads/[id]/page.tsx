@@ -17,6 +17,8 @@ import {
   Calendar,
   Circle,
   Trash2,
+  ShieldCheck,
+  UserCheck,
 } from 'lucide-react'
 
 const STATUS_OPTIONS = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost']
@@ -67,6 +69,11 @@ export default function LeadDetailPage() {
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
 
+  // Portal Account Promotion states
+  const [profileForLead, setProfileForLead] = useState<any | null>(null)
+  const [checkingProfile, setCheckingProfile] = useState(true)
+  const [promoting, setPromoting] = useState(false)
+
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type })
     setTimeout(() => setToast(null), 3500)
@@ -82,12 +89,77 @@ export default function LeadDetailPage() {
         setLead(leadData)
         setNotes(leadData.notes ?? '')
         setStatus(leadData.status)
+
+        // Check if there is a registered portal profile for this lead email
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('email', leadData.email)
+          .maybeSingle()
+        setProfileForLead(profileData)
       }
       setSessions(sessionData ?? [])
+      setCheckingProfile(false)
       setLoading(false)
     }
     fetchData()
   }, [id])
+
+  const handlePromote = async () => {
+    if (!profileForLead) return
+    setPromoting(true)
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: 'client' })
+      .eq('id', profileForLead.id)
+    setPromoting(false)
+
+    if (error) {
+      showToast('Failed to promote user.', 'error')
+      return
+    }
+
+    showToast('User promoted to Client successfully.')
+    setProfileForLead((prev: any) => prev ? { ...prev, role: 'client' } : null)
+
+    // Log activity
+    const { data: { user } } = await supabase.auth.getUser()
+    await supabase.from('activity_logs').insert({
+      user_id: user?.id,
+      action_type: 'Promoted Lead to Client',
+      target_table: 'profiles',
+      target_id: profileForLead.id,
+      details: { email: lead!.email }
+    })
+  }
+
+  const handleDemote = async () => {
+    if (!profileForLead) return
+    setPromoting(true)
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: 'user' })
+      .eq('id', profileForLead.id)
+    setPromoting(false)
+
+    if (error) {
+      showToast('Failed to demote user.', 'error')
+      return
+    }
+
+    showToast('User demoted to standard User.')
+    setProfileForLead((prev: any) => prev ? { ...prev, role: 'user' } : null)
+
+    // Log activity
+    const { data: { user } } = await supabase.auth.getUser()
+    await supabase.from('activity_logs').insert({
+      user_id: user?.id,
+      action_type: 'Demoted Client to User',
+      target_table: 'profiles',
+      target_id: profileForLead.id,
+      details: { email: lead!.email }
+    })
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -263,6 +335,69 @@ export default function LeadDetailPage() {
 
         {/* Right — Status & Metadata */}
         <div className="space-y-5">
+          {/* Portal Integration Card */}
+          <div className="glass rounded-2xl border border-gold/10 p-5 space-y-4">
+            <p className="text-xxs font-bold uppercase tracking-widest text-gold/70">Portal Account Status</p>
+            
+            {checkingProfile ? (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Loader2 size={13} className="animate-spin text-gold" /> Checking portal accounts…
+              </div>
+            ) : !profileForLead ? (
+              <div className="space-y-2">
+                <div className="text-xs text-muted-foreground bg-white/2 rounded-lg p-3 border border-gold/5 leading-relaxed">
+                  No registered member account matches this email. Once the prospect registers via the login/signup page, you can promote them.
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="bg-white/2 border border-gold/5 rounded-lg p-3 space-y-1.5 text-xs">
+                  <p className="font-semibold text-foreground flex items-center gap-1.5">
+                    <UserCheck size={13} className="text-gold" /> Registered Member Found
+                  </p>
+                  <p className="text-[10px] text-muted-foreground truncate">
+                    ID: {profileForLead.id}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                    Current Role: <span className="font-bold text-gold uppercase tracking-wider">{profileForLead.role}</span>
+                  </p>
+                </div>
+
+                {profileForLead.role === 'user' ? (
+                  <button
+                    onClick={handlePromote}
+                    disabled={promoting}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                  >
+                    {promoting ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <ShieldCheck size={13} />
+                    )}
+                    Promote to Client
+                  </button>
+                ) : profileForLead.role === 'client' ? (
+                  <div className="flex flex-col gap-2">
+                    <div className="bg-green-500/10 border border-green-500/25 rounded-lg p-2.5 text-[10px] font-semibold text-green-400 flex items-center gap-1">
+                      ✓ Active Client Dashboard Enabled
+                    </div>
+                    <button
+                      onClick={handleDemote}
+                      disabled={promoting}
+                      className="w-full text-center text-[10px] text-muted-foreground hover:text-gold transition-colors underline py-1"
+                    >
+                      Demote to User
+                    </button>
+                  </div>
+                ) : (
+                  <div className="bg-gold/10 border border-gold/20 rounded-lg p-2.5 text-[10px] font-semibold text-gold">
+                    Crown Executive Admin Account
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Status Selector */}
           <div className="glass rounded-2xl border border-gold/10 p-5 space-y-3">
             <p className="text-xxs font-bold uppercase tracking-widest text-gold/70">Lead Status</p>

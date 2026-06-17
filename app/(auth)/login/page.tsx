@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   const router = useRouter()
+  const [loginType, setLoginType] = useState<'client' | 'admin'>('client')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setLoading(true)
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       setError('Invalid credentials. Please check your email and password.')
@@ -28,15 +29,68 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/admin')
+    const user = data?.user
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/dashboard')
+      }
+    } else {
+      router.push('/dashboard')
+    }
     router.refresh()
   }
 
   return (
     <div className="glass rounded-2xl border border-gold/15 p-8 space-y-6">
-      <div className="space-y-1 text-center">
-        <h2 className="font-serif text-2xl font-bold text-foreground">Welcome Back</h2>
-        <p className="text-sm text-muted-foreground">Sign in to your admin dashboard</p>
+      {/* Portal Tab Switcher */}
+      <div className="grid grid-cols-2 gap-1.5 bg-background/50 p-1 rounded-xl border border-gold/10">
+        <button
+          type="button"
+          onClick={() => {
+            setLoginType('client')
+            setError(null)
+          }}
+          className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
+            loginType === 'client'
+              ? 'bg-gradient-to-r from-gold/20 to-gold/10 text-gold border border-gold/20 shadow-[0_0_12px_rgba(212,175,55,0.15)]'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Client Login
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setLoginType('admin')
+            setError(null)
+          }}
+          className={`py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
+            loginType === 'admin'
+              ? 'bg-gradient-to-r from-gold/20 to-gold/10 text-gold border border-gold/20 shadow-[0_0_12px_rgba(212,175,55,0.15)]'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Staff / Admin
+        </button>
+      </div>
+
+      <div className="space-y-1.5 text-center">
+        <h2 className="font-serif text-2xl font-bold text-foreground">
+          {loginType === 'client' ? 'Welcome Back' : 'Executive Access'}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {loginType === 'client'
+            ? 'Sign in to your client wealth dashboard'
+            : 'Sign in to your administrative dashboard'}
+        </p>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-5">
@@ -52,7 +106,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@gslegacywealth.com"
+            placeholder={loginType === 'client' ? 'you@example.com' : 'admin@gslegacywealth.com'}
             className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 focus:border-gold/50 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:ring-2 focus:ring-gold/20 transition-all"
           />
         </div>
@@ -104,16 +158,38 @@ export default function LoginPage() {
               Signing In…
             </>
           ) : (
-            'Sign In to Dashboard'
+            loginType === 'client' ? 'Sign In to Client Portal' : 'Sign In to Admin Portal'
           )}
         </button>
 
-        <div className="text-center">
+        {/* Links Section */}
+        <div className="flex flex-col gap-4 text-center border-t border-gold/10 pt-4 mt-2">
+          <div className="text-center">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-muted-foreground hover:text-gold transition-colors underline underline-offset-2"
+            >
+              Forgot your password?
+            </Link>
+          </div>
+
+          {loginType === 'client' && (
+            <p className="text-xs text-muted-foreground">
+              Don't have an account?{' '}
+              <Link
+                href="/signup"
+                className="text-gold hover:text-gold-light transition-colors font-semibold underline underline-offset-2"
+              >
+                Create one here
+              </Link>
+            </p>
+          )}
+
           <Link
-            href="/forgot-password"
-            className="text-xs text-muted-foreground hover:text-gold transition-colors underline underline-offset-2"
+            href="/"
+            className="text-xs text-muted-foreground hover:text-gold transition-colors flex items-center justify-center gap-1.5"
           >
-            Forgot your password?
+            ← Back to Homepage
           </Link>
         </div>
       </form>

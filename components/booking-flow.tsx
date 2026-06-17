@@ -398,7 +398,7 @@ function BookingFlowInner() {
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                No commitment. We&apos;ll review your business and give you honest feedback in 20 minutes — completely free.
+                No commitment. We&apos;ll review your business and give you honest feedback in 30 minutes — completely free.
               </p>
             </form>
           </motion.div>

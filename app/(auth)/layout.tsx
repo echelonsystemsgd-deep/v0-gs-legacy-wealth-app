@@ -3,12 +3,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Admin Access',
+  title: 'Secure Access',
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+    <main className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-y-auto">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-40 left-1/4 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[160px]" />
@@ -33,7 +33,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </Link>
           <div className="text-center">
             <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">
-              Admin Portal
+              Secure Gateway
             </p>
             <h1 className="font-serif text-xl font-bold text-foreground mt-1">
               GS Legacy Wealth AI

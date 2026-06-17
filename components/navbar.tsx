@@ -107,7 +107,13 @@ export function Navbar() {
           </div>
 
           {/* CTA Button */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex lg:items-center lg:gap-6">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
+            >
+              Login
+            </Link>
             <Button
               asChild
               variant="outline"
@@ -155,6 +161,13 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+              >
+                Login
+              </Link>
               <div className="pt-6">
                 <Button
                   asChild

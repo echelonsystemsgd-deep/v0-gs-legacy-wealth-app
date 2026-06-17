@@ -95,7 +95,7 @@ export function AdminSidebar() {
         <button
           onClick={handleSignOut}
           id="admin-signout"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/5 transition-all duration-200"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all duration-200 cursor-pointer"
         >
           <LogOut size={16} className="shrink-0" />
           Sign Out

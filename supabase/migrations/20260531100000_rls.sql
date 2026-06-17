@@ -17,7 +17,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
     RETURN EXISTS (
         SELECT 1 FROM public.profiles
-        WHERE id = auth.uid() AND role = 'admin'::user_role
+        WHERE id = auth.uid() AND role = 'admin'::public.user_role
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

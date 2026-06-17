@@ -48,8 +48,8 @@ export async function middleware(request: NextRequest) {
     }
     const profile = await getUserProfile()
     if (!profile || profile.role !== 'admin' || profile.is_suspended) {
-      // If a standard user tries to access admin, redirect them to dashboard
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      // If a standard user tries to access admin, redirect them to unauthorized page
+      return NextResponse.redirect(new URL('/unauthorized', request.url))
     }
   }
 

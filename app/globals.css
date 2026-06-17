@@ -101,6 +101,11 @@
   --color-text-gold: var(--color-text-gold);
   --color-border-brand: var(--color-border);
 
+  /* Helper Gold Tokens */
+  --color-gold: var(--color-accent-gold);
+  --color-gold-light: #E5C453;
+  --color-gold-dark: #A27E1C;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

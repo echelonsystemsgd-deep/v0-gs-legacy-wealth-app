@@ -9,6 +9,8 @@ CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     first_name TEXT,
     last_name TEXT,
+    full_name TEXT,
+    avatar_url TEXT,
     phone_number TEXT,
     address_line1 TEXT,
     address_line2 TEXT,
@@ -184,13 +186,15 @@ BEGIN
         id,
         first_name,
         last_name,
+        full_name,
         role
     )
     VALUES (
         new.id,
         new.raw_user_meta_data->>'first_name',
         new.raw_user_meta_data->>'last_name',
-        'user'::user_role -- Default role
+        TRIM(COALESCE(new.raw_user_meta_data->>'first_name', '') || ' ' || COALESCE(new.raw_user_meta_data->>'last_name', '')),
+        'user'::public.user_role -- Default role
     );
     RETURN NEW;
 END;
