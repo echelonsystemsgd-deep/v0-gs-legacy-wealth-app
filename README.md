@@ -1,27 +1,61 @@
-# GS Legacy Wealth AI — Developer Documentation
+# 🏛️ GS Legacy Wealth AI — Developer Hub
 
-Welcome to the **GS Legacy Wealth AI** web application and administrative portal. This repository is built as a hybrid architecture combining a high-performance **Next.js App Router** frontend with a robust **Supabase** backend. It is designed to engineer luxury digital assets, streamline client onboarding, showcase agency portfolio/testimonials, and handle lead/project operations.
+Welcome to the **GS Legacy Wealth AI** web application and administrative hub. This repository is built as a hybrid architecture combining a high-performance **Next.js App Router** frontend with a robust **Supabase** backend. It is designed to engineer luxury digital assets, streamline client onboarding, showcase agency portfolio/testimonials, and handle lead/project operations.
 
 ---
 
-## 🚀 Tech Stack
+## 🚀 Technical Stack
 
 This project is built using modern, type-safe, and highly performant technologies:
 
 ### Frontend & UI
-* **Framework**: [Next.js 16.2 (App Router)](https://nextjs.org/) & **React 19**
+* **Framework**: [Next.js 16.2 (App Router)](https://nextjs.org/) & **React 19** (configured in [package.json](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/package.json))
 * **Language**: **TypeScript** (fully typed)
-* **Styling**: **Tailwind CSS v4** (`@tailwindcss/postcss`) & [Framer Motion](https://www.framer.com/motion/) for premium, fluid animations.
-* **Component Library**: custom components built on top of [Radix UI](https://www.radix-ui.com/) and [shadcn/ui](https://ui.shadcn.com/)
+* **Styling**: **Tailwind CSS v4** (`@tailwindcss/postcss`) & [Framer Motion](https://www.framer.com/motion/) for premium, fluid animations. (Directives located in [app/globals.css](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/globals.css))
+* **Component Library**: Custom elements built on top of [Radix UI](https://www.radix-ui.com/) and [shadcn/ui](https://ui.shadcn.com/)
 * **Forms & Validation**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev)
 * **Data Visualization**: [Recharts](https://recharts.org/) (for dashboard analytics)
 
 ### Backend & Infrastructure
 * **BaaS Provider**: [Supabase](https://supabase.com/)
 * **Database**: **PostgreSQL** with Row-Level Security (RLS) policies
-* **Authentication**: **Supabase Auth** with server-side validation using `@supabase/ssr`
-* **File Storage**: **Supabase Storage** (configured with public buckets for assets, and private buckets for client deliverables)
-* **Serverless Edge Logic**: **Deno-powered Supabase Edge Functions** (TypeScript)
+* **Authentication**: **Supabase Auth** with server-side validation using `@supabase/ssr` (integrated via [middleware.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/middleware.ts))
+* **File Storage**: **Supabase Storage** (configured with public buckets for assets, and private buckets for secure client deliverables)
+* **Serverless Logic**: **Deno-powered Supabase Edge Functions** (TypeScript)
+* **Error Tracking**: **Sentry** (configured in [next.config.mjs](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/next.config.mjs))
+* **Email Service**: **Resend** integration for automated transactional mailings.
+
+---
+
+## 🎛️ Integrations & Slack Alert System
+
+The application leverages several core webhooks and APIs to maintain real-time tracking, lead validation, and collaborative communication:
+
+### 1. Developer & Administrative Slack Alert Notifications
+Whenever critical events occur on the platform, automated notifications are dispatched to both Slack and Discord:
+* **Slack & Discord Webhook Router**: Triggered automatically via database changes (using PostgreSQL webhook triggers mapping to the `notify-admin` Supabase Edge Function).
+* **Source Code**: Located in [notify-admin/index.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/supabase/functions/notify-admin/index.ts).
+* **Environment Configuration**: Set `SLACK_WEBHOOK_URL` and `DISCORD_WEBHOOK_URL` inside your Supabase dashboard or local edge function env file.
+* **Notification Scopes**:
+  * **Lead Intake**: Fires when a prospect fills out the public questionnaire (INSERT on the `leads` table). It formats a Slack attachment card detailing the applicant's name, company, email, interest, and message.
+  * **Strategy Session Booking**: Fires when a new appointment is confirmed (INSERT on the `strategy_sessions` table), summarizing scheduling dates, Calendly IDs, and notes.
+
+### 2. Live Platform Status Monitor
+* The developer dashboard and landing pages include a console feed component ([results.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/results.tsx)) designed to showcase system actions.
+* It simulates the end-to-end user journey, printing logs such as:
+  ```text
+  [SLACK] Dispatching sales notification to team #alerts
+  ```
+
+### 3. Client Collaboration (Founder Slack Hotline)
+* As specified in the Agency plans ([pricing.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/pricing.tsx)), Elite tier clients gain direct access to a private founder channel:
+  * **Founder Slack Channel**: Instant, high-touch engineering and consulting access directly to core partners, replacing traditional ticketing systems.
+
+### 4. Calendly Webhook Sync
+* Located in [calendly-webhook/index.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/supabase/functions/calendly-webhook/index.ts).
+* Synchronizes calendar booking events (`invitee.created`, `invitee.canceled`) automatically:
+  * Links appointments with existing record metrics by matching emails.
+  * Updates lead status to `Call Booked` and schedules/cancels events dynamically inside the `strategy_sessions` table.
 
 ---
 
@@ -44,8 +78,11 @@ v0-gs-legacy-wealth-app/
 │   │   └── layout.tsx             # Glassmorphic sidebar shell & providers
 │   ├── (auth)/
 │   │   ├── login/                 # Secure login page
+│   │   ├── signup/                # User registration
 │   │   ├── forgot-password/       # Password recovery triggers
 │   │   └── reset-password/        # Password reset callback page
+│   ├── (user)/
+│   │   └── dashboard/             # Standard User/Client Client Space & mockup dashboard
 │   ├── book/                      # Public booking page and qualifier questionnaire
 │   ├── contact/                   # Public agency contact form
 │   ├── success/                   # Post-qualification success page
@@ -64,7 +101,7 @@ v0-gs-legacy-wealth-app/
 ├── supabase/
 │   ├── config.toml                # Local Supabase dev config
 │   ├── migrations/                # Core Postgres DB schema & RLS rules SQL migrations
-│   └── functions/                 # Deno Serverless edge endpoints (Calendly webhooks, administrative roles)
+│   └── functions/                 # Deno Serverless edge endpoints (Calendly, admin operations, notifications)
 └── Implementation/                # Historical plans, strategies, and implementation references
 ```
 
@@ -72,97 +109,77 @@ v0-gs-legacy-wealth-app/
 
 ## 🗄️ Database & Schema Overview
 
-The Supabase PostgreSQL database is structured around the following core tables (refer to [20260531000000_schema.sql](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/supabase/migrations/20260531000000_schema.sql)):
+The database is built on PostgreSQL inside Supabase. Tables include:
 
-* **`profiles`**: Links to `auth.users`; holds user identity, roles (`admin` vs `user`), and accounts suspend state.
-* **`leads`**: Tracks public inquiries, contact entries, and booking questionnaire submissions.
+* **`profiles`**: Tied to `auth.users` via triggers; stores user roles (`admin` vs `user`), profiles, and account suspension flags (`is_suspended`).
+* **`leads`**: Tracks lead qualifications, service interests, and initial questionnaires.
 * **`projects`**: Manages client lifecycle stages (`Discovery` ➔ `Design` ➔ `Development` ➔ `Revision` ➔ `Complete`).
 * **`project_assets`**: Holds records of secure project assets uploaded in private buckets.
-* **`strategy_sessions`**: Booked slots synced via Calendly webhooks or inputted manually.
-* **`portfolio_items` & `testimonials`**: Marketing data displayed on the public landing page.
-* **`website_content`**: Key-value JSONB table storing editable website copy.
-* **`login_history` & `activity_logs`**: Security audit logging tables tracking updates, deletions, and logs.
+* **`strategy_sessions`**: Session slots synced from Calendly.
+* **`portfolio_items` & `testimonials`**: Dynamic portfolio records displayed on the frontend.
+* **`website_content`**: A key-value JSONB catalog storing content and copy for the website.
+* **`login_history` & `activity_logs`**: Logs tracking authentication events and changes to profiles (linked via [admin-user-actions/index.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/supabase/functions/admin-user-actions/index.ts)).
 
 ### Security & Row Level Security (RLS)
-* **RLS is enabled** on all database tables.
-* Anonymous public users have permissions to read `portfolio_items` and `testimonials` and write inserts to `leads` (contact form submissions).
-* The dashboard `/admin` routes require authentication and checks if the user's role is set to `admin`.
-* Private storage buckets (e.g., `project-assets`) generate short-lived signed URLs for authenticated administrators and relevant client profiles.
+* **RLS is strictly enabled** on all database tables.
+* Public anonymous clients only have read privileges to `portfolio_items` / `testimonials`, and write permissions to insert into `leads`.
+* Admin paths `/admin/*` are restricted via [middleware.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/middleware.ts), which queries roles from the `profiles` table.
+* Secure assets use Supabase Storage private buckets generating short-lived signed URLs for approved administrators and project clients.
 
 ---
 
-## ⚙️ Getting Started
+## ⚙️ Getting Started & Local Development
 
-### 1. Clone & Install Dependencies
-Run the installation process using npm:
+### 1. Pre-requisites & Installations
+Clone the repository and install dependencies using npm:
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-Copy the local environment sample and fill in the required Supabase credentials:
+### 2. Setup Local Environment Variables
+Create your local environment file:
 ```bash
 cp .env.local.example .env.local
 ```
-
-Open `.env.local` and enter your Supabase credentials:
+Configure your credentials in `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key # Keep this secret! (Only used server-side)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-### 3. Local Development Server
-Launch the next development server:
+### 3. Run Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the client-facing website and landing experience. The admin console can be reached at `/admin` (requires login credentials).
+Open [http://localhost:3000](http://localhost:3000) to view the client-facing application. Access the administrator workspace at `/admin`.
 
 ### 4. Supabase CLI & Edge Functions
-If you are developing Database migrations or editing Deno serverless edge functions:
-
-* **Link your project**:
+To deploy database migrations, test edge functions locally, or push updates:
+* **Link Local Project**:
   ```bash
   npx supabase link --project-ref your-project-ref
   ```
-* **Start local Supabase stack**:
+* **Start Local DB Stack**:
   ```bash
   npx supabase start
   ```
-* **Run migrations**:
+* **Apply Migrations**:
   ```bash
   npx supabase db push
   ```
-* **Run Edge Functions locally**:
+* **Serve Edge Functions Locally**:
   ```bash
   npx supabase functions serve --env-file .env.local
   ```
 
 ---
 
-## 🛠️ Key Administration Flows
+## 🛡️ Git Workflow & Developer Guidelines
 
-### 1. Securing Admin Dashboard Access
-Client authentication is validated via Next.js server middleware ([middleware.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/middleware.ts)):
-* When a user attempts to access `/admin/*`, the middleware refreshes the Supabase token.
-* If no session is present, the user is redirected to `/login`.
-* If a session is present, the middleware checks the database `profiles` table to verify that the user's `role` is `'admin'` and `is_suspended` is `false`.
-
-### 2. Calendly Synchronization
-Bookings are automated via the `calendly-webhook` edge function. 
-* Calendly webhooks trigger on event creation.
-* The hook handles linking incoming event emails to existing `leads`.
-* Updates lead state to `'Call Booked'` and creates strategy session records dynamically.
-
-### 3. Asset Upload Pipeline
-Uploading media or project deliverables utilizes drag-and-drop secure upload modules:
-* Files are uploaded to Supabase Storage buckets.
-* On completion, database triggers log uploads inside the corresponding `project_assets` or `media_assets` databases.
-
----
-
-## 📝 Best Practices & Guidelines
-* **Database migrations**: Never modify database schemas directly via the Supabase dashboard interface in production. Always create SQL migration files inside `supabase/migrations` and apply them using the CLI.
-* **Component Styling**: This project uses **Tailwind CSS v4**. Avoid arbitrary margins or hardcoded text sizes; use defined theme scales and components to maintain a premium visual style.
-* **Client Security**: Do not expose client deliverables publicly. Always upload client-specific project assets to private buckets and access them via generated signed URLs.
+Developers **must** follow the guidelines in [GITHUB_ISSUES_GUIDE.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/GITHUB_ISSUES_GUIDE.md):
+1. **Issue Search**: Verify whether an issue exists before writing code. If not, create one.
+2. **Issue Names**: Prefix issue titles with `feat:`, `fix:`, `refactor:`, `docs:`, or `chore:`.
+3. **Branching & Pull Requests**: Work in structured feature branches, submit PRs, and cross-reference issue numbers.
+4. **RLS Policies**: Never write a migration that disables RLS. Ensure that every table has proper access controls.
+5. **Private Uploads**: Always upload client deliverables to private buckets and access them via generated signed URLs.

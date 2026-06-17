@@ -1,35 +1,13 @@
-# v0-gs-legacy-wealth-app
+# Implementation Folder Guide
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+This directory holds the historical plans, branding specifications, database implementation details, and phase logs for the developer team.
 
-## Built with v0
+For the primary application documentation, setup guides, tech stack details, and Slack configuration, please refer directly to the root [README.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/README.md).
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+## Directory Inventory
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_73Zv98nS6nLTlyTMEx85cs0x1JfI)
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-## Learn More
-
-To learn more, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
-
-<a href="https://v0.app/chat/api/kiro/clone/echelonsystemsgd-deep/v0-gs-legacy-wealth-app" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+- **Core DB Schema & Auth Strategy**: See [backend_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/backend_implementation_plan.md) and [PHASE_1_AUTH_PROFILES.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/PHASE_1_AUTH_PROFILES.md).
+- **Branding & Theme Layouts**: See [branding_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/branding_implementation_plan.md) and [IMPLEMENTATION_PLAN_REBRANDING.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/IMPLEMENTATION_PLAN_REBRANDING.md).
+- **Booking Flow Pipeline**: See [booking_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/booking_implementation_plan.md).
+- **Error Logs & Sentry Configuration**: See [SENTRY_GUIDE.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/SENTRY_GUIDE.md).
+- **UI Responsiveness Plans**: See [responsiveness_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/responsiveness_implementation_plan.md).
