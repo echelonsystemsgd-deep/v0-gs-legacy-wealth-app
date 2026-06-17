@@ -187,7 +187,7 @@ export async function POST(request: Request) {
         </div>
 
         <div style="text-align: center; border-t: 1px solid rgba(201, 162, 39, 0.2); padding-top: 20px;">
-          <a href="https://uwdmmjzcieunybuvnrib.supabase.co/project/uwdmmjzcieunybuvnrib/editor" style="display: inline-block; background-color: #6d28d9; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C9A227; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">View in CRM Dashboard</a>
+          <a href="https://supabase.com/dashboard/project/ladebhmyywkcqtyazxxk/editor" style="display: inline-block; background-color: #6d28d9; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C9A227; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">View in CRM Dashboard</a>
         </div>
       </div>
     `
