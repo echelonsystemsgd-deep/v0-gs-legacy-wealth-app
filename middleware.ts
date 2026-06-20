@@ -65,6 +65,17 @@ export async function middleware(request: NextRequest) {
     // Admins can also access dashboard if they want, or we can leave it open for users
   }
 
+  // Protect all /profile routes
+  if (pathname.startsWith('/profile')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    const profile = await getUserProfile()
+    if (profile?.is_suspended) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+
   // Redirect logged-in users away from login/auth pages
   if ((pathname === '/login' || pathname === '/signup' || pathname === '/forgot-password') && user) {
     const profile = await getUserProfile()
@@ -82,9 +93,11 @@ export const config = {
   matcher: [
     '/admin/:path*',
     '/dashboard/:path*',
+    '/profile/:path*',
     '/login',
     '/signup',
     '/forgot-password',
     '/reset-password',
   ],
 }
+

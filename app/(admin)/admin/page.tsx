@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink } from 'lucide-react'
+import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function AdminDashboardPage() {
@@ -48,10 +48,25 @@ export default async function AdminDashboardPage() {
     .from('strategy_sessions')
     .select('*', { count: 'exact', head: true })
 
+  // Fetch financial aggregates from projects
+  const { data: projectsFinancials } = await supabase
+    .from('projects')
+    .select('amount_paid, contract_value')
+
+  const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
+  const totalPipeline = projectsFinancials?.reduce((sum, p) => sum + ((Number(p.contract_value) - Number(p.amount_paid)) || 0), 0) || 0
+
   // Fetch recent activity logs
   const { data: recentLogs } = await supabase
     .from('activity_logs')
     .select('id, action_type, target_table, created_at, profiles(full_name)')
+    .order('created_at', { ascending: false })
+    .limit(4)
+
+  // Fetch recent payments joined with projects for name context
+  const { data: recentPayments } = await supabase
+    .from('payments')
+    .select('id, amount, notes, status, created_at, projects(project_name)')
     .order('created_at', { ascending: false })
     .limit(4)
 
@@ -79,45 +94,71 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Metrics Row */}
-      <section className="grid sm:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {/* Total Sales Card */}
+        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+          <div className="space-y-1.5 min-w-0">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
+            <p className="text-2xl font-serif font-bold text-foreground truncate">
+              ${totalSales.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            </p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <DollarSign size={18} className="text-gold" />
+          </div>
+        </div>
+
+        {/* Active Pipeline Card */}
+        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+          <div className="space-y-1.5 min-w-0">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
+            <p className="text-2xl font-serif font-bold text-foreground truncate">
+              ${totalPipeline.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            </p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Sparkles size={18} className="text-gold" />
+          </div>
+        </div>
+
         {/* Leads Metric */}
         <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
-            <p className="text-3xl font-serif font-bold text-foreground">{leadsCount ?? 0}</p>
+            <p className="text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
-            <Users size={20} className="text-gold" />
+          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Users size={18} className="text-gold" />
           </div>
         </div>
 
         {/* Active Projects Metric */}
         <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
-            <p className="text-3xl font-serif font-bold text-foreground">{projectsCount ?? 0}</p>
+            <p className="text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
-            <FolderKanban size={20} className="text-gold" />
+          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <FolderKanban size={18} className="text-gold" />
           </div>
         </div>
 
         {/* Strategy Sessions Metric */}
         <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Booked Sessions</span>
-            <p className="text-3xl font-serif font-bold text-foreground">{sessionsCount ?? 0}</p>
+          <div className="space-y-1.5 min-w-0">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Sessions</span>
+            <p className="text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
-            <Calendar size={20} className="text-gold" />
+          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Calendar size={18} className="text-gold" />
           </div>
         </div>
       </section>
 
-      {/* Main Grid: Activity & Actions */}
-      <div className="grid md:grid-cols-3 gap-8">
+      {/* Main Grid: Activity, Transactions & Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Recent Activity Timeline */}
-        <section className="md:col-span-2 p-6 glass rounded-2xl border border-gold/10 space-y-6">
+        <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6">
           <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
             <Activity size={16} className="text-gold" /> System Activity
           </h2>
@@ -128,22 +169,61 @@ export default async function AdminDashboardPage() {
                 <div key={log.id} className="relative space-y-1">
                   <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold border border-[#050505]" />
                   <div className="flex justify-between items-start gap-4">
-                    <p className="text-sm font-semibold text-foreground">
+                    <p className="text-xs font-semibold text-foreground">
                       {log.action_type} on <span className="text-gold capitalize">{log.target_table}</span>
                     </p>
-                    <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-mono">
-                      <Clock size={10} /> {new Date(log.created_at).toLocaleDateString()}
+                    <span className="text-[9px] text-muted-foreground flex items-center gap-1 font-mono">
+                      <Clock size={9} /> {new Date(log.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Performed by: {log.profiles?.full_name || 'System Auto'}
+                  <p className="text-[10px] text-muted-foreground">
+                    By: {log.profiles?.full_name || 'System Auto'}
                   </p>
                 </div>
               ))
             ) : (
               <div className="relative py-4 text-center">
                 <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold/50 border border-[#050505]" />
-                <p className="text-xs text-muted-foreground">No recent system activity found.</p>
+                <p className="text-xs text-muted-foreground">No recent activity found.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Recent Sales / Transactions Panel */}
+        <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6">
+          <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
+            <DollarSign size={16} className="text-gold" /> Recent Sales
+          </h2>
+
+          <div className="space-y-4">
+            {recentPayments && recentPayments.length > 0 ? (
+              (recentPayments as any[]).map((payment) => (
+                <div key={payment.id} className="p-3.5 rounded-xl bg-background/30 border border-gold/10 hover:border-gold/20 transition-all flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground truncate">
+                      {payment.projects?.project_name || 'Custom Project'}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate mt-0.5">
+                      {payment.notes || 'Milestone payment'}
+                    </p>
+                    <p className="text-[9px] text-gold/60 font-mono mt-0.5">
+                      {new Date(payment.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-sm font-serif font-bold text-gold">
+                      +${Number(payment.amount).toLocaleString('en-US')}
+                    </span>
+                    <span className="block text-[8px] uppercase tracking-wider text-green-400 font-bold mt-0.5">
+                      {payment.status}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-8 text-center text-xs text-muted-foreground">
+                No recent transactions logged.
               </div>
             )}
           </div>

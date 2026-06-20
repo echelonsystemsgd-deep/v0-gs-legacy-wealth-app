@@ -3,11 +3,22 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User, LogOut, LayoutDashboard, Globe } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
+import { createClient } from "@/lib/supabase/client"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -26,6 +37,11 @@ export function Navbar() {
   const router = useRouter()
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
+  const [user, setUser] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
+
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
     return pathname.startsWith(href)
@@ -38,6 +54,108 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const resolveAvatarUrl = async (pathOrUrl: string | null) => {
+    if (!pathOrUrl) return ""
+    if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://") || pathOrUrl.startsWith("data:")) {
+      return pathOrUrl
+    }
+    try {
+      const { data, error } = await supabase.storage.from("avatars").createSignedUrl(pathOrUrl, 3600)
+      if (error) {
+        console.error("Error creating signed URL", error)
+        return ""
+      }
+      return data?.signedUrl || ""
+    } catch (err) {
+      console.error("Error resolving avatar path", err)
+      return ""
+    }
+  }
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          setUser(user)
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("first_name, last_name, avatar_url, role")
+            .eq("id", user.id)
+            .single()
+          if (profileData) {
+            if (profileData.avatar_url) {
+              profileData.avatar_url = await resolveAvatarUrl(profileData.avatar_url)
+            }
+            setProfile(profileData)
+          }
+        } else {
+          setUser(null)
+          setProfile(null)
+        }
+      } catch (err) {
+        console.error("Error fetching user session", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session.user)
+        try {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("first_name, last_name, avatar_url, role")
+            .eq("id", session.user.id)
+            .single()
+          if (profileData) {
+            if (profileData.avatar_url) {
+              profileData.avatar_url = await resolveAvatarUrl(profileData.avatar_url)
+            }
+            setProfile(profileData)
+          }
+        } catch (err) {
+          console.error("Error fetching profile", err)
+        }
+      } else {
+        setUser(null)
+        setProfile(null)
+      }
+      setLoading(false)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase])
+
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+    setProfile(null)
+    router.push("/")
+    router.refresh()
+  }
+
+  const getInitials = () => {
+    if (profile?.first_name || profile?.last_name) {
+      return `${profile.first_name?.[0] || ""}${profile.last_name?.[0] || ""}`.toUpperCase()
+    }
+    return user?.email?.[0]?.toUpperCase() || "U"
+  }
+
+  const getFullName = () => {
+    if (profile?.first_name || profile?.last_name) {
+      return `${profile.first_name || ""} ${profile.last_name || ""}`.trim()
+    }
+    return user?.email?.split("@")[0] || "User"
+  }
+
 
   // Outside click handler for mobile menu drawer
   useEffect(() => {
@@ -106,22 +224,91 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button / User Profile Dropdown */}
           <div className="hidden lg:flex lg:items-center lg:gap-6">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
-            >
-              Login
-            </Link>
-            <Button
-              asChild
-              variant="outline"
-              className="px-6 py-2"
-            >
-              <Link href="/book">Book a Strategy Call</Link>
-            </Button>
+            {loading ? (
+              <div className="h-10 w-10 rounded-full border border-gold/15 bg-gold/5 animate-pulse" />
+            ) : user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-gold/15 hover:border-gold/30 outline-none focus-visible:ring-0">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                      <AvatarFallback className="bg-gradient-to-br from-gold/20 to-purple-500/20 text-gold text-xs font-bold font-serif">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-bg-secondary border border-gold/15 text-text-primary rounded-xl p-2 shadow-2xl" align="end">
+                  <DropdownMenuLabel className="font-normal px-2 py-1.5">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-bold font-serif truncate text-foreground">{getFullName()}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      {profile?.role && (
+                        <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-gold/10 border border-gold/20 text-[9px] font-bold text-gold uppercase tracking-wider">
+                          {profile.role}
+                        </span>
+                      )}
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-gold/10" />
+                  {profile?.role === "admin" ? (
+                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
+                      <Link href="/admin" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <LayoutDashboard size={14} />
+                        Admin Panel
+                      </Link>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
+                      <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <LayoutDashboard size={14} />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
+                    <Link href="/profile" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                      <User size={14} />
+                      Profile Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
+                    <Link href="/" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                      <Globe size={14} />
+                      Go to Website
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator className="bg-gold/10" />
+                  <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-500 rounded-lg">
+                    <div className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                      <LogOut size={14} />
+                      Log Out
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
+                >
+                  Login
+                </Link>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="px-6 py-2"
+                >
+                  <Link href="/book">Book a Strategy Call</Link>
+                </Button>
+              </>
+            )}
           </div>
+
 
           {/* Mobile Menu Button */}
           <button
@@ -161,13 +348,76 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-              >
-                Login
-              </Link>
+              {loading ? (
+                <div className="h-10 w-24 bg-gold/5 border border-gold/15 rounded-lg animate-pulse" />
+              ) : user ? (
+                <>
+                  <div className="py-2 border-b border-border-brand/10">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Avatar className="h-10 w-10 border border-gold/15">
+                        <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                        <AvatarFallback className="bg-gradient-to-br from-gold/20 to-purple-500/20 text-gold font-bold font-serif">
+                          {getInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-bold text-foreground font-serif truncate">{getFullName()}</span>
+                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {profile?.role === "admin" ? (
+                    <Link
+                      href="/admin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                    >
+                      Admin Panel
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                    >
+                      Dashboard
+                    </Link>
+                  )}
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                  >
+                    Profile Settings
+                  </Link>
+                  <Link
+                    href="/"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                  >
+                    Go to Website
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      handleSignOut()
+                    }}
+                    className="block w-full text-left text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 text-red-500 hover:text-red-400"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                >
+                  Login
+                </Link>
+              )}
+
               <div className="pt-6">
                 <Button
                   asChild

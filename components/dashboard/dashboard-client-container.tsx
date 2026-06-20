@@ -240,14 +240,23 @@ export default function DashboardClientContainer({
             </p>
           </div>
 
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center gap-2 cursor-pointer"
+          <div className="flex items-center gap-4 flex-wrap">
+            <Link
+              href="/"
+              className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center gap-2"
             >
-              <LogOut size={14} /> Sign Out
-            </button>
-          </form>
+              <Globe size={14} /> Go to Website
+            </Link>
+            <form action="/auth/signout" method="post">
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center gap-2 cursor-pointer"
+              >
+                <LogOut size={14} /> Sign Out
+              </button>
+            </form>
+          </div>
+
         </header>
 
         {/* -------------------- USER (PROSPECT) DASHBOARD VIEW -------------------- */}
