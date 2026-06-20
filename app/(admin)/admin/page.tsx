@@ -187,9 +187,11 @@ export default async function AdminDashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="relative py-4 text-center">
-                <div className="absolute -left-[18.5px] top-1.5 w-2 h-2 rounded-full bg-gold/50 border border-[#050505]" />
-                <p className="text-xs text-muted-foreground">No recent activity found.</p>
+              <div className="relative py-4 text-left pl-1">
+                <div className="absolute -left-[18.5px] top-2.5 w-2.5 h-2.5 rounded-full bg-gold/30 border border-[#050505] animate-pulse" />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Operational feed quiet. System activity will stream here in real-time as administrative changes occur.
+                </p>
               </div>
             )}
           </div>
@@ -228,8 +230,10 @@ export default async function AdminDashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="py-8 text-center text-xs text-muted-foreground">
-                No recent transactions logged.
+              <div className="py-8 text-center px-4">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  No transactions recorded yet. Revenue logs will populate automatically as project milestones are completed and payments are processed.
+                </p>
               </div>
             )}
           </div>

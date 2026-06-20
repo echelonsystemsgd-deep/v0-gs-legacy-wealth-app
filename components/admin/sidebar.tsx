@@ -6,8 +6,10 @@ import Image from 'next/image'
 import { useState } from 'react'
 import {
   LayoutDashboard,
+  Inbox,
   Users,
   FolderKanban,
+  Calendar,
   ImageIcon,
   MessageSquareQuote,
   FileEdit,
@@ -23,8 +25,10 @@ import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/leads', label: 'Leads', icon: Users },
+  { href: '/admin/leads', label: 'Leads', icon: Inbox },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
+  { href: '/admin/clients', label: 'Clients', icon: Users },
+  { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/portfolio', label: 'Portfolio', icon: ImageIcon },
   { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
   { href: '/admin/content', label: 'Content', icon: FileEdit },

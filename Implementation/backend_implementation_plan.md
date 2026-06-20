@@ -659,6 +659,7 @@ gantt
     section Phase 2: Admin Panel
     Admin Dashboard Shell Layout     :p3, after p2, 2d
     Lead Inbox & Details Workspace   :p4, after p3, 4d
+    Clients & Bookings CRM Suite     :p4b, after p4, 4d
     section Phase 3: Operations
     Project Board & Asset Uploads    :p5, after p4, 4d
     Calendly Webhook integration     :p6, after p5, 3d
@@ -677,10 +678,14 @@ gantt
   * Enable RLS security guidelines.
   * Design auth templates: Login, Reset, forgot-password.
 
-* **Phase 2: Administrative Foundation** (Days 7–12)
+* **Phase 2: Administrative Foundation & CRM Suite** (Days 7–12)
   * Draft dashboard layouts, sidebars, and theme styling.
   * Create metrics display charts using mock data.
   * Build the lead inbox view, search tools, and details pages.
+  * Build the Clients CRUD manager (integrating search, metadata editing, and linkages to Projects & Bookings).
+  * Build the Bookings (Strategy Call) CRUD manager with status tracking (scheduled/completed/cancelled/no-show).
+  * Create a session category editor inside the bookings panel to manage meeting types.
+  * Implement the "Convert to Client" interactive workflow wizard.
 
 * **Phase 3: Operational Integrations** (Days 13–19)
   * Build project pipelines (Kanban boards and detailed milestone trackers).
