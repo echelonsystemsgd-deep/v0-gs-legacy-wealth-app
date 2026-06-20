@@ -177,7 +177,7 @@ export default async function AdminDashboardPage() {
                     </span>
                   </div>
                   <p className="text-[10px] text-muted-foreground">
-                    By: {log.profiles?.full_name || 'System Auto'}
+                    By: {(Array.isArray(log.profiles) ? log.profiles[0]?.full_name : (log.profiles as any)?.full_name) || 'System Auto'}
                   </p>
                 </div>
               ))

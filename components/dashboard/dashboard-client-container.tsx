@@ -222,7 +222,7 @@ export default function DashboardClientContainer({
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/3 blur-[130px]" />
       </div>
 
-      <div className="max-w-5xl w-full mx-auto px-4 py-12 space-y-10 relative z-10 flex-1">
+      <div className="max-w-5xl w-full mx-auto px-4 py-6 sm:py-12 space-y-10 relative z-10 flex-1">
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-gold/15">
           <div className="space-y-2">
@@ -230,27 +230,27 @@ export default function DashboardClientContainer({
               <Sparkles size={12} className="animate-pulse" />{' '}
               {profile.role === 'client' ? 'Active Client Suite' : 'Registered Member Suite'}
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground">
               {getGreeting()}, {profile.first_name || 'Partner'}
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {profile.role === 'client'
                 ? 'Track your live AI project status, deliverables, and asset pipeline.'
                 : 'Complete your business profile, review capabilities, and schedule your launch strategy call.'}
             </p>
           </div>
 
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="grid grid-cols-2 gap-3 w-full sm:flex sm:w-auto sm:items-center sm:gap-4">
             <Link
               href="/"
-              className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center justify-center gap-2"
             >
               <Globe size={14} /> Go to Website
             </Link>
-            <form action="/auth/signout" method="post">
+            <form action="/auth/signout" method="post" className="w-full sm:w-auto">
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                className="w-full px-5 py-2.5 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogOut size={14} /> Sign Out
               </button>
@@ -263,9 +263,9 @@ export default function DashboardClientContainer({
         {profile.role !== 'client' && (
           <div className="space-y-8 animate-fade-in">
             {/* User Quick Stats */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
               {/* Account Status Card */}
-              <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
+              <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
                   <User size={18} className="text-gold" />
                 </div>
@@ -279,7 +279,7 @@ export default function DashboardClientContainer({
               </div>
 
               {/* CRM Status Card */}
-              <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
+              <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
                   <Compass size={18} className="text-gold" />
                 </div>
@@ -298,7 +298,7 @@ export default function DashboardClientContainer({
               </div>
 
               {/* Call Booking Card */}
-              <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
+              <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 transition-all duration-300 space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
                   <Calendar size={18} className="text-gold" />
                 </div>
@@ -315,7 +315,7 @@ export default function DashboardClientContainer({
             </div>
 
             {/* Onboarding Roadmap */}
-            <section className="p-8 glass rounded-2xl border border-gold/10 space-y-6">
+            <section className="p-4 sm:p-8 glass rounded-2xl border border-gold/10 space-y-6">
               <div className="space-y-1">
                 <h2 className="text-2xl font-serif font-bold text-foreground flex items-center gap-2">
                   <ShieldCheck size={20} className="text-gold" /> Client Onboarding Roadmap
@@ -390,9 +390,9 @@ export default function DashboardClientContainer({
             </section>
 
             {/* Forms and Case Studies */}
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               {/* Business Profile Input Form */}
-              <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
+              <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-lg font-serif font-bold text-foreground">Business Profile Form</h3>
                   <p className="text-xs text-muted-foreground">Provide details to customize your launch roadmap.</p>
@@ -500,7 +500,7 @@ export default function DashboardClientContainer({
                   ].map((study) => (
                     <div
                       key={study.title}
-                      className="p-5 rounded-xl bg-card border border-gold/10 hover:border-gold/20 transition-all group cursor-pointer"
+                      className="p-4 sm:p-5 rounded-xl bg-card border border-gold/10 hover:border-gold/20 transition-all group cursor-pointer"
                     >
                       <div className="flex justify-between items-start gap-4">
                         <h4 className="text-xs font-bold text-foreground group-hover:text-gold transition-colors">
@@ -525,7 +525,7 @@ export default function DashboardClientContainer({
         {profile.role === 'client' && (
           <div className="space-y-8 animate-fade-in">
             {/* Active Project Milestones Timeline */}
-            <section className="p-8 glass rounded-2xl border border-gold/10 space-y-6">
+            <section className="p-4 sm:p-8 glass rounded-2xl border border-gold/10 space-y-6">
               <div className="space-y-1">
                 <div className="flex justify-between items-start flex-wrap gap-4">
                   <div>
@@ -538,7 +538,7 @@ export default function DashboardClientContainer({
                     </p>
                   </div>
                   {project && (
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <p className="text-xxs uppercase tracking-widest text-muted-foreground">Target Launch</p>
                       <p className="text-xs font-bold text-gold mt-0.5 font-mono">
                         {project.target_launch_date
@@ -570,8 +570,8 @@ export default function DashboardClientContainer({
                     </div>
                   </div>
 
-                  {/* Horizontal Timeline Steps */}
-                  <div className="grid grid-cols-5 gap-2 pt-2 text-center">
+                  {/* Timeline Steps */}
+                  <div className="flex flex-col gap-3.5 pt-2 sm:grid sm:grid-cols-5 sm:gap-2 sm:text-center">
                     {[
                       { key: 'Discovery', label: '1. Discovery' },
                       { key: 'Design', label: '2. Design UI' },
@@ -585,8 +585,8 @@ export default function DashboardClientContainer({
                       const isActiveStep = step.key === project.status
 
                       return (
-                        <div key={step.key} className="space-y-1.5">
-                          <div className="flex justify-center">
+                        <div key={step.key} className="flex items-center gap-3 sm:flex-col sm:justify-center sm:gap-1.5">
+                          <div className="shrink-0">
                             <div
                               className={`w-6 h-6 rounded-full flex items-center justify-center border text-[9px] font-bold transition-all ${
                                 isCompleted
@@ -600,7 +600,7 @@ export default function DashboardClientContainer({
                             </div>
                           </div>
                           <span
-                            className={`text-[9px] font-semibold block uppercase tracking-wider ${
+                            className={`text-[10px] sm:text-[9px] font-semibold block uppercase tracking-wider ${
                               isActiveStep ? 'text-gold' : 'text-muted-foreground'
                             }`}
                           >
@@ -623,9 +623,9 @@ export default function DashboardClientContainer({
             </section>
 
             {/* Asset Vault & File Uploader */}
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               {/* Asset Uploader Card */}
-              <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
+              <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
                     <Upload size={16} className="text-gold" /> Asset Vault Submit
@@ -647,7 +647,7 @@ export default function DashboardClientContainer({
                       />
                     </div>
 
-                    <div className="border border-dashed border-gold/15 hover:border-gold/30 rounded-xl p-6 text-center transition-all bg-background/20">
+                    <div className="border border-dashed border-gold/15 hover:border-gold/30 rounded-xl p-4 sm:p-6 text-center transition-all bg-background/20">
                       <FileText size={28} className="text-gold/30 mx-auto mb-2" />
                       <span className="text-xxs text-muted-foreground block">
                         Simulation Mode: Enter label above and click upload to register file in project.
@@ -676,7 +676,7 @@ export default function DashboardClientContainer({
               </section>
 
               {/* Uploaded Files List */}
-              <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
+              <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4">
                 <div className="space-y-0.5">
                   <h3 className="text-lg font-serif font-bold text-foreground">Registered Assets</h3>
                   <p className="text-xs text-muted-foreground">Files available for design and development.</p>
@@ -692,7 +692,7 @@ export default function DashboardClientContainer({
                     assets.map((asset) => (
                       <div
                         key={asset.id}
-                        className="p-3.5 rounded-lg bg-background/50 border border-gold/8 hover:border-gold/15 flex items-center justify-between gap-4 transition-all"
+                        className="p-3 sm:p-3.5 rounded-lg bg-background/50 border border-gold/8 hover:border-gold/15 flex items-center justify-between gap-3 sm:gap-4 transition-all"
                       >
                         <div className="flex items-center gap-3 overflow-hidden">
                           <div className="p-2 rounded-lg bg-gold/10 border border-gold/25 text-gold shrink-0">
@@ -722,7 +722,7 @@ export default function DashboardClientContainer({
             </div>
 
             {/* Performance Analytics & ROI Preview */}
-            <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6">
+            <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-6">
               <div className="space-y-0.5">
                 <h3 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
                   <BarChart3 size={16} className="text-gold" /> AI Core Performance Command
@@ -751,7 +751,7 @@ export default function DashboardClientContainer({
                     accent: 'text-blue-400',
                   },
                 ].map((stat) => (
-                  <div key={stat.label} className="p-4 rounded-xl bg-card border border-gold/5 space-y-2">
+                  <div key={stat.label} className="p-3.5 sm:p-4 rounded-xl bg-card border border-gold/5 space-y-2">
                     <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
                       {stat.label}
                     </p>
