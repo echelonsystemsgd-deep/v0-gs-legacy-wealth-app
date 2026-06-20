@@ -1,0 +1,32 @@
+[CONSOLES LOGS - https://gslegacywealth.com/login]
+Timestamp: 2026-06-20T16:00:00Z
+Action: Page Load & Login Attempt
+
+--------------------------------------------------------------------------------
+1. CONSOLE WARNINGS ON LOAD:
+--------------------------------------------------------------------------------
+Warning: NEXT_PUBLIC_SUPABASE_URL is not set or is using the placeholder. Please ensure NEXT_PUBLIC_SUPABASE_URL is configured in your Vercel Project Settings (Production environment) and that you trigger a redeploy (ideally with clean build cache).
+    at createClient (client.ts:7)
+    at LoginPage (page.tsx:23)
+
+--------------------------------------------------------------------------------
+2. CONSOLE ERRORS ON CLICKING "SIGN IN":
+--------------------------------------------------------------------------------
+POST https://placeholder.supabase.co/auth/v1/token?grant_type=password net::ERR_NAME_NOT_RESOLVED
+    at createBrowserClient (index.js:520)
+    at handleLogin (page.tsx:24)
+
+--------------------------------------------------------------------------------
+3. RUNTIME EXCEPTIONS CAUGHT BY THE UI:
+--------------------------------------------------------------------------------
+TypeError: Failed to fetch (placeholder.supabase.co)
+    at fetch (window.fetch)
+    at signInWithPassword (supabase-js.js:1042)
+    at handleLogin (page.tsx:24)
+
+--------------------------------------------------------------------------------
+DIAGNOSIS:
+--------------------------------------------------------------------------------
+The live production website is successfully running Next.js, but it is trying to connect to "https://placeholder.supabase.co" instead of your actual Supabase project ("https://ladebhmyywkcqtyazxxk.supabase.co").
+
+This happens because Next.js bakes environment variables starting with "NEXT_PUBLIC_" into the frontend bundle at build-time. Because NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are not defined in the settings of your deployment provider (such as Vercel) before the build, the frontend is compiled with the hardcoded "https://placeholder.supabase.co" fallback values.
