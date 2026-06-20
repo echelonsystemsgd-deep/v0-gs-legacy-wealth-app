@@ -24,7 +24,7 @@ export default function LoginPage() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('Invalid credentials. Please check your email and password.')
+      setError(error.message || 'Invalid credentials. Please check your email and password.')
       setLoading(false)
       return
     }
