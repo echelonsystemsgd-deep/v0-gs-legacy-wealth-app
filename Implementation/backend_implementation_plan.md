@@ -654,8 +654,8 @@ gantt
     title Development Gantt Chart
     dateFormat  YYYY-MM-DD
     section Phase 1: Core Setup
-    Database Schemas & RLS           :active, p1, 2026-06-01, 3d
-    Supabase Auth & Auth Pages       :p2, after p1, 3d
+    Database Schemas & RLS           :done, p1, 2026-06-01, 3d
+    Supabase Auth & Auth Pages       :done, p2, after p1, 3d
     section Phase 2: Admin Panel
     Admin Dashboard Shell Layout     :p3, after p2, 2d
     Lead Inbox & Details Workspace   :p4, after p3, 4d
@@ -672,7 +672,7 @@ gantt
 
 ### Phase Details
 
-* **Phase 1: Foundation & Security** (Days 1–6)
+* **Phase 1: Foundation & Security** (Days 1–6) - **[COMPLETED]**
   * Run migrations creating database schemas, indexes, and user profiling triggers.
   * Enable RLS security guidelines.
   * Design auth templates: Login, Reset, forgot-password.
