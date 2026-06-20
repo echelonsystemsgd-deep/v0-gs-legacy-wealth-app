@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// Force Next.js recompilation to reload environment variables
 export async function createClient() {
   const cookieStore = await cookies()
 
