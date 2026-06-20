@@ -70,7 +70,7 @@ export function AdminSidebar() {
         />
       )}
 
-      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 left-0 z-30 transform transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-30 transition-[left] duration-300 lg:left-0 ${isOpen ? 'left-0' : 'left-[-256px]'}`}>
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
           <div className="flex items-center gap-3">
