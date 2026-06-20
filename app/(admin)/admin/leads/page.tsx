@@ -58,6 +58,54 @@ export default function LeadsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [toast, setToast] = useState<string | null>(null)
 
+  // Manual Lead creation modal states
+  const [showNewModal, setShowNewModal] = useState(false)
+  const [leadForm, setLeadForm] = useState({
+    name: '',
+    business_name: '',
+    email: '',
+    phone: '',
+    website: '',
+    service_interested: '',
+    source: 'manual',
+    status: 'New',
+    notes: ''
+  })
+  const [savingLead, setSavingLead] = useState(false)
+
+  const handleCreateLead = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!leadForm.name || !leadForm.email) {
+      triggerToast('Name and Email are required.')
+      return
+    }
+    setSavingLead(true)
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert({
+          name: leadForm.name,
+          business_name: leadForm.business_name || 'N/A',
+          email: leadForm.email,
+          phone: leadForm.phone || null,
+          website: leadForm.website || null,
+          service_interested: leadForm.service_interested || null,
+          source: leadForm.source,
+          status: leadForm.status,
+          notes: leadForm.notes || null
+        })
+
+      if (error) throw error
+      triggerToast('Lead created successfully.')
+      setShowNewModal(false)
+      fetchLeads()
+    } catch (err: any) {
+      triggerToast(`Creation failed: ${err.message}`)
+    } finally {
+      setSavingLead(false)
+    }
+  }
+
   const triggerToast = (msg: string) => {
     setToast(msg)
     setTimeout(() => setToast(null), 3000)
@@ -202,13 +250,15 @@ export default function LeadsPage() {
             Qualify incoming website enquiries and route prospect bookings.
           </p>
         </div>
-        <Link
-          href="/book"
-          target="_blank"
-          className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+        <button
+          onClick={() => {
+            setLeadForm({ name: '', business_name: '', email: '', phone: '', website: '', service_interested: '', source: 'manual', status: 'New', notes: '' })
+            setShowNewModal(true)
+          }}
+          className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
         >
           <Plus size={14} /> New Lead
-        </Link>
+        </button>
       </div>
 
       {/* Tabs Menu */}
@@ -455,6 +505,147 @@ export default function LeadsPage() {
             >
               <Trash2 size={12} /> Delete
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Manual Creation Modal */}
+      {showNewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5">
+            <div className="flex justify-between items-center border-b border-gold/10 pb-3">
+              <h2 className="font-serif text-lg font-bold text-foreground">Add New Lead</h2>
+              <button
+                onClick={() => setShowNewModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateLead} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Full Name *</label>
+                  <input
+                    required
+                    value={leadForm.name}
+                    onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
+                    placeholder="John Doe"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    value={leadForm.email}
+                    onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
+                    placeholder="john@example.com"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Business Name</label>
+                  <input
+                    value={leadForm.business_name}
+                    onChange={(e) => setLeadForm({ ...leadForm, business_name: e.target.value })}
+                    placeholder="Acme Corp"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Phone Number</label>
+                  <input
+                    value={leadForm.phone}
+                    onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
+                    placeholder="+1 (555) 000-0000"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Website URL</label>
+                  <input
+                    value={leadForm.website}
+                    onChange={(e) => setLeadForm({ ...leadForm, website: e.target.value })}
+                    placeholder="https://example.com"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Service Interested</label>
+                  <input
+                    value={leadForm.service_interested}
+                    onChange={(e) => setLeadForm({ ...leadForm, service_interested: e.target.value })}
+                    placeholder="e.g. AI Automation & Design"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Source</label>
+                  <select
+                    value={leadForm.source}
+                    onChange={(e) => setLeadForm({ ...leadForm, source: e.target.value })}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                  >
+                    <option value="manual">Manual Intake</option>
+                    <option value="booking_form">Booking Flow</option>
+                    <option value="contact_form">Contact Form</option>
+                    <option value="direct">Direct Referral</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pipeline Status</label>
+                  <select
+                    value={leadForm.status}
+                    onChange={(e) => setLeadForm({ ...leadForm, status: e.target.value })}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                  >
+                    {ALL_STATUSES.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Notes / Qualifier Answers</label>
+                <textarea
+                  value={leadForm.notes}
+                  onChange={(e) => setLeadForm({ ...leadForm, notes: e.target.value })}
+                  placeholder="Additional context or qualification details..."
+                  rows={3}
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                />
+              </div>
+
+              <div className="pt-3 flex justify-end gap-3 border-t border-gold/10">
+                <button
+                  type="button"
+                  onClick={() => setShowNewModal(false)}
+                  className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingLead}
+                  className="px-5 py-2 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {savingLead ? 'Creating...' : 'Create Lead'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

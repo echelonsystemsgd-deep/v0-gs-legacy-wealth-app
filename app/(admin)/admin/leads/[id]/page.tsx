@@ -162,6 +162,38 @@ export default function LeadDetailPage() {
     })
   }
 
+  const handleInviteClient = async () => {
+    if (!lead) return
+    setPromoting(true)
+    try {
+      const response = await fetch('/api/admin/invite-client', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: lead.email,
+          fullName: lead.name,
+          phone: lead.phone || '',
+          company: lead.business_name || ''
+        })
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Failed to send invite.')
+
+      showToast('Client invitation dispatched successfully.')
+      
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', lead.email)
+        .maybeSingle()
+      setProfileForLead(profileData)
+    } catch (err: any) {
+      showToast(err.message || 'Invitation failed.', 'error')
+    } finally {
+      setPromoting(false)
+    }
+  }
+
   const handleSave = async () => {
     setSaving(true)
     const { error } = await supabase
@@ -366,10 +398,22 @@ export default function LeadDetailPage() {
                 <Loader2 size={13} className="animate-spin text-gold" /> Checking portal accounts…
               </div>
             ) : !profileForLead ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="text-xs text-muted-foreground bg-white/2 rounded-lg p-3 border border-gold/5 leading-relaxed">
-                  No registered member account matches this email. Once the prospect registers via the login/signup page, you can promote them.
+                  No registered member account matches this email. You can directly invite them to create their client portal workspace.
                 </div>
+                <button
+                  onClick={handleInviteClient}
+                  disabled={promoting}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                >
+                  {promoting ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <UserCheck size={13} />
+                  )}
+                  Invite Client Account
+                </button>
               </div>
             ) : (
               <div className="space-y-3">

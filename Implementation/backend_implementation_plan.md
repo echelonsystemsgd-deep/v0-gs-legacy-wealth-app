@@ -679,13 +679,23 @@ gantt
   * Design auth templates: Login, Reset, forgot-password.
 
 * **Phase 2: Administrative Foundation & CRM Suite** (Days 7–12)
-  * Draft dashboard layouts, sidebars, and theme styling.
-  * Create metrics display charts using mock data.
-  * Build the lead inbox view, search tools, and details pages.
-  * Build the Clients CRUD manager (integrating search, metadata editing, and linkages to Projects & Bookings).
-  * Build the Bookings (Strategy Call) CRUD manager with status tracking (scheduled/completed/cancelled/no-show).
-  * Create a session category editor inside the bookings panel to manage meeting types.
-  * Implement the "Convert to Client" interactive workflow wizard.
+  * [x] **Admin Core Infrastructure**
+    * [x] Implement `AdminLayout` with Collapsible Sidebar (Leads, Projects, Clients, Bookings, Portfolio, Testimonials, Content, Media Library).
+    * [x] Shared Admin Header with profile dropdown, Breadcrumbs, and Notification Center.
+    * [x] Contextual Quick Actions system for common admin tasks.
+  * [ ] **Data Management & CRUD**
+    * [ ] CRUD for `leads` (capture source, status pipeline: new, contacted, qualified, converted, lost).
+    * [ ] CRUD for `clients` including linked project history and contact details.
+    * [ ] CRUD for `bookings` (strategy calls) including recurring availability logic and status tracking (scheduled, completed, cancelled, no-show).
+    * [ ] CRUD for `projects` (Master list with filtering by status: planning, in progress, review, delivered).
+    * [ ] CRUD for `portfolio` items with image support and project linkage.
+    * [ ] CRUD for `testimonials` with client linkage and approval/publish toggle.
+  * [ ] **Analytics & Features**
+    * [ ] Summary Dashboard with Summary Cards, Trend Indicators, and Date Range Filter.
+    * [ ] Real-time notification logic (Supabase Realtime for new bookings and new leads).
+    * [ ] Lead-to-Client conversion flow (one-click promote a Lead to a Client record on booking confirmation).
+  * [ ] **Security**
+    * [ ] Refine RLS policies for `admin` role write permissions.
 
 * **Phase 3: Operational Integrations** (Days 13–19)
   * Build project pipelines (Kanban boards and detailed milestone trackers).

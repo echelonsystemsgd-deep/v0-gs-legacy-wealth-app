@@ -53,7 +53,7 @@ type SimpleClient = { id: string; full_name: string; email: string }
 
 export default function BookingsPage() {
   const supabase = createClient()
-  const [activeTab, setActiveTab] = useState<'bookings' | 'categories'>('bookings')
+  const [activeTab, setActiveTab] = useState<'bookings' | 'categories' | 'availability'>('bookings')
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
@@ -62,8 +62,8 @@ export default function BookingsPage() {
   const [dbCategories, setDbCategories] = useState<SessionCategory[]>([])
   const [dbLeads, setDbLeads] = useState<SimpleLead[]>([])
   const [dbClients, setDbClients] = useState<SimpleClient[]>([])
+  const [dbAvailability, setDbAvailability] = useState<{ id: string; day_of_week: number; start_time: string; end_time: string }[]>([])
 
-  // Computed display datasets
   const sessions = dbSessions
   const categories = dbCategories
   const leads = dbLeads
@@ -97,6 +97,9 @@ export default function BookingsPage() {
     notes: '',
     outcomes: ''
   })
+
+  const [showAvailabilityModal, setShowAvailabilityModal] = useState(false)
+  const [availabilityForm, setAvailabilityForm] = useState({ id: '', day: 1, start: '09:00', end: '17:00' })
 
   const triggerToast = (msg: string) => {
     setToast(msg)
@@ -140,6 +143,14 @@ export default function BookingsPage() {
           .eq('role', 'client')
           .eq('is_suspended', false)
       setDbClients((cls as any) ?? [])
+
+      // 5. Fetch availability rules
+      const { data: avRules } = await supabase
+          .from('availability_rules')
+          .select('*')
+          .order('day_of_week', { ascending: true })
+          .order('start_time', { ascending: true })
+      setDbAvailability(avRules ?? [])
 
     } catch (err: any) {
       triggerToast(`Database fetch error: ${err.message}`)
@@ -307,6 +318,55 @@ export default function BookingsPage() {
       fetchData()
     } catch (err: any) {
       triggerToast(`Deletion failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSaveAvailability = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const payload = {
+        day_of_week: Number(availabilityForm.day),
+        start_time: `${availabilityForm.start}:00`,
+        end_time: `${availabilityForm.end}:00`
+      }
+      let error
+      if (availabilityForm.id) {
+        ({ error } = await supabase
+          .from('availability_rules')
+          .update(payload)
+          .eq('id', availabilityForm.id))
+      } else {
+        ({ error } = await supabase
+          .from('availability_rules')
+          .insert(payload))
+      }
+      if (error) throw error
+      triggerToast('Availability rule saved successfully.')
+      setShowAvailabilityModal(false)
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Save failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteAvailability = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this availability rule?')) return
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('availability_rules')
+        .delete()
+        .eq('id', id)
+      if (error) throw error
+      triggerToast('Availability rule deleted.')
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Delete failed: ${err.message}`)
     } finally {
       setLoading(false)
     }

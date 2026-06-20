@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/sidebar'
 import { createClient } from '@/lib/supabase/server'
+import { NotificationCenter } from '@/components/admin/notification-center'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -40,7 +41,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <header className="sticky top-0 z-10 h-14 border-b border-gold/10 bg-background/80 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
           <div className="w-10 lg:hidden shrink-0" />
           <div className="flex-1" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3.5">
+            <NotificationCenter />
+            <div className="h-5 w-px bg-gold/10" />
             <span className="text-xs text-muted-foreground hidden sm:block">
               {profile.full_name ?? user.email}
             </span>
