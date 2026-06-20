@@ -11,35 +11,35 @@ This implementation plan focuses on setting up the entire Supabase database sche
 ## Proposed Tasks & Checklists
 
 ### 1. Supabase Initialization & Database Migration
-- [ ] **Supabase Setup**:
+- [x] **Supabase Setup**:
   - Ensure `@supabase/supabase-js` and `@supabase/ssr` are installed.
   - Setup `lib/supabase/client.ts` and `lib/supabase/server.ts`.
   - Verify environment variables in `.env.local`.
-- [ ] **Full Database Schema**:
+- [x] **Full Database Schema**:
   - Create `supabase/migrations/20260531000000_schema.sql` to initialize **all tables** from the backend plan:
     - Enums: `user_role`, `lead_status`, `project_status`, `booking_status`.
     - Tables: `profiles`, `leads`, `projects`, `project_assets`, `portfolio_items`, `testimonials`, `website_content`, `media_assets`, `strategy_sessions`, `login_history`, `activity_logs`.
-- [ ] **Role & Profile Triggers**:
+- [x] **Role & Profile Triggers**:
   - Include the `handle_new_user` trigger to automatically create a `profiles` entry for new signups with the default `user` role.
   - Include `updated_at` triggers for relevant tables.
-- [ ] **Row Level Security (RLS)**:
+- [x] **Row Level Security (RLS)**:
   - Create `supabase/migrations/20260531100000_rls.sql` to enable RLS on all tables, setting baseline policies (e.g., Admins have full access, Users can read/update their own profile).
 
 ### 2. Authentication Flow & Role Handling
-- [ ] **Login Page**:
+- [x] **Login Page**:
   - Create `app/(auth)/login/page.tsx` with email/password authentication.
-- [ ] **Signup Page**:
+- [x] **Signup Page**:
   - Create `app/(auth)/signup/page.tsx` with email/password registration.
-- [ ] **Protected Route Middleware**:
+- [x] **Protected Route Middleware**:
   - Configure `middleware.ts` to secure routes based on the session and user role:
     - Redirect unauthenticated users to `/login`.
     - Restrict `/admin/*` routes to users with the `admin` role.
     - Route standard `user` accounts to the user dashboard.
 
 ### 3. Mockup Dashboards for Testing
-- [ ] **Admin Dashboard Mockup**:
+- [x] **Admin Dashboard Mockup**:
   - Create `app/(admin)/admin/page.tsx` as a placeholder to verify successful admin login and role authorization.
-- [ ] **User Dashboard Mockup**:
+- [x] **User Dashboard Mockup**:
   - Create `app/(user)/dashboard/page.tsx` (or similar) to verify standard user login, ensuring they cannot access the `/admin` area.
 
 ### 4. User Profiles & Navbar Dropdown Integration
@@ -69,11 +69,11 @@ This implementation plan focuses on setting up the entire Supabase database sche
   - Ensure previous avatar files are deleted from the user's folder before upload to prevent storage leaks.
 
 ### 6. Admin Sales & Revenue Dashboard Integration
-- [ ] **Database Migration for Financials**:
+- [x] **Database Migration for Financials**:
   - Create `supabase/migrations/20260620102200_admin_revenue.sql` adding `contract_value` and `amount_paid` columns to `projects`.
   - Create `payments` table and write RLS policies allowing only admins to access or modify transactions.
   - Implement `update_project_amount_paid` trigger keeping project paid balances synchronized automatically.
-- [ ] **Admin Dashboard UI Redesign**:
+- [x] **Admin Dashboard UI Redesign**:
   - Update `app/(admin)/admin/page.tsx` to query and calculate Total Sales and Active Revenue Pipeline.
   - Add a Recent Transactions panel listing recent payments dynamically.
   - Expand metrics grid to 4 cards, including Sales and Pipeline figures.
