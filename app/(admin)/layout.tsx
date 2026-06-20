@@ -32,14 +32,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </div>
 
       {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full z-20">
-        <AdminSidebar />
-      </div>
+      <AdminSidebar />
 
       {/* Main content area */}
-      <div className="flex-1 ml-64 relative z-10 min-h-screen flex flex-col">
+      <div className="flex-1 lg:ml-64 ml-0 relative z-10 min-h-screen flex flex-col">
         {/* Top bar */}
-        <header className="sticky top-0 z-10 h-14 border-b border-gold/10 bg-background/80 backdrop-blur-md flex items-center px-8 gap-4">
+        <header className="sticky top-0 z-10 h-14 border-b border-gold/10 bg-background/80 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
+          <div className="w-10 lg:hidden shrink-0" />
           <div className="flex-1" />
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground hidden sm:block">
@@ -54,7 +53,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 sm:p-8">
           {children}
         </main>
       </div>

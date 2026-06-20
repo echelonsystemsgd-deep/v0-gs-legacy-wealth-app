@@ -71,14 +71,14 @@ export default async function AdminDashboardPage() {
     .limit(4)
 
   return (
-    <div className="space-y-10 relative">
+    <div className="space-y-6 sm:space-y-10 relative">
       {/* Page Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
             <Sparkles size={12} className="animate-pulse" /> Commander Overview
           </div>
-          <h1 className="text-3xl font-serif font-bold text-foreground">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground">
             Monitor leads, track project progress, and manage website content.
           </p>
@@ -94,9 +94,9 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Metrics Row */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         {/* Total Sales Card */}
-        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
             <p className="text-2xl font-serif font-bold text-foreground truncate">
@@ -109,7 +109,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Active Pipeline Card */}
-        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
             <p className="text-2xl font-serif font-bold text-foreground truncate">
@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Leads Metric */}
-        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
             <p className="text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Active Projects Metric */}
-        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
             <p className="text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
@@ -144,7 +144,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Strategy Sessions Metric */}
-        <div className="p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <span className="text-xs uppercase tracking-wider text-muted-foreground">Sessions</span>
             <p className="text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
@@ -156,9 +156,9 @@ export default async function AdminDashboardPage() {
       </section>
 
       {/* Main Grid: Activity, Transactions & Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {/* Recent Activity Timeline */}
-        <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6">
+        <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6">
           <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
             <Activity size={16} className="text-gold" /> System Activity
           </h2>
@@ -191,7 +191,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         {/* Recent Sales / Transactions Panel */}
-        <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6">
+        <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6">
           <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
             <DollarSign size={16} className="text-gold" /> Recent Sales
           </h2>
@@ -199,7 +199,7 @@ export default async function AdminDashboardPage() {
           <div className="space-y-4">
             {recentPayments && recentPayments.length > 0 ? (
               (recentPayments as any[]).map((payment) => (
-                <div key={payment.id} className="p-3.5 rounded-xl bg-background/30 border border-gold/10 hover:border-gold/20 transition-all flex items-center justify-between gap-3">
+                <div key={payment.id} className="p-3 sm:p-3.5 rounded-xl bg-background/30 border border-gold/10 hover:border-gold/20 transition-all flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-foreground truncate">
                       {payment.projects?.project_name || 'Custom Project'}
@@ -230,7 +230,7 @@ export default async function AdminDashboardPage() {
         </section>
 
         {/* Quick Actions Panel */}
-        <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6 flex flex-col justify-between">
+        <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6 flex flex-col justify-between">
           <div className="space-y-4">
             <h2 className="text-lg font-serif font-bold text-foreground">Quick Actions</h2>
             <p className="text-xs text-muted-foreground">Common management shortlinks.</p>

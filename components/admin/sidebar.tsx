@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { useState } from 'react'
 import {
   LayoutDashboard,
   Users,
@@ -15,6 +16,8 @@ import {
   ScrollText,
   LogOut,
   ChevronRight,
+  Menu,
+  X,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -33,6 +36,7 @@ const navItems = [
 export function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -41,23 +45,57 @@ export function AdminSidebar() {
     router.refresh()
   }
 
+  // Close sidebar on navigation change on mobile
+  const handleLinkClick = () => {
+    setIsOpen(false)
+  }
+
   return (
-    <aside className="flex flex-col h-full w-64 shrink-0 border-r border-gold/10 bg-card/50 backdrop-blur-md">
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-gold/10">
-        <div className="relative h-9 w-9 shrink-0">
-          <Image
-            src="/GS_Legacy_Wealth-removebg-preview.png"
-            alt="GS Legacy Wealth"
-            fill
-            className="object-contain"
-          />
+    <>
+      {/* Floating Toggle Button for Mobile */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="lg:hidden fixed top-2.5 left-4 z-45 p-2 rounded-xl bg-card border border-gold/15 text-gold hover:bg-gold/5 transition-all cursor-pointer flex items-center justify-center shadow-lg"
+        >
+          <Menu size={18} />
+        </button>
+      )}
+
+      {/* Backdrop for Mobile */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-25 transition-opacity duration-300"
+        />
+      )}
+
+      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 left-0 z-30 transform transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Logo */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
+          <div className="flex items-center gap-3">
+            <div className="relative h-9 w-9 shrink-0">
+              <Image
+                src="/GS_Legacy_Wealth-removebg-preview.png"
+                alt="GS Legacy Wealth"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <div>
+              <p className="font-serif text-sm font-bold text-foreground leading-tight">GS Legacy</p>
+              <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest">Admin Portal</p>
+            </div>
+          </div>
+
+          {/* Close button for mobile */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
+          >
+            <X size={16} />
+          </button>
         </div>
-        <div>
-          <p className="font-serif text-sm font-bold text-foreground leading-tight">GS Legacy</p>
-          <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest">Admin Portal</p>
-        </div>
-      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
@@ -67,6 +105,7 @@ export function AdminSidebar() {
             <Link
               key={href}
               href={href}
+              onClick={handleLinkClick}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? 'bg-gold/10 text-gold border border-gold/20'
@@ -88,6 +127,7 @@ export function AdminSidebar() {
       <div className="px-3 py-4 border-t border-gold/10">
         <Link
           href="/"
+          onClick={handleLinkClick}
           className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all mb-1"
         >
           View Public Site →
@@ -102,5 +142,6 @@ export function AdminSidebar() {
         </button>
       </div>
     </aside>
+    </>
   )
 }
