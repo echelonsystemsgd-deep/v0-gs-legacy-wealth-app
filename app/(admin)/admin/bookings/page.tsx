@@ -51,116 +51,8 @@ type StrategySession = {
 type SimpleLead = { id: string; name: string; email: string; business_name: string }
 type SimpleClient = { id: string; full_name: string; email: string }
 
-// Mock Data
-const MOCK_CATEGORIES: SessionCategory[] = [
-  {
-    id: 'cat-1',
-    name: 'Strategy Session',
-    slug: 'strategy-session',
-    duration_minutes: 30,
-    description: 'Initial high-level consulting and qualification call.',
-    color_code: '#D4AF37',
-    is_active: true
-  },
-  {
-    id: 'cat-2',
-    name: 'Technical Discovery',
-    slug: 'technical-discovery',
-    duration_minutes: 45,
-    description: 'In-depth architecture planning and technical assessment.',
-    color_code: '#6D28D9',
-    is_active: true
-  },
-  {
-    id: 'cat-3',
-    name: 'Onboarding Consultation',
-    slug: 'onboarding-consultation',
-    duration_minutes: 60,
-    description: 'Kickoff session for newly won clients.',
-    color_code: '#10B981',
-    is_active: true
-  },
-  {
-    id: 'cat-4',
-    name: 'Milestone Review',
-    slug: 'milestone-review',
-    duration_minutes: 30,
-    description: 'Iterative layout and component reviews during design/dev.',
-    color_code: '#3B82F6',
-    is_active: true
-  }
-]
-
-const MOCK_SESSIONS: StrategySession[] = [
-  {
-    id: 'sess-1',
-    lead_id: 'lead-1',
-    client_id: null,
-    scheduled_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days later
-    status: 'Scheduled',
-    notes: 'Prospect interested in upgrading their landing page and integrating an automated Calendly funnel.',
-    outcomes: null,
-    category_id: 'cat-1',
-    leads: { id: 'lead-1', name: 'James Morgan', email: 'james@morganventures.com', business_name: 'Morgan Ventures' },
-    profiles: null,
-    session_categories: MOCK_CATEGORIES[0]
-  },
-  {
-    id: 'sess-2',
-    lead_id: null,
-    client_id: 'client-1',
-    scheduled_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // Yesterday
-    status: 'Completed',
-    notes: 'Discussing the database schema design and project architecture for Legacy Wealth App.',
-    outcomes: 'Discussed enums, RLS policies, and decided on extending strategy sessions. Setup next milestone review.',
-    category_id: 'cat-2',
-    leads: null,
-    profiles: { id: 'client-1', full_name: 'Sarah Jenkins', email: 'sarah@jenkinsconsulting.com' },
-    session_categories: MOCK_CATEGORIES[1]
-  },
-  {
-    id: 'sess-3',
-    lead_id: 'lead-2',
-    client_id: null,
-    scheduled_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days later
-    status: 'Scheduled',
-    notes: 'Kickoff call to review public testimonials bucket layouts.',
-    outcomes: null,
-    category_id: 'cat-3',
-    leads: { id: 'lead-2', name: 'Robert Chen', email: 'robert@chencorp.com', business_name: 'Chen & Partners' },
-    profiles: null,
-    session_categories: MOCK_CATEGORIES[2]
-  },
-  {
-    id: 'sess-4',
-    lead_id: 'lead-3',
-    client_id: null,
-    scheduled_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    status: 'Canceled',
-    notes: 'Initial strategy consultation.',
-    outcomes: 'Canceled by lead. Emailed them to reschedule but no response yet.',
-    category_id: 'cat-1',
-    leads: { id: 'lead-3', name: 'Elena Rostova', email: 'elena@rostov.io', business_name: 'Rostova LLC' },
-    profiles: null,
-    session_categories: MOCK_CATEGORIES[0]
-  }
-]
-
-const MOCK_LEADS: SimpleLead[] = [
-  { id: 'lead-1', name: 'James Morgan', email: 'james@morganventures.com', business_name: 'Morgan Ventures' },
-  { id: 'lead-2', name: 'Robert Chen', email: 'robert@chencorp.com', business_name: 'Chen & Partners' },
-  { id: 'lead-3', name: 'Elena Rostova', email: 'elena@rostov.io', business_name: 'Rostova LLC' },
-  { id: 'lead-4', name: 'David Miller', email: 'david@millermedia.com', business_name: 'Miller Media' }
-]
-
-const MOCK_CLIENTS: SimpleClient[] = [
-  { id: 'client-1', full_name: 'Sarah Jenkins', email: 'sarah@jenkinsconsulting.com' },
-  { id: 'client-2', full_name: 'Markus Vance', email: 'markus@vanceholdings.com' }
-]
-
 export default function BookingsPage() {
   const supabase = createClient()
-  const [useMock, setUseMock] = useState(true)
   const [activeTab, setActiveTab] = useState<'bookings' | 'categories'>('bookings')
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -172,10 +64,10 @@ export default function BookingsPage() {
   const [dbClients, setDbClients] = useState<SimpleClient[]>([])
 
   // Computed display datasets
-  const sessions = useMock ? MOCK_SESSIONS : dbSessions
-  const categories = useMock ? MOCK_CATEGORIES : dbCategories
-  const leads = useMock ? MOCK_LEADS : dbLeads
-  const clients = useMock ? MOCK_CLIENTS : dbClients
+  const sessions = dbSessions
+  const categories = dbCategories
+  const leads = dbLeads
+  const clients = dbClients
 
   // Filter & Search states
   const [search, setSearch] = useState('')
@@ -213,41 +105,40 @@ export default function BookingsPage() {
 
   // Fetch Database Data
   const fetchData = useCallback(async () => {
-    if (useMock) return
     setLoading(true)
     try {
       // 1. Fetch categories
       const { data: cats } = await supabase
-        .from('session_categories')
-        .select('*')
-        .order('name', { ascending: true })
+          .from('session_categories')
+          .select('*')
+          .order('name', { ascending: true })
       setDbCategories(cats ?? [])
 
       // 2. Fetch sessions with joins
       const { data: sess } = await supabase
-        .from('strategy_sessions')
-        .select(`
+          .from('strategy_sessions')
+          .select(`
           id, lead_id, client_id, scheduled_at, status, notes, outcomes, category_id,
           leads(id, name, email, business_name),
           profiles(id, full_name, email),
           session_categories(id, name, slug, duration_minutes, description, color_code, is_active)
         `)
-        .order('scheduled_at', { ascending: false })
+          .order('scheduled_at', { ascending: false })
       setDbSessions((sess as any) ?? [])
 
       // 3. Fetch leads for scheduling selectors
       const { data: lds } = await supabase
-        .from('leads')
-        .select('id, name, email, business_name')
-        .eq('is_archived', false)
+          .from('leads')
+          .select('id, name, email, business_name')
+          .eq('is_archived', false)
       setDbLeads(lds ?? [])
 
       // 4. Fetch clients for scheduling selectors
       const { data: cls } = await supabase
-        .from('profiles')
-        .select('id, full_name, email')
-        .eq('role', 'client')
-        .eq('is_suspended', false)
+          .from('profiles')
+          .select('id, full_name, email')
+          .eq('role', 'client')
+          .eq('is_suspended', false)
       setDbClients((cls as any) ?? [])
 
     } catch (err: any) {
@@ -255,7 +146,7 @@ export default function BookingsPage() {
     } finally {
       setLoading(false)
     }
-  }, [useMock, supabase])
+  }, [supabase])
 
   useEffect(() => {
     fetchData()
@@ -267,9 +158,9 @@ export default function BookingsPage() {
     const email = s.leads?.email || s.profiles?.email || ''
     const business = s.leads?.business_name || ''
     const matchSearch =
-      name.toLowerCase().includes(search.toLowerCase()) ||
-      email.toLowerCase().includes(search.toLowerCase()) ||
-      business.toLowerCase().includes(search.toLowerCase())
+        name.toLowerCase().includes(search.toLowerCase()) ||
+        email.toLowerCase().includes(search.toLowerCase()) ||
+        business.toLowerCase().includes(search.toLowerCase())
 
     const matchStatus = statusFilter === 'All' || s.status === statusFilter
     const matchCat = categoryFilter === 'All' || s.category_id === categoryFilter
@@ -281,38 +172,6 @@ export default function BookingsPage() {
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault()
     const slug = categoryForm.name.toLowerCase().replace(/\s+/g, '-')
-
-    if (useMock) {
-      if (categoryForm.id) {
-        // Edit mock
-        const idx = MOCK_CATEGORIES.findIndex((c) => c.id === categoryForm.id)
-        if (idx !== -1) {
-          MOCK_CATEGORIES[idx] = {
-            ...MOCK_CATEGORIES[idx],
-            name: categoryForm.name,
-            slug,
-            duration_minutes: Number(categoryForm.duration),
-            description: categoryForm.description,
-            color_code: categoryForm.color
-          }
-        }
-        triggerToast('Mock session category updated.')
-      } else {
-        // Create mock
-        MOCK_CATEGORIES.push({
-          id: `cat-${Date.now()}`,
-          name: categoryForm.name,
-          slug,
-          duration_minutes: Number(categoryForm.duration),
-          description: categoryForm.description,
-          color_code: categoryForm.color,
-          is_active: true
-        })
-        triggerToast('Mock session category created.')
-      }
-      setShowCategoryModal(false)
-      return
-    }
 
     // Live Database Save
     setLoading(true)
@@ -329,13 +188,13 @@ export default function BookingsPage() {
       let error
       if (categoryForm.id) {
         ({ error } = await supabase
-          .from('session_categories')
-          .update(payload)
-          .eq('id', categoryForm.id))
+            .from('session_categories')
+            .update(payload)
+            .eq('id', categoryForm.id))
       } else {
         ({ error } = await supabase
-          .from('session_categories')
-          .insert(payload))
+            .from('session_categories')
+            .insert(payload))
       }
 
       if (error) throw error
@@ -359,31 +218,6 @@ export default function BookingsPage() {
 
     const scheduledAt = new Date(`${bookingForm.date}T${bookingForm.time}:00`).toISOString()
 
-    if (useMock) {
-      const targetLead = leads.find(l => l.id === bookingForm.targetId)
-      const targetClient = clients.find(c => c.id === bookingForm.targetId)
-      const targetCategory = categories.find(c => c.id === bookingForm.categoryId)
-
-      const newSess: StrategySession = {
-        id: `sess-${Date.now()}`,
-        lead_id: bookingForm.targetType === 'lead' ? bookingForm.targetId : null,
-        client_id: bookingForm.targetType === 'client' ? bookingForm.targetId : null,
-        scheduled_at: scheduledAt,
-        status: 'Scheduled',
-        notes: bookingForm.notes || null,
-        outcomes: null,
-        category_id: bookingForm.categoryId,
-        leads: bookingForm.targetType === 'lead' && targetLead ? targetLead : null,
-        profiles: bookingForm.targetType === 'client' && targetClient ? { id: targetClient.id, full_name: targetClient.full_name, email: targetClient.email } : null,
-        session_categories: targetCategory ?? null
-      }
-
-      MOCK_SESSIONS.unshift(newSess)
-      triggerToast('Mock booking scheduled successfully.')
-      setShowBookingModal(false)
-      return
-    }
-
     // Live Database Save
     setLoading(true)
     const payload = {
@@ -397,8 +231,8 @@ export default function BookingsPage() {
 
     try {
       const { error } = await supabase
-        .from('strategy_sessions')
-        .insert(payload)
+          .from('strategy_sessions')
+          .insert(payload)
 
       if (error) throw error
       triggerToast('Booking scheduled successfully.')
@@ -414,32 +248,18 @@ export default function BookingsPage() {
   // Update Booking Status/Outcome
   const handleSaveOutcome = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (useMock) {
-      const idx = MOCK_SESSIONS.findIndex((s) => s.id === outcomeForm.sessionId)
-      if (idx !== -1) {
-        MOCK_SESSIONS[idx] = {
-          ...MOCK_SESSIONS[idx],
-          status: outcomeForm.status,
-          notes: outcomeForm.notes || null,
-          outcomes: outcomeForm.outcomes || null
-        }
-      }
-      triggerToast('Mock booking outcomes logged.')
-      setShowOutcomeModal(false)
-      return
-    }
 
     // Live Database Update
     setLoading(true)
     try {
       const { error } = await supabase
-        .from('strategy_sessions')
-        .update({
-          status: outcomeForm.status,
-          notes: outcomeForm.notes || null,
-          outcomes: outcomeForm.outcomes || null
-        })
-        .eq('id', outcomeForm.sessionId)
+          .from('strategy_sessions')
+          .update({
+            status: outcomeForm.status,
+            notes: outcomeForm.notes || null,
+            outcomes: outcomeForm.outcomes || null
+          })
+          .eq('id', outcomeForm.sessionId)
 
       if (error) throw error
       triggerToast('Outcomes and status logged.')
@@ -455,22 +275,12 @@ export default function BookingsPage() {
   const handleDeleteCategory = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return
 
-    if (useMock) {
-      const idx = MOCK_CATEGORIES.findIndex((c) => c.id === id)
-      if (idx !== -1) {
-        MOCK_CATEGORIES.splice(idx, 1)
-      }
-      triggerToast('Mock category deleted.')
-      setActiveTab('bookings')
-      return
-    }
-
     setLoading(true)
     try {
       const { error } = await supabase
-        .from('session_categories')
-        .delete()
-        .eq('id', id)
+          .from('session_categories')
+          .delete()
+          .eq('id', id)
 
       if (error) throw error
       triggerToast('Category deleted successfully.')
@@ -485,21 +295,12 @@ export default function BookingsPage() {
   const handleDeleteBooking = async (id: string) => {
     if (!confirm('Are you sure you want to permanently delete this booking?')) return
 
-    if (useMock) {
-      const idx = MOCK_SESSIONS.findIndex((s) => s.id === id)
-      if (idx !== -1) {
-        MOCK_SESSIONS.splice(idx, 1)
-      }
-      triggerToast('Mock booking deleted.')
-      return
-    }
-
     setLoading(true)
     try {
       const { error } = await supabase
-        .from('strategy_sessions')
-        .delete()
-        .eq('id', id)
+          .from('strategy_sessions')
+          .delete()
+          .eq('id', id)
 
       if (error) throw error
       triggerToast('Booking deleted permanently.')
@@ -514,74 +315,42 @@ export default function BookingsPage() {
   // Convert Lead / Client triggers (Mock only / visual dialog launcher)
   const handleConvertToClient = (session: StrategySession) => {
     const clientName = session.leads?.name || 'Client'
-    const businessName = session.leads?.business_name || 'Direct Business'
-    const email = session.leads?.email || ''
-
-    if (useMock) {
-      MOCK_CLIENTS.push({ id: `client-${Date.now()}`, full_name: clientName, email })
-      // mark lead as won
-      if (session.lead_id) {
-        const leadIdx = MOCK_LEADS.findIndex(l => l.id === session.lead_id)
-        if (leadIdx !== -1) MOCK_LEADS.splice(leadIdx, 1)
-      }
-      // update booking to completed
-      const sessIdx = MOCK_SESSIONS.findIndex(s => s.id === session.id)
-      if (sessIdx !== -1) {
-        MOCK_SESSIONS[sessIdx].status = 'Completed'
-        MOCK_SESSIONS[sessIdx].client_id = `client-${Date.now()}`
-        MOCK_SESSIONS[sessIdx].lead_id = null
-      }
-      triggerToast(`Successfully converted ${clientName} (${businessName}) to Client.`);
-      return
-    }
 
     // Direct redirection to Client Management Page to initialize onboarding
     triggerToast(`Launching conversion panel for ${clientName}. Please seed standard credentials in clients view.`);
   }
 
   return (
-    <div className="space-y-6 sm:space-y-10 relative">
-      {/* Toast Alert */}
-      {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-          <CheckCircle2 size={14} /> {toast}
-        </div>
-      )}
+      <div className="space-y-6 sm:space-y-10 relative">
+        {/* Toast Alert */}
+        {toast && (
+            <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
+              <CheckCircle2 size={14} /> {toast}
+            </div>
+        )}
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
-            <CalendarIcon size={12} /> CRM Calendar Operations
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
+              <CalendarIcon size={12} /> CRM Calendar Operations
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Bookings & Sessions</h1>
+            <p className="text-sm text-muted-foreground">Define your strategy packages and manage scheduled agency calls.</p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Bookings & Sessions</h1>
-          <p className="text-sm text-muted-foreground">Define your strategy packages and manage scheduled agency calls.</p>
-        </div>
 
-        <div className="flex items-center gap-3 self-end sm:self-center">
-          {/* Mock/Live Toggle */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card border border-gold/10 text-xs font-semibold text-muted-foreground select-none">
-            <span className={useMock ? 'text-gold' : ''}>Mockup Data</span>
+          <div className="flex items-center gap-3 self-end sm:self-center">
             <button
-              onClick={() => setUseMock(!useMock)}
-              className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 ${useMock ? 'bg-gold/30' : 'bg-gold'}`}
+                onClick={() => {
+                  setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
+                  setShowBookingModal(true)
+                }}
+                className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
             >
-              <div className={`w-4 h-4 rounded-full bg-background transition-all duration-300 ${useMock ? 'translate-x-0' : 'translate-x-4'}`} />
+              <Plus size={14} /> Schedule Call
             </button>
-            <span className={!useMock ? 'text-gold animate-pulse' : ''}>Live Database</span>
           </div>
-
-          <button
-            onClick={() => {
-              setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
-              setShowBookingModal(true)
-            }}
-            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
-          >
-            <Plus size={14} /> Schedule Call
-          </button>
         </div>
-      </div>
 
       {/* Tabs Menu */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">

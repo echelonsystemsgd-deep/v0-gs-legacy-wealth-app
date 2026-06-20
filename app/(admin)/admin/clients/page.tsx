@@ -24,7 +24,8 @@ import {
   ExternalLink,
   Lock,
   Unlock,
-  AlertCircle
+  AlertCircle,
+  Info
 } from 'lucide-react'
 
 // Define Types
@@ -59,95 +60,8 @@ type StrategySession = {
   session_categories?: { name: string } | null
 }
 
-// Mock Data
-const MOCK_CLIENTS: ClientProfile[] = [
-  {
-    id: 'client-1',
-    full_name: 'Sarah Jenkins',
-    email: 'sarah@jenkinsconsulting.com',
-    avatar_url: null,
-    role: 'client',
-    is_suspended: false,
-    phone_number: '+1 (555) 123-4567',
-    company_name: 'Jenkins Consulting',
-    created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days ago
-  },
-  {
-    id: 'client-2',
-    full_name: 'Markus Vance',
-    email: 'markus@vanceholdings.com',
-    avatar_url: null,
-    role: 'client',
-    is_suspended: false,
-    phone_number: '+1 (555) 987-6543',
-    company_name: 'Vance Holdings',
-    created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString() // 15 days ago
-  },
-  {
-    id: 'client-3',
-    full_name: 'Helen Sterling',
-    email: 'helen@sterlingmetals.com',
-    avatar_url: null,
-    role: 'client',
-    is_suspended: true,
-    phone_number: '+1 (555) 246-8135',
-    company_name: 'Sterling Metals',
-    created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() // 60 days ago
-  }
-]
-
-const MOCK_PROJECTS: Project[] = [
-  {
-    id: 'proj-1',
-    client_id: 'client-1',
-    client_name: 'Sarah Jenkins',
-    project_name: 'Legacy Wealth App Design',
-    status: 'Development',
-    contract_value: 12000,
-    amount_paid: 6000
-  },
-  {
-    id: 'proj-2',
-    client_id: 'client-2',
-    client_name: 'Markus Vance',
-    project_name: 'Agency Portfolio Showcase',
-    status: 'Design',
-    contract_value: 8500,
-    amount_paid: 4250
-  },
-  {
-    id: 'proj-3',
-    client_id: 'client-1',
-    client_name: 'Sarah Jenkins',
-    project_name: 'Marketing SEO Optimization',
-    status: 'Discovery',
-    contract_value: 3000,
-    amount_paid: 3000
-  }
-]
-
-const MOCK_SESSIONS: StrategySession[] = [
-  {
-    id: 'sess-1',
-    client_id: 'client-1',
-    scheduled_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    status: 'Completed',
-    notes: 'Initial layout discussion.',
-    session_categories: { name: 'Technical Discovery' }
-  },
-  {
-    id: 'sess-2',
-    client_id: 'client-2',
-    scheduled_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-    status: 'Scheduled',
-    notes: 'Kickoff call to seed typography requirements.',
-    session_categories: { name: 'Onboarding Consultation' }
-  }
-]
-
 export default function ClientsPage() {
   const supabase = createClient()
-  const [useMock, setUseMock] = useState(true)
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
@@ -157,9 +71,9 @@ export default function ClientsPage() {
   const [dbSessions, setDbSessions] = useState<StrategySession[]>([])
 
   // Computed Datasets
-  const clientsList = useMock ? MOCK_CLIENTS : dbClients
-  const projects = useMock ? MOCK_PROJECTS : dbProjects
-  const sessions = useMock ? MOCK_SESSIONS : dbSessions
+  const clientsList = dbClients
+  const projects = dbProjects
+  const sessions = dbSessions
 
   // Search & Filter
   const [search, setSearch] = useState('')
@@ -193,7 +107,6 @@ export default function ClientsPage() {
 
   // Fetch Database Data
   const fetchData = useCallback(async () => {
-    if (useMock) return
     setLoading(true)
     try {
       // 1. Fetch clients profiles
@@ -203,13 +116,10 @@ export default function ClientsPage() {
         .eq('role', 'client')
         .order('created_at', { ascending: false })
 
-      // Wait, we need company name which might be stored in website_content or project metadata, 
-      // or we can map phone number / business name from projects or leads.
-      // In profiles schema, we added email, first/last/full name, phone_number (via migrations).
-      // Let's query them.
+      // Map profiles and reuse address_line2 as company name
       const mappedProfiles = (profiles ?? []).map(p => ({
         ...p,
-        company_name: (p as any).address_line2 || 'Direct Client' // We can reuse address_line2 or mock metadata
+        company_name: (p as any).address_line2 || 'Direct Client'
       }))
       setDbClients(mappedProfiles as any)
 
@@ -233,7 +143,7 @@ export default function ClientsPage() {
     } finally {
       setLoading(false)
     }
-  }, [useMock, supabase])
+  }, [supabase])
 
   useEffect(() => {
     fetchData()
@@ -271,19 +181,6 @@ export default function ClientsPage() {
   const handleToggleSuspension = async (client: ClientProfile) => {
     const nextSuspended = !client.is_suspended
 
-    if (useMock) {
-      const idx = MOCK_CLIENTS.findIndex(c => c.id === client.id)
-      if (idx !== -1) {
-        MOCK_CLIENTS[idx].is_suspended = nextSuspended
-        // update selected state if active
-        if (selectedClient?.id === client.id) {
-          setSelectedClient({ ...MOCK_CLIENTS[idx] })
-        }
-      }
-      triggerToast(nextSuspended ? 'Mock account suspended.' : 'Mock account activated.')
-      return
-    }
-
     setLoading(true)
     try {
       const { error } = await supabase
@@ -314,18 +211,6 @@ export default function ClientsPage() {
 
     setLoading(true)
     try {
-      if (useMock) {
-        const idx = MOCK_CLIENTS.findIndex(c => c.id === clientToDelete.id)
-        if (idx !== -1) {
-          MOCK_CLIENTS.splice(idx, 1)
-        }
-        triggerToast('Mock client account deleted.')
-        setSelectedClient(null)
-        setShowDeleteModal(false)
-        setDeleteConfirmText('')
-        return
-      }
-
       // Live mode deletes via Edge Function
       const { data, error } = await supabase.functions.invoke('admin-user-actions', {
         body: { target_user_id: clientToDelete.id, action: 'delete' }
@@ -348,47 +233,9 @@ export default function ClientsPage() {
   const handleSaveClient = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (useMock) {
-      if (clientForm.id) {
-        // Edit mock
-        const idx = MOCK_CLIENTS.findIndex(c => c.id === clientForm.id)
-        if (idx !== -1) {
-          MOCK_CLIENTS[idx] = {
-            ...MOCK_CLIENTS[idx],
-            full_name: clientForm.fullName,
-            email: clientForm.email,
-            phone_number: clientForm.phone,
-            company_name: clientForm.company
-          }
-          if (selectedClient?.id === clientForm.id) {
-            setSelectedClient({ ...MOCK_CLIENTS[idx] })
-          }
-        }
-        triggerToast('Mock client updated.')
-      } else {
-        // Create mock
-        const newClient: ClientProfile = {
-          id: `client-${Date.now()}`,
-          full_name: clientForm.fullName,
-          email: clientForm.email,
-          avatar_url: null,
-          role: 'client',
-          is_suspended: false,
-          phone_number: clientForm.phone,
-          company_name: clientForm.company,
-          created_at: new Date().toISOString()
-        }
-        MOCK_CLIENTS.unshift(newClient)
-        triggerToast('Mock client account created.')
-      }
-      setShowAddModal(false)
-      return
-    }
-
     // Live Database Save
     setLoading(true)
     try {
-      // NOTE: Creating a new client in a live environment requires provisioning in auth.users first. 
       // If editing an existing profile:
       if (clientForm.id) {
         const { error } = await supabase
@@ -397,7 +244,7 @@ export default function ClientsPage() {
             full_name: clientForm.fullName,
             email: clientForm.email,
             phone_number: clientForm.phone,
-            address_line2: clientForm.company // Reuse address_line2 as company metadata
+            address_line2: clientForm.company
           })
           .eq('id', clientForm.id)
 
@@ -415,8 +262,7 @@ export default function ClientsPage() {
           })
         }
       } else {
-        // Direct addition from console requires auth. For live integration:
-        // We will call the backend API/edge function admin-user-actions to invite them.
+        // Direct addition from console requires auth. Call the backend api to invite them.
         const response = await fetch('/api/admin/invite-client', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -461,18 +307,6 @@ export default function ClientsPage() {
         </div>
 
         <div className="flex items-center gap-3 self-end sm:self-center">
-          {/* Mock Toggle */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card border border-gold/10 text-xs font-semibold text-muted-foreground select-none">
-            <span className={useMock ? 'text-gold' : ''}>Mockup Data</span>
-            <button
-              onClick={() => setUseMock(!useMock)}
-              className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 ${useMock ? 'bg-gold/30' : 'bg-gold'}`}
-            >
-              <div className={`w-4 h-4 rounded-full bg-background transition-all duration-300 ${useMock ? 'translate-x-0' : 'translate-x-4'}`} />
-            </button>
-            <span className={!useMock ? 'text-gold animate-pulse' : ''}>Live Database</span>
-          </div>
-
           <button
             onClick={() => {
               setClientForm({ id: '', fullName: '', email: '', phone: '', company: '', isSuspended: false })
@@ -838,7 +672,7 @@ export default function ClientsPage() {
                 </div>
               </div>
 
-              {!clientForm.id && !useMock && (
+              {!clientForm.id && (
                 <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex gap-2.5 items-start">
                   <AlertCircle size={15} className="text-amber-400 shrink-0 mt-0.5" />
                   <p className="text-[10px] text-muted-foreground leading-normal">

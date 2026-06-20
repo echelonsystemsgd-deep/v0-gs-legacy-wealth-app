@@ -16,7 +16,9 @@ import {
   Inbox,
   AlertCircle,
   RefreshCw,
-  FolderInput
+  FolderInput,
+  CheckCircle2,
+  UserCheck
 } from 'lucide-react'
 
 type Lead = {
