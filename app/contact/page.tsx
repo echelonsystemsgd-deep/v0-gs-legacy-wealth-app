@@ -44,8 +44,8 @@ export default function ContactPage() {
               {/* Contact Cards */}
               <div className="space-y-4">
                 {/* Email */}
-                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 transition-all duration-300 flex items-start gap-4">
-                  <div className="p-3 bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
+                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
                     <Mail size={18} />
                   </div>
                   <div className="space-y-1">
@@ -57,8 +57,8 @@ export default function ContactPage() {
                 </div>
 
                 {/* Phone */}
-                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 transition-all duration-300 flex items-start gap-4">
-                  <div className="p-3 bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
+                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
                     <Phone size={18} />
                   </div>
                   <div className="space-y-1">
@@ -73,8 +73,8 @@ export default function ContactPage() {
                 </div>
 
                 {/* Response SLA */}
-                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 transition-all duration-300 flex items-start gap-4">
-                  <div className="p-3 bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
+                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
                     <Clock size={18} />
                   </div>
                   <div className="space-y-1">

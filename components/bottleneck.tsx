@@ -59,7 +59,7 @@ export function Bottleneck() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 flex justify-center"
           >
-            <div className="relative w-full max-w-md min-h-[440px] sm:min-h-[460px] md:aspect-square bg-bg-tertiary border border-border-brand/20 p-6 rounded-none shadow-2xl flex flex-col justify-between items-center overflow-hidden">
+            <div className="relative w-full max-w-md min-h-[440px] sm:min-h-[460px] md:aspect-square bg-bg-tertiary border border-border-brand/20 p-6 rounded-xl shadow-2xl flex flex-col justify-between items-center overflow-hidden">
               <div className="absolute top-4 left-4 flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${isOrdered ? "bg-accent-gold animate-pulse" : "bg-red-500 animate-pulse"}`} />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-text-primary opacity-70">
@@ -157,9 +157,9 @@ export function Bottleneck() {
             className="lg:col-span-7 space-y-5"
           >
             {/* Card 1 */}
-            <div className={`p-6 border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
+            <div className={`p-6 rounded-xl border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
               <div className="flex items-start gap-4">
-                <div className={`p-2 shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
+                <div className={`p-2 rounded-lg shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">
@@ -175,9 +175,9 @@ export function Bottleneck() {
             </div>
 
             {/* Card 2 */}
-            <div className={`p-6 border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
+            <div className={`p-6 rounded-xl border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
               <div className="flex items-start gap-4">
-                <div className={`p-2 shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
+                <div className={`p-2 rounded-lg shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">
@@ -193,9 +193,9 @@ export function Bottleneck() {
             </div>
 
             {/* Card 3 */}
-            <div className={`p-6 border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
+            <div className={`p-6 rounded-xl border transition-all duration-300 ${isOrdered ? "bg-bg-tertiary/30 border-accent-gold/20" : "bg-[#1C1313]/10 border-red-500/15"}`}>
               <div className="flex items-start gap-4">
-                <div className={`p-2 shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
+                <div className={`p-2 rounded-lg shrink-0 ${isOrdered ? "text-accent-gold bg-accent-gold/10" : "text-red-500 bg-red-500/10"}`}>
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">

@@ -486,7 +486,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-none border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10]"
+                className="group relative overflow-hidden rounded-xl border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10]"
               >
                 {/* Visual Image / Mockup background */}
                 <div className="w-full h-full relative z-10">
@@ -548,7 +548,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                     </h3>
                   </div>
                   <button
-                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-none active:opacity-80 transition-opacity"
+                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
                     onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
                   >
                     View →

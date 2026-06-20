@@ -54,12 +54,12 @@ export function Testimonials() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-bg-tertiary border border-border-brand/20 border-t-[3px] border-t-accent-gold rounded-none transition-all duration-300 hover:shadow-[0_10px_30px_rgba(109,40,217,0.1)]">
+              <Card className="h-full bg-bg-tertiary border border-border-brand/20 border-t-[3px] border-t-accent-gold rounded-xl transition-all duration-300 hover:shadow-[0_10px_30px_rgba(109,40,217,0.1)]">
                 <CardContent className="p-8 space-y-6 flex flex-col justify-between h-full">
                   
                   <div className="space-y-6">
                     {/* Outcome Badge */}
-                    <div className="inline-flex px-3 py-1 border border-accent-gold/30 bg-transparent rounded-none">
+                    <div className="inline-flex px-3 py-1 border border-accent-gold/30 bg-transparent rounded-full">
                       <span className="text-[9px] font-mono font-bold tracking-widest text-accent-gold">
                         {testimonial.badge}
                       </span>

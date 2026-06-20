@@ -53,11 +53,11 @@ export function Services({ limit }: { limit?: number }) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-none group">
+                <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-xl group">
                   <CardContent className="p-8 flex flex-col justify-between h-full space-y-6">
                     <div className="space-y-4">
                       {/* Gold icon */}
-                      <div className="inline-flex items-center justify-center p-3 border border-accent-gold/30 bg-transparent text-accent-gold">
+                      <div className="inline-flex items-center justify-center p-3 border border-accent-gold/30 bg-transparent text-accent-gold rounded-lg">
                         <IconComponent className="w-6 h-6 stroke-[1.5]" />
                       </div>
                       

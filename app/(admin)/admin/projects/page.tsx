@@ -135,11 +135,12 @@ export default function ProjectsPage() {
           <Loader2 size={28} className="animate-spin text-gold/40" />
         </div>
       ) : view === 'kanban' ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4 overflow-x-auto">
+        <div className="overflow-x-auto pb-4 -mx-2 px-2">
+          <div className="flex gap-4 min-w-max xl:min-w-0 xl:grid xl:grid-cols-5">
           {STATUS_STEPS.map((status) => {
             const cols = byStatus(status)
             return (
-              <div key={status} className="min-w-[200px] space-y-3">
+              <div key={status} className="w-56 xl:w-auto space-y-3 shrink-0 xl:shrink">
                 <div className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold ${STATUS_COLORS[status]}`}>
                   <span>{status}</span>
                   <span className="opacity-70">{cols.length}</span>
@@ -165,6 +166,7 @@ export default function ProjectsPage() {
               </div>
             )
           })}
+          </div>
         </div>
       ) : (
         /* List View */

@@ -25,7 +25,8 @@ import {
   Lock,
   Unlock,
   AlertCircle,
-  Info
+  Info,
+  X,
 } from 'lucide-react'
 
 // Define Types
@@ -83,6 +84,7 @@ export default function ClientsPage() {
   const [selectedClient, setSelectedClient] = useState<ClientProfile | null>(null)
   const [clientProjects, setClientProjects] = useState<Project[]>([])
   const [clientSessions, setClientSessions] = useState<StrategySession[]>([])
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
 
   // Edit / Add client form
   const [showAddModal, setShowAddModal] = useState(false)
@@ -371,7 +373,10 @@ export default function ClientsPage() {
                         return (
                           <tr
                             key={client.id}
-                            onClick={() => setSelectedClient(client)}
+                            onClick={() => {
+                              setSelectedClient(client)
+                              setMobileSheetOpen(true)
+                            }}
                             className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
                               isSelected ? 'bg-gold/5' : ''
                             }`}
@@ -457,8 +462,8 @@ export default function ClientsPage() {
             </div>
           </div>
 
-          {/* RIGHT: CLIENT WORKSPACE DETAIL DRAWER */}
-          <div className="lg:col-span-1">
+          {/* RIGHT: CLIENT WORKSPACE DETAIL DRAWER (desktop only) */}
+          <div className="lg:col-span-1 hidden lg:block">
             {selectedClient ? (
               <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/15 space-y-6 sticky top-6">
                 <div className="flex justify-between items-start">
@@ -755,6 +760,123 @@ export default function ClientsPage() {
               >
                 {loading ? 'Deleting...' : 'Permanently Delete'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* MOBILE SHEET: Client Workspace (lg:hidden) */}
+      {mobileSheetOpen && selectedClient && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setMobileSheetOpen(false)}
+          />
+          {/* Sheet */}
+          <div className="relative bg-[#0A0A0A] border-t border-gold/20 rounded-t-3xl max-h-[85vh] overflow-y-auto animate-slide-up shadow-2xl">
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-white/15" />
+            </div>
+
+            {/* Sheet Header */}
+            <div className="flex justify-between items-center px-5 py-3 border-b border-gold/10">
+              <div>
+                <h2 className="font-serif text-lg font-bold text-foreground">Client Workspace</h2>
+                <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest">
+                  {selectedClient.company_name || 'Direct Business'}
+                </p>
+              </div>
+              <button
+                onClick={() => setMobileSheetOpen(false)}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-5">
+              {/* Identity Card */}
+              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-gold">{selectedClient.full_name?.[0] || 'C'}</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-foreground">{selectedClient.full_name}</div>
+                    <div className="text-[10px] text-muted-foreground">{selectedClient.email}</div>
+                  </div>
+                </div>
+                <div className="pt-2 divide-y divide-gold/5 text-xs">
+                  {selectedClient.phone_number && (
+                    <div className="py-2 flex justify-between">
+                      <span className="text-muted-foreground">Phone:</span>
+                      <span className="text-foreground font-medium">{selectedClient.phone_number}</span>
+                    </div>
+                  )}
+                  <div className="py-2 flex justify-between">
+                    <span className="text-muted-foreground">Partner Since:</span>
+                    <span className="text-foreground font-medium">{new Date(selectedClient.created_at).toLocaleDateString()}</span>
+                  </div>
+                  <div className="py-2 flex justify-between items-center">
+                    <span className="text-muted-foreground">Portal Status:</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'}`}>
+                      {selectedClient.is_suspended ? 'Suspended' : 'Active'}
+                    </span>
+                  </div>
+                </div>
+                <div className="pt-2 flex justify-end">
+                  <button
+                    onClick={() => { setClientToDelete(selectedClient); setShowDeleteModal(true); setMobileSheetOpen(false) }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xxs font-bold transition-all cursor-pointer"
+                  >
+                    <Trash2 size={12} /> Delete Account
+                  </button>
+                </div>
+              </div>
+
+              {/* Projects */}
+              <div className="space-y-2">
+                <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                  <FolderKanban size={12} /> Active Projects ({clientProjects.length})
+                </h3>
+                {clientProjects.length > 0 ? clientProjects.map((p) => (
+                  <div key={p.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">{p.status}</span>
+                        <span className="text-[9px] text-muted-foreground">Paid: ${p.amount_paid.toLocaleString()} / ${p.contract_value.toLocaleString()}</span>
+                      </div>
+                    </div>
+                    <ChevronRight size={14} className="text-gold/50 shrink-0" />
+                  </div>
+                )) : (
+                  <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No active projects.</div>
+                )}
+              </div>
+
+              {/* Sessions */}
+              <div className="space-y-2 pb-4">
+                <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                  <Calendar size={12} /> Strategy Calls ({clientSessions.length})
+                </h3>
+                {clientSessions.length > 0 ? clientSessions.map((s) => (
+                  <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
+                    <div>
+                      <h4 className="text-xs font-bold text-foreground">{s.session_categories?.name || 'Consultation Call'}</h4>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                        {new Date(s.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${s.status === 'Completed' ? 'bg-green-500/10 text-green-400' : s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'}`}>
+                      {s.status}
+                    </span>
+                  </div>
+                )) : (
+                  <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No consultations logged.</div>
+                )}
+              </div>
             </div>
           </div>
         </div>

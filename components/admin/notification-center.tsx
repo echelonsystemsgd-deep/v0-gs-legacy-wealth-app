@@ -135,83 +135,87 @@ export function NotificationCenter() {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 glass-card rounded-2xl border border-gold/15 overflow-hidden shadow-2xl z-50 text-sm animate-fade-in">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 glass rounded-2xl border border-gold/20 overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.6)] z-50 text-sm animate-fade-in">
           {/* Header */}
-          <div className="px-4 py-3 bg-white/[0.02] border-b border-gold/10 flex items-center justify-between">
-            <span className="font-serif font-bold text-foreground flex items-center gap-1.5">
-              <Sparkles size={13} className="text-gold" /> Alerts
+          <div className="px-5 py-3.5 bg-[#1A0A2E]/60 border-b border-gold/15 flex items-center justify-between">
+            <span className="font-serif font-bold text-foreground flex items-center gap-2 text-sm">
+              <Sparkles size={13} className="text-gold" /> Notification Centre
             </span>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-xxs text-gold hover:text-gold-light transition-colors flex items-center gap-1 font-semibold"
+                  className="text-xs text-gold hover:text-gold/70 transition-colors flex items-center gap-1 font-semibold py-1 px-2 rounded-lg hover:bg-gold/10"
                 >
-                  <Check size={11} /> Mark Read
+                  <Check size={12} /> Mark all read
                 </button>
               )}
               {notifications.length > 0 && (
                 <button
                   onClick={clearAll}
-                  className="text-xxs text-muted-foreground hover:text-red-400 transition-colors flex items-center gap-1 font-semibold"
+                  className="text-xs text-muted-foreground hover:text-red-400 transition-colors flex items-center gap-1 font-semibold py-1 px-2 rounded-lg hover:bg-red-500/10"
                 >
-                  <Trash2 size={11} /> Clear
+                  <Trash2 size={12} /> Clear
                 </button>
               )}
             </div>
           </div>
 
           {/* List */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-gold/5 scrollbar-thin">
+          <div className="max-h-[380px] overflow-y-auto divide-y divide-white/5 scrollbar-thin">
             {notifications.length === 0 ? (
-              <div className="py-10 text-center text-muted-foreground px-4 space-y-1">
-                <Bell size={24} className="mx-auto text-gold/20 mb-1" />
-                <p className="text-xs font-semibold">No recent alerts</p>
-                <p className="text-[10px] text-muted-foreground/60 leading-normal">
-                  Real-time pipeline registrations will stream here.
-                </p>
+              <div className="py-12 text-center px-6 space-y-3">
+                <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center mx-auto">
+                  <Bell size={20} className="text-gold/30" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">All clear</p>
+                  <p className="text-xs text-muted-foreground/60 leading-relaxed mt-1">
+                    Real-time lead and booking alerts will stream here instantly.
+                  </p>
+                </div>
               </div>
             ) : (
               notifications.map((item) => (
                 <div
                   key={item.id}
                   onClick={() => markAsRead(item.id)}
-                  className={`p-3.5 hover:bg-white/[0.02] transition-colors relative flex items-start gap-3 ${
-                    !item.isRead ? 'bg-gold/[0.02]' : ''
+                  className={`relative flex items-start gap-3.5 px-4 py-4 hover:bg-white/[0.03] transition-colors cursor-pointer ${
+                    !item.isRead ? 'bg-gold/[0.03]' : ''
                   }`}
                 >
                   {/* Unread Indicator Bar */}
                   {!item.isRead && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gold" />
+                    <div className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r bg-gradient-to-b from-gold to-gold/30" />
                   )}
 
                   {/* Icon */}
-                  <div className={`p-2 rounded-xl border shrink-0 ${
+                  <div className={`p-2.5 rounded-xl border shrink-0 mt-0.5 ${
                     item.type === 'lead'
-                      ? 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-                      : 'bg-purple-500/10 border-purple-500/20 text-purple-400'
+                      ? 'bg-blue-500/10 border-blue-500/25 text-blue-400'
+                      : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                   }`}>
-                    {item.type === 'lead' ? <UserPlus size={14} /> : <Calendar size={14} />}
+                    {item.type === 'lead' ? <UserPlus size={15} /> : <Calendar size={15} />}
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex justify-between items-start gap-2">
-                      <p className="text-xs font-semibold text-foreground truncate">{item.title}</p>
-                      <span className="text-[8px] text-muted-foreground font-mono whitespace-nowrap pt-0.5">
+                      <p className="text-xs font-semibold text-foreground leading-snug">{item.title}</p>
+                      <span className="text-[9px] text-muted-foreground font-mono whitespace-nowrap pt-0.5 shrink-0">
                         {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <p className="text-xxs text-muted-foreground leading-normal line-clamp-2">
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                       {item.description}
                     </p>
-                    <div className="pt-1 flex items-center justify-between">
+                    <div className="pt-1">
                       <Link
                         href={item.link}
                         onClick={() => setIsOpen(false)}
-                        className="text-[9px] font-bold text-gold hover:underline flex items-center gap-0.5"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-gold hover:text-gold/70 py-1 transition-colors"
                       >
-                        Workspace →
+                        View in workspace →
                       </Link>
                     </div>
                   </div>

@@ -272,7 +272,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""}`}
                 >
                   <div
-                    className={`relative h-full bg-bg-tertiary border rounded-none transition-all duration-300 ${
+                    className={`relative h-full bg-bg-tertiary border rounded-xl transition-all duration-300 ${
                       tier.featured ? "border-accent-gold" : "border-white/5"
                     }`}
                   >
@@ -290,7 +290,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                           </div>
 
                           {tier.featured && (
-                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
+                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full">
                               Most Popular
                             </span>
                           )}
@@ -373,7 +373,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 glass rounded-3xl p-6 sm:p-10 bg-bg-tertiary/10 border border-white/5"
+          className="mb-20 glass rounded-xl p-6 sm:p-10 bg-bg-tertiary/10 border border-white/5"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
@@ -388,9 +388,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           <div className="grid lg:grid-cols-12 gap-8 items-center">
 
             {/* Output Panel — appears FIRST on mobile, right column on desktop */}
-            <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-none p-6 border border-white/5 space-y-6 order-first lg:order-last">
+            <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-xl p-6 border border-white/5 space-y-6 order-first lg:order-last">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-bg-primary rounded-none border border-white/5">
+                <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Clock size={12} className="text-accent" />
                     <span>Annual Time Reclaimed</span>
@@ -400,7 +400,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   </div>
                 </div>
 
-                <div className="p-4 bg-bg-primary rounded-none border border-white/5">
+                <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Zap size={12} className="text-accent" />
                     <span>Est. Growth Lift (15%)</span>
@@ -411,7 +411,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 </div>
               </div>
 
-              <div className="p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-none border border-accent-purple/20">
+              <div className="p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-lg border border-accent-purple/20">
                 <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-accent-gold">Total Est. Annual Value Unlocked</div>
                 <div className="text-3xl font-bold font-serif text-accent-gold">
                   <RollingNumber value={totalValueUnlocked} prefix="£" />
@@ -421,7 +421,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-none text-xs">
+              <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-lg text-xs">
                 <span className="text-muted-foreground">Recommended Alignment:</span>
                 <span className="flex items-center gap-1.5 font-bold text-accent text-accent-gold">
                   <Crown size={12} />
@@ -587,7 +587,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <div
-                    className={`relative h-full bg-bg-tertiary border border-border hover:border-accent-gold/45 rounded-none transition-all duration-300 ${
+                    className={`relative h-full bg-bg-tertiary border border-border hover:border-accent-gold/45 rounded-xl transition-all duration-300 ${
                       tier.featured ? "border-accent-gold md:scale-105 z-10 bg-bg-tertiary" : ""
                     }`}
                   >
@@ -604,7 +604,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                           </div>
                           
                           {tier.featured && (
-                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider">
+                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full">
                               Most Popular
                             </span>
                           )}
