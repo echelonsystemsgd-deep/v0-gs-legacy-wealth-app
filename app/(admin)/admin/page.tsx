@@ -87,70 +87,75 @@ export default async function AdminDashboardPage() {
         <Link
           href="/"
           target="_blank"
-          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-gold/10 hover:bg-gold/15 text-gold border border-gold/25 transition-all duration-300 w-fit"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 text-xs font-semibold rounded-xl bg-gold/10 hover:bg-gold/15 text-gold border border-gold/25 transition-all duration-300 w-full sm:w-fit"
         >
           View Public Site <ExternalLink size={12} />
         </Link>
       </div>
 
       {/* Metrics Row */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-6">
         {/* Total Sales Card */}
-        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
-            <p className="text-2xl font-serif font-bold text-foreground truncate">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 sm:space-y-1.5 min-w-0">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
+            <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               ${totalSales.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <DollarSign size={18} className="text-gold" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <DollarSign size={16} className="text-gold sm:hidden" />
+            <DollarSign size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
 
         {/* Active Pipeline Card */}
-        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
-            <p className="text-2xl font-serif font-bold text-foreground truncate">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 sm:space-y-1.5 min-w-0">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
+            <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               ${totalPipeline.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Sparkles size={18} className="text-gold" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Sparkles size={16} className="text-gold sm:hidden" />
+            <Sparkles size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
 
         {/* Leads Metric */}
-        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
-            <p className="text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 sm:space-y-1.5 min-w-0">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
+            <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Users size={18} className="text-gold" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Users size={16} className="text-gold sm:hidden" />
+            <Users size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
 
         {/* Active Projects Metric */}
-        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
-            <p className="text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 sm:space-y-1.5 min-w-0">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
+            <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <FolderKanban size={18} className="text-gold" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <FolderKanban size={16} className="text-gold sm:hidden" />
+            <FolderKanban size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
 
         {/* Strategy Sessions Metric */}
-        <div className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Sessions</span>
-            <p className="text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 col-span-2 md:col-span-1">
+          <div className="space-y-1 sm:space-y-1.5 min-w-0">
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Sessions</span>
+            <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Calendar size={18} className="text-gold" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Calendar size={16} className="text-gold sm:hidden" />
+            <Calendar size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
       </section>
@@ -163,16 +168,16 @@ export default async function AdminDashboardPage() {
             <Activity size={16} className="text-gold" /> System Activity
           </h2>
 
-          <div className="relative border-l border-gold/15 pl-4 ml-2 space-y-6">
+          <div className="relative border-l border-gold/15 pl-3.5 ml-1.5 space-y-6">
             {recentLogs && recentLogs.length > 0 ? (
               recentLogs.map((log) => (
                 <div key={log.id} className="relative space-y-1">
-                  <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold border border-[#050505]" />
-                  <div className="flex justify-between items-start gap-4">
+                  <div className="absolute -left-[18.5px] top-1.5 w-2 h-2 rounded-full bg-gold border border-[#050505]" />
+                  <div className="flex justify-between items-start gap-3">
                     <p className="text-xs font-semibold text-foreground">
                       {log.action_type} on <span className="text-gold capitalize">{log.target_table}</span>
                     </p>
-                    <span className="text-[9px] text-muted-foreground flex items-center gap-1 font-mono">
+                    <span className="text-[9px] text-muted-foreground flex items-center gap-1 font-mono shrink-0">
                       <Clock size={9} /> {new Date(log.created_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -183,7 +188,7 @@ export default async function AdminDashboardPage() {
               ))
             ) : (
               <div className="relative py-4 text-center">
-                <div className="absolute -left-[21px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold/50 border border-[#050505]" />
+                <div className="absolute -left-[18.5px] top-1.5 w-2 h-2 rounded-full bg-gold/50 border border-[#050505]" />
                 <p className="text-xs text-muted-foreground">No recent activity found.</p>
               </div>
             )}
@@ -196,10 +201,10 @@ export default async function AdminDashboardPage() {
             <DollarSign size={16} className="text-gold" /> Recent Sales
           </h2>
 
-          <div className="space-y-4">
+          <div className="divide-y divide-gold/10">
             {recentPayments && recentPayments.length > 0 ? (
               (recentPayments as any[]).map((payment) => (
-                <div key={payment.id} className="p-3 sm:p-3.5 rounded-xl bg-background/30 border border-gold/10 hover:border-gold/20 transition-all flex items-center justify-between gap-3">
+                <div key={payment.id} className="py-3 flex items-center justify-between gap-3 first:pt-0 last:pb-0 transition-all hover:bg-white/[0.01]">
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-foreground truncate">
                       {payment.projects?.project_name || 'Custom Project'}
@@ -212,7 +217,8 @@ export default async function AdminDashboardPage() {
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-sm font-serif font-bold text-gold">
+                    <span className="text-sm font-serif font-bold text-gold flex items-center gap-1 justify-end">
+                      <span className="w-1.2 h-1.2 rounded-full bg-green-500 animate-pulse shrink-0" />
                       +${Number(payment.amount).toLocaleString('en-US')}
                     </span>
                     <span className="block text-[8px] uppercase tracking-wider text-green-400 font-bold mt-0.5">
