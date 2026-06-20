@@ -21,7 +21,7 @@ import {
   UserCheck,
 } from 'lucide-react'
 
-const STATUS_OPTIONS = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost']
+const STATUS_OPTIONS = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost', 'Spam']
 const STATUS_COLORS: Record<string, string> = {
   New: 'bg-blue-500/15 text-blue-400 border-blue-500/25',
   Contacted: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/25',
@@ -29,6 +29,7 @@ const STATUS_COLORS: Record<string, string> = {
   'Proposal Sent': 'bg-orange-500/15 text-orange-400 border-orange-500/25',
   Won: 'bg-green-500/15 text-green-400 border-green-500/25',
   Lost: 'bg-red-500/15 text-red-400 border-red-500/25',
+  Spam: 'bg-red-500/10 text-red-400/70 border-red-500/20',
 }
 
 type Lead = {
@@ -183,6 +184,21 @@ export default function LeadDetailPage() {
     setLead((prev) => prev ? { ...prev, is_archived: newVal } : prev)
   }
 
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to permanently delete this lead? This action cannot be undone.')) return
+    setSaving(true)
+    const { error } = await supabase.from('leads').delete().eq('id', id)
+    setSaving(false)
+    if (error) {
+      showToast('Failed to delete lead.', 'error')
+      return
+    }
+    showToast('Lead permanently deleted.')
+    setTimeout(() => {
+      router.push('/admin/leads')
+    }, 1200)
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -223,6 +239,12 @@ export default function LeadDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-background text-sm font-bold border border-red-500/20 hover:border-red-500 transition-all cursor-pointer"
+          >
+            <Trash2 size={14} /> Delete
+          </button>
           <button
             onClick={handleArchive}
             disabled={archiving}

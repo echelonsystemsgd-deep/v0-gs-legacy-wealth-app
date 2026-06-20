@@ -181,6 +181,11 @@ export default function ClientsPage() {
     isSuspended: false
   })
 
+  // Deletion States
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [clientToDelete, setClientToDelete] = useState<ClientProfile | null>(null)
+
   const triggerToast = (msg: string) => {
     setToast(msg)
     setTimeout(() => setToast(null), 3000)
@@ -294,6 +299,46 @@ export default function ClientsPage() {
       }
     } catch (err: any) {
       triggerToast(`Update failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteClient = async () => {
+    if (!clientToDelete) return
+    const expectedText = clientToDelete.company_name || clientToDelete.full_name || 'Confirm'
+    if (deleteConfirmText !== expectedText) {
+      triggerToast('Confirmation name does not match.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      if (useMock) {
+        const idx = MOCK_CLIENTS.findIndex(c => c.id === clientToDelete.id)
+        if (idx !== -1) {
+          MOCK_CLIENTS.splice(idx, 1)
+        }
+        triggerToast('Mock client account deleted.')
+        setSelectedClient(null)
+        setShowDeleteModal(false)
+        setDeleteConfirmText('')
+        return
+      }
+
+      // Live mode deletes via Edge Function
+      const { data, error } = await supabase.functions.invoke('admin-user-actions', {
+        body: { target_user_id: clientToDelete.id, action: 'delete' }
+      })
+
+      if (error) throw error
+      triggerToast('Client account deleted successfully.')
+      setSelectedClient(null)
+      setShowDeleteModal(false)
+      setDeleteConfirmText('')
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Deletion failed: ${err.message}`)
     } finally {
       setLoading(false)
     }
@@ -633,6 +678,18 @@ export default function ClientsPage() {
                       </span>
                     </div>
                   </div>
+
+                  <div className="pt-3 flex justify-end">
+                    <button
+                      onClick={() => {
+                        setClientToDelete(selectedClient)
+                        setShowDeleteModal(true)
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 hover:border-red-500/30 text-xxs font-bold transition-all cursor-pointer"
+                    >
+                      <Trash2 size={12} /> Delete Account
+                    </button>
+                  </div>
                 </div>
 
                 {/* Associated Projects Section */}
@@ -808,6 +865,63 @@ export default function ClientsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* MODAL: DELETE CLIENT SAFETY CONFIRMATION */}
+      {showDeleteModal && clientToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md glass border border-red-500/20 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5">
+            <div className="flex justify-between items-center border-b border-red-500/15 pb-3">
+              <h2 className="font-serif text-lg font-bold text-red-400 flex items-center gap-2">
+                <AlertCircle size={18} /> Permanent Account Deletion
+              </h2>
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false)
+                  setDeleteConfirmText('')
+                }}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Warning: Hard-deleting the client account for <strong className="text-foreground">{clientToDelete.full_name}</strong> will revoke all portal accesses, delete their profile record, and cascade-remove all associated projects, file assets, and timelines.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                To confirm this deletion, please type the company name <strong className="text-foreground font-mono">"{clientToDelete.company_name || clientToDelete.full_name || 'Confirm'}"</strong> below:
+              </p>
+              <input
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type name here..."
+                className="w-full bg-background/60 border border-red-500/25 hover:border-red-500/40 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-mono"
+              />
+            </div>
+
+            <div className="pt-3 flex justify-end gap-3 border-t border-red-500/15">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteModal(false)
+                  setDeleteConfirmText('')
+                }}
+                className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteClient}
+                disabled={loading || deleteConfirmText !== (clientToDelete.company_name || clientToDelete.full_name || 'Confirm')}
+                className="px-5 py-2 text-xs font-bold bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-background rounded-lg border border-red-500/30 hover:border-red-500 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Deleting...' : 'Permanently Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}

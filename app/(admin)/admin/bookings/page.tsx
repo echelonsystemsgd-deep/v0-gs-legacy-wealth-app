@@ -482,6 +482,35 @@ export default function BookingsPage() {
     }
   }
 
+  const handleDeleteBooking = async (id: string) => {
+    if (!confirm('Are you sure you want to permanently delete this booking?')) return
+
+    if (useMock) {
+      const idx = MOCK_SESSIONS.findIndex((s) => s.id === id)
+      if (idx !== -1) {
+        MOCK_SESSIONS.splice(idx, 1)
+      }
+      triggerToast('Mock booking deleted.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('strategy_sessions')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+      triggerToast('Booking deleted permanently.')
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Deletion failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Convert Lead / Client triggers (Mock only / visual dialog launcher)
   const handleConvertToClient = (session: StrategySession) => {
     const clientName = session.leads?.name || 'Client'
@@ -731,6 +760,14 @@ export default function BookingsPage() {
                                     title="Edit Outcomes & Details"
                                   >
                                     Log Outcome
+                                  </button>
+
+                                  <button
+                                    onClick={() => handleDeleteBooking(session.id)}
+                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all cursor-pointer border border-transparent hover:border-red-500/20"
+                                    title="Delete Booking"
+                                  >
+                                    <Trash2 size={12} />
                                   </button>
                                 </div>
                               </td>
