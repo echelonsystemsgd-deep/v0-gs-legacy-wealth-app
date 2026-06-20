@@ -225,42 +225,73 @@ export default function DashboardClientContainer({
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/3 blur-[130px]" />
       </div>
 
-      <div className="max-w-5xl w-full mx-auto px-4 py-6 sm:py-10 space-y-8 relative z-10 flex-1">
-
-        {/* ── Header ──────────────────────────────────────────────────────── */}
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-gold/15">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
-              <Sparkles size={12} className="animate-pulse" />
-              {profile.role === 'client' ? 'Active Client Suite' : 'Member Portal'}
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
-              {getGreeting()}, {profile.first_name || 'Partner'}
-            </h1>
-            <p className="text-xs text-muted-foreground max-w-md">
-              {profile.role === 'client'
-                ? 'Track your live AI project, deliverables, and asset pipeline.'
-                : 'Complete your profile and schedule your strategy session.'}
+      {/* ── Sticky Top Bar ─────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/90 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4 shrink-0">
+        {/* Brand mark */}
+        <div className="flex items-center gap-2.5 flex-1 min-w-0">
+          <div className="w-7 h-7 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+            <Sparkles size={11} className="text-gold" />
+          </div>
+          <div className="hidden sm:block">
+            <p className="font-serif text-xs font-bold text-foreground leading-none">GS Legacy Wealth</p>
+            <p className="text-[10px] text-gold/60 font-semibold uppercase tracking-widest mt-0.5">
+              {profile.role === 'client' ? 'Client Suite' : 'Member Portal'}
             </p>
           </div>
+          {/* Greeting shown only on mobile inside the top bar */}
+          <p className="sm:hidden text-sm font-serif font-bold text-foreground truncate">
+            {getGreeting()}, {profile.first_name || 'Partner'}
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="px-4 py-2 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-200 flex items-center gap-2"
+        {/* Right actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="h-5 w-px bg-gold/10 hidden sm:block" />
+          <span className="text-xs text-muted-foreground hidden sm:block truncate max-w-[120px]">
+            {profile.full_name ?? profile.first_name ?? ''}
+          </span>
+          <div className="h-5 w-px bg-gold/10" />
+          <Link
+            href="/"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all"
+            title="View Public Site"
+          >
+            <Globe size={15} />
+          </Link>
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
+              title="Sign Out"
             >
-              <Globe size={13} /> Website
-            </Link>
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-xl border border-gold/15 hover:border-gold/30 hover:bg-gold/5 text-sm text-muted-foreground hover:text-gold transition-all duration-200 flex items-center gap-2 cursor-pointer"
-              >
-                <LogOut size={13} /> Sign Out
-              </button>
-            </form>
+              <LogOut size={15} />
+            </button>
+          </form>
+          <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
+            <span className="text-xs font-bold text-gold uppercase">
+              {(profile.first_name ?? profile.full_name ?? 'U')[0]}
+            </span>
           </div>
-        </header>
+        </div>
+      </header>
+
+      <div className="max-w-5xl w-full mx-auto px-4 pt-6 pb-28 sm:py-10 space-y-8 relative z-10 flex-1">
+
+        {/* ── Page Heading ─────────────────────────────────────────────────── */}
+        <div className="space-y-1 pb-6 border-b border-gold/15">
+          <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
+            <Sparkles size={12} className="animate-pulse" />
+            {profile.role === 'client' ? 'Active Client Suite' : 'Member Portal'}
+          </div>
+          <h1 className="hidden sm:block text-2xl sm:text-3xl font-serif font-bold text-foreground">
+            {getGreeting()}, {profile.first_name || 'Partner'}
+          </h1>
+          <p className="text-xs text-muted-foreground max-w-md">
+            {profile.role === 'client'
+              ? 'Track your live AI project, deliverables, and asset pipeline.'
+              : 'Complete your profile and schedule your strategy session.'}
+          </p>
+        </div>
 
         {/* ═══════════════════════════════════════════════════════════════════
             CLIENT DASHBOARD (tabbed)
@@ -269,7 +300,7 @@ export default function DashboardClientContainer({
           <div className="space-y-6 animate-fade-in">
 
             {/* Tab Bar */}
-            <div className="flex items-center gap-1 p-1 bg-white/[0.03] border border-white/8 rounded-xl w-fit">
+            <div className="hidden sm:flex items-center gap-1 p-1 bg-white/[0.03] border border-white/8 rounded-xl w-fit">
               {([
                 { id: 'overview', label: 'Overview', icon: LayoutDashboard },
                 { id: 'assets', label: 'Assets', icon: FolderOpen },
@@ -368,7 +399,7 @@ export default function DashboardClientContainer({
                 </section>
 
                 {/* Quick actions */}
-                <div className="grid sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {[
                     { label: 'Upload Asset', sub: 'Send brand files or briefs', icon: Upload, action: () => setClientTab('assets') },
                     { label: 'View Analytics', sub: 'Live automation metrics', icon: BarChart3, action: () => setClientTab('insights') },
@@ -524,7 +555,7 @@ export default function DashboardClientContainer({
                     <p className="text-xs text-muted-foreground mt-0.5">Live automation analytics once your systems go live.</p>
                   </div>
 
-                  <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[
                       { label: 'Work Hours Saved', value: '42.5 hrs', sub: 'This billing period', accent: 'text-green-400', bg: 'bg-green-500/5 border-green-500/15' },
                       { label: 'AI Chat Sessions', value: '387', sub: '94% resolution rate', accent: 'text-gold', bg: 'bg-gold/5 border-gold/15' },
@@ -555,7 +586,7 @@ export default function DashboardClientContainer({
           <div className="space-y-6 animate-fade-in">
 
             {/* Tab Bar */}
-            <div className="flex items-center gap-1 p-1 bg-white/[0.03] border border-white/8 rounded-xl w-fit overflow-x-auto">
+            <div className="hidden sm:flex items-center gap-1 p-1 bg-white/[0.03] border border-white/8 rounded-xl w-fit overflow-x-auto">
               {([
                 { id: 'overview', label: 'Overview', icon: LayoutDashboard },
                 { id: 'profile', label: 'Business Profile', icon: Building2 },
@@ -795,6 +826,51 @@ export default function DashboardClientContainer({
           </div>
         )}
       </div>
+
+      {/* ── Mobile Bottom Navigation ─────────────────────────────────────── */}
+      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 border-t border-gold/10 bg-[#050505]/95 backdrop-blur-md">
+        <div className="flex items-center h-16">
+          {profile.role === 'client' ? (
+            <>
+              {([
+                { id: 'overview' as ClientTab, label: 'Overview', icon: LayoutDashboard },
+                { id: 'assets' as ClientTab, label: 'Assets', icon: FolderOpen },
+                { id: 'insights' as ClientTab, label: 'Analytics', icon: TrendingUp },
+              ]).map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setClientTab(id)}
+                  className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200 cursor-pointer ${
+                    clientTab === id ? 'text-gold' : 'text-muted-foreground'
+                  }`}
+                >
+                  <Icon size={20} strokeWidth={clientTab === id ? 2.5 : 1.5} />
+                  <span className="text-[10px] font-semibold">{label}</span>
+                </button>
+              ))}
+            </>
+          ) : (
+            <>
+              {([
+                { id: 'overview' as UserTab, label: 'Overview', icon: LayoutDashboard },
+                { id: 'profile' as UserTab, label: 'Profile', icon: Building2 },
+                { id: 'vault' as UserTab, label: 'Vault', icon: Zap },
+              ]).map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setUserTab(id)}
+                  className={`flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200 cursor-pointer ${
+                    userTab === id ? 'text-gold' : 'text-muted-foreground'
+                  }`}
+                >
+                  <Icon size={20} strokeWidth={userTab === id ? 2.5 : 1.5} />
+                  <span className="text-[10px] font-semibold">{label}</span>
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+      </nav>
 
       <footer className="w-full border-t border-gold/10 py-5 text-center text-xs text-muted-foreground relative z-10 bg-[#050505]/80 backdrop-blur-md">
         © {new Date().getFullYear()} GS Legacy Wealth AI. All rights reserved.
