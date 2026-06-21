@@ -19,7 +19,10 @@ import {
   ChevronRight,
   Info,
   CalendarDays,
-  UserPlus
+  UserPlus,
+  CalendarRange,
+  SlidersHorizontal,
+  Eye
 } from 'lucide-react'
 
 // Define Types
@@ -49,7 +52,7 @@ type StrategySession = {
 }
 
 type SimpleLead = { id: string; name: string; email: string; business_name: string }
-type SimpleClient = { id: string; full_name: string; email: string }
+type SimpleClient = { id: string; full_name: string; email: string; role?: string }
 
 export default function BookingsPage() {
   const supabase = createClient()
@@ -73,6 +76,9 @@ export default function BookingsPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('All')
   const [categoryFilter, setCategoryFilter] = useState<string>('All')
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month' | 'custom'>('all')
+  const [customStartDate, setCustomStartDate] = useState<string>('')
+  const [customEndDate, setCustomEndDate] = useState<string>('')
 
   // Modals States
   const [showCategoryModal, setShowCategoryModal] = useState(false)
@@ -100,6 +106,8 @@ export default function BookingsPage() {
 
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false)
   const [availabilityForm, setAvailabilityForm] = useState({ id: '', day: 1, start: '09:00', end: '17:00' })
+  const [showViewModal, setShowViewModal] = useState(false)
+  const [selectedBooking, setSelectedBooking] = useState<StrategySession | null>(null)
 
   const triggerToast = (msg: string) => {
     setToast(msg)
@@ -114,6 +122,7 @@ export default function BookingsPage() {
       const { data: cats } = await supabase
           .from('session_categories')
           .select('*')
+          .eq('is_active', true)
           .order('name', { ascending: true })
       setDbCategories(cats ?? [])
 
@@ -136,11 +145,11 @@ export default function BookingsPage() {
           .eq('is_archived', false)
       setDbLeads(lds ?? [])
 
-      // 4. Fetch clients for scheduling selectors
+      // 4. Fetch clients and users for scheduling selectors
       const { data: cls } = await supabase
           .from('profiles')
-          .select('id, full_name, email')
-          .eq('role', 'client')
+          .select('id, full_name, email, role')
+          .in('role', ['client', 'user'])
           .eq('is_suspended', false)
       setDbClients((cls as any) ?? [])
 
@@ -176,7 +185,42 @@ export default function BookingsPage() {
     const matchStatus = statusFilter === 'All' || s.status === statusFilter
     const matchCat = categoryFilter === 'All' || s.category_id === categoryFilter
 
-    return matchSearch && matchStatus && matchCat
+    // Date filtering logic
+    const sessionDate = new Date(s.scheduled_at)
+    const today = new Date()
+    let matchDate = true
+
+    if (dateFilter === 'today') {
+      const startOfToday = new Date()
+      startOfToday.setHours(0, 0, 0, 0)
+      const endOfToday = new Date()
+      endOfToday.setHours(23, 59, 59, 999)
+      matchDate = sessionDate >= startOfToday && sessionDate <= endOfToday
+    } else if (dateFilter === 'week') {
+      const startOfToday = new Date()
+      startOfToday.setHours(0, 0, 0, 0)
+      const endOf7Days = new Date()
+      endOf7Days.setDate(startOfToday.getDate() + 7)
+      endOf7Days.setHours(23, 59, 59, 999)
+      matchDate = sessionDate >= startOfToday && sessionDate <= endOf7Days
+    } else if (dateFilter === 'month') {
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+      matchDate = sessionDate >= startOfMonth && sessionDate <= endOfMonth
+    } else if (dateFilter === 'custom') {
+      const start = customStartDate ? new Date(customStartDate) : null
+      const end = customEndDate ? new Date(customEndDate) : null
+      if (start && end) {
+        end.setHours(23, 59, 59, 999)
+        matchDate = sessionDate >= start && sessionDate <= end
+      } else if (start) {
+        matchDate = sessionDate >= start
+      } else if (end) {
+        matchDate = sessionDate <= end
+      }
+    }
+
+    return matchSearch && matchStatus && matchCat && matchDate
   })
 
   // CRUD Session Category
@@ -490,6 +534,59 @@ export default function BookingsPage() {
                 </div>
               </div>
 
+              {/* Date Filters Row */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-1 bg-white/[0.01] p-3 rounded-2xl border border-gold/5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xxs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 mr-2">
+                    <Clock size={11} className="text-gold" /> Date Range
+                  </span>
+                  
+                  {[
+                    { id: 'all', label: 'All Time', icon: CalendarIcon },
+                    { id: 'today', label: 'Today', icon: Clock },
+                    { id: 'week', label: 'Next 7 Days', icon: CalendarDays },
+                    { id: 'month', label: 'This Month', icon: CalendarIcon },
+                    { id: 'custom', label: 'Custom Range', icon: CalendarRange }
+                  ].map((range) => {
+                    const IconComponent = range.icon
+                    const isActive = dateFilter === range.id
+                    return (
+                      <button
+                        key={range.id}
+                        onClick={() => setDateFilter(range.id as any)}
+                        className={`px-3 py-1.5 rounded-lg text-xxs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer ${
+                          isActive
+                            ? 'bg-gold/10 border-gold/30 text-gold shadow-sm'
+                            : 'bg-card/40 border-gold/5 text-muted-foreground hover:text-foreground hover:bg-white/5'
+                        }`}
+                      >
+                        <IconComponent size={12} />
+                        {range.label}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {dateFilter === 'custom' && (
+                  <div className="flex items-center gap-2 bg-card/45 border border-gold/10 px-3 py-1 rounded-xl animate-fade-in">
+                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">From:</span>
+                    <input
+                      type="date"
+                      value={customStartDate}
+                      onChange={(e) => setCustomStartDate(e.target.value)}
+                      className="bg-transparent text-foreground text-xs outline-none cursor-pointer w-28 [color-scheme:dark]"
+                    />
+                    <span className="text-[10px] text-muted-foreground uppercase font-semibold border-l border-gold/10 pl-2">To:</span>
+                    <input
+                      type="date"
+                      value={customEndDate}
+                      onChange={(e) => setCustomEndDate(e.target.value)}
+                      className="bg-transparent text-foreground text-xs outline-none cursor-pointer w-28 [color-scheme:dark]"
+                    />
+                  </div>
+                )}
+              </div>
+
               {/* Table List */}
               <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
                 <div className="overflow-x-auto">
@@ -512,7 +609,14 @@ export default function BookingsPage() {
                           const isClient = !!session.client_id || !session.lead_id
 
                           return (
-                            <tr key={session.id} className="hover:bg-white/[0.01] transition-all">
+                            <tr
+                              key={session.id}
+                              onClick={() => {
+                                setSelectedBooking(session)
+                                setShowViewModal(true)
+                              }}
+                              className="hover:bg-white/[0.02] cursor-pointer transition-all"
+                            >
                               <td className="py-4 px-5">
                                 <div className="font-semibold text-foreground">{contactName}</div>
                                 {company && <div className="text-xxs text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
@@ -823,14 +927,14 @@ export default function BookingsPage() {
                     bookingForm.targetType === 'client' ? 'bg-gold text-background font-bold' : 'text-muted-foreground'
                   }`}
                 >
-                  Active Client
+                  Client / User
                 </button>
               </div>
 
               {/* Target Selector */}
               <div className="space-y-1">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Select {bookingForm.targetType === 'lead' ? 'Lead Profile' : 'Client Profile'}
+                  Select {bookingForm.targetType === 'lead' ? 'Lead Profile' : 'Client/User Profile'}
                 </label>
                 <select
                   required
@@ -844,7 +948,9 @@ export default function BookingsPage() {
                         <option key={l.id} value={l.id}>{l.name} ({l.business_name})</option>
                       ))
                     : clients.map((c) => (
-                        <option key={c.id} value={c.id}>{c.full_name} ({c.email})</option>
+                        <option key={c.id} value={c.id}>
+                          {c.full_name} ({c.email}) — {c.role === 'client' ? 'Client' : 'User'}
+                        </option>
                       ))}
                 </select>
               </div>
@@ -1005,6 +1111,192 @@ export default function BookingsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: VIEW BOOKING DETAILS */}
+      {showViewModal && selectedBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="w-full max-w-lg glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 animate-scale-up">
+            
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-gold/10 pb-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gold-light">
+                  Session Details
+                </span>
+                <h2 className="font-serif text-xl font-bold text-foreground">
+                  {selectedBooking.session_categories?.name || 'General Strategy Session'}
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowViewModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer w-8 h-8 rounded-full bg-white/5 border border-gold/5 flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content Body */}
+            <div className="space-y-4 text-sm max-h-[60vh] overflow-y-auto scrollbar-none pr-1">
+              
+              {/* Profile Card */}
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-gold/10 space-y-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold text-foreground text-base">
+                      {selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Booking'}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {selectedBooking.leads?.email || selectedBooking.profiles?.email || 'No email provided'}
+                    </p>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                    selectedBooking.client_id || !selectedBooking.lead_id
+                      ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400'
+                      : 'bg-indigo-500/10 border border-indigo-500/30 text-indigo-400'
+                  }`}>
+                    {selectedBooking.client_id || !selectedBooking.lead_id ? 'Client / User' : 'Provisional Lead'}
+                  </span>
+                </div>
+
+                {/* Lead Business / Profile Meta */}
+                {selectedBooking.leads?.business_name && (
+                  <div className="pt-2 border-t border-gold/5 flex items-center gap-1.5 text-xs text-gold/80">
+                    <span className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Company:</span>
+                    <span>{selectedBooking.leads.business_name}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Status and Time Metadata */}
+              <div className="grid grid-cols-2 gap-4">
+                
+                {/* Date & Time */}
+                <div className="p-3.5 rounded-xl bg-card border border-gold/5 space-y-1.5">
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground flex items-center gap-1">
+                    <CalendarIcon size={12} className="text-gold" /> Date & Time
+                  </div>
+                  <div className="text-sm font-semibold text-foreground">
+                    {new Date(selectedBooking.scheduled_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </div>
+                  <div className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Clock size={11} />
+                    {new Date(selectedBooking.scheduled_at).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                    <span>·</span>
+                    <span>{selectedBooking.session_categories?.duration_minutes || 30} mins</span>
+                  </div>
+                </div>
+
+                {/* Booking Status */}
+                <div className="p-3.5 rounded-xl bg-card border border-gold/5 space-y-1.5">
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                    Meeting Status
+                  </div>
+                  <div className="pt-0.5">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 w-fit ${
+                      selectedBooking.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
+                      selectedBooking.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
+                      selectedBooking.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
+                      'bg-gold/15 border border-gold/30 text-gold'
+                    }`}>
+                      {selectedBooking.status === 'Completed' && <CheckCircle2 size={12} />}
+                      {selectedBooking.status === 'Canceled' && <XCircle size={12} />}
+                      {selectedBooking.status === 'No Show' && <AlertTriangle size={12} />}
+                      {selectedBooking.status}
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">
+                    Status governs outcome logging availability.
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Administrative Preparation Notes */}
+              <div className="space-y-1.5">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Administrative Prep Notes
+                </h4>
+                <div className="p-4 rounded-xl bg-card border border-gold/5 text-xs leading-relaxed text-foreground min-h-[60px] whitespace-pre-wrap">
+                  {selectedBooking.notes || 'No prep notes entered for this strategy call.'}
+                </div>
+              </div>
+
+              {/* Call Outcomes */}
+              <div className="space-y-1.5">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Call Outcomes & Rescheduling Info
+                </h4>
+                <div className={`p-4 rounded-xl border text-xs leading-relaxed min-h-[60px] whitespace-pre-wrap ${
+                  selectedBooking.outcomes 
+                    ? 'bg-gold/5 border-gold/20 text-foreground' 
+                    : 'bg-card border-gold/5 text-muted-foreground italic'
+                }`}>
+                  {selectedBooking.outcomes || 'No call outcome results logged yet. Click "Log Outcome" below to record the findings.'}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Footer Actions */}
+            <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gold/10">
+              
+              {/* Danger Delete Button */}
+              <button
+                onClick={() => {
+                  setShowViewModal(false)
+                  handleDeleteBooking(selectedBooking.id)
+                }}
+                className="px-3.5 py-2 text-xs font-semibold text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <Trash2 size={12} /> Delete Booking
+              </button>
+
+              <div className="flex gap-2">
+                {/* Convert Client (if conditions met) */}
+                {(!selectedBooking.client_id && selectedBooking.status === 'Completed') && (
+                  <button
+                    onClick={() => {
+                      setShowViewModal(false)
+                      handleConvertToClient(selectedBooking)
+                    }}
+                    className="px-4 py-2 text-xs font-bold bg-gold/10 border border-gold/30 hover:bg-gold/20 text-gold rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <UserPlus size={12} /> Convert Client
+                  </button>
+                )}
+
+                {/* Log Outcome */}
+                <button
+                  onClick={() => {
+                    const contactName = selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Intake'
+                    setOutcomeForm({
+                      sessionId: selectedBooking.id,
+                      clientName: contactName,
+                      status: selectedBooking.status,
+                      notes: selectedBooking.notes || '',
+                      outcomes: selectedBooking.outcomes || ''
+                    })
+                    setShowViewModal(false)
+                    setShowOutcomeModal(true)
+                  }}
+                  className="px-4 py-2 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <SlidersHorizontal size={12} /> Log Outcome
+                </button>
+              </div>
+
+            </div>
+
           </div>
         </div>
       )}
