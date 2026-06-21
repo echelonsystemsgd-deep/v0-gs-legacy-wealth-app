@@ -23,7 +23,9 @@ import {
   CalendarRange,
   SlidersHorizontal,
   Eye,
-  CreditCard
+  CreditCard,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react'
 
 // Define Types
@@ -80,6 +82,8 @@ export default function BookingsPage() {
   const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month' | 'custom'>('all')
   const [customStartDate, setCustomStartDate] = useState<string>('')
   const [customEndDate, setCustomEndDate] = useState<string>('')
+  const [sortField, setSortField] = useState<'contact' | 'package' | 'investment' | 'date' | 'status'>('date')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
 
   // Modals States
   const [showCategoryModal, setShowCategoryModal] = useState(false)
@@ -224,6 +228,54 @@ export default function BookingsPage() {
     return matchSearch && matchStatus && matchCat && matchDate
   })
 
+  // Sorting helper
+  const handleSort = (field: 'contact' | 'package' | 'investment' | 'date' | 'status') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+  }
+
+  // Sorted list based on filtered result
+  const sortedSessions = [...filteredSessions].sort((a, b) => {
+    let valA: any = ''
+    let valB: any = ''
+
+    if (sortField === 'contact') {
+      valA = (a.leads?.name || a.profiles?.full_name || 'System Booking').toLowerCase()
+      valB = (b.leads?.name || b.profiles?.full_name || 'System Booking').toLowerCase()
+    } else if (sortField === 'package') {
+      valA = (a.session_categories?.name || 'General Strategy').toLowerCase()
+      valB = (b.session_categories?.name || 'General Strategy').toLowerCase()
+    } else if (sortField === 'investment') {
+      const getPriceWeight = (slug: string) => {
+        switch (slug) {
+          case 'launch-discovery-call': return 1500
+          case 'legacy-strategy-session': return 3500
+          case 'elite-strategy-session': return 7000
+          case 'ascent-discovery-call': return 499
+          case 'sovereign-strategy-session': return 1299
+          case 'apex-strategy-session': return 2999
+          default: return 0
+        }
+      }
+      valA = getPriceWeight(a.session_categories?.slug || '')
+      valB = getPriceWeight(b.session_categories?.slug || '')
+    } else if (sortField === 'date') {
+      valA = new Date(a.scheduled_at).getTime()
+      valB = new Date(b.scheduled_at).getTime()
+    } else if (sortField === 'status') {
+      valA = a.status.toLowerCase()
+      valB = b.status.toLowerCase()
+    }
+
+    if (valA < valB) return sortDirection === 'asc' ? -1 : 1
+    if (valA > valB) return sortDirection === 'asc' ? 1 : -1
+    return 0
+  })
+
   // CRUD Session Category
   const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -345,6 +397,18 @@ export default function BookingsPage() {
       triggerToast(`Status update failed: ${err.message}`)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getPackageInvestment = (slug: string, full = false) => {
+    switch (slug) {
+      case 'launch-discovery-call': return full ? 'From £1,500 (One-Time)' : '£1,500'
+      case 'legacy-strategy-session': return full ? 'From £3,500 (One-Time)' : '£3,500'
+      case 'elite-strategy-session': return full ? 'From £7,000 (One-Time)' : '£7,000'
+      case 'ascent-discovery-call': return full ? 'From £499/mo (Retainer)' : '£499/mo'
+      case 'sovereign-strategy-session': return full ? 'From £1,299/mo (Retainer)' : '£1,299/mo'
+      case 'apex-strategy-session': return full ? 'From £2,999/mo (Retainer)' : '£2,999/mo'
+      default: return full ? 'Active Partner Session' : 'Included'
     }
   }
 
@@ -613,17 +677,78 @@ export default function BookingsPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
-                        <th className="py-4 px-5">Contact Details</th>
-                        <th className="py-4 px-5">Package / Type</th>
-                        <th className="py-4 px-5">Scheduled Date</th>
-                        <th className="py-4 px-5">Status</th>
+                      <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01] select-none">
+                        <th 
+                          onClick={() => handleSort('contact')}
+                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className="flex items-center gap-1">
+                            Contact Details
+                            {sortField === 'contact' ? (
+                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                            ) : (
+                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                            )}
+                          </div>
+                        </th>
+                        <th 
+                          onClick={() => handleSort('package')}
+                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className="flex items-center gap-1">
+                            Package / Type
+                            {sortField === 'package' ? (
+                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                            ) : (
+                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                            )}
+                          </div>
+                        </th>
+                        <th 
+                          onClick={() => handleSort('investment')}
+                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className="flex items-center gap-1">
+                            Investment
+                            {sortField === 'investment' ? (
+                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                            ) : (
+                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                            )}
+                          </div>
+                        </th>
+                        <th 
+                          onClick={() => handleSort('date')}
+                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className="flex items-center gap-1">
+                            Scheduled Date
+                            {sortField === 'date' ? (
+                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                            ) : (
+                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                            )}
+                          </div>
+                        </th>
+                        <th 
+                          onClick={() => handleSort('status')}
+                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className="flex items-center gap-1">
+                            Status
+                            {sortField === 'status' ? (
+                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                            ) : (
+                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                            )}
+                          </div>
+                        </th>
                         <th className="py-4 px-5 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gold/5 text-sm">
-                      {filteredSessions.length > 0 ? (
-                        filteredSessions.map((session) => {
+                      {sortedSessions.length > 0 ? (
+                        sortedSessions.map((session) => {
                           const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
                           const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
                           const email = session.leads?.email || session.profiles?.email || ''
@@ -657,6 +782,11 @@ export default function BookingsPage() {
                                 <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
                                   <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
                                 </div>
+                              </td>
+                              <td className="py-4 px-5 whitespace-nowrap">
+                                <span className="font-semibold text-gold-light">
+                                  {getPackageInvestment(session.session_categories?.slug || '')}
+                                </span>
                               </td>
                               <td className="py-4 px-5">
                                 <div className="font-medium text-foreground">
@@ -730,7 +860,7 @@ export default function BookingsPage() {
                         })
                       ) : (
                         <tr>
-                          <td colSpan={5} className="py-12 text-center text-muted-foreground px-4">
+                          <td colSpan={6} className="py-12 text-center text-muted-foreground px-4">
                             <Info size={24} className="mx-auto text-gold/30 mb-2" />
                             No scheduled strategy sessions match your filters.
                           </td>
@@ -1151,18 +1281,6 @@ export default function BookingsPage() {
         })
         const displayDateTime = `${formattedDate} at ${formattedTime}`
 
-        const getPackageInvestment = (slug: string) => {
-          switch (slug) {
-            case 'launch-discovery-call': return 'From £1,500 (One-Time)'
-            case 'legacy-strategy-session': return 'From £3,500 (One-Time)'
-            case 'elite-strategy-session': return 'From £7,000 (One-Time)'
-            case 'ascent-discovery-call': return 'From £499/mo (Retainer)'
-            case 'sovereign-strategy-session': return 'From £1,299/mo (Retainer)'
-            case 'apex-strategy-session': return 'From £2,999/mo (Retainer)'
-            default: return 'Active Partner Session'
-          }
-        }
-
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-fade-in">
             <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 animate-scale-up">
@@ -1215,7 +1333,7 @@ export default function BookingsPage() {
                     <CreditCard size={14} className="text-gold/60" /> Value / Tier
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full text-xxs font-semibold bg-gold/15 border border-gold/30 text-gold-light">
-                    {getPackageInvestment(selectedBooking.session_categories?.slug || '')}
+                    {getPackageInvestment(selectedBooking.session_categories?.slug || '', true)}
                   </span>
                 </div>
               </div>
