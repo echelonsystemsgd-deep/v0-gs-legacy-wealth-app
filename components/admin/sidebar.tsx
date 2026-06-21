@@ -92,14 +92,6 @@ export function AdminSidebar() {
               <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest">Admin Portal</p>
             </div>
           </div>
-
-          {/* Close button for mobile */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
-          >
-            <X size={16} />
-          </button>
         </div>
 
       {/* Navigation */}

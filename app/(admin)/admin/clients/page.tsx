@@ -28,6 +28,7 @@ import {
   Info,
   X,
   ShieldAlert,
+  Eye,
 } from 'lucide-react'
 
 // Define Types
@@ -83,7 +84,8 @@ export default function ClientsPage() {
   const [selectedClient, setSelectedClient] = useState<ClientProfile | null>(null)
   const [clientProjects, setClientProjects] = useState<Project[]>([])
   const [clientSessions, setClientSessions] = useState<StrategySession[]>([])
-  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
+  const [showViewModal, setShowViewModal] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   // Edit / Add client form
   const [showAddModal, setShowAddModal] = useState(false)
@@ -111,6 +113,12 @@ export default function ClientsPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
+      // 0. Fetch current user session
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setCurrentUserId(user.id)
+      }
+
       // 1. Fetch all profiles (Admins, Clients, Users)
       const { data: profiles, error: pErr } = await supabase
         .from('profiles')
@@ -245,6 +253,10 @@ export default function ClientsPage() {
 
   // Toggle suspension state
   const handleToggleSuspension = async (client: ClientProfile) => {
+    if (client.id === currentUserId) {
+      triggerToast('You cannot suspend your own admin account.')
+      return
+    }
     const nextSuspended = !client.is_suspended
 
     setLoading(true)
@@ -269,6 +281,10 @@ export default function ClientsPage() {
 
   const handleDeleteClient = async () => {
     if (!clientToDelete) return
+    if (clientToDelete.id === currentUserId) {
+      triggerToast('You cannot delete your own admin account.')
+      return
+    }
     const expectedText = clientToDelete.company_name || clientToDelete.full_name || 'Confirm'
     if (deleteConfirmText !== expectedText) {
       triggerToast('Confirmation name does not match.')
@@ -459,140 +475,138 @@ export default function ClientsPage() {
           <p className="text-sm text-muted-foreground animate-pulse">Syncing directory profiles...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          {/* LEFT: DIRECTORY LIST */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Quick Role Filters Tabs */}
-            <div className="flex flex-wrap gap-2 items-center pb-1">
-              {[
-                { id: 'All', label: 'All Roles', count: sortedProfiles.length },
-                { id: 'Admin', label: 'Admins', count: dbClients.filter(c => c.role === 'admin').length },
-                { id: 'Client', label: 'Clients', count: dbClients.filter(c => c.role === 'client').length },
-                { id: 'User', label: 'Users', count: dbClients.filter(c => c.role === 'user').length },
-              ].map((roleTab) => (
-                <button
-                  key={roleTab.id}
-                  onClick={() => setRoleFilter(roleTab.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-2 cursor-pointer ${
-                    roleFilter === roleTab.id
-                      ? 'bg-gold/15 border-gold/45 text-gold shadow-[0_0_12px_rgba(212,175,55,0.12)]'
-                      : 'bg-card/40 border-gold/10 text-muted-foreground hover:text-foreground hover:bg-white/5'
-                  }`}
-                >
-                  {roleTab.label}
-                  <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold ${
-                    roleFilter === roleTab.id ? 'bg-gold/25 text-gold' : 'bg-white/5 text-muted-foreground'
-                  }`}>
-                    {roleTab.count}
-                  </span>
-                </button>
-              ))}
+        <div className="space-y-4">
+          {/* Quick Role Filters Tabs */}
+          <div className="flex flex-wrap gap-2 items-center pb-1">
+            {[
+              { id: 'All', label: 'All Roles', count: sortedProfiles.length },
+              { id: 'Admin', label: 'Admins', count: dbClients.filter(c => c.role === 'admin').length },
+              { id: 'Client', label: 'Clients', count: dbClients.filter(c => c.role === 'client').length },
+              { id: 'User', label: 'Users', count: dbClients.filter(c => c.role === 'user').length },
+            ].map((roleTab) => (
+              <button
+                key={roleTab.id}
+                onClick={() => setRoleFilter(roleTab.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-2 cursor-pointer ${
+                  roleFilter === roleTab.id
+                    ? 'bg-gold/15 border-gold/45 text-gold shadow-[0_0_12px_rgba(212,175,55,0.12)]'
+                    : 'bg-card/40 border-gold/10 text-muted-foreground hover:text-foreground hover:bg-white/5'
+                }`}
+              >
+                {roleTab.label}
+                <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold ${
+                  roleFilter === roleTab.id ? 'bg-gold/25 text-gold' : 'bg-white/5 text-muted-foreground'
+                }`}>
+                  {roleTab.count}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="relative sm:col-span-2">
+              <Search size={15} className="absolute left-4 top-3.5 text-muted-foreground" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search name, email, company..."
+                className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/10 transition-all"
+              />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="relative sm:col-span-2">
-                <Search size={15} className="absolute left-4 top-3.5 text-muted-foreground" />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search name, email, company..."
-                  className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/10 transition-all"
-                />
-              </div>
-
-              <div className="relative">
-                <Filter size={13} className="absolute left-3.5 top-4 text-muted-foreground" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-9 pr-4 py-2.5 text-xs text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/10 transition-all appearance-none"
-                >
-                  <option value="All">All Statuses</option>
-                  <option value="Active">Active only</option>
-                  <option value="Suspended">Suspended only</option>
-                </select>
-              </div>
+            <div className="relative">
+              <Filter size={13} className="absolute left-3.5 top-4 text-muted-foreground" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-9 pr-4 py-2.5 text-xs text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/10 transition-all appearance-none"
+              >
+                <option value="All">All Statuses</option>
+                <option value="Active">Active only</option>
+                <option value="Suspended">Suspended only</option>
+              </select>
             </div>
+          </div>
 
-            <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
-                      <th className="py-4 px-5">Identity Details</th>
-                      <th className="py-4 px-5">Role</th>
-                      <th className="py-4 px-5">Key Information</th>
-                      <th className="py-4 px-5">Status</th>
-                      <th className="py-4 px-5 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gold/5 text-sm">
-                    {filteredClients.length > 0 ? (
-                      filteredClients.map((client) => {
-                        const isSelected = selectedClient?.id === client.id
-                        return (
-                          <tr
-                            key={client.id}
-                            onClick={() => {
-                              setSelectedClient(client)
-                              setMobileSheetOpen(true)
-                            }}
-                            className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
-                              isSelected ? 'bg-gold/5' : ''
-                            }`}
-                          >
-                            <td className="py-4 px-5">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
-                                  <span className="text-xs font-bold text-gold">
-                                    {client.full_name?.[0] || 'C'}
-                                  </span>
+          <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
+                    <th className="py-4 px-5">Identity Details</th>
+                    <th className="py-4 px-5">Role</th>
+                    <th className="py-4 px-5">Key Information</th>
+                    <th className="py-4 px-5">Status</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gold/5 text-sm">
+                  {filteredClients.length > 0 ? (
+                    filteredClients.map((client) => {
+                      const isSelected = selectedClient?.id === client.id
+                      return (
+                        <tr
+                          key={client.id}
+                          onClick={() => {
+                            setSelectedClient(client)
+                            setShowViewModal(true)
+                          }}
+                          className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
+                            isSelected ? 'bg-gold/5' : ''
+                          }`}
+                        >
+                          <td className="py-4 px-5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
+                                <span className="text-xs font-bold text-gold">
+                                  {client.full_name?.[0] || 'C'}
+                                </span>
+                              </div>
+                              <div className="min-w-0">
+                                <div className="font-semibold text-foreground flex items-center gap-2 truncate max-w-[150px]">
+                                  <span>{client.full_name || 'Anonymous User'}</span>
+                                  {client.id === currentUserId && (
+                                    <span className="px-1.5 py-0.5 rounded bg-gold/20 border border-gold/45 text-[8px] font-bold text-gold uppercase tracking-wider shrink-0">
+                                      You
+                                    </span>
+                                  )}
                                 </div>
-                                <div className="min-w-0">
-                                  <div className="font-semibold text-foreground truncate max-w-[150px]">{client.full_name || 'Anonymous User'}</div>
-                                  <div className="text-[10px] text-muted-foreground truncate max-w-[150px]">
-                                    {client.email}
-                                  </div>
+                                <div className="text-[10px] text-muted-foreground truncate max-w-[150px]">
+                                  {client.email}
                                 </div>
                               </div>
-                            </td>
-                            <td className="py-4 px-5 whitespace-nowrap">
-                              {renderRoleBadge(client.role)}
-                            </td>
-                            <td className="py-4 px-5">
-                              {renderKeyDetails(client)}
-                            </td>
-                            <td className="py-4 px-5">
-                              {client.is_suspended ? (
-                                <span className="px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-xxs font-semibold text-red-400">
-                                  Suspended
-                                </span>
-                              ) : (
-                                <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/30 text-xxs font-semibold text-green-400">
-                                  Active
-                                </span>
-                              )}
-                            </td>
-                            <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
-                              <div className="flex items-center justify-end gap-2">
-                                <button
-                                  onClick={() => {
-                                    setClientForm({
-                                      id: client.id,
-                                      fullName: client.full_name || '',
-                                      email: client.email || '',
-                                      phone: client.phone_number || '',
-                                      company: client.company_name || '',
-                                      isSuspended: client.is_suspended,
-                                      role: client.role
-                                    })
-                                    setShowAddModal(true)
-                                  }}
-                                  className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
-                                  title="Edit Profile"
-                                >
-                                  <Edit2 size={12} />
-                                </button>
+                            </div>
+                          </td>
+                          <td className="py-4 px-5 whitespace-nowrap">
+                            {renderRoleBadge(client.role)}
+                          </td>
+                          <td className="py-4 px-5">
+                            {renderKeyDetails(client)}
+                          </td>
+                          <td className="py-4 px-5">
+                            {client.is_suspended ? (
+                              <span className="px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-xxs font-semibold text-red-400">
+                                Suspended
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/30 text-xxs font-semibold text-green-400">
+                                Active
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => {
+                                  setSelectedClient(client)
+                                  setShowViewModal(true)
+                                }}
+                                className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
+                                title="View Profile"
+                              >
+                                <Eye size={12} />
+                              </button>
+                              {client.id !== currentUserId && (
                                 <button
                                   onClick={() => handleToggleSuspension(client)}
                                   className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${
@@ -604,301 +618,25 @@ export default function ClientsPage() {
                                 >
                                   {client.is_suspended ? <Unlock size={12} /> : <Lock size={12} />}
                                 </button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan={5} className="py-12 text-center text-muted-foreground px-4">
-                          <Info size={24} className="mx-auto text-gold/30 mb-2" />
-                          No directory listings found.
-                        </td>
-                      </tr>
-                    )}
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-muted-foreground px-4">
+                        <Info size={24} className="mx-auto text-gold/30 mb-2" />
+                        No directory listings found.
+                      </td>
+                    </tr>
+                  )}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-
-          {/* RIGHT: DETAIL DRAWER (desktop only) */}
-          <div className="lg:col-span-1 hidden lg:block">
-            {selectedClient ? (
-              <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/15 space-y-6 sticky top-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="font-serif text-xl font-bold text-foreground">User Profile</h2>
-                    <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest mt-0.5">
-                      {selectedClient.company_name || 'Direct Business'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedClient(null)}
-                    className="text-muted-foreground hover:text-foreground text-xs"
-                  >
-                    Close ✕
-                  </button>
-                </div>
-
-                {/* Identity Card */}
-                <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-bold text-gold">
-                          {selectedClient.full_name?.[0] || 'C'}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold text-foreground">{selectedClient.full_name}</div>
-                        <div className="text-[10px] text-muted-foreground">{selectedClient.email}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 divide-y divide-gold/5 text-xs">
-                    <div className="py-2 flex justify-between items-center">
-                      <span className="text-muted-foreground">Access Role:</span>
-                      {renderRoleBadge(selectedClient.role)}
-                    </div>
-                    {selectedClient.phone_number && (
-                      <div className="py-2 flex justify-between">
-                        <span className="text-muted-foreground">Phone:</span>
-                        <span className="text-foreground font-medium">{selectedClient.phone_number}</span>
-                      </div>
-                    )}
-                    <div className="py-2 flex justify-between">
-                      <span className="text-muted-foreground">Registered:</span>
-                      <span className="text-foreground font-medium">
-                        {new Date(selectedClient.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="py-2 flex justify-between items-center">
-                      <span className="text-muted-foreground">Status:</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
-                        selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'
-                      }`}>
-                        {selectedClient.is_suspended ? 'Suspended' : 'Active'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 flex justify-end">
-                    <button
-                      onClick={() => {
-                        setClientToDelete(selectedClient)
-                        setShowDeleteModal(true)
-                      }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 hover:border-red-500/30 text-xxs font-bold transition-all cursor-pointer"
-                    >
-                      <Trash2 size={12} /> Delete Account
-                    </button>
-                  </div>
-                </div>
-
-                {/* Conditional Sections based on role */}
-                {selectedClient.role === 'client' && (
-                  <>
-                    {/* Associated Projects Section */}
-                    <div className="space-y-3">
-                      <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                        <FolderKanban size={12} /> Active Projects ({clientProjects.length})
-                      </h3>
-
-                      {clientProjects.length > 0 ? (
-                        <div className="space-y-2">
-                          {clientProjects.map((p) => (
-                            <div key={p.id} className="p-3 bg-white/[0.01] hover:bg-white/[0.03] border border-gold/10 rounded-xl flex items-center justify-between gap-3 transition-colors">
-                              <div className="min-w-0">
-                                <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">
-                                    {p.status}
-                                  </span>
-                                  <span className="text-[9px] text-muted-foreground">
-                                    Paid: ${p.amount_paid.toLocaleString()} / ${p.contract_value.toLocaleString()}
-                                  </span>
-                                </div>
-                              </div>
-                              <ChevronRight size={14} className="text-gold/50 shrink-0" />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                          No active build projects registered.
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Associated Bookings Section */}
-                    <div className="space-y-3">
-                      <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                        <Calendar size={12} /> Strategy Calls ({clientSessions.length})
-                      </h3>
-
-                      {clientSessions.length > 0 ? (
-                        <div className="space-y-2">
-                          {clientSessions.map((s) => (
-                            <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                              <div>
-                                <h4 className="text-xs font-bold text-foreground">
-                                  {s.session_categories?.name || 'Consultation Call'}
-                                </h4>
-                                <p className="text-[10px] text-muted-foreground mt-1 font-mono">
-                                  {new Date(s.scheduled_at).toLocaleString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                              <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${
-                                s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
-                                s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
-                              }`}>
-                                {s.status}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                          No strategy bookings logged.
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-
-                {selectedClient.role === 'user' && (
-                  <>
-                    {/* Synced CRM Lead Details */}
-                    <div className="space-y-3">
-                      <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                        <Building size={12} /> Synced CRM Lead Details
-                      </h3>
-                      {(() => {
-                        const lead = dbLeads.find(l => l.email === selectedClient.email)
-                        if (lead) {
-                          return (
-                            <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5 text-xs">
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Lead Status:</span>
-                                <span className="text-gold font-semibold">{lead.status}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Business:</span>
-                                <span className="text-foreground font-semibold">{lead.business_name || 'N/A'}</span>
-                              </div>
-                              {lead.website && (
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Website:</span>
-                                  <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline flex items-center gap-1">
-                                    {lead.website.replace(/^https?:\/\//, '')} <ExternalLink size={10} />
-                                  </a>
-                                </div>
-                              )}
-                              {lead.service_interested && (
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Interest:</span>
-                                  <span className="text-foreground">{lead.service_interested}</span>
-                                </div>
-                              )}
-                              {lead.phone && (
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Lead Phone:</span>
-                                  <span className="text-foreground">{lead.phone}</span>
-                                </div>
-                              )}
-                              {lead.notes && (
-                                <div className="pt-2 border-t border-gold/5 space-y-1">
-                                  <span className="text-muted-foreground block font-semibold">CRM Notes:</span>
-                                  <p className="text-muted-foreground leading-relaxed italic">{lead.notes}</p>
-                                </div>
-                              )}
-                            </div>
-                          )
-                        }
-                        return (
-                          <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                            No synced CRM lead found for this user.
-                          </div>
-                        )
-                      })()}
-                    </div>
-
-                    {/* Associated Bookings Section */}
-                    <div className="space-y-3">
-                      <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                        <Calendar size={12} /> Strategy Calls ({clientSessions.length})
-                      </h3>
-
-                      {clientSessions.length > 0 ? (
-                        <div className="space-y-2">
-                          {clientSessions.map((s) => (
-                            <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                              <div>
-                                <h4 className="text-xs font-bold text-foreground">
-                                  {s.session_categories?.name || 'Consultation Call'}
-                                </h4>
-                                <p className="text-[10px] text-muted-foreground mt-1 font-mono">
-                                  {new Date(s.scheduled_at).toLocaleString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                              <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${
-                                s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
-                                s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
-                              }`}>
-                                {s.status}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                          No strategy bookings logged.
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-
-                {selectedClient.role === 'admin' && (
-                  <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <UserCheck size={12} /> Administrator Capabilities
-                    </h3>
-                    <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2 text-xs text-muted-foreground leading-relaxed">
-                      <p>This administrator account enjoys comprehensive control across CRM pipelines, website content nodes, activity audits, and server resources.</p>
-                      <ul className="list-disc pl-4 space-y-1 mt-1 text-[11px]">
-                        <li>Full audit logs control</li>
-                        <li>Global CMS variables override</li>
-                        <li>Client portal revocation privileges</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="p-12 glass rounded-2xl border border-gold/10 border-dashed text-center space-y-3 sticky top-6">
-                <UsersIcon size={28} className="mx-auto text-gold/30" />
-                <h3 className="font-serif text-sm font-semibold text-foreground">No User Selected</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">
-                  Select an entry in the catalog to view details, active project parameters, strategy calls, or synchronized lead profiles.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
       )}
 
       {/* MODAL: ADD / EDIT CLIENT */}
@@ -946,8 +684,9 @@ export default function ClientsPage() {
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Account Access Role</label>
                 <select
                   value={clientForm.role}
+                  disabled={clientForm.id === currentUserId}
                   onChange={(e) => setClientForm({ ...clientForm, role: e.target.value as any })}
-                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="client" className="bg-[#0A0A0A]">Client (Paying Partner)</option>
                   <option value="user" className="bg-[#0A0A0A]">User (Prospect/Visitor)</option>
@@ -1066,211 +805,341 @@ export default function ClientsPage() {
         </div>
       )}
 
-      {/* MOBILE SHEET: Client Workspace (lg:hidden) */}
-      {mobileSheetOpen && selectedClient && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={() => setMobileSheetOpen(false)}
-          />
-          {/* Sheet */}
-          <div className="relative bg-[#0A0A0A] border-t border-gold/20 rounded-t-3xl max-h-[85vh] overflow-y-auto animate-slide-up shadow-2xl">
-            {/* Drag handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-white/15" />
-            </div>
-
-            {/* Sheet Header */}
-            <div className="flex justify-between items-center px-5 py-3 border-b border-gold/10">
-              <div>
-                <h2 className="font-serif text-lg font-bold text-foreground">User Details</h2>
-                <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest">
-                  {selectedClient.company_name || 'Direct Business'}
-                </p>
+      {/* MODAL: VIEW CLIENT DETAILS */}
+      {showViewModal && selectedClient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+          <div className="w-full max-w-2xl glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 max-h-[90vh] overflow-y-auto relative">
+            
+            {/* Header */}
+            <div className="flex justify-between items-start border-b border-gold/10 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+                  <span className="text-lg font-bold text-gold">
+                    {selectedClient.full_name?.[0] || 'C'}
+                  </span>
+                </div>
+                <div>
+                  <h2 className="font-serif text-xl font-bold text-foreground flex items-center gap-2">
+                    {selectedClient.full_name || 'Anonymous User'}
+                  </h2>
+                  <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest mt-0.5">
+                    {selectedClient.company_name || 'Direct Business'}
+                  </p>
+                </div>
               </div>
               <button
-                onClick={() => setMobileSheetOpen(false)}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setShowViewModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5"
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
 
-            <div className="p-5 space-y-5">
-              {/* Identity Card */}
-              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-gold">{selectedClient.full_name?.[0] || 'C'}</span>
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-foreground">{selectedClient.full_name}</div>
-                    <div className="text-[10px] text-muted-foreground">{selectedClient.email}</div>
-                  </div>
-                </div>
-                <div className="pt-2 divide-y divide-gold/5 text-xs">
-                  <div className="py-2 flex justify-between items-center">
+            {/* Profile Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-2.5">
+                <h3 className="font-semibold text-gold tracking-wider uppercase text-[10px] flex items-center gap-1.5">
+                  <UsersIcon size={11} /> Profile Details
+                </h3>
+                <div className="divide-y divide-gold/5 space-y-2">
+                  <div className="flex justify-between items-center pt-2">
                     <span className="text-muted-foreground">Access Role:</span>
                     {renderRoleBadge(selectedClient.role)}
                   </div>
-                  {selectedClient.phone_number && (
-                    <div className="py-2 flex justify-between">
-                      <span className="text-muted-foreground">Phone:</span>
-                      <span className="text-foreground font-medium">{selectedClient.phone_number}</span>
-                    </div>
-                  )}
-                  <div className="py-2 flex justify-between">
-                    <span className="text-muted-foreground">Registered:</span>
-                    <span className="text-foreground font-medium">{new Date(selectedClient.created_at).toLocaleDateString()}</span>
-                  </div>
-                  <div className="py-2 flex justify-between items-center">
+                  <div className="flex justify-between items-center pt-2">
                     <span className="text-muted-foreground">Status:</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
+                      selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'
+                    }`}>
                       {selectedClient.is_suspended ? 'Suspended' : 'Active'}
                     </span>
                   </div>
-                </div>
-                <div className="pt-2 flex justify-end">
-                  <button
-                    onClick={() => { setClientToDelete(selectedClient); setShowDeleteModal(true); setMobileSheetOpen(false) }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xxs font-bold transition-all cursor-pointer"
-                  >
-                    <Trash2 size={12} /> Delete Account
-                  </button>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-muted-foreground">Registered:</span>
+                    <span className="text-foreground font-medium">
+                      {new Date(selectedClient.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Conditional Sections based on role (Mobile) */}
+              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-2.5">
+                <h3 className="font-semibold text-gold tracking-wider uppercase text-[10px] flex items-center gap-1.5">
+                  <Mail size={11} /> Contact Information
+                </h3>
+                <div className="divide-y divide-gold/5 space-y-2">
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-muted-foreground">Email:</span>
+                    <span className="text-foreground font-medium truncate max-w-[160px]" title={selectedClient.email || ''}>
+                      {selectedClient.email || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-muted-foreground">Phone:</span>
+                    <span className="text-foreground font-medium">
+                      {selectedClient.phone_number || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-muted-foreground">Company:</span>
+                    <span className="text-foreground font-medium truncate max-w-[160px]">
+                      {selectedClient.company_name || 'N/A'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Role-Specific Content */}
+            <div className="space-y-4">
               {selectedClient.role === 'client' && (
-                <>
-                  {/* Projects */}
-                  <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Associated Projects Section */}
+                  <div className="space-y-3">
                     <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
                       <FolderKanban size={12} /> Active Projects ({clientProjects.length})
                     </h3>
-                    {clientProjects.length > 0 ? clientProjects.map((p) => (
-                      <div key={p.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">{p.status}</span>
-                            <span className="text-[9px] text-muted-foreground">Paid: ${p.amount_paid.toLocaleString()} / ${p.contract_value.toLocaleString()}</span>
+                    {clientProjects.length > 0 ? (
+                      <div className="space-y-2">
+                        {clientProjects.map((p) => (
+                          <div key={p.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">
+                                  {p.status}
+                                </span>
+                                <span className="text-[9px] text-muted-foreground">
+                                  Paid: ${p.amount_paid.toLocaleString()} / ${p.contract_value.toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <ChevronRight size={14} className="text-gold/50 shrink-0" />
+                        ))}
                       </div>
-                    )) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No active projects.</div>
+                    ) : (
+                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
+                        No active build projects registered.
+                      </div>
                     )}
                   </div>
 
-                  {/* Sessions */}
-                  <div className="space-y-2 pb-4">
+                  {/* Associated Bookings Section */}
+                  <div className="space-y-3">
                     <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
                       <Calendar size={12} /> Strategy Calls ({clientSessions.length})
                     </h3>
-                    {clientSessions.length > 0 ? clientSessions.map((s) => (
-                      <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                        <div>
-                          <h4 className="text-xs font-bold text-foreground">{s.session_categories?.name || 'Consultation Call'}</h4>
-                          <p className="text-[10px] text-muted-foreground mt-0.5 font-mono">
-                            {new Date(s.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                        </div>
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${s.status === 'Completed' ? 'bg-green-500/10 text-green-400' : s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'}`}>
-                          {s.status}
-                        </span>
+                    {clientSessions.length > 0 ? (
+                      <div className="space-y-2">
+                        {clientSessions.map((s) => (
+                          <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-foreground truncate">
+                                {s.session_categories?.name || 'Consultation Call'}
+                              </h4>
+                              <p className="text-[10px] text-muted-foreground mt-1 font-mono">
+                                {new Date(s.scheduled_at).toLocaleString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                              s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                              s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
+                            }`}>
+                              {s.status}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    )) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No strategy bookings logged.</div>
+                    ) : (
+                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
+                        No strategy bookings logged.
+                      </div>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
               {selectedClient.role === 'user' && (
-                <>
-                  {/* Lead CRM */}
-                  <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Synced CRM Lead Details */}
+                  <div className="space-y-3">
                     <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <Building size={12} /> CRM Lead Details
+                      <Building size={12} /> Synced CRM Lead Details
                     </h3>
                     {(() => {
                       const lead = dbLeads.find(l => l.email === selectedClient.email)
                       if (lead) {
                         return (
-                          <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5 text-xs">
+                          <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5 text-xs font-sans">
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Status:</span>
-                              <span className="text-gold font-bold">{lead.status}</span>
+                              <span className="text-muted-foreground">Lead Status:</span>
+                              <span className="text-gold font-semibold">{lead.status}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Business Name:</span>
-                              <span className="text-foreground">{lead.business_name}</span>
+                              <span className="text-muted-foreground">Business:</span>
+                              <span className="text-foreground font-semibold">{lead.business_name || 'N/A'}</span>
                             </div>
                             {lead.website && (
                               <div className="flex justify-between">
                                 <span className="text-muted-foreground">Website:</span>
-                                <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline truncate max-w-[150px]">
-                                  {lead.website.replace(/^https?:\/\//, '')}
+                                <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline flex items-center gap-1">
+                                  {lead.website.replace(/^https?:\/\//, '')} <ExternalLink size={10} />
                                 </a>
                               </div>
                             )}
                             {lead.service_interested && (
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Service:</span>
+                                <span className="text-muted-foreground">Interest:</span>
                                 <span className="text-foreground">{lead.service_interested}</span>
+                              </div>
+                            )}
+                            {lead.phone && (
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Lead Phone:</span>
+                                <span className="text-foreground">{lead.phone}</span>
                               </div>
                             )}
                             {lead.notes && (
                               <div className="pt-2 border-t border-gold/5 space-y-1">
-                                <span className="text-muted-foreground block font-semibold">Notes:</span>
-                                <p className="text-muted-foreground leading-normal italic">{lead.notes}</p>
+                                <span className="text-muted-foreground block font-semibold">CRM Notes:</span>
+                                <p className="text-muted-foreground leading-relaxed italic text-[11px]">{lead.notes}</p>
                               </div>
                             )}
                           </div>
                         )
                       }
-                      return <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No synced lead found.</div>
+                      return (
+                        <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
+                          No synced CRM lead found for this user.
+                        </div>
+                      )
                     })()}
                   </div>
 
-                  {/* Sessions */}
-                  <div className="space-y-2 pb-4">
+                  {/* Associated Bookings Section */}
+                  <div className="space-y-3">
                     <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
                       <Calendar size={12} /> Strategy Calls ({clientSessions.length})
                     </h3>
-                    {clientSessions.length > 0 ? clientSessions.map((s) => (
-                      <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                        <div>
-                          <h4 className="text-xs font-bold text-foreground">{s.session_categories?.name || 'Consultation Call'}</h4>
-                          <p className="text-[10px] text-muted-foreground mt-0.5 font-mono">
-                            {new Date(s.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                        </div>
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider ${s.status === 'Completed' ? 'bg-green-500/10 text-green-400' : s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'}`}>
-                          {s.status}
-                        </span>
+                    {clientSessions.length > 0 ? (
+                      <div className="space-y-2">
+                        {clientSessions.map((s) => (
+                          <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-foreground truncate">
+                                {s.session_categories?.name || 'Consultation Call'}
+                              </h4>
+                              <p className="text-[10px] text-muted-foreground mt-1 font-mono">
+                                {new Date(s.scheduled_at).toLocaleString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                              s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                              s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
+                            }`}>
+                              {s.status}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    )) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">No strategy bookings logged.</div>
+                    ) : (
+                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
+                        No strategy bookings logged.
+                      </div>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
               {selectedClient.role === 'admin' && (
-                <div className="space-y-2 pb-4">
+                <div className="space-y-3">
                   <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                    <UserCheck size={12} /> Admin Information
+                    <UserCheck size={12} /> Administrator Capabilities
                   </h3>
-                  <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl text-xs text-muted-foreground leading-normal">
-                    This account is registered as a system administrator with full access privileges.
+                  <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2 text-xs text-muted-foreground leading-relaxed font-sans">
+                    <p>This administrator account enjoys comprehensive control across CRM pipelines, website content nodes, activity audits, and server resources.</p>
+                    <ul className="list-disc pl-4 space-y-1 mt-1 text-[11px]">
+                      <li>Full audit logs control</li>
+                      <li>Global CMS variables override</li>
+                      <li>Client portal revocation privileges</li>
+                    </ul>
                   </div>
                 </div>
               )}
             </div>
+
+            {/* Footer / Quick Actions */}
+            <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center border-t border-gold/10">
+              <div>
+                {selectedClient.id !== currentUserId && (
+                  <button
+                    onClick={() => handleToggleSuspension(selectedClient)}
+                    className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border transition-all cursor-pointer text-xs font-semibold w-full sm:w-auto ${
+                      selectedClient.is_suspended
+                        ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                        : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
+                    }`}
+                  >
+                    {selectedClient.is_suspended ? (
+                      <>
+                        <Unlock size={13} /> Activate Account
+                      </>
+                    ) : (
+                      <>
+                        <Lock size={13} /> Suspend Account
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setClientForm({
+                      id: selectedClient.id,
+                      fullName: selectedClient.full_name || '',
+                      email: selectedClient.email || '',
+                      phone: selectedClient.phone_number || '',
+                      company: selectedClient.company_name || '',
+                      isSuspended: selectedClient.is_suspended,
+                      role: selectedClient.role
+                    })
+                    setShowViewModal(false)
+                    setShowAddModal(true)
+                  }}
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial"
+                >
+                  <Edit2 size={13} /> Edit Profile
+                </button>
+                
+                {selectedClient.id !== currentUserId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setClientToDelete(selectedClient)
+                      setShowViewModal(false)
+                      setShowDeleteModal(true)
+                    }}
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial"
+                  >
+                    <Trash2 size={13} /> Delete Account
+                  </button>
+                )}
+              </div>
+            </div>
+            
           </div>
         </div>
       )}
