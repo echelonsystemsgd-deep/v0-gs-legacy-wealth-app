@@ -62,6 +62,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Protect all /client/* routes
+  if (pathname.startsWith('/client')) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    const profile = await getUserProfile()
+    if (!profile || (profile.role !== 'client' && profile.role !== 'admin') || profile.is_suspended) {
+      return NextResponse.redirect(new URL('/unauthorized', request.url))
+    }
+  }
+
   // Protect all /dashboard/* routes
   if (pathname.startsWith('/dashboard')) {
     if (!user) {
@@ -90,6 +101,8 @@ export async function middleware(request: NextRequest) {
     const profile = await getUserProfile()
     if (profile?.role === 'admin') {
       return NextResponse.redirect(new URL('/admin', request.url))
+    } else if (profile?.role === 'client') {
+      return NextResponse.redirect(new URL('/client', request.url))
     } else {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
@@ -101,6 +114,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin/:path*',
+    '/client/:path*',
     '/dashboard/:path*',
     '/profile/:path*',
     '/login',

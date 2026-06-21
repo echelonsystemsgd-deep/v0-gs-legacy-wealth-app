@@ -260,6 +260,13 @@ export function Navbar() {
                         Admin Panel
                       </Link>
                     </DropdownMenuItem>
+                  ) : profile?.role === "client" ? (
+                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
+                      <Link href="/client" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <LayoutDashboard size={14} />
+                        Client Dashboard
+                      </Link>
+                    </DropdownMenuItem>
                   ) : (
                     <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
                       <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
@@ -373,6 +380,14 @@ export function Navbar() {
                       className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
                     >
                       Admin Panel
+                    </Link>
+                  ) : profile?.role === "client" ? (
+                    <Link
+                      href="/client"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
+                    >
+                      Client Dashboard
                     </Link>
                   ) : (
                     <Link
