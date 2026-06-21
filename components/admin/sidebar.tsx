@@ -27,7 +27,7 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/leads', label: 'Leads', icon: Inbox },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/admin/clients', label: 'Clients', icon: Users },
+  { href: '/admin/clients', label: 'Client Directory', icon: Users },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/portfolio', label: 'Portfolio', icon: ImageIcon },
   { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },

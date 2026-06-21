@@ -60,12 +60,27 @@ export default async function UserDashboardPage() {
     initialAssets = assets ?? []
   }
 
+  // Fetch testimonials and portfolio items for social proof inside User Dashboard
+  const { data: testimonials } = await supabase
+    .from('testimonials')
+    .select('*')
+    .eq('is_archived', false)
+    .limit(4)
+
+  const { data: portfolioItems } = await supabase
+    .from('portfolio_items')
+    .select('*')
+    .eq('is_archived', false)
+    .limit(4)
+
   return (
     <DashboardClientContainer
       profile={profile}
       lead={lead}
       project={project}
       initialAssets={initialAssets}
+      testimonials={testimonials ?? []}
+      portfolioItems={portfolioItems ?? []}
     />
   )
 }

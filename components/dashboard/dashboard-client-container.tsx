@@ -29,6 +29,7 @@ import {
   TrendingUp,
   CheckCheck,
   X,
+  ExternalLink,
 } from 'lucide-react'
 
 type Profile = {
@@ -76,6 +77,8 @@ interface DashboardClientContainerProps {
   lead: Lead | null
   project: Project | null
   initialAssets: Asset[]
+  testimonials?: any[]
+  portfolioItems?: any[]
 }
 
 // ─── Tab Definitions ──────────────────────────────────────────────────────────
@@ -87,6 +90,8 @@ export default function DashboardClientContainer({
   lead: initialLead,
   project,
   initialAssets,
+  testimonials = [],
+  portfolioItems = [],
 }: DashboardClientContainerProps) {
   const router = useRouter()
   const supabase = createClient()
@@ -583,7 +588,7 @@ export default function DashboardClientContainer({
             USER / PROSPECT DASHBOARD (tabbed)
         ════════════════════════════════════════════════════════════════════ */}
         {profile.role !== 'client' && (
-          <div className="space-y-6 animate-fade-in">
+          <div className="space-y-10 animate-fade-in">
 
             {/* Tab Bar */}
             <div className="hidden sm:flex items-center gap-1 p-1 bg-white/[0.03] border border-white/8 rounded-xl w-fit overflow-x-auto">
@@ -608,16 +613,16 @@ export default function DashboardClientContainer({
 
             {/* ── Overview Tab ──────────────────────────────────────────── */}
             {userTab === 'overview' && (
-              <div className="space-y-6">
-                {/* Status Cards */}
-                <div className="grid sm:grid-cols-3 gap-4">
+              <div className="space-y-8">
+                {/* Onboarding Overview Status */}
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div className="p-5 glass rounded-xl border border-gold/10 hover:border-gold/20 transition-all space-y-3">
                     <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
                       <User size={16} className="text-gold" />
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-wider text-muted-foreground">Portal Status</p>
-                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">Registered Member</h3>
+                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">Registered Partner</h3>
                     </div>
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold/10 border border-gold/20 text-[10px] font-bold text-gold uppercase tracking-wider">
                       Awaiting Promotion
@@ -629,103 +634,279 @@ export default function DashboardClientContainer({
                       <Compass size={16} className="text-gold" />
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground">CRM Pipeline</p>
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground">CRM Pipeline Status</p>
                       <h3 className="text-base font-serif font-bold text-foreground mt-0.5">{lead ? lead.status : 'Not Registered'}</h3>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {lead?.status === 'New' && 'Reviewing your preliminary account.'}
-                      {lead?.status === 'Contacted' && 'Check your email for custom proposals.'}
-                      {lead?.status === 'Call Booked' && 'Your strategy call is confirmed.'}
-                      {!lead && 'Complete your profile to register.'}
+                    <p className="text-xs text-muted-foreground leading-normal">
+                      {lead?.status === 'New' && 'Reviewing your preliminary account parameters.'}
+                      {lead?.status === 'Contacted' && 'Check your inbox for custom project proposals.'}
+                      {lead?.status === 'Call Booked' && 'Your live strategy session is confirmed.'}
+                      {!lead && 'Complete your business profile below to register.'}
                     </p>
-                  </div>
-
-                  <div className="p-5 glass rounded-xl border border-gold/10 hover:border-gold/20 transition-all space-y-3">
-                    <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
-                      <Calendar size={16} className="text-gold" />
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground">Strategy Session</p>
-                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">
-                        {lead?.status === 'Call Booked' ? 'Call Scheduled' : 'Awaiting Booking'}
-                      </h3>
-                    </div>
-                    {lead?.status !== 'Call Booked' && (
-                      <Link href="/book" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold text-background font-bold text-xs hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all">
-                        Book Call <ArrowRight size={11} />
-                      </Link>
-                    )}
                   </div>
                 </div>
 
-                {/* Onboarding Roadmap */}
-                <section className="p-5 sm:p-7 glass rounded-2xl border border-gold/10 space-y-5">
-                  <div>
-                    <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
-                      <ShieldCheck size={18} className="text-gold" /> Client Onboarding Roadmap
-                    </h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Complete these steps to activate your full client suite.</p>
+                {/* VIP Strategy Session Spotlight */}
+                {lead?.status !== 'Call Booked' ? (
+                  <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-gold/15 to-transparent border border-gold/25 relative overflow-hidden space-y-6">
+                    <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                      <Calendar size={120} className="text-gold" />
+                    </div>
+                    
+                    <div className="space-y-2 max-w-lg">
+                      <span className="px-2.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-[10px] font-bold text-gold uppercase tracking-wider">
+                        VIP Strategy Invitation
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold text-foreground">
+                        Secure Your 1-on-1 Architecture Audit
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Let's map out your systems. In this 30-minute session with our engineering lead, we will diagnose your onboarding bottlenecks and construct a custom system diagram (value: $1,500).
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <Link
+                        href="/book"
+                        className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5"
+                      >
+                        Book Strategy Session <ArrowRight size={13} />
+                      </Link>
+                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <Sparkles size={12} className="text-gold animate-pulse" /> No obligation · Limited availability this month
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="relative border-l border-gold/10 pl-6 ml-3 space-y-7 py-1">
-                    {/* Step 1 */}
-                    <div className="relative">
-                      <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center">
-                        <CheckCircle2 size={9} className="text-green-400" />
-                      </div>
-                      <h4 className="text-sm font-bold text-foreground">Step 1: Secure Account Created</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">Credentials registered. Standard user profile auto-generated.</p>
+                ) : (
+                  <div className="p-6 rounded-2xl bg-green-500/5 border border-green-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-green-400" /> Strategy Session Scheduled
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        Your call is confirmed. Check your email for calendar invites and details. Our engineering lead is preparing your audit.
+                      </p>
                     </div>
+                    <span className="px-3 py-1 bg-green-500/10 border border-green-500/25 rounded-lg text-green-400 text-xs font-bold font-mono">
+                      Confirmed
+                    </span>
+                  </div>
+                )}
 
-                    {/* Step 2 */}
-                    <div className="relative">
-                      <div className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full flex items-center justify-center border ${
-                        lead?.business_name ? 'bg-green-500/20 border-green-500' : 'bg-gold/10 border-gold/30'
-                      }`}>
-                        {lead?.business_name
-                          ? <CheckCircle2 size={9} className="text-green-400" />
-                          : <div className="w-1.5 h-1.5 rounded-full bg-gold/30" />}
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <h4 className="text-sm font-bold text-foreground">Step 2: Submit Business Profile</h4>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {lead?.business_name ? `Registered: "${lead.business_name}"` : 'Go to Business Profile tab below.'}
-                          </p>
+                {/* The Blueprint Journey & Locked Suite Grid */}
+                <div className="grid md:grid-cols-2 gap-6 items-start">
+                  
+                  {/* Left: Locked Dashboard Gamification */}
+                  <div className="space-y-3">
+                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">Client Suite Preview</h3>
+                    
+                    <div className="relative rounded-2xl border border-gold/10 overflow-hidden bg-white/[0.01]">
+                      {/* Blur overlay */}
+                      <div className="absolute inset-0 bg-[#050505]/75 backdrop-blur-[6px] z-10 flex flex-col items-center justify-center p-6 text-center">
+                        <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-3 animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+                          <Lock className="text-gold" size={20} />
                         </div>
-                        {!lead?.business_name && (
-                          <button onClick={() => setUserTab('profile')}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold/20 text-gold text-xs font-bold hover:bg-gold/10 transition-all self-start sm:self-auto shrink-0">
-                            Complete Profile <ArrowRight size={11} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Step 3 */}
-                    <div className="relative">
-                      <div className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full flex items-center justify-center border ${
-                        lead?.status === 'Call Booked' ? 'bg-green-500/20 border-green-500' : 'bg-gold/10 border-gold animate-pulse'
-                      }`}>
-                        {lead?.status === 'Call Booked'
-                          ? <CheckCircle2 size={9} className="text-green-400" />
-                          : <div className="w-1.5 h-1.5 rounded-full bg-gold" />}
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <h4 className="text-sm font-bold text-foreground">Step 3: Book 1-on-1 Strategy Session</h4>
-                          <p className="text-xs text-muted-foreground mt-0.5">Map out your custom digital assets with our engineering lead.</p>
-                        </div>
-                        {lead?.status !== 'Call Booked' && (
-                          <Link href="/book"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold text-background font-bold text-xs hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all self-start sm:self-auto shrink-0">
-                            Book Call <ArrowRight size={11} />
+                        <h4 className="font-serif text-sm font-bold text-foreground">Interactive Development Suite</h4>
+                        <p className="text-[10px] text-muted-foreground mt-2 max-w-xs leading-relaxed">
+                          Once your custom system begins development, you'll unlock real-time project metrics, live staging iframe windows, and asset pipelines here.
+                        </p>
+                        {lead?.status !== 'Call Booked' ? (
+                          <Link href="/book" className="mt-4 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gold text-background text-[10px] font-bold hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
+                            Book Call to Unlock <ArrowRight size={10} />
                           </Link>
+                        ) : (
+                          <span className="mt-4 px-2.5 py-1 rounded bg-gold/10 border border-gold/25 text-gold text-[9px] font-semibold">
+                            Pending Initial Strategy Call
+                          </span>
                         )}
+                      </div>
+
+                      {/* Dummy background content resembling client suite */}
+                      <div className="p-5 opacity-20 select-none pointer-events-none space-y-4">
+                        <div className="h-3 w-1/4 bg-white/20 rounded" />
+                        <div className="p-3 border border-white/10 rounded-xl space-y-3">
+                          <div className="h-4 w-1/3 bg-white/20 rounded" />
+                          <div className="w-full bg-white/10 rounded-full h-1.5">
+                            <div className="bg-white/30 h-full rounded-full w-2/3" />
+                          </div>
+                          <div className="flex gap-2">
+                            <div className="h-4 w-12 bg-white/20 rounded-full" />
+                            <div className="h-4 w-12 bg-white/20 rounded-full" />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="p-3 border border-white/10 rounded-xl h-16" />
+                          <div className="p-3 border border-white/10 rounded-xl h-16" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </section>
+
+                  {/* Right: The Blueprint Journey Stepper */}
+                  <div className="space-y-3">
+                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">The Onboarding Blueprint</h3>
+                    
+                    <section className="p-5 glass rounded-2xl border border-gold/10 space-y-5">
+                      <div className="relative border-l border-gold/10 pl-6 ml-3 space-y-6 py-1">
+                        {/* Step 1 */}
+                        <div className="relative">
+                          <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center">
+                            <CheckCircle2 size={9} className="text-green-400" />
+                          </div>
+                          <h4 className="text-xs font-bold text-foreground">Step 1: Secure Account Created</h4>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">Credentials registered. Portal profile auto-generated.</p>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="relative">
+                          <div className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full flex items-center justify-center border ${
+                            lead?.business_name ? 'bg-green-500/20 border-green-500' : 'bg-gold/10 border-gold/30'
+                          }`}>
+                            {lead?.business_name
+                              ? <CheckCircle2 size={9} className="text-green-400" />
+                              : <div className="w-1.5 h-1.5 rounded-full bg-gold/30" />}
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                              <h4 className="text-xs font-bold text-foreground">Step 2: Submit Business Profile</h4>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                {lead?.business_name ? `Registered: "${lead.business_name}"` : 'Tell us about your brand goals.'}
+                              </p>
+                            </div>
+                            {!lead?.business_name && (
+                              <button onClick={() => setUserTab('profile')}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-gold/20 text-gold text-[10px] font-bold hover:bg-gold/10 transition-all self-start sm:self-auto shrink-0">
+                                Complete <ArrowRight size={10} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="relative">
+                          <div className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full flex items-center justify-center border ${
+                            lead?.status === 'Call Booked' ? 'bg-green-500/20 border-green-500' : 'bg-gold/10 border-gold animate-pulse'
+                          }`}>
+                            {lead?.status === 'Call Booked'
+                              ? <CheckCircle2 size={9} className="text-green-400" />
+                              : <div className="w-1.5 h-1.5 rounded-full bg-gold" />}
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                              <h4 className="text-xs font-bold text-foreground">Step 3: Book Strategy Call</h4>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">Map out custom visual & backend logic systems.</p>
+                            </div>
+                            {lead?.status !== 'Call Booked' && (
+                              <Link href="/book"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-gold text-background font-bold text-[10px] hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all self-start sm:self-auto shrink-0">
+                                Book Now <ArrowRight size={10} />
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+
+                {/* Flagship Systems & Testimonials Showcase */}
+                <div className="border-t border-gold/10 pt-8 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-serif font-bold text-foreground">Flagship Systems</h3>
+                      <p className="text-xs text-muted-foreground">Premium custom builds engineered for visual and CRM authority.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {portfolioItems && portfolioItems.length > 0 ? (
+                      portfolioItems.map((item) => (
+                        <div key={item.id} className="glass border border-gold/10 hover:border-gold/20 rounded-2xl overflow-hidden group transition-all flex flex-col justify-between">
+                          <div className="relative h-40 w-full overflow-hidden bg-[#111]">
+                            {item.cover_image ? (
+                              <img src={item.cover_image} alt={item.project_name} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-gold/5">
+                                <Globe className="text-gold/20" size={32} />
+                              </div>
+                            )}
+                            <div className="absolute top-3 right-3 bg-[#050505]/80 backdrop-blur-md border border-gold/20 rounded-lg px-2.5 py-1 text-[9px] font-bold text-gold uppercase tracking-wider">
+                              {item.industry || 'Luxury Build'}
+                            </div>
+                          </div>
+                          <div className="p-5 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                              <h4 className="text-sm font-bold text-foreground group-hover:text-gold transition-colors">{item.project_name}</h4>
+                              <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mt-1">{item.description}</p>
+                            </div>
+                            {item.website_link && (
+                              <a href={item.website_link} target="_blank" rel="noopener noreferrer" className="pt-2 text-[10px] font-bold text-gold flex items-center gap-1.5 self-start hover:underline">
+                                View System <ExternalLink size={10} />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        <div className="glass border border-gold/10 hover:border-gold/20 rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+                          <div className="space-y-1">
+                            <span className="text-[10px] text-gold font-bold uppercase tracking-wider">Asset Management</span>
+                            <h4 className="text-sm font-bold text-foreground">Sovereign Property Group</h4>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              Elite web asset integrating real-time investor telemetry, secure auth credentials, and automatic property briefings.
+                            </p>
+                          </div>
+                          <span className="text-xxs text-gold font-bold flex items-center gap-1">
+                            2.4x Engagement Lift
+                          </span>
+                        </div>
+                        <div className="glass border border-gold/10 hover:border-gold/20 rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+                          <div className="space-y-1">
+                            <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">Custom Strategy Suite</span>
+                            <h4 className="text-sm font-bold text-foreground">Kensington Advisory Group</h4>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              Onboarding systems linked with predictive scoring algorithms, strategy bookings, and custom CRM dashboards.
+                            </p>
+                          </div>
+                          <span className="text-xxs text-indigo-400 font-bold flex items-center gap-1">
+                            +42% Booking Rate Lift
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Testimonial Panel */}
+                  <div className="bg-white/[0.01] border border-gold/10 rounded-2xl p-6 space-y-4">
+                    <h4 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                      <Sparkles size={11} className="text-gold" /> Partner Experiences
+                    </h4>
+                    {testimonials && testimonials.length > 0 ? (
+                      <div className="space-y-5 divide-y divide-gold/10">
+                        {testimonials.map((t, idx) => (
+                          <div key={t.id} className={`space-y-2 ${idx > 0 ? 'pt-4' : ''}`}>
+                            <p className="text-xs text-foreground italic leading-relaxed">
+                              &ldquo;{t.testimonial}&rdquo;
+                            </p>
+                            <p className="text-[10px] text-muted-foreground font-semibold">
+                              — {t.client_name}, {t.company || 'Partner'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-xs text-foreground italic leading-relaxed">
+                          &ldquo;The strategy call alone was worth it — they identified critical onboarding bottlenecks we had missed for two years. Our system went live within 4 weeks and auto-nurtures leads seamlessly.&rdquo;
+                        </p>
+                        <p className="text-[10px] text-muted-foreground font-semibold">
+                          — Daniel K., Founder, Kensington Advisory
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
