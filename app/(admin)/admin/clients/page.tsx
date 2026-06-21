@@ -462,29 +462,42 @@ export default function ClientsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* LEFT: DIRECTORY LIST */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <div className="relative col-span-2">
+            {/* Quick Role Filters Tabs */}
+            <div className="flex flex-wrap gap-2 items-center pb-1">
+              {[
+                { id: 'All', label: 'All Roles', count: sortedProfiles.length },
+                { id: 'Admin', label: 'Admins', count: dbClients.filter(c => c.role === 'admin').length },
+                { id: 'Client', label: 'Clients', count: dbClients.filter(c => c.role === 'client').length },
+                { id: 'User', label: 'Users', count: dbClients.filter(c => c.role === 'user').length },
+              ].map((roleTab) => (
+                <button
+                  key={roleTab.id}
+                  onClick={() => setRoleFilter(roleTab.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all flex items-center gap-2 cursor-pointer ${
+                    roleFilter === roleTab.id
+                      ? 'bg-gold/15 border-gold/45 text-gold shadow-[0_0_12px_rgba(212,175,55,0.12)]'
+                      : 'bg-card/40 border-gold/10 text-muted-foreground hover:text-foreground hover:bg-white/5'
+                  }`}
+                >
+                  {roleTab.label}
+                  <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-mono font-bold ${
+                    roleFilter === roleTab.id ? 'bg-gold/25 text-gold' : 'bg-white/5 text-muted-foreground'
+                  }`}>
+                    {roleTab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="relative sm:col-span-2">
                 <Search size={15} className="absolute left-4 top-3.5 text-muted-foreground" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search name, email, company, role..."
+                  placeholder="Search name, email, company..."
                   className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/10 transition-all"
                 />
-              </div>
-
-              <div className="relative">
-                <Filter size={13} className="absolute left-3.5 top-4 text-muted-foreground" />
-                <select
-                  value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
-                  className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-9 pr-4 py-2.5 text-xs text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/10 transition-all appearance-none"
-                >
-                  <option value="All">All Roles</option>
-                  <option value="Admin">Admins</option>
-                  <option value="Client">Clients</option>
-                  <option value="User">Users</option>
-                </select>
               </div>
 
               <div className="relative">
@@ -575,15 +588,17 @@ export default function ClientsPage() {
                                     })
                                     setShowAddModal(true)
                                   }}
-                                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-gold transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
                                   title="Edit Profile"
                                 >
                                   <Edit2 size={12} />
                                 </button>
                                 <button
                                   onClick={() => handleToggleSuspension(client)}
-                                  className={`p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer ${
-                                    client.is_suspended ? 'text-green-400' : 'text-red-400'
+                                  className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${
+                                    client.is_suspended
+                                      ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                                      : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
                                   }`}
                                   title={client.is_suspended ? 'Activate Access' : 'Suspend Access'}
                                 >

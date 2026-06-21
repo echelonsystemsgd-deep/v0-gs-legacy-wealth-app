@@ -57,24 +57,25 @@ export function AdminSidebar() {
   return (
     <>
       {/* Floating Toggle Button for Mobile */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="lg:hidden fixed top-2.5 left-4 z-45 p-2 rounded-xl bg-card border border-gold/15 text-gold hover:bg-gold/5 transition-all cursor-pointer flex items-center justify-center shadow-lg"
-        >
-          <Menu size={18} />
-        </button>
-      )}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-2.5 z-50 p-2.5 rounded-xl bg-[#0A0A0A] border border-gold/35 text-gold hover:bg-gold/10 hover:text-gold-light transition-all duration-300 cursor-pointer flex items-center justify-center shadow-lg"
+        style={{
+          left: isOpen ? '268px' : '16px'
+        }}
+      >
+        {isOpen ? <X size={16} /> : <Menu size={16} />}
+      </button>
 
       {/* Backdrop for Mobile */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-25 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-30 transition-opacity duration-300"
         />
       )}
 
-      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-30 transition-[left] duration-300 lg:left-0 ${isOpen ? 'left-0' : 'left-[-256px]'}`}>
+      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-0 ${isOpen ? 'left-0' : 'left-[-256px]'}`}>
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
           <div className="flex items-center gap-3">
