@@ -22,7 +22,8 @@ import {
   UserPlus,
   CalendarRange,
   SlidersHorizontal,
-  Eye
+  Eye,
+  CreditCard
 } from 'lucide-react'
 
 // Define Types
@@ -322,6 +323,26 @@ export default function BookingsPage() {
       fetchData()
     } catch (err: any) {
       triggerToast(`Outcome update failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUpdateStatus = async (status: StrategySession['status']) => {
+    if (!selectedBooking) return
+    setLoading(true)
+    try {
+      const { error } = await supabase
+          .from('strategy_sessions')
+          .update({ status })
+          .eq('id', selectedBooking.id)
+
+      if (error) throw error
+      triggerToast(`Meeting status updated to ${status}.`)
+      setSelectedBooking({ ...selectedBooking, status })
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Status update failed: ${err.message}`)
     } finally {
       setLoading(false)
     }
@@ -1116,190 +1137,221 @@ export default function BookingsPage() {
       )}
 
       {/* MODAL 4: VIEW BOOKING DETAILS */}
-      {showViewModal && selectedBooking && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="w-full max-w-lg glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 animate-scale-up">
-            
-            {/* Header */}
-            <div className="flex justify-between items-center border-b border-gold/10 pb-4">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gold-light">
-                  Session Details
-                </span>
-                <h2 className="font-serif text-xl font-bold text-foreground">
-                  {selectedBooking.session_categories?.name || 'General Strategy Session'}
-                </h2>
-              </div>
-              <button
-                onClick={() => setShowViewModal(false)}
-                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer w-8 h-8 rounded-full bg-white/5 border border-gold/5 flex items-center justify-center transition-colors"
-              >
-                ✕
-              </button>
-            </div>
+      {showViewModal && selectedBooking && (() => {
+        const formattedDate = new Date(selectedBooking.scheduled_at).toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric'
+        })
+        const formattedTime = new Date(selectedBooking.scheduled_at).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        })
+        const displayDateTime = `${formattedDate} at ${formattedTime}`
 
-            {/* Content Body */}
-            <div className="space-y-4 text-sm max-h-[60vh] overflow-y-auto scrollbar-none pr-1">
+        const getPackageInvestment = (slug: string) => {
+          switch (slug) {
+            case 'launch-discovery-call': return 'From £1,500 (One-Time)'
+            case 'legacy-strategy-session': return 'From £3,500 (One-Time)'
+            case 'elite-strategy-session': return 'From £7,000 (One-Time)'
+            case 'ascent-discovery-call': return 'From £499/mo (Retainer)'
+            case 'sovereign-strategy-session': return 'From £1,299/mo (Retainer)'
+            case 'apex-strategy-session': return 'From £2,999/mo (Retainer)'
+            default: return 'Active Partner Session'
+          }
+        }
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-fade-in">
+            <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 animate-scale-up">
               
-              {/* Profile Card */}
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-gold/10 space-y-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-foreground text-base">
-                      {selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Booking'}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {selectedBooking.leads?.email || selectedBooking.profiles?.email || 'No email provided'}
-                    </p>
+              {/* Header */}
+              <div className="flex justify-between items-start pb-4 border-b border-gold/10">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                    Client
+                  </span>
+                  <h2 className="font-serif text-lg font-bold text-foreground mt-0.5">
+                    {selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Booking'}
+                  </h2>
+                </div>
+                <div className="text-right flex flex-col items-end">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                    Booking ID
+                  </span>
+                  <div className="text-xs font-mono text-muted-foreground mt-0.5">
+                    #{selectedBooking.id.substring(0, 8)}
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                    selectedBooking.client_id || !selectedBooking.lead_id
-                      ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400'
-                      : 'bg-indigo-500/10 border border-indigo-500/30 text-indigo-400'
-                  }`}>
-                    {selectedBooking.client_id || !selectedBooking.lead_id ? 'Client / User' : 'Provisional Lead'}
+                </div>
+              </div>
+
+              {/* Content Card */}
+              <div className="p-4 rounded-xl bg-black/40 border border-gold/10 space-y-4 shadow-inner">
+                {/* Session Package */}
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <CalendarIcon size={14} className="text-gold/60" /> Session
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {selectedBooking.session_categories?.name || 'General Strategy'}
                   </span>
                 </div>
 
-                {/* Lead Business / Profile Meta */}
-                {selectedBooking.leads?.business_name && (
-                  <div className="pt-2 border-t border-gold/5 flex items-center gap-1.5 text-xs text-gold/80">
-                    <span className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Company:</span>
-                    <span>{selectedBooking.leads.business_name}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Status and Time Metadata */}
-              <div className="grid grid-cols-2 gap-4">
-                
-                {/* Date & Time */}
-                <div className="p-3.5 rounded-xl bg-card border border-gold/5 space-y-1.5">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground flex items-center gap-1">
-                    <CalendarIcon size={12} className="text-gold" /> Date & Time
-                  </div>
-                  <div className="text-sm font-semibold text-foreground">
-                    {new Date(selectedBooking.scheduled_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </div>
-                  <div className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock size={11} />
-                    {new Date(selectedBooking.scheduled_at).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                    <span>·</span>
-                    <span>{selectedBooking.session_categories?.duration_minutes || 30} mins</span>
-                  </div>
+                {/* Date/Time */}
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <Clock size={14} className="text-gold/60" /> Date/Time
+                  </span>
+                  <span className="font-semibold text-gold-light text-right max-w-[240px] leading-snug">
+                    {displayDateTime}
+                  </span>
                 </div>
 
-                {/* Booking Status */}
-                <div className="p-3.5 rounded-xl bg-card border border-gold/5 space-y-1.5">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
-                    Meeting Status
-                  </div>
-                  <div className="pt-0.5">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 w-fit ${
-                      selectedBooking.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
-                      selectedBooking.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
-                      selectedBooking.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
-                      'bg-gold/15 border border-gold/30 text-gold'
-                    }`}>
-                      {selectedBooking.status === 'Completed' && <CheckCircle2 size={12} />}
-                      {selectedBooking.status === 'Canceled' && <XCircle size={12} />}
-                      {selectedBooking.status === 'No Show' && <AlertTriangle size={12} />}
-                      {selectedBooking.status}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-muted-foreground">
-                    Status governs outcome logging availability.
-                  </div>
+                {/* Price / Type */}
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <CreditCard size={14} className="text-gold/60" /> Value / Tier
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-xxs font-semibold bg-gold/15 border border-gold/30 text-gold-light">
+                    {getPackageInvestment(selectedBooking.session_categories?.slug || '')}
+                  </span>
                 </div>
-
               </div>
 
-              {/* Administrative Preparation Notes */}
-              <div className="space-y-1.5">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Administrative Prep Notes
+              {/* Manage Status Buttons */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+                  Manage Status
                 </h4>
-                <div className="p-4 rounded-xl bg-card border border-gold/5 text-xs leading-relaxed text-foreground min-h-[60px] whitespace-pre-wrap">
-                  {selectedBooking.notes || 'No prep notes entered for this strategy call.'}
-                </div>
-              </div>
-
-              {/* Call Outcomes */}
-              <div className="space-y-1.5">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Call Outcomes & Rescheduling Info
-                </h4>
-                <div className={`p-4 rounded-xl border text-xs leading-relaxed min-h-[60px] whitespace-pre-wrap ${
-                  selectedBooking.outcomes 
-                    ? 'bg-gold/5 border-gold/20 text-foreground' 
-                    : 'bg-card border-gold/5 text-muted-foreground italic'
-                }`}>
-                  {selectedBooking.outcomes || 'No call outcome results logged yet. Click "Log Outcome" below to record the findings.'}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Footer Actions */}
-            <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gold/10">
-              
-              {/* Danger Delete Button */}
-              <button
-                onClick={() => {
-                  setShowViewModal(false)
-                  handleDeleteBooking(selectedBooking.id)
-                }}
-                className="px-3.5 py-2 text-xs font-semibold text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                <Trash2 size={12} /> Delete Booking
-              </button>
-
-              <div className="flex gap-2">
-                {/* Convert Client (if conditions met) */}
-                {(!selectedBooking.client_id && selectedBooking.status === 'Completed') && (
+                <div className="grid grid-cols-3 gap-3">
+                  {/* Confirm */}
                   <button
-                    onClick={() => {
-                      setShowViewModal(false)
-                      handleConvertToClient(selectedBooking)
-                    }}
-                    className="px-4 py-2 text-xs font-bold bg-gold/10 border border-gold/30 hover:bg-gold/20 text-gold rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+                    onClick={() => handleUpdateStatus('Completed')}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                      selectedBooking.status === 'Completed'
+                        ? 'bg-green-500/10 border-green-500/40 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.15)] font-bold'
+                        : 'bg-white/5 border-white/5 text-muted-foreground/60 hover:border-green-500/30 hover:text-green-400 hover:bg-green-500/5'
+                    }`}
                   >
-                    <UserPlus size={12} /> Convert Client
+                    <CheckCircle2 size={13} />
+                    Confirm
                   </button>
+
+                  {/* Pending */}
+                  <button
+                    onClick={() => handleUpdateStatus('Scheduled')}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                      selectedBooking.status === 'Scheduled'
+                        ? 'bg-gold/10 border-gold/40 text-gold shadow-[0_0_12px_rgba(212,175,55,0.15)] font-bold'
+                        : 'bg-white/5 border-white/5 text-muted-foreground/60 hover:border-gold/30 hover:text-gold hover:bg-gold/5'
+                    }`}
+                  >
+                    <Clock size={13} />
+                    Pending
+                  </button>
+
+                  {/* Cancel */}
+                  <button
+                    onClick={() => handleUpdateStatus('Canceled')}
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                      selectedBooking.status === 'Canceled'
+                        ? 'bg-red-500/10 border-red-500/40 text-red-400 shadow-[0_0_12px_rgba(239,68,68,0.15)] font-bold'
+                        : 'bg-white/5 border-white/5 text-muted-foreground/60 hover:border-red-500/30 hover:text-red-400 hover:bg-red-500/5'
+                    }`}
+                  >
+                    <XCircle size={13} />
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              {/* Prep Notes & Outcome log info */}
+              <div className="space-y-3 pt-1">
+                {selectedBooking.notes && (
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                      Administrative Prep Notes
+                    </span>
+                    <div className="p-3 bg-white/[0.01] border border-gold/5 rounded-xl text-xs text-foreground/90 whitespace-pre-wrap leading-relaxed max-h-[80px] overflow-y-auto">
+                      {selectedBooking.notes}
+                    </div>
+                  </div>
                 )}
 
-                {/* Log Outcome */}
+                {selectedBooking.outcomes && (
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                      Outcomes Log
+                    </span>
+                    <div className="p-3 bg-gold/5 border border-gold/15 rounded-xl text-xs text-gold-light whitespace-pre-wrap leading-relaxed max-h-[80px] overflow-y-auto">
+                      {selectedBooking.outcomes}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer Actions */}
+              <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gold/10">
+                {/* Delete Booking */}
                 <button
                   onClick={() => {
-                    const contactName = selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Intake'
-                    setOutcomeForm({
-                      sessionId: selectedBooking.id,
-                      clientName: contactName,
-                      status: selectedBooking.status,
-                      notes: selectedBooking.notes || '',
-                      outcomes: selectedBooking.outcomes || ''
-                    })
                     setShowViewModal(false)
-                    setShowOutcomeModal(true)
+                    handleDeleteBooking(selectedBooking.id)
                   }}
-                  className="px-4 py-2 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer flex items-center gap-1.5"
+                  className="px-3 py-1.5 text-xs font-semibold text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
                 >
-                  <SlidersHorizontal size={12} /> Log Outcome
+                  <Trash2 size={12} /> Delete Booking
                 </button>
+
+                <div className="flex gap-2">
+                  {/* Convert Prospect to Client */}
+                  {(!selectedBooking.client_id && selectedBooking.status === 'Completed') && (
+                    <button
+                      onClick={() => {
+                        setShowViewModal(false)
+                        handleConvertToClient(selectedBooking)
+                      }}
+                      className="px-3.5 py-1.5 text-xs font-bold bg-gold/10 border border-gold/30 hover:bg-gold/20 text-gold rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                      <UserPlus size={12} /> Convert Client
+                    </button>
+                  )}
+
+                  {/* Log Outcome */}
+                  <button
+                    onClick={() => {
+                      const contactName = selectedBooking.leads?.name || selectedBooking.profiles?.full_name || 'System Intake'
+                      setOutcomeForm({
+                        sessionId: selectedBooking.id,
+                        clientName: contactName,
+                        status: selectedBooking.status,
+                        notes: selectedBooking.notes || '',
+                        outcomes: selectedBooking.outcomes || ''
+                      })
+                      setShowViewModal(false)
+                      setShowOutcomeModal(true)
+                    }}
+                    className="px-4 py-1.5 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <SlidersHorizontal size={12} /> Log Outcome
+                  </button>
+                </div>
               </div>
 
-            </div>
+              {/* Close Button */}
+              <button
+                onClick={() => setShowViewModal(false)}
+                className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-foreground transition-all cursor-pointer border border-transparent hover:border-gold/10 text-center"
+              >
+                Close
+              </button>
 
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   )
 }
