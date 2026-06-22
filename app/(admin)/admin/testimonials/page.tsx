@@ -123,7 +123,11 @@ export default function TestimonialsPage() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((item) => (
-            <div key={item.id} className="glass rounded-2xl border border-gold/10 hover:border-gold/20 p-5 space-y-4 transition-all">
+            <div 
+              key={item.id} 
+              onClick={() => openEdit(item)}
+              className="glass rounded-2xl border border-gold/10 hover:border-gold/20 p-5 space-y-4 transition-all cursor-pointer hover:bg-gold/[0.01]"
+            >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center overflow-hidden shrink-0">
                   {item.profile_image
@@ -141,7 +145,7 @@ export default function TestimonialsPage() {
               <p className="text-sm text-muted-foreground leading-relaxed italic line-clamp-4">
                 &ldquo;{item.testimonial}&rdquo;
               </p>
-              <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-gold/8">
+              <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-gold/8" onClick={(e) => e.stopPropagation()}>
                 <button onClick={() => openEdit(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all">
                   <Edit2 size={11} /> Edit
                 </button>

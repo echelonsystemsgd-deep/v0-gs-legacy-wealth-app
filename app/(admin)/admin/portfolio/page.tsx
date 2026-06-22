@@ -134,7 +134,11 @@ export default function PortfolioPage() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((item) => (
-            <div key={item.id} className="glass rounded-2xl border border-gold/10 overflow-hidden group hover:border-gold/20 transition-all">
+            <div 
+              key={item.id} 
+              onClick={() => openEdit(item)}
+              className="glass rounded-2xl border border-gold/10 overflow-hidden group hover:border-gold/20 transition-all cursor-pointer hover:bg-gold/[0.01]"
+            >
               <div className="relative h-44 bg-secondary/50">
                 {item.cover_image ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -155,7 +159,7 @@ export default function PortfolioPage() {
                   <p className="font-semibold text-foreground line-clamp-1">{item.project_name}</p>
                   <p className="text-xs text-muted-foreground">{item.client_name ?? '—'} {item.industry ? `· ${item.industry}` : ''}</p>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
                   <button onClick={() => openEdit(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground hover:border-gold/25 transition-all">
                     <Edit2 size={11} /> Edit
                   </button>

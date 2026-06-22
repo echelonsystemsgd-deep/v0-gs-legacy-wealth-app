@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Bell, Inbox, Calendar, Check, Trash2, UserPlus, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 type NotificationItem = {
   id: string
@@ -17,6 +19,7 @@ type NotificationItem = {
 
 export function NotificationCenter() {
   const supabase = createClient()
+  const router = useRouter()
   const [notifications, setNotifications] = useState<NotificationItem[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -52,6 +55,13 @@ export function NotificationCenter() {
             link: `/admin/leads/${newLead.id}`
           }
           setNotifications((prev) => [item, ...prev])
+          toast.success('New Lead Submission', {
+            description: `${newLead.name} from ${newLead.business_name || 'N/A'}`,
+            action: {
+              label: 'View',
+              onClick: () => router.push(`/admin/leads/${newLead.id}`)
+            }
+          })
         }
       )
       .subscribe()
@@ -92,6 +102,13 @@ export function NotificationCenter() {
             link: '/admin/bookings'
           }
           setNotifications((prev) => [item, ...prev])
+          toast.info('New Strategy Session', {
+            description: `Booked by ${attendeeName}`,
+            action: {
+              label: 'View',
+              onClick: () => router.push('/admin/bookings')
+            }
+          })
         }
       )
       .subscribe()
@@ -135,9 +152,9 @@ export function NotificationCenter() {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 glass rounded-2xl border border-gold/20 overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.6)] z-50 text-sm animate-fade-in">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-[#130D24] rounded-2xl border border-gold/20 overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.8)] z-50 text-sm animate-fade-in">
           {/* Header */}
-          <div className="px-5 py-3.5 bg-[#1A0A2E]/60 border-b border-gold/15 flex items-center justify-between">
+          <div className="px-5 py-3.5 bg-[#1C1430] border-b border-gold/15 flex items-center justify-between">
             <span className="font-serif font-bold text-foreground flex items-center gap-2 text-sm">
               <Sparkles size={13} className="text-gold" /> Notification Centre
             </span>

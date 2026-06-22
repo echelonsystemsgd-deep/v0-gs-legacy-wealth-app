@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Search,
@@ -51,6 +52,7 @@ const ALL_STATUSES = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won',
 
 export default function LeadsPage() {
   const supabase = createClient()
+  const router = useRouter()
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -467,7 +469,8 @@ export default function LeadsPage() {
                       columnLeads.map((lead) => (
                         <div
                           key={lead.id}
-                          className="p-3.5 rounded-xl border border-gold/5 hover:border-gold/20 bg-background/50 hover:bg-gold/[0.02] transition-all duration-200 space-y-3 group shadow-sm hover:shadow-md relative"
+                          onClick={() => router.push(`/admin/leads/${lead.id}`)}
+                          className="p-3.5 rounded-xl border border-gold/5 hover:border-gold/20 bg-background/50 hover:bg-gold/[0.02] transition-all duration-200 space-y-3 group shadow-sm hover:shadow-md relative cursor-pointer"
                         >
                           {/* Card Content */}
                           <div className="space-y-1">
@@ -490,6 +493,7 @@ export default function LeadsPage() {
                             {/* Quick Status Dropdown Selector */}
                             <select
                               value={lead.status}
+                              onClick={(e) => e.stopPropagation()}
                               onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
                               className="bg-transparent text-[9px] text-muted-foreground hover:text-foreground font-semibold border-0 p-0 outline-none w-20 [color-scheme:dark] cursor-pointer"
                             >
@@ -505,6 +509,7 @@ export default function LeadsPage() {
                             {/* Detail Link Button */}
                             <Link
                               href={`/admin/leads/${lead.id}`}
+                              onClick={(e) => e.stopPropagation()}
                               className="text-[10px] text-gold font-bold flex items-center hover:underline"
                             >
                               Details <ChevronRight size={10} />
@@ -581,9 +586,13 @@ export default function LeadsPage() {
                     {leads.map((lead) => {
                       const isChecked = selectedIds.includes(lead.id)
                       return (
-                        <tr key={lead.id} className={`hover:bg-white/[0.01] transition-colors group ${isChecked ? 'bg-gold/5' : ''}`}>
+                        <tr 
+                          key={lead.id} 
+                          onClick={() => router.push(`/admin/leads/${lead.id}`)}
+                          className={`hover:bg-white/[0.01] transition-colors group cursor-pointer ${isChecked ? 'bg-gold/5' : ''}`}
+                        >
                           {/* Checkbox */}
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                             <input
                               type="checkbox"
                               checked={isChecked}
@@ -617,7 +626,7 @@ export default function LeadsPage() {
                               {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </span>
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                             <Link
                               href={`/admin/leads/${lead.id}`}
                               className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
@@ -637,15 +646,21 @@ export default function LeadsPage() {
                 {leads.map((lead) => {
                   const isChecked = selectedIds.includes(lead.id)
                   return (
-                    <div key={lead.id} className={`p-4 space-y-3 ${isChecked ? 'bg-gold/5' : ''}`}>
+                    <div 
+                      key={lead.id} 
+                      onClick={() => router.push(`/admin/leads/${lead.id}`)}
+                      className={`p-4 space-y-3 cursor-pointer hover:bg-gold/[0.01] transition-all ${isChecked ? 'bg-gold/5' : ''}`}
+                    >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-3">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
-                            className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
-                          />
+                          <span onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
+                              className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
+                            />
+                          </span>
                           <div>
                             <p className="text-sm font-semibold text-foreground">{lead.name}</p>
                             <p className="text-xs text-muted-foreground">{lead.email}</p>
@@ -674,6 +689,7 @@ export default function LeadsPage() {
                         </span>
                         <Link
                           href={`/admin/leads/${lead.id}`}
+                          onClick={(e) => e.stopPropagation()}
                           className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
                         >
                           Details <ChevronRight size={12} />

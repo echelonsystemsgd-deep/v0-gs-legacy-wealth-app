@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Plus,
@@ -39,6 +40,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function ProjectsPage() {
   const supabase = createClient()
+  const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<'kanban' | 'list'>('kanban')
@@ -238,7 +240,11 @@ export default function ProjectsPage() {
                 </thead>
                 <tbody className="divide-y divide-gold/5">
                   {projects.map((p) => (
-                    <tr key={p.id} className="hover:bg-white/2 transition-colors group">
+                    <tr 
+                      key={p.id} 
+                      onClick={() => router.push(`/admin/projects/${p.id}`)}
+                      className="hover:bg-white/2 transition-colors group cursor-pointer"
+                    >
                       <td className="px-6 py-4">
                         <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
                         <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
@@ -256,7 +262,7 @@ export default function ProjectsPage() {
                           {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
                         </p>
                       </td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                         <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
                           <ChevronRight size={15} />
                         </Link>
@@ -270,7 +276,11 @@ export default function ProjectsPage() {
             {/* Mobile Card List View */}
             <div className="block md:hidden divide-y divide-gold/5">
               {projects.map((p) => (
-                <div key={p.id} className="p-4 space-y-3">
+                <div 
+                  key={p.id} 
+                  onClick={() => router.push(`/admin/projects/${p.id}`)}
+                  className="p-4 space-y-3 cursor-pointer hover:bg-white/5 transition-all"
+                >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
@@ -294,7 +304,7 @@ export default function ProjectsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end pt-2 border-t border-gold/5">
+                  <div className="flex items-center justify-end pt-2 border-t border-gold/5" onClick={(e) => e.stopPropagation()}>
                     <Link
                       href={`/admin/projects/${p.id}`}
                       className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
