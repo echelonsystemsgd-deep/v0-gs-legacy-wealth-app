@@ -563,6 +563,16 @@ export default function BookingsPage() {
         >
           <Info size={14} /> Session Packages ({categories.length})
         </button>
+        <button
+          onClick={() => setActiveTab('availability')}
+          className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer ${
+            activeTab === 'availability'
+              ? 'border-gold text-gold bg-gold/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <Clock size={14} /> Weekly Availability ({dbAvailability.length})
+        </button>
       </div>
 
       {loading ? (
@@ -816,42 +826,17 @@ export default function BookingsPage() {
                                   {session.status}
                                 </span>
                               </td>
-                              <td className="py-4 px-5 text-right">
-                                <div className="flex items-center justify-end gap-2.5">
-                                  {/* Convert lead to client button */}
-                                  {!isClient && session.status === 'Completed' && (
-                                    <button
-                                      onClick={() => handleConvertToClient(session)}
-                                      className="p-1.5 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 hover:border-gold/30 transition-all cursor-pointer flex items-center gap-1 text-[10px] font-bold"
-                                      title="Convert Prospect to Client profile"
-                                    >
-                                      <UserPlus size={12} /> Convert Client
-                                    </button>
-                                  )}
-
+                              <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex items-center justify-end gap-2">
                                   <button
                                     onClick={() => {
-                                      setOutcomeForm({
-                                        sessionId: session.id,
-                                        clientName: contactName,
-                                        status: session.status,
-                                        notes: session.notes || '',
-                                        outcomes: session.outcomes || ''
-                                      })
-                                      setShowOutcomeModal(true)
+                                      setSelectedBooking(session)
+                                      setShowViewModal(true)
                                     }}
-                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all cursor-pointer flex items-center gap-1 text-xxs font-bold border border-transparent hover:border-gold/15"
-                                    title="Edit Outcomes & Details"
+                                    className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
+                                    title="View Booking Details"
                                   >
-                                    Log Outcome
-                                  </button>
-
-                                  <button
-                                    onClick={() => handleDeleteBooking(session.id)}
-                                    className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all cursor-pointer border border-transparent hover:border-red-500/20"
-                                    title="Delete Booking"
-                                  >
-                                    <Trash2 size={12} />
+                                    <Eye size={12} />
                                   </button>
                                 </div>
                               </td>
@@ -950,6 +935,99 @@ export default function BookingsPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: WEEKLY AVAILABILITY */}
+          {activeTab === 'availability' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center flex-wrap gap-4">
+                <div className="space-y-1">
+                  <h3 className="font-serif text-lg font-bold text-foreground">Consultation Hours</h3>
+                  <p className="text-xs text-muted-foreground">Define your weekly active time slots for consultations.</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                    setShowAvailabilityModal(true)
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
+                >
+                  <Plus size={12} /> Add Rule
+                </button>
+              </div>
+
+              {/* Weekly Visual Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                {[
+                  { dayNum: 1, name: 'Monday' },
+                  { dayNum: 2, name: 'Tuesday' },
+                  { dayNum: 3, name: 'Wednesday' },
+                  { dayNum: 4, name: 'Thursday' },
+                  { dayNum: 5, name: 'Friday' },
+                  { dayNum: 6, name: 'Saturday' },
+                  { dayNum: 0, name: 'Sunday' }
+                ].map((day) => {
+                  const dayRules = dbAvailability.filter((r) => r.day_of_week === day.dayNum)
+                  return (
+                    <div
+                      key={day.dayNum}
+                      className="glass rounded-xl border border-gold/10 p-4 space-y-3 flex flex-col justify-between min-h-[160px] bg-white/[0.01]"
+                    >
+                      <div>
+                        <h4 className="font-semibold text-xs text-foreground uppercase tracking-wider border-b border-gold/5 pb-1">
+                          {day.name}
+                        </h4>
+                        
+                        <div className="space-y-2 pt-2">
+                          {dayRules.length > 0 ? (
+                            dayRules.map((rule) => {
+                              const cleanStart = rule.start_time.substring(0, 5)
+                              const cleanEnd = rule.end_time.substring(0, 5)
+                              return (
+                                <div
+                                  key={rule.id}
+                                  className="group flex items-center justify-between gap-2 px-2.5 py-1 bg-gold/5 border border-gold/10 rounded-lg text-xxs font-medium text-gold-light"
+                                >
+                                  <span>{cleanStart} - {cleanEnd}</span>
+                                  <div className="flex gap-1">
+                                    <button
+                                      onClick={() => {
+                                        setAvailabilityForm({
+                                          id: rule.id,
+                                          day: rule.day_of_week,
+                                          start: cleanStart,
+                                          end: cleanEnd
+                                        })
+                                        setShowAvailabilityModal(true)
+                                      }}
+                                      className="opacity-0 group-hover:opacity-100 hover:text-gold transition-opacity cursor-pointer p-0.5"
+                                      title="Edit Slot"
+                                    >
+                                      <Edit2 size={10} />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteAvailability(rule.id)}
+                                      className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity cursor-pointer p-0.5"
+                                      title="Delete Slot"
+                                    >
+                                      <Trash2 size={10} />
+                                    </button>
+                                  </div>
+                                </div>
+                              )
+                            })
+                          ) : (
+                            <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed">
+                              Unavailable
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -1470,6 +1548,85 @@ export default function BookingsPage() {
           </div>
         );
       })()}
+      {/* MODAL 5: SET AVAILABILITY RULE */}
+      {showAvailabilityModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 animate-scale-up">
+            <div className="flex justify-between items-center border-b border-gold/10 pb-3">
+              <h2 className="font-serif text-lg font-bold text-foreground">
+                {availabilityForm.id ? 'Edit Availability Slot' : 'Add Availability Slot'}
+              </h2>
+              <button
+                onClick={() => setShowAvailabilityModal(false)}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveAvailability} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Day</label>
+                <select
+                  required
+                  value={availabilityForm.day}
+                  onChange={(e) => setAvailabilityForm({ ...availabilityForm, day: Number(e.target.value) })}
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/20 transition-all appearance-none"
+                >
+                  <option value={1} className="bg-[#0C0C0C]">Monday</option>
+                  <option value={2} className="bg-[#0C0C0C]">Tuesday</option>
+                  <option value={3} className="bg-[#0C0C0C]">Wednesday</option>
+                  <option value={4} className="bg-[#0C0C0C]">Thursday</option>
+                  <option value={5} className="bg-[#0C0C0C]">Friday</option>
+                  <option value={6} className="bg-[#0C0C0C]">Saturday</option>
+                  <option value={0} className="bg-[#0C0C0C]">Sunday</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Start Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={availabilityForm.start}
+                    onChange={(e) => setAvailabilityForm({ ...availabilityForm, start: e.target.value })}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">End Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={availabilityForm.end}
+                    onChange={(e) => setAvailabilityForm({ ...availabilityForm, end: e.target.value })}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 flex justify-end gap-3 border-t border-gold/10">
+                <button
+                  type="button"
+                  onClick={() => setShowAvailabilityModal(false)}
+                  className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-5 py-2 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer"
+                >
+                  {loading ? 'Saving...' : 'Save Slot'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

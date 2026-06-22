@@ -209,7 +209,7 @@ export function NotificationCenter() {
                     <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                       {item.description}
                     </p>
-                    <div className="pt-1">
+                    <div className="pt-1 flex items-center justify-between gap-2">
                       <Link
                         href={item.link}
                         onClick={() => setIsOpen(false)}
@@ -217,6 +217,18 @@ export function NotificationCenter() {
                       >
                         View in workspace →
                       </Link>
+                      
+                      {!item.isRead && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            markAsRead(item.id)
+                          }}
+                          className="px-2 py-0.5 rounded bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-[9px] font-bold transition-all cursor-pointer"
+                        >
+                          Mark Read
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -18,7 +18,9 @@ import {
   RefreshCw,
   FolderInput,
   CheckCircle2,
-  UserCheck
+  UserCheck,
+  LayoutGrid,
+  List
 } from 'lucide-react'
 
 type Lead = {
@@ -57,6 +59,7 @@ export default function LeadsPage() {
   const [activeTab, setActiveTab] = useState<'active' | 'archived' | 'spam'>('active')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [toast, setToast] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
 
   // Manual Lead creation modal states
   const [showNewModal, setShowNewModal] = useState(false)
@@ -72,6 +75,22 @@ export default function LeadsPage() {
     notes: ''
   })
   const [savingLead, setSavingLead] = useState(false)
+
+  const handleUpdateLeadStatus = async (id: string, status: string) => {
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .update({ status })
+        .eq('id', id)
+      if (error) throw error
+      triggerToast(`Lead status updated to ${status}.`)
+      fetchLeads()
+    } catch (err: any) {
+      triggerToast(`Update failed: ${err.message}`)
+      setLoading(false)
+    }
+  }
 
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -323,6 +342,32 @@ export default function LeadsPage() {
             <Filter size={15} /> Filters {statusFilter.length > 0 && `(${statusFilter.length})`}
           </button>
         )}
+
+        {/* View Toggle (Only shown for Active tab) */}
+        {activeTab === 'active' && (
+          <div className="flex items-center gap-1 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 ml-auto">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'table'
+                  ? 'bg-gold/10 text-gold border border-gold/20 font-bold shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground border border-transparent'
+              }`}
+            >
+              <List size={13} /> List
+            </button>
+            <button
+              onClick={() => setViewMode('kanban')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                viewMode === 'kanban'
+                  ? 'bg-gold/10 text-gold border border-gold/20 font-bold shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground border border-transparent'
+              }`}
+            >
+              <LayoutGrid size={13} /> Board
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Status filter chips */}
@@ -346,106 +391,205 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* Table */}
-      <div className="glass rounded-2xl border border-gold/10 overflow-hidden relative">
-        {loading ? (
-          <div className="divide-y divide-gold/5">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="px-6 py-5 flex items-center gap-4 animate-pulse">
-                <div className="h-4 w-4 bg-white/5 rounded shrink-0" />
-                <div className="h-4 w-40 bg-white/5 rounded" />
-                <div className="h-4 w-28 bg-white/5 rounded" />
-                <div className="h-4 w-20 bg-white/5 rounded ml-auto" />
-              </div>
-            ))}
+      {/* Table / Kanban Board */}
+      {viewMode === 'kanban' && activeTab === 'active' ? (
+        loading ? (
+          <div className="glass rounded-2xl border border-gold/10 p-16 flex flex-col items-center justify-center space-y-4">
+            <RefreshCw size={36} className="text-gold animate-spin" />
+            <p className="text-sm text-muted-foreground animate-pulse">Syncing leads board...</p>
           </div>
         ) : leads.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center px-6">
+          <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10">
             <Search size={36} className="text-gold/20 mb-3" />
             <p className="font-serif text-lg font-semibold text-foreground">No leads found</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {search || statusFilter.length > 0 ? 'Try adjusting your filters.' : 'Leads will populate automatically from enquiries.'}
-            </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-gold/10 bg-white/[0.01]">
-                  {/* Select All Checkbox */}
-                  <th className="w-12 px-6 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.length === leads.length}
-                      onChange={(e) => handleSelectAll(e.target.checked)}
-                      className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
-                    />
-                  </th>
-                  <th className="px-6 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Name</th>
-                  <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Business</th>
-                  <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Service</th>
-                  <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
-                  <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden xl:table-cell">Source</th>
-                  <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Date</th>
-                  <th className="w-10 px-4 py-4" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gold/5">
-                {leads.map((lead) => {
-                  const isChecked = selectedIds.includes(lead.id)
-                  return (
-                    <tr key={lead.id} className={`hover:bg-white/[0.01] transition-colors group ${isChecked ? 'bg-gold/5' : ''}`}>
-                      {/* Checkbox */}
-                      <td className="px-6 py-4">
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
-                          className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
-                        />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">{lead.name}</p>
-                          <p className="text-xs text-muted-foreground">{lead.email}</p>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 hidden md:table-cell">
-                        <p className="text-sm text-foreground">{lead.business_name}</p>
-                      </td>
-                      <td className="px-4 py-4 hidden lg:table-cell">
-                        <p className="text-sm text-muted-foreground">{lead.service_interested ?? '—'}</p>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
-                          <Circle size={5} className="fill-current" />
-                          {lead.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 hidden xl:table-cell">
-                        <span className="text-xs text-muted-foreground capitalize">{lead.source}</span>
-                      </td>
-                      <td className="px-4 py-4 hidden lg:table-cell">
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <Link
-                          href={`/admin/leads/${lead.id}`}
-                          className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-start">
+            {['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost'].map((columnStatus) => {
+              const columnLeads = leads.filter((l) => l.status === columnStatus)
+              return (
+                <div key={columnStatus} className="glass rounded-2xl border border-gold/10 p-4 space-y-4 flex flex-col min-h-[450px] bg-white/[0.01]">
+                  {/* Column Header */}
+                  <div className="flex items-center justify-between pb-2 border-b border-gold/5">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2.5 h-2.5 rounded-full ${
+                        columnStatus === 'New' ? 'bg-blue-400' :
+                        columnStatus === 'Contacted' ? 'bg-yellow-400' :
+                        columnStatus === 'Call Booked' ? 'bg-purple-400' :
+                        columnStatus === 'Proposal Sent' ? 'bg-orange-400' :
+                        columnStatus === 'Won' ? 'bg-green-400' :
+                        'bg-red-400'
+                      }`} />
+                      <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider">{columnStatus}</h3>
+                    </div>
+                    <span className="px-1.5 py-0.5 rounded bg-white/5 text-[9px] font-mono text-muted-foreground font-bold">
+                      {columnLeads.length}
+                    </span>
+                  </div>
+
+                  {/* Column Body / Cards */}
+                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[500px] scrollbar-thin">
+                    {columnLeads.length > 0 ? (
+                      columnLeads.map((lead) => (
+                        <div
+                          key={lead.id}
+                          className="p-3.5 rounded-xl border border-gold/5 hover:border-gold/20 bg-background/50 hover:bg-gold/[0.02] transition-all duration-200 space-y-3 group shadow-sm hover:shadow-md relative"
                         >
-                          <ChevronRight size={15} />
-                        </Link>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                          {/* Card Content */}
+                          <div className="space-y-1">
+                            <h4 className="font-semibold text-xs text-foreground line-clamp-1 group-hover:text-gold transition-colors">{lead.name}</h4>
+                            {lead.business_name && (
+                              <p className="text-[10px] text-gold/80 uppercase tracking-wider font-semibold truncate">{lead.business_name}</p>
+                            )}
+                            <p className="text-[10px] text-muted-foreground truncate">{lead.email}</p>
+                            {lead.service_interested && (
+                              <div className="pt-1.5">
+                                <span className="text-[9px] px-2 py-0.5 rounded-md bg-white/5 text-muted-foreground border border-white/5 block w-fit truncate max-w-full">
+                                  {lead.service_interested}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Card Action Row */}
+                          <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                            {/* Quick Status Dropdown Selector */}
+                            <select
+                              value={lead.status}
+                              onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                              className="bg-transparent text-[9px] text-muted-foreground hover:text-foreground font-semibold border-0 p-0 outline-none w-20 [color-scheme:dark] cursor-pointer"
+                            >
+                              <option value="New" className="bg-[#0C0C0C]">New</option>
+                              <option value="Contacted" className="bg-[#0C0C0C]">Contacted</option>
+                              <option value="Call Booked" className="bg-[#0C0C0C]">Call Booked</option>
+                              <option value="Proposal Sent" className="bg-[#0C0C0C]">Proposal Sent</option>
+                              <option value="Won" className="bg-[#0C0C0C]">Won</option>
+                              <option value="Lost" className="bg-[#0C0C0C]">Lost</option>
+                              <option value="Spam" className="bg-[#0C0C0C]">Spam</option>
+                            </select>
+
+                            {/* Detail Link Button */}
+                            <Link
+                              href={`/admin/leads/${lead.id}`}
+                              className="text-[10px] text-gold font-bold flex items-center hover:underline"
+                            >
+                              Details <ChevronRight size={10} />
+                            </Link>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-8 text-center text-muted-foreground text-xxs">
+                        No leads
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        )}
-      </div>
+        )
+      ) : (
+        <div className="glass rounded-2xl border border-gold/10 overflow-hidden relative">
+          {loading ? (
+            <div className="divide-y divide-gold/5">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="px-6 py-5 flex items-center gap-4 animate-pulse">
+                  <div className="h-4 w-4 bg-white/5 rounded shrink-0" />
+                  <div className="h-4 w-40 bg-white/5 rounded" />
+                  <div className="h-4 w-28 bg-white/5 rounded" />
+                  <div className="h-4 w-20 bg-white/5 rounded ml-auto" />
+                </div>
+              ))}
+            </div>
+          ) : leads.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center px-6">
+              <Search size={36} className="text-gold/20 mb-3" />
+              <p className="font-serif text-lg font-semibold text-foreground">No leads found</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {search || statusFilter.length > 0 ? 'Try adjusting your filters.' : 'Leads will populate automatically from enquiries.'}
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gold/10 bg-white/[0.01]">
+                    {/* Select All Checkbox */}
+                    <th className="w-12 px-6 py-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.length === leads.length}
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                        className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
+                      />
+                    </th>
+                    <th className="px-6 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Name</th>
+                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Business</th>
+                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Service</th>
+                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
+                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden xl:table-cell">Source</th>
+                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Date</th>
+                    <th className="w-10 px-4 py-4" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gold/5">
+                  {leads.map((lead) => {
+                    const isChecked = selectedIds.includes(lead.id)
+                    return (
+                      <tr key={lead.id} className={`hover:bg-white/[0.01] transition-colors group ${isChecked ? 'bg-gold/5' : ''}`}>
+                        {/* Checkbox */}
+                        <td className="px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
+                            className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
+                          />
+                        </td>
+                        <td className="px-6 py-4">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">{lead.name}</p>
+                            <p className="text-xs text-muted-foreground">{lead.email}</p>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 hidden md:table-cell">
+                          <p className="text-sm text-foreground">{lead.business_name}</p>
+                        </td>
+                        <td className="px-4 py-4 hidden lg:table-cell">
+                          <p className="text-sm text-muted-foreground">{lead.service_interested ?? '—'}</p>
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
+                            <Circle size={5} className="fill-current" />
+                            {lead.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 hidden xl:table-cell">
+                          <span className="text-xs text-muted-foreground capitalize">{lead.source}</span>
+                        </td>
+                        <td className="px-4 py-4 hidden lg:table-cell">
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
+                          <Link
+                            href={`/admin/leads/${lead.id}`}
+                            className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
+                          >
+                            <ChevronRight size={15} />
+                          </Link>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* FLOATING BULK ACTIONS TOOLBAR */}
       {selectedIds.length > 0 && (
