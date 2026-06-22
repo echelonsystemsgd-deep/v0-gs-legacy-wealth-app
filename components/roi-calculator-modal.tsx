@@ -277,8 +277,9 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
                 {/* Booking Button */}
                 <Button
                   asChild
-                  size="sm"
-                  className="w-full font-bold bg-accent-purple text-white hover:bg-accent-purple/90 border-0 py-4"
+                  size="lg"
+                  variant="default"
+                  className="w-full font-bold"
                   onClick={onClose}
                 >
                   <Link href={`/book?tier=${recommendedTier}`}>
