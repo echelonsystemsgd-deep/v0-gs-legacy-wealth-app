@@ -4,9 +4,11 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { AlertCircle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ROICalculatorModal } from "@/components/roi-calculator-modal"
 
 export function Bottleneck() {
   const [isOrdered, setIsOrdered] = useState(false)
+  const [isROICalcOpen, setIsROICalcOpen] = useState(false)
 
   // SVG Coordinates for Chaos vs Order state
   const nodes = [
@@ -136,9 +138,12 @@ export function Bottleneck() {
                   <span className="text-xs font-semibold text-text-primary opacity-80 leading-relaxed">
                     {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
                   </span>
-                  <a href="#pricing" className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block">
+                  <button
+                    onClick={() => setIsROICalcOpen(true)}
+                    className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block bg-transparent border-none p-0 cursor-pointer text-left focus:outline-none"
+                  >
                     Calculate Uptime Value & ROI →
-                  </a>
+                  </button>
                 </div>
                 <Button
                   onClick={() => setIsOrdered(!isOrdered)}
@@ -221,6 +226,8 @@ export function Bottleneck() {
 
         </div>
       </div>
+
+      <ROICalculatorModal isOpen={isROICalcOpen} onClose={() => setIsROICalcOpen(false)} />
     </section>
   )
 }
