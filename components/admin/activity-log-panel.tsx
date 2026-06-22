@@ -43,13 +43,13 @@ export function ActivityLogPanel({ initialLogs }: ActivityLogPanelProps) {
 
   return (
     <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6 flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col 2xl:flex-row 2xl:items-center justify-between gap-3">
         <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
           <Activity size={16} className="text-gold" /> System Activity
         </h2>
         
         {/* Filters */}
-        <div className="flex items-center gap-1.5 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 self-start 2xl:self-auto">
           <button
             onClick={() => setFilter('all')}
             className={`px-2.5 py-1 text-[10px] font-semibold rounded-lg transition-all ${

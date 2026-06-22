@@ -4,9 +4,25 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { PhoneCall } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function StickyCTAButton() {
+  const pathname = usePathname()
   const [isVisible, setIsVisible] = useState(false)
+
+  // Do not render the Sticky CTA Button on admin, client, dashboard, auth, or booking pages
+  const excludedPrefixes = [
+    '/admin',
+    '/client',
+    '/dashboard',
+    '/forgot-password',
+    '/login',
+    '/reset-password',
+    '/signup',
+    '/book',
+    '/unauthorized'
+  ]
+  const isExcluded = excludedPrefixes.some((prefix) => pathname?.startsWith(prefix))
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +37,8 @@ export function StickyCTAButton() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  if (isExcluded) return null
 
   return (
     <AnimatePresence>

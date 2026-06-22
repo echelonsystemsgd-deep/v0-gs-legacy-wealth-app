@@ -24,6 +24,7 @@ type Project = {
   service_type: string | null; status: string; start_date: string | null
   target_launch_date: string | null; notes: string | null; is_archived: boolean; created_at: string
   client_id: string | null; live_url: string | null; preview_url: string | null
+  contract_value: number; amount_paid: number
 }
 type Asset = { id: string; file_name: string; file_url: string; file_size: number | null; file_type: string | null; created_at: string }
 type ClientProfile = { id: string; full_name: string | null; email: string | null }
@@ -48,6 +49,8 @@ export default function ProjectDetailPage() {
   const [clientId, setClientId] = useState<string>('')
   const [liveUrl, setLiveUrl] = useState('')
   const [previewUrl, setPreviewUrl] = useState('')
+  const [contractValue, setContractValue] = useState('')
+  const [amountPaid, setAmountPaid] = useState('')
   
   // Updates & Messages states
   const [newUpdateTitle, setNewUpdateTitle] = useState('')
@@ -104,6 +107,8 @@ export default function ProjectDetailPage() {
         setClientId(proj.client_id ?? '')
         setLiveUrl(proj.live_url ?? '')
         setPreviewUrl(proj.preview_url ?? '')
+        setContractValue(proj.contract_value?.toString() ?? '0')
+        setAmountPaid(proj.amount_paid?.toString() ?? '0')
       }
       setAssets(assetData ?? [])
       setClients(clientData ?? [])
@@ -151,12 +156,16 @@ export default function ProjectDetailPage() {
 
   const handleSave = async () => {
     setSaving(true)
+    const cVal = parseFloat(contractValue) || 0
+    const aPaid = parseFloat(amountPaid) || 0
     const { error } = await supabase.from('projects').update({
       notes,
       status,
       client_id: clientId || null,
       live_url: liveUrl || null,
-      preview_url: previewUrl || null
+      preview_url: previewUrl || null,
+      contract_value: cVal,
+      amount_paid: aPaid
     }).eq('id', id)
     setSaving(false)
     
@@ -165,7 +174,7 @@ export default function ProjectDetailPage() {
       return
     }
     showToast('Project updated.')
-    setProject((p) => p ? { ...p, notes, status, client_id: clientId || null, live_url: liveUrl || null, preview_url: previewUrl || null } : p)
+    setProject((p) => p ? { ...p, notes, status, client_id: clientId || null, live_url: liveUrl || null, preview_url: previewUrl || null, contract_value: cVal, amount_paid: aPaid } : p)
   }
 
   const handleArchive = async () => {
@@ -387,6 +396,30 @@ export default function ProjectDetailPage() {
                   value={liveUrl}
                   onChange={(e) => setLiveUrl(e.target.value)}
                   placeholder="https://www.myproject.com"
+                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
+                />
+              </div>
+
+              {/* Contract Value */}
+              <div>
+                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Contract Value ($)</label>
+                <input
+                  type="number"
+                  value={contractValue}
+                  onChange={(e) => setContractValue(e.target.value)}
+                  placeholder="0"
+                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
+                />
+              </div>
+
+              {/* Amount Paid */}
+              <div>
+                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Amount Paid ($)</label>
+                <input
+                  type="number"
+                  value={amountPaid}
+                  onChange={(e) => setAmountPaid(e.target.value)}
+                  placeholder="0"
                   className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
                 />
               </div>
