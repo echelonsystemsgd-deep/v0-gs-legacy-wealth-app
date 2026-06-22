@@ -401,10 +401,18 @@ export default function LeadsPage() {
             <RefreshCw size={36} className="text-gold animate-spin" />
             <p className="text-sm text-muted-foreground animate-pulse">Syncing leads board...</p>
           </div>
-        ) : leads.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10">
-            <Search size={36} className="text-gold/20 mb-3" />
-            <p className="font-serif text-lg font-semibold text-foreground">No leads found</p>
+         ) : leads.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
+            <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+              <Inbox size={20} />
+            </div>
+            <div>
+              <h3 className="font-serif text-sm font-bold text-foreground">Lead Ledger Empty</h3>
+              <p className="text-xs text-muted-foreground mt-1">No prospect records match these filter options. Initialize a manual lead record to begin.</p>
+            </div>
+            <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer">
+              Add Manual Lead
+            </button>
           </div>
         ) : (
           <div className="space-y-4">
@@ -530,12 +538,19 @@ export default function LeadsPage() {
               ))}
             </div>
           ) : leads.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center px-6">
-              <Search size={36} className="text-gold/20 mb-3" />
-              <p className="font-serif text-lg font-semibold text-foreground">No leads found</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {search || statusFilter.length > 0 ? 'Try adjusting your filters.' : 'Leads will populate automatically from enquiries.'}
-              </p>
+            <div className="flex flex-col items-center justify-center py-16 text-center px-6 space-y-4 max-w-md mx-auto">
+              <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+                <Inbox size={20} />
+              </div>
+              <div>
+                <h3 className="font-serif text-sm font-bold text-foreground">Lead Ledger Empty</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {search || statusFilter.length > 0 ? 'No results match your search parameters.' : 'No prospects are currently in this pipeline.'}
+                </p>
+              </div>
+              <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer">
+                Add Manual Lead
+              </button>
             </div>
           ) : (
             <>

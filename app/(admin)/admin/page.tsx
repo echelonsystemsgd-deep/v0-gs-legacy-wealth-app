@@ -79,11 +79,11 @@ export default async function AdminDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
-            <Sparkles size={12} className="animate-pulse" /> Commander Overview
+            <Sparkles size={12} className="animate-pulse" /> Operations Console
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Command Center</h1>
           <p className="text-sm text-muted-foreground">
-            Monitor leads, track project progress, and manage website content.
+            Live pipeline telemetry, transactional logs, and system controls.
           </p>
         </div>
 

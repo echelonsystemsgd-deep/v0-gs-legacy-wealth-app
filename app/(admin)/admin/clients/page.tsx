@@ -527,206 +527,219 @@ export default function ClientsPage() {
               </select>
             </div>
           </div>
-
-          <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
-            {/* Desktop Table View */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
-                    <th className="py-4 px-5">Identity Details</th>
-                    <th className="py-4 px-5">Role</th>
-                    <th className="py-4 px-5">Key Information</th>
-                    <th className="py-4 px-5">Status</th>
-                    <th className="py-4 px-5 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gold/5 text-sm">
-                  {filteredClients.length > 0 ? (
-                    filteredClients.map((client) => {
-                      const isSelected = selectedClient?.id === client.id
-                      return (
-                        <tr
-                          key={client.id}
-                          onClick={() => {
-                            setSelectedClient(client)
-                            setShowViewModal(true)
-                          }}
-                          className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
-                            isSelected ? 'bg-gold/5' : ''
-                          }`}
-                        >
-                          <td className="py-4 px-5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
-                                <span className="text-xs font-bold text-gold">
-                                  {client.full_name?.[0] || 'C'}
-                                </span>
-                              </div>
-                              <div className="min-w-0">
-                                <div className="font-semibold text-foreground flex items-center gap-2 truncate max-w-[150px]">
-                                  <span>{client.full_name || 'Anonymous User'}</span>
-                                  {client.id === currentUserId && (
-                                    <span className="px-1.5 py-0.5 rounded bg-gold/20 border border-gold/45 text-[8px] font-bold text-gold uppercase tracking-wider shrink-0">
-                                      You
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-[10px] text-muted-foreground truncate max-w-[150px]">
-                                  {client.email}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-5 whitespace-nowrap">
-                            {renderRoleBadge(client.role)}
-                          </td>
-                          <td className="py-4 px-5">
-                            {renderKeyDetails(client)}
-                          </td>
-                          <td className="py-4 px-5">
-                            {client.is_suspended ? (
-                              <span className="px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-xxs font-semibold text-red-400">
-                                Suspended
-                              </span>
-                            ) : (
-                              <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/30 text-xxs font-semibold text-green-400">
-                                Active
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
-                            <div className="flex items-center justify-end gap-2">
-                              <button
-                                onClick={() => {
-                                  setSelectedClient(client)
-                                  setShowViewModal(true)
-                                }}
-                                className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
-                                title="View Profile"
-                              >
-                                <Eye size={12} />
-                              </button>
-                              {client.id !== currentUserId && (
-                                <button
-                                  onClick={() => handleToggleSuspension(client)}
-                                  className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${
-                                    client.is_suspended
-                                      ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
-                                      : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
-                                  }`}
-                                  title={client.is_suspended ? 'Activate Access' : 'Suspend Access'}
-                                >
-                                  {client.is_suspended ? <Unlock size={12} /> : <Lock size={12} />}
-                                </button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="py-12 text-center text-muted-foreground px-4">
-                        <Info size={24} className="mx-auto text-gold/30 mb-2" />
-                        No directory listings found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile Card List View */}
-            <div className="block md:hidden divide-y divide-gold/5 text-sm">
-              {filteredClients.length > 0 ? (
-                filteredClients.map((client) => {
-                  const isSelected = selectedClient?.id === client.id
-                  return (
-                    <div
-                      key={client.id}
-                      onClick={() => {
-                        setSelectedClient(client)
-                        setShowViewModal(true)
-                      }}
-                      className={`p-4 space-y-3 cursor-pointer hover:bg-white/[0.01] transition-colors ${
-                        isSelected ? 'bg-gold/5' : ''
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
-                            <span className="text-xs font-bold text-gold">
-                              {client.full_name?.[0] || 'C'}
-                            </span>
-                          </div>
-                          <div>
-                            <div className="font-semibold text-foreground flex items-center gap-2">
-                              <span>{client.full_name || 'Anonymous User'}</span>
-                              {client.id === currentUserId && (
-                                <span className="px-1.5 py-0.5 rounded bg-gold/20 border border-gold/45 text-[8px] font-bold text-gold uppercase tracking-wider shrink-0">
-                                  You
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[10px] text-muted-foreground">{client.email}</p>
-                          </div>
-                        </div>
-                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
-                          client.is_suspended ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-green-500/10 border-green-500/30 text-green-400'
-                        }`}>
-                          {client.is_suspended ? 'Suspended' : 'Active'}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
-                        <div>
-                          <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Role</span>
-                          <span>{renderRoleBadge(client.role)}</span>
-                        </div>
-                        <div>
-                          <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Key Info</span>
-                          <span className="text-foreground">{renderKeyDetails(client)}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-gold/5" onClick={(e) => e.stopPropagation()}>
-                        <span className="text-[10px] text-muted-foreground">
-                          Joined: {new Date(client.created_at).toLocaleDateString()}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <button
+          <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
+            {filteredClients.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center px-6 space-y-4 max-w-md mx-auto">
+                <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+                  <UsersIcon size={20} />
+                </div>
+                <div>
+                  <h3 className="font-serif text-sm font-bold text-foreground">Directory Registry Empty</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {search || roleFilter !== 'All' || statusFilter !== 'All'
+                      ? 'No profiles match the current filter criteria. Refine your parameters or register a new profile.'
+                      : 'No active accounts are registered in the secure directory. Dispatch a system invite to get started.'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setClientForm({ id: '', fullName: '', email: '', phone: '', company: '', isSuspended: false, role: 'client' })
+                    setShowAddModal(true)
+                  }}
+                  className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                >
+                  Invite New User
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
+                        <th className="py-4 px-5">Identity Details</th>
+                        <th className="py-4 px-5">Role</th>
+                        <th className="py-4 px-5">Key Information</th>
+                        <th className="py-4 px-5">Status</th>
+                        <th className="py-4 px-5 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gold/5 text-sm">
+                      {filteredClients.map((client) => {
+                        const isSelected = selectedClient?.id === client.id
+                        return (
+                          <tr
+                            key={client.id}
                             onClick={() => {
                               setSelectedClient(client)
                               setShowViewModal(true)
                             }}
-                            className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer"
-                            title="View Profile"
+                            className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
+                              isSelected ? 'bg-gold/5' : ''
+                            }`}
                           >
-                            <Eye size={12} />
-                          </button>
-                          {client.id !== currentUserId && (
+                            <td className="py-4 px-5">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
+                                  <span className="text-xs font-bold text-gold">
+                                    {client.full_name?.[0] || 'C'}
+                                  </span>
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="font-semibold text-foreground flex items-center gap-2 truncate max-w-[150px]">
+                                    <span>{client.full_name || 'Anonymous User'}</span>
+                                    {client.id === currentUserId && (
+                                      <span className="px-1.5 py-0.5 rounded bg-gold/20 border border-gold/45 text-[8px] font-bold text-gold uppercase tracking-wider shrink-0">
+                                        You
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[10px] text-muted-foreground truncate max-w-[150px]">
+                                    {client.email}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-5 whitespace-nowrap">
+                              {renderRoleBadge(client.role)}
+                            </td>
+                            <td className="py-4 px-5">
+                              {renderKeyDetails(client)}
+                            </td>
+                            <td className="py-4 px-5">
+                              {client.is_suspended ? (
+                                <span className="px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-xxs font-semibold text-red-400">
+                                  Suspended
+                                </span>
+                              ) : (
+                                <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/30 text-xxs font-semibold text-green-400">
+                                  Active
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  onClick={() => {
+                                    setSelectedClient(client)
+                                    setShowViewModal(true)
+                                  }}
+                                  className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
+                                  title="View Profile"
+                                >
+                                  <Eye size={12} />
+                                </button>
+                                {client.id !== currentUserId && (
+                                  <button
+                                    onClick={() => handleToggleSuspension(client)}
+                                    className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${
+                                      client.is_suspended
+                                        ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                                        : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
+                                    }`}
+                                    title={client.is_suspended ? 'Activate Access' : 'Suspend Access'}
+                                  >
+                                    {client.is_suspended ? <Unlock size={12} /> : <Lock size={12} />}
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card List View */}
+                <div className="block md:hidden divide-y divide-gold/5 text-sm">
+                  {filteredClients.map((client) => {
+                    const isSelected = selectedClient?.id === client.id
+                    return (
+                      <div
+                        key={client.id}
+                        onClick={() => {
+                          setSelectedClient(client)
+                          setShowViewModal(true)
+                        }}
+                        className={`p-4 space-y-3 cursor-pointer hover:bg-white/[0.01] transition-colors ${
+                          isSelected ? 'bg-gold/5' : ''
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
+                              <span className="text-xs font-bold text-gold">
+                                {client.full_name?.[0] || 'C'}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-semibold text-foreground flex items-center gap-2">
+                                <span>{client.full_name || 'Anonymous User'}</span>
+                                {client.id === currentUserId && (
+                                  <span className="px-1.5 py-0.5 rounded bg-gold/20 border border-gold/45 text-[8px] font-bold text-gold uppercase tracking-wider shrink-0">
+                                    You
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-muted-foreground">{client.email}</p>
+                            </div>
+                          </div>
+                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                            client.is_suspended ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-green-500/10 border-green-500/30 text-green-400'
+                          }`}>
+                            {client.is_suspended ? 'Suspended' : 'Active'}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
+                          <div>
+                            <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Role</span>
+                            <span>{renderRoleBadge(client.role)}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Key Info</span>
+                            <span className="text-foreground">{renderKeyDetails(client)}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-gold/5" onClick={(e) => e.stopPropagation()}>
+                          <span className="text-[10px] text-muted-foreground">
+                            Joined: {new Date(client.created_at).toLocaleDateString()}
+                          </span>
+                          <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleToggleSuspension(client)}
-                              className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
-                                client.is_suspended
-                                  ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
-                                  : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
-                              }`}
-                              title={client.is_suspended ? 'Activate Access' : 'Suspend Access'}
+                              onClick={() => {
+                                setSelectedClient(client)
+                                setShowViewModal(true)
+                              }}
+                              className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer"
+                              title="View Profile"
                             >
-                              {client.is_suspended ? <Unlock size={12} /> : <Lock size={12} />}
+                              <Eye size={12} />
                             </button>
-                          )}
+                            {client.id !== currentUserId && (
+                              <button
+                                onClick={() => handleToggleSuspension(client)}
+                                className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                                  client.is_suspended
+                                    ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                                    : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
+                                }`}
+                                title={client.is_suspended ? 'Activate Access' : 'Suspend Access'}
+                              >
+                                {client.is_suspended ? <Unlock size={12} /> : <Lock size={12} />}
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )
-                })
-              ) : (
-                <div className="py-8 text-center text-muted-foreground">No users matching filter criteria.</div>
-              )}
-            </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
           </div>
           </div>
       )}

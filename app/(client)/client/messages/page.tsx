@@ -62,10 +62,10 @@ export default async function ClientMessagesPage() {
           <Sparkles size={12} className="animate-pulse" /> Message Hub
         </div>
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground">
-          Portal Desk
+          Operations Desk
         </h1>
         <p className="text-sm text-muted-foreground">
-          Communicate directly with our build coordinators and designers regarding revisions, notes, or assets.
+          Direct technical link. Submit assets, copy details, or review queries directly. Dispatched responses occur within 2 hours.
         </p>
       </div>
 

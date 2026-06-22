@@ -53,7 +53,7 @@ export default async function ClientUpdatesPage() {
           Project Updates
         </h1>
         <p className="text-sm text-muted-foreground">
-          A historical timeline of updates, notes, and milestones completed by our build team.
+          Chronological register of verified system alterations and milestone achievements.
         </p>
       </div>
 
@@ -64,9 +64,9 @@ export default async function ClientUpdatesPage() {
             <Clock size={28} className="text-gold" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-serif font-bold text-foreground">Timeline Log Quiet</h2>
+            <h2 className="text-xl font-serif font-bold text-foreground">Awaiting Initial Deployment Log</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We have not posted any official updates yet. As we progress through the milestones of your digital build, we will post logs here so you can review completed actions.
+              System updates will populate here as code commits are pushed and telemetry milestones are verified.
             </p>
           </div>
         </div>

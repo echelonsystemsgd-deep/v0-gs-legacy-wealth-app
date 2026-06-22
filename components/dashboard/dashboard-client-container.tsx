@@ -240,12 +240,12 @@ export default function DashboardClientContainer({
           <div className="hidden sm:block">
             <p className="font-serif text-xs font-bold text-foreground leading-none">GS Legacy Wealth</p>
             <p className="text-[10px] text-gold/60 font-semibold uppercase tracking-widest mt-0.5">
-              {profile.role === 'client' ? 'Client Suite' : 'Member Portal'}
+              {profile.role === 'client' ? 'Client Suite' : 'Qualified Sandbox'}
             </p>
           </div>
           {/* Greeting shown only on mobile inside the top bar */}
           <p className="sm:hidden text-sm font-serif font-bold text-foreground truncate">
-            {getGreeting()}, {profile.first_name || 'Partner'}
+            {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Sandbox Clearance Active'}
           </p>
         </div>
 
@@ -286,15 +286,15 @@ export default function DashboardClientContainer({
         <div className="space-y-1 pb-6 border-b border-gold/15">
           <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
             <Sparkles size={12} className="animate-pulse" />
-            {profile.role === 'client' ? 'Active Client Suite' : 'Member Portal'}
+            {profile.role === 'client' ? 'Active Client Suite' : 'Qualified Sandbox Preview'}
           </div>
           <h1 className="hidden sm:block text-2xl sm:text-3xl font-serif font-bold text-foreground">
-            {getGreeting()}, {profile.first_name || 'Partner'}
+            {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Credentialed Access Node'}
           </h1>
           <p className="text-xs text-muted-foreground max-w-md">
             {profile.role === 'client'
               ? 'Track your live AI project, deliverables, and asset pipeline.'
-              : 'Complete your profile and schedule your strategy session.'}
+              : 'Temporary sandbox clearance active. Register operational parameters below to evaluate custom alignment.'}
           </p>
         </div>
 
@@ -621,11 +621,11 @@ export default function DashboardClientContainer({
                       <User size={16} className="text-gold" />
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground">Portal Status</p>
-                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">Registered Partner</h3>
+                      <p className="text-xs uppercase tracking-wider text-muted-foreground">Security Clearance</p>
+                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">Sandbox Access</h3>
                     </div>
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold/10 border border-gold/20 text-[10px] font-bold text-gold uppercase tracking-wider">
-                      Awaiting Promotion
+                      Vetting Pending
                     </span>
                   </div>
 
@@ -635,13 +635,13 @@ export default function DashboardClientContainer({
                     </div>
                     <div>
                       <p className="text-xs uppercase tracking-wider text-muted-foreground">CRM Pipeline Status</p>
-                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">{lead ? lead.status : 'Not Registered'}</h3>
+                      <h3 className="text-base font-serif font-bold text-foreground mt-0.5">{lead ? lead.status : 'Unregistered Sandbox'}</h3>
                     </div>
                     <p className="text-xs text-muted-foreground leading-normal">
-                      {lead?.status === 'New' && 'Reviewing your preliminary account parameters.'}
-                      {lead?.status === 'Contacted' && 'Check your inbox for custom project proposals.'}
-                      {lead?.status === 'Call Booked' && 'Your live strategy session is confirmed.'}
-                      {!lead && 'Complete your business profile below to register.'}
+                      {lead?.status === 'New' && 'Analyzing preliminary account parameters.'}
+                      {lead?.status === 'Contacted' && 'Vetting stage active. Inspect your communication log.'}
+                      {lead?.status === 'Call Booked' && 'Operational alignment audit confirmed.'}
+                      {!lead && 'Submit operational parameters to initialize CRM record.'}
                     </p>
                   </div>
                 </div>
@@ -655,13 +655,13 @@ export default function DashboardClientContainer({
                     
                     <div className="space-y-2 max-w-lg">
                       <span className="px-2.5 py-1 rounded-full bg-gold/10 border border-gold/30 text-[10px] font-bold text-gold uppercase tracking-wider">
-                        VIP Strategy Invitation
+                        Allocation Vetting
                       </span>
                       <h3 className="font-serif text-2xl font-bold text-foreground">
-                        Secure Your 1-on-1 Architecture Audit
+                        Request System Architecture Alignment & Allocation
                       </h3>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Let's map out your systems. In this 30-minute session with our engineering lead, we will diagnose your onboarding bottlenecks and construct a custom system diagram (value: $1,500).
+                        To maintain system integrity and throughput, we restrict monthly client intake to exactly 3 priority builds. In this 30-minute operational audit with our engineering lead, we will map your structural bottlenecks and draft a custom telemetry flowchart (valued at $1,500).
                       </p>
                     </div>
 
@@ -670,10 +670,10 @@ export default function DashboardClientContainer({
                         href="/book"
                         className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5"
                       >
-                        Book Strategy Session <ArrowRight size={13} />
+                        Submit Vetting Application <ArrowRight size={13} />
                       </Link>
                       <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                        <Sparkles size={12} className="text-gold animate-pulse" /> No obligation · Limited availability this month
+                        <Sparkles size={12} className="text-gold animate-pulse" /> Vetted alignment only · Strictly limited bandwidth allocations
                       </div>
                     </div>
                   </div>
@@ -681,14 +681,14 @@ export default function DashboardClientContainer({
                   <div className="p-6 rounded-2xl bg-green-500/5 border border-green-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-green-400" /> Strategy Session Scheduled
+                        <CheckCircle2 size={16} className="text-green-400" /> Operational Audit Confirmed
                       </h3>
                       <p className="text-xs text-muted-foreground">
-                        Your call is confirmed. Check your email for calendar invites and details. Our engineering lead is preparing your audit.
+                        Your session allocation is locked. Our lead architect is analyzing your preliminary business parameters to isolate margin friction prior to the call.
                       </p>
                     </div>
                     <span className="px-3 py-1 bg-green-500/10 border border-green-500/25 rounded-lg text-green-400 text-xs font-bold font-mono">
-                      Confirmed
+                      Allocated
                     </span>
                   </div>
                 )}
@@ -698,7 +698,7 @@ export default function DashboardClientContainer({
                   
                   {/* Left: Locked Dashboard Gamification */}
                   <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">Client Suite Preview</h3>
+                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">Operational Telemetry Suite</h3>
                     
                     <div className="relative rounded-2xl border border-gold/10 overflow-hidden bg-white/[0.01]">
                       {/* Blur overlay */}
@@ -706,17 +706,17 @@ export default function DashboardClientContainer({
                         <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mb-3 animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.2)]">
                           <Lock className="text-gold" size={20} />
                         </div>
-                        <h4 className="font-serif text-sm font-bold text-foreground">Interactive Development Suite</h4>
+                        <h4 className="font-serif text-sm font-bold text-foreground">Interactive Development Telemetry</h4>
                         <p className="text-[10px] text-muted-foreground mt-2 max-w-xs leading-relaxed">
-                          Once your custom system begins development, you'll unlock real-time project metrics, live staging iframe windows, and asset pipelines here.
+                          Provisioning active systems triggers sub-second staging render channels, database schema mapping, and automated asset delivery pipelines here.
                         </p>
                         {lead?.status !== 'Call Booked' ? (
                           <Link href="/book" className="mt-4 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gold text-background text-[10px] font-bold hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
-                            Book Call to Unlock <ArrowRight size={10} />
+                            Apply for Vetting to Unlock <ArrowRight size={10} />
                           </Link>
                         ) : (
                           <span className="mt-4 px-2.5 py-1 rounded bg-gold/10 border border-gold/25 text-gold text-[9px] font-semibold">
-                            Pending Initial Strategy Call
+                            Awaiting Vetting Audit Outcome
                           </span>
                         )}
                       </div>
@@ -753,8 +753,8 @@ export default function DashboardClientContainer({
                           <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center">
                             <CheckCircle2 size={9} className="text-green-400" />
                           </div>
-                          <h4 className="text-xs font-bold text-foreground">Step 1: Secure Account Created</h4>
-                          <p className="text-[10px] text-muted-foreground mt-0.5">Credentials registered. Portal profile auto-generated.</p>
+                          <h4 className="text-xs font-bold text-foreground">Step 1: Portal Credentials Provisioned</h4>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">Sandbox profile established and secured.</p>
                         </div>
 
                         {/* Step 2 */}
@@ -768,9 +768,9 @@ export default function DashboardClientContainer({
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                              <h4 className="text-xs font-bold text-foreground">Step 2: Submit Business Profile</h4>
+                              <h4 className="text-xs font-bold text-foreground">Step 2: Register Operational Parameters</h4>
                               <p className="text-[10px] text-muted-foreground mt-0.5">
-                                {lead?.business_name ? `Registered: "${lead.business_name}"` : 'Tell us about your brand goals.'}
+                                {lead?.business_name ? `Parameters registered: "${lead.business_name}"` : 'Input your enterprise scaling bottleneck.'}
                               </p>
                             </div>
                             {!lead?.business_name && (
@@ -793,13 +793,13 @@ export default function DashboardClientContainer({
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                              <h4 className="text-xs font-bold text-foreground">Step 3: Book Strategy Call</h4>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">Map out custom visual & backend logic systems.</p>
+                              <h4 className="text-xs font-bold text-foreground">Step 3: Request Vetting Strategy Session</h4>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">Isolate margin leaks and design system leverage points.</p>
                             </div>
                             {lead?.status !== 'Call Booked' && (
                               <Link href="/book"
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-gold text-background font-bold text-[10px] hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all self-start sm:self-auto shrink-0">
-                                Book Now <ArrowRight size={10} />
+                                Apply Now <ArrowRight size={10} />
                               </Link>
                             )}
                           </div>
@@ -809,12 +809,43 @@ export default function DashboardClientContainer({
                   </div>
                 </div>
 
+                {/* Objection Neutralization Parameters */}
+                <section className="p-6 glass rounded-2xl border border-gold/10 space-y-6 bg-white/[0.01]">
+                  <div>
+                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                      <ShieldCheck size={12} className="text-gold" /> System Parameters & Sovereignty Guarantees
+                    </h3>
+                    <p className="text-[10px] text-muted-foreground mt-1">We eliminate structural friction and address common objections transparently.</p>
+                  </div>
+                  
+                  <div className="grid sm:grid-cols-3 gap-5 text-xs">
+                    <div className="space-y-2 border-r border-gold/10 pr-4 last:border-0">
+                      <h4 className="font-serif font-bold text-foreground text-xs">Code & Data Sovereignty</h4>
+                      <p className="text-muted-foreground leading-relaxed text-[11px]">
+                        Every system is engineered using containerized Next.js/Supabase architectures. You own 100% of the codebase and database sovereignty upon handover. Zero proprietary vendor lock-ins.
+                      </p>
+                    </div>
+                    <div className="space-y-2 border-r border-gold/10 pr-4 last:border-0">
+                      <h4 className="font-serif font-bold text-foreground text-xs">Capital Optimization</h4>
+                      <p className="text-muted-foreground leading-relaxed text-[11px]">
+                        Our custom builds are capital assets, not recurring expenses. Autonomous qualifiers and conduits typically offset equivalent manual labor within 45 days of deployment.
+                      </p>
+                    </div>
+                    <div className="space-y-2 last:border-0">
+                      <h4 className="font-serif font-bold text-foreground text-sm">21-Day Launch Protocol</h4>
+                      <p className="text-muted-foreground leading-relaxed text-[11px]">
+                        To preserve system quality, we strictly limit capacity. We operate on a guaranteed 21-business-day timeline from strategic signoff to live telemetric testing. Waiting compounds operational drag.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+
                 {/* Flagship Systems & Testimonials Showcase */}
                 <div className="border-t border-gold/10 pt-8 space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-serif font-bold text-foreground">Flagship Systems</h3>
-                      <p className="text-xs text-muted-foreground">Premium custom builds engineered for visual and CRM authority.</p>
+                      <h3 className="text-lg font-serif font-bold text-foreground">Bespoke Deployments</h3>
+                      <p className="text-xs text-muted-foreground">Verified production engines operating at sub-second render speeds with sovereign databases.</p>
                     </div>
                   </div>
 
@@ -831,7 +862,7 @@ export default function DashboardClientContainer({
                               </div>
                             )}
                             <div className="absolute top-3 right-3 bg-[#050505]/80 backdrop-blur-md border border-gold/20 rounded-lg px-2.5 py-1 text-[9px] font-bold text-gold uppercase tracking-wider">
-                              {item.industry || 'Luxury Build'}
+                              {item.industry || 'Bespoke Build'}
                             </div>
                           </div>
                           <div className="p-5 space-y-2 flex-1 flex flex-col justify-between">
@@ -915,8 +946,8 @@ export default function DashboardClientContainer({
               <div className="max-w-lg">
                 <section className="p-5 sm:p-7 glass rounded-2xl border border-gold/10 space-y-5">
                   <div>
-                    <h3 className="text-lg font-serif font-bold text-foreground">Business Profile</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">Provide details to receive a customized launch roadmap.</p>
+                    <h3 className="text-lg font-serif font-bold text-foreground">Operational Parameters Vetting</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">Provide detailed enterprise parameters to evaluate system configuration and alignment.</p>
                   </div>
 
                   <form onSubmit={handleSaveLeadDetails} className="space-y-4">
@@ -942,7 +973,7 @@ export default function DashboardClientContainer({
 
                     <div className="space-y-1.5">
                       <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                        <Briefcase size={11} className="text-gold" /> Core Automation Need
+                        <Briefcase size={11} className="text-gold" /> Primary Leverage Target
                       </label>
                       <select
                         value={service}

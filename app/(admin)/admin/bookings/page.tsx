@@ -682,256 +682,267 @@ export default function BookingsPage() {
                 )}
               </div>
 
-              {/* Desktop Table view */}
-              <div className="hidden md:block glass rounded-2xl border border-gold/10 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01] select-none">
-                        <th 
-                          onClick={() => handleSort('contact')}
-                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-1">
-                            Contact Details
-                            {sortField === 'contact' ? (
-                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
-                            ) : (
-                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
-                            )}
-                          </div>
-                        </th>
-                        <th 
-                          onClick={() => handleSort('package')}
-                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-1">
-                            Package / Type
-                            {sortField === 'package' ? (
-                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
-                            ) : (
-                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
-                            )}
-                          </div>
-                        </th>
-                        <th 
-                          onClick={() => handleSort('investment')}
-                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-1">
-                            Investment
-                            {sortField === 'investment' ? (
-                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
-                            ) : (
-                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
-                            )}
-                          </div>
-                        </th>
-                        <th 
-                          onClick={() => handleSort('date')}
-                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-1">
-                            Scheduled Date
-                            {sortField === 'date' ? (
-                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
-                            ) : (
-                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
-                            )}
-                          </div>
-                        </th>
-                        <th 
-                          onClick={() => handleSort('status')}
-                          className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                        >
-                          <div className="flex items-center gap-1">
-                            Status
-                            {sortField === 'status' ? (
-                              sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
-                            ) : (
-                              <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
-                            )}
-                          </div>
-                        </th>
-                        <th className="py-4 px-5 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gold/5 text-sm">
-                      {sortedSessions.length > 0 ? (
-                        sortedSessions.map((session) => {
-                          const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
-                          const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
-                          const email = session.leads?.email || session.profiles?.email || ''
-                          const isClient = !!session.client_id || !session.lead_id
-
-                          return (
-                            <tr
-                              key={session.id}
-                              onClick={() => {
-                                setSelectedBooking(session)
-                                setShowViewModal(true)
-                              }}
-                              className="hover:bg-white/[0.02] cursor-pointer transition-all"
-                            >
-                              <td className="py-4 px-5">
-                                <div className="font-semibold text-foreground">{contactName}</div>
-                                {company && <div className="text-xxs text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
-                                <div className="text-[10px] text-muted-foreground">{email}</div>
-                              </td>
-                              <td className="py-4 px-5">
-                                <span
-                                  className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
-                                  style={{
-                                    borderColor: `${session.session_categories?.color_code || '#D4AF37'}30`,
-                                    backgroundColor: `${session.session_categories?.color_code || '#D4AF37'}10`,
-                                    color: session.session_categories?.color_code || '#D4AF37'
-                                  }}
-                                >
-                                  {session.session_categories?.name || 'General Strategy'}
-                                </span>
-                                <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
-                                  <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
-                                </div>
-                              </td>
-                              <td className="py-4 px-5 whitespace-nowrap">
-                                <span className="font-semibold text-gold-light">
-                                  {getPackageInvestment(session.session_categories?.slug || '')}
-                                </span>
-                              </td>
-                              <td className="py-4 px-5">
-                                <div className="font-medium text-foreground">
-                                  {new Date(session.scheduled_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                  })}
-                                </div>
-                                <div className="text-[10px] text-muted-foreground mt-0.5">
-                                  {new Date(session.scheduled_at).toLocaleTimeString('en-US', {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </div>
-                              </td>
-                              <td className="py-4 px-5">
-                                <span className={`px-2.5 py-0.5 rounded-full text-xxs font-semibold flex items-center gap-1.5 w-fit ${
-                                  session.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
-                                  session.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
-                                  session.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
-                                  'bg-gold/15 border border-gold/30 text-gold'
-                                }`}>
-                                  {session.status === 'Completed' && <CheckCircle2 size={10} />}
-                                  {session.status === 'Canceled' && <XCircle size={10} />}
-                                  {session.status === 'No Show' && <AlertTriangle size={10} />}
-                                  {session.status}
-                                </span>
-                              </td>
-                              <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
-                                <div className="flex items-center justify-end gap-2">
-                                  <button
-                                    onClick={() => {
-                                      setSelectedBooking(session)
-                                      setShowViewModal(true)
-                                    }}
-                                    className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
-                                    title="View Booking Details"
-                                  >
-                                    <Eye size={12} />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={6} className="py-12 text-center text-muted-foreground px-4">
-                            <Info size={24} className="mx-auto text-gold/30 mb-2" />
-                            No scheduled strategy sessions match your filters.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Mobile Card List view */}
-              <div className="block md:hidden space-y-4">
-                {sortedSessions.length > 0 ? (
-                  sortedSessions.map((session) => {
-                    const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
-                    const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
-                    const email = session.leads?.email || session.profiles?.email || ''
-
-                    return (
-                      <div
-                        key={session.id}
-                        onClick={() => {
-                          setSelectedBooking(session)
-                          setShowViewModal(true)
-                        }}
-                        className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all space-y-3 cursor-pointer"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <div className="font-semibold text-foreground text-sm">{contactName}</div>
-                            {company && <div className="text-[10px] text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
-                            <div className="text-[10px] text-muted-foreground">{email}</div>
-                          </div>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 w-fit ${
-                            session.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
-                            session.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
-                            session.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
-                            'bg-gold/15 border border-gold/30 text-gold'
-                          }`}>
-                            {session.status}
-                          </span>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 justify-between items-center pt-2 border-t border-gold/5 text-xs">
-                          <div className="space-y-1">
-                            <span
-                              className="px-2 py-0.5 rounded-full text-[10px] font-semibold border inline-block"
-                              style={{
-                                borderColor: `${session.session_categories?.color_code || '#D4AF37'}30`,
-                                backgroundColor: `${session.session_categories?.color_code || '#D4AF37'}10`,
-                                color: session.session_categories?.color_code || '#D4AF37'
-                              }}
-                            >
-                              {session.session_categories?.name || 'General Strategy'}
-                            </span>
-                            <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
-                            </div>
-                          </div>
-
-                          <div className="text-right">
-                            <div className="font-semibold text-gold-light text-xs">
-                              {getPackageInvestment(session.session_categories?.slug || '')}
-                            </div>
-                            <div className="text-[10px] text-muted-foreground mt-0.5">
-                              {new Date(session.scheduled_at).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })} at {new Date(session.scheduled_at).toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })
-                ) : (
-                  <div className="glass rounded-xl border border-gold/10 p-8 text-center text-muted-foreground">
-                    <Info size={20} className="mx-auto text-gold/30 mb-2" />
-                    No scheduled strategy sessions match your filters.
+              {/* Centralized Bookings Empty State or Views */}
+              {sortedSessions.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+                    <CalendarIcon size={20} />
                   </div>
-                )}
-              </div>
+                  <div>
+                    <h3 className="font-serif text-sm font-bold text-foreground">Consultation Ledger Empty</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {search || statusFilter !== 'All' || categoryFilter !== 'All' || dateFilter !== 'all'
+                        ? 'No scheduled consultations match your current filter parameters.'
+                        : 'No strategy sessions are currently booked in the system ledger. Schedule a new consulting slot to begin.'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
+                      setShowBookingModal(true)
+                    }}
+                    className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                  >
+                    Schedule Call
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Desktop Table view */}
+                  <div className="hidden md:block glass rounded-2xl border border-gold/10 overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01] select-none">
+                            <th 
+                              onClick={() => handleSort('contact')}
+                              className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                            >
+                              <div className="flex items-center gap-1">
+                                Contact Details
+                                {sortField === 'contact' ? (
+                                  sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                                ) : (
+                                  <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              onClick={() => handleSort('package')}
+                              className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                            >
+                              <div className="flex items-center gap-1">
+                                Package / Type
+                                {sortField === 'package' ? (
+                                  sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                                ) : (
+                                  <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              onClick={() => handleSort('investment')}
+                              className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                            >
+                              <div className="flex items-center gap-1">
+                                Investment
+                                {sortField === 'investment' ? (
+                                  sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                                ) : (
+                                  <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              onClick={() => handleSort('date')}
+                              className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                            >
+                              <div className="flex items-center gap-1">
+                                Scheduled Date
+                                {sortField === 'date' ? (
+                                  sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                                ) : (
+                                  <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                                )}
+                              </div>
+                            </th>
+                            <th 
+                              onClick={() => handleSort('status')}
+                              className="py-4 px-5 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                            >
+                              <div className="flex items-center gap-1">
+                                Status
+                                {sortField === 'status' ? (
+                                  sortDirection === 'asc' ? <ArrowUp size={11} className="text-gold" /> : <ArrowDown size={11} className="text-gold" />
+                                ) : (
+                                  <span className="text-muted-foreground/35 font-normal text-xxs">⇅</span>
+                                )}
+                              </div>
+                            </th>
+                            <th className="py-4 px-5 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gold/5 text-sm">
+                          {sortedSessions.map((session) => {
+                            const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
+                            const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
+                            const email = session.leads?.email || session.profiles?.email || ''
+
+                            return (
+                              <tr
+                                key={session.id}
+                                onClick={() => {
+                                  setSelectedBooking(session)
+                                  setShowViewModal(true)
+                                }}
+                                className="hover:bg-white/[0.02] cursor-pointer transition-all"
+                              >
+                                <td className="py-4 px-5">
+                                  <div className="font-semibold text-foreground">{contactName}</div>
+                                  {company && <div className="text-xxs text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
+                                  <div className="text-[10px] text-muted-foreground">{email}</div>
+                                </td>
+                                <td className="py-4 px-5">
+                                  <span
+                                    className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
+                                    style={{
+                                      borderColor: `${session.session_categories?.color_code || '#D4AF37'}30`,
+                                      backgroundColor: `${session.session_categories?.color_code || '#D4AF37'}10`,
+                                      color: session.session_categories?.color_code || '#D4AF37'
+                                    }}
+                                  >
+                                    {session.session_categories?.name || 'General Strategy'}
+                                  </span>
+                                  <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
+                                    <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
+                                  </div>
+                                </td>
+                                <td className="py-4 px-5 whitespace-nowrap">
+                                  <span className="font-semibold text-gold-light">
+                                    {getPackageInvestment(session.session_categories?.slug || '')}
+                                  </span>
+                                </td>
+                                <td className="py-4 px-5">
+                                  <div className="font-medium text-foreground">
+                                    {new Date(session.scheduled_at).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </div>
+                                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                                    {new Date(session.scheduled_at).toLocaleTimeString('en-US', {
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </div>
+                                </td>
+                                <td className="py-4 px-5">
+                                  <span className={`px-2.5 py-0.5 rounded-full text-xxs font-semibold flex items-center gap-1.5 w-fit ${
+                                    session.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
+                                    session.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
+                                    session.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
+                                    'bg-gold/15 border border-gold/30 text-gold'
+                                  }`}>
+                                    {session.status === 'Completed' && <CheckCircle2 size={10} />}
+                                    {session.status === 'Canceled' && <XCircle size={10} />}
+                                    {session.status === 'No Show' && <AlertTriangle size={10} />}
+                                    {session.status}
+                                  </span>
+                                </td>
+                                <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex items-center justify-end gap-2">
+                                    <button
+                                      onClick={() => {
+                                        setSelectedBooking(session)
+                                        setShowViewModal(true)
+                                      }}
+                                      className="p-1.5 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 transition-all cursor-pointer shadow-[0_0_8px_rgba(212,175,55,0.05)]"
+                                      title="View Booking Details"
+                                    >
+                                      <Eye size={12} />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Mobile Card List view */}
+                  <div className="block md:hidden space-y-4">
+                    {sortedSessions.map((session) => {
+                      const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
+                      const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
+                      const email = session.leads?.email || session.profiles?.email || ''
+
+                      return (
+                        <div
+                          key={session.id}
+                          onClick={() => {
+                            setSelectedBooking(session)
+                            setShowViewModal(true)
+                          }}
+                          className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all space-y-3 cursor-pointer"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <div className="font-semibold text-foreground text-sm">{contactName}</div>
+                              {company && <div className="text-[10px] text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
+                              <div className="text-[10px] text-muted-foreground">{email}</div>
+                            </div>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 w-fit ${
+                              session.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
+                              session.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
+                              session.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
+                              'bg-gold/15 border border-gold/30 text-gold'
+                            }`}>
+                              {session.status}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2 justify-between items-center pt-2 border-t border-gold/5 text-xs">
+                            <div className="space-y-1">
+                              <span
+                                className="px-2 py-0.5 rounded-full text-[10px] font-semibold border inline-block"
+                                style={{
+                                  borderColor: `${session.session_categories?.color_code || '#D4AF37'}30`,
+                                  backgroundColor: `${session.session_categories?.color_code || '#D4AF37'}10`,
+                                  color: session.session_categories?.color_code || '#D4AF37'
+                                }}
+                              >
+                                {session.session_categories?.name || 'General Strategy'}
+                              </span>
+                              <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
+                              </div>
+                            </div>
+
+                            <div className="text-right">
+                              <div className="font-semibold text-gold-light text-xs">
+                                {getPackageInvestment(session.session_categories?.slug || '')}
+                              </div>
+                              <div className="text-[10px] text-muted-foreground mt-0.5">
+                                {new Date(session.scheduled_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })} at {new Date(session.scheduled_at).toLocaleTimeString('en-US', {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -951,68 +962,91 @@ export default function BookingsPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {categories.map((category) => (
-                  <div
-                    key={category.id}
-                    className="p-5 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_24px_rgba(212,175,55,0.02)] transition-all duration-300 space-y-4 flex flex-col justify-between"
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span
-                          className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
-                          style={{
-                            borderColor: `${category.color_code}30`,
-                            backgroundColor: `${category.color_code}10`,
-                            color: category.color_code
-                          }}
-                        >
-                          {category.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1 font-semibold">
-                          <Clock size={12} /> {category.duration_minutes} Minutes
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed pt-1">
-                        {category.description || 'No package description details set.'}
-                      </p>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-2 border-t border-gold/5">
-                      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-widest font-mono">
-                        Slug: {category.slug}
-                      </span>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => {
-                            setCategoryForm({
-                              id: category.id,
-                              name: category.name,
-                              slug: category.slug,
-                              duration: category.duration_minutes,
-                              description: category.description || '',
-                              color: category.color_code
-                            })
-                            setShowCategoryModal(true)
-                          }}
-                          className="p-2 text-muted-foreground hover:text-gold transition-colors"
-                          title="Edit Package"
-                        >
-                          <Edit2 size={13} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteCategory(category.id)}
-                          className="p-2 text-muted-foreground hover:text-red-400 transition-colors"
-                          title="Delete Package"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </div>
+              {categories.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+                    <SlidersHorizontal size={20} />
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <h3 className="font-serif text-sm font-bold text-foreground">Consulting Packages Empty</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      No strategy consultation packages are currently configured. Create a new slot package to define booking duration, colors, and descriptions for prospect scheduling.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setCategoryForm({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37' })
+                      setShowCategoryModal(true)
+                    }}
+                    className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                  >
+                    Add Package
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {categories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="p-5 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_24px_rgba(212,175,55,0.02)] transition-all duration-300 space-y-4 flex flex-col justify-between"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span
+                            className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
+                            style={{
+                              borderColor: `${category.color_code}30`,
+                              backgroundColor: `${category.color_code}10`,
+                              color: category.color_code
+                            }}
+                          >
+                            {category.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1 font-semibold">
+                            <Clock size={12} /> {category.duration_minutes} Minutes
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed pt-1">
+                          {category.description || 'No package description details set.'}
+                        </p>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-2 border-t border-gold/5">
+                        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-widest font-mono">
+                          Slug: {category.slug}
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => {
+                              setCategoryForm({
+                                id: category.id,
+                                name: category.name,
+                                slug: category.slug,
+                                duration: category.duration_minutes,
+                                description: category.description || '',
+                                color: category.color_code
+                              })
+                              setShowCategoryModal(true)
+                            }}
+                            className="p-2 text-muted-foreground hover:text-gold transition-colors"
+                            title="Edit Package"
+                          >
+                            <Edit2 size={13} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="p-2 text-muted-foreground hover:text-red-400 transition-colors"
+                            title="Delete Package"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -1035,77 +1069,100 @@ export default function BookingsPage() {
                 </button>
               </div>
 
-              {/* Weekly Visual Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                {[
-                  { dayNum: 1, name: 'Monday' },
-                  { dayNum: 2, name: 'Tuesday' },
-                  { dayNum: 3, name: 'Wednesday' },
-                  { dayNum: 4, name: 'Thursday' },
-                  { dayNum: 5, name: 'Friday' },
-                  { dayNum: 6, name: 'Saturday' },
-                  { dayNum: 0, name: 'Sunday' }
-                ].map((day) => {
-                  const dayRules = dbAvailability.filter((r) => r.day_of_week === day.dayNum)
-                  return (
-                    <div
-                      key={day.dayNum}
-                      className="glass rounded-xl border border-gold/10 p-4 space-y-3 flex flex-col justify-between min-h-[160px] bg-white/[0.01]"
-                    >
-                      <div>
-                        <h4 className="font-semibold text-xs text-foreground uppercase tracking-wider border-b border-gold/5 pb-1">
-                          {day.name}
-                        </h4>
-                        
-                        <div className="space-y-2 pt-2">
-                          {dayRules.length > 0 ? (
-                            dayRules.map((rule) => {
-                              const cleanStart = rule.start_time.substring(0, 5)
-                              const cleanEnd = rule.end_time.substring(0, 5)
-                              return (
-                                <div
-                                  key={rule.id}
-                                  className="group flex items-center justify-between gap-2 px-2.5 py-1 bg-gold/5 border border-gold/10 rounded-lg text-xxs font-medium text-gold-light"
-                                >
-                                  <span>{cleanStart} - {cleanEnd}</span>
-                                  <div className="flex gap-1">
-                                    <button
-                                      onClick={() => {
-                                        setAvailabilityForm({
-                                          id: rule.id,
-                                          day: rule.day_of_week,
-                                          start: cleanStart,
-                                          end: cleanEnd
-                                        })
-                                        setShowAvailabilityModal(true)
-                                      }}
-                                      className="opacity-0 group-hover:opacity-100 hover:text-gold transition-opacity cursor-pointer p-0.5"
-                                      title="Edit Slot"
-                                    >
-                                      <Edit2 size={10} />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteAvailability(rule.id)}
-                                      className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity cursor-pointer p-0.5"
-                                      title="Delete Slot"
-                                    >
-                                      <Trash2 size={10} />
-                                    </button>
+              {dbAvailability.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+                    <Clock size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-sm font-bold text-foreground">Consultation Availability Empty</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      No weekly availability rules are currently defined. Set your active day and hour ranges to open calendar slots for client bookings.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                      setShowAvailabilityModal(true)
+                    }}
+                    className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                  >
+                    Add Availability Rule
+                  </button>
+                </div>
+              ) : (
+                /* Weekly Visual Grid */
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                  {[
+                    { dayNum: 1, name: 'Monday' },
+                    { dayNum: 2, name: 'Tuesday' },
+                    { dayNum: 3, name: 'Wednesday' },
+                    { dayNum: 4, name: 'Thursday' },
+                    { dayNum: 5, name: 'Friday' },
+                    { dayNum: 6, name: 'Saturday' },
+                    { dayNum: 0, name: 'Sunday' }
+                  ].map((day) => {
+                    const dayRules = dbAvailability.filter((r) => r.day_of_week === day.dayNum)
+                    return (
+                      <div
+                        key={day.dayNum}
+                        className="glass rounded-xl border border-gold/10 p-4 space-y-3 flex flex-col justify-between min-h-[160px] bg-white/[0.01]"
+                      >
+                        <div>
+                          <h4 className="font-semibold text-xs text-foreground uppercase tracking-wider border-b border-gold/5 pb-1">
+                            {day.name}
+                          </h4>
+                          
+                          <div className="space-y-2 pt-2">
+                            {dayRules.length > 0 ? (
+                              dayRules.map((rule) => {
+                                const cleanStart = rule.start_time.substring(0, 5)
+                                const cleanEnd = rule.end_time.substring(0, 5)
+                                return (
+                                  <div
+                                    key={rule.id}
+                                    className="group flex items-center justify-between gap-2 px-2.5 py-1 bg-gold/5 border border-gold/10 rounded-lg text-xxs font-medium text-gold-light"
+                                  >
+                                    <span>{cleanStart} - {cleanEnd}</span>
+                                    <div className="flex gap-1">
+                                      <button
+                                        onClick={() => {
+                                          setAvailabilityForm({
+                                            id: rule.id,
+                                            day: rule.day_of_week,
+                                            start: cleanStart,
+                                            end: cleanEnd
+                                          })
+                                          setShowAvailabilityModal(true)
+                                        }}
+                                        className="opacity-0 group-hover:opacity-100 hover:text-gold transition-opacity cursor-pointer p-0.5"
+                                        title="Edit Slot"
+                                      >
+                                        <Edit2 size={10} />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDeleteAvailability(rule.id)}
+                                        className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity cursor-pointer p-0.5"
+                                        title="Delete Slot"
+                                      >
+                                        <Trash2 size={10} />
+                                      </button>
+                                    </div>
                                   </div>
-                                </div>
-                              )
-                            })
-                          ) : (
-                            <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed">
-                              Unavailable
-                            </p>
-                          )}
+                                )
+                              })
+                            ) : (
+                              <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed">
+                                Unavailable
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>

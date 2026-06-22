@@ -138,6 +138,30 @@ export default function ProjectsPage() {
         <div className="flex items-center justify-center min-h-[300px]">
           <Loader2 size={28} className="animate-spin text-gold/40" />
         </div>
+      ) : projects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
+          <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
+            <FolderKanban size={20} />
+          </div>
+          <div>
+            <h3 className="font-serif text-sm font-bold text-foreground">
+              {showArchived ? 'Archived Ledger Empty' : 'Production Pipeline Empty'}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              {showArchived
+                ? 'No archived project records exist in the historical archives.'
+                : 'No client projects are currently active in the engineering queue. Initialize a new project container to begin tracking progress.'}
+            </p>
+          </div>
+          {!showArchived && (
+            <button
+              onClick={() => setShowNewModal(true)}
+              className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+            >
+              Initialize Project
+            </button>
+          )}
+        </div>
       ) : view === 'kanban' ? (
         <div className="space-y-4">
           {/* Mobile Kanban Switcher */}
@@ -199,97 +223,89 @@ export default function ProjectsPage() {
       ) : (
         /* List View */
         <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
-          {projects.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center px-6">
-              <FolderKanban size={36} className="text-gold/20 mb-3" />
-              <p className="font-serif text-lg font-semibold text-foreground">No projects yet</p>
-              <p className="text-sm text-muted-foreground mt-1">Create your first client project to get started.</p>
-            </div>
-          ) : (
-            <>
-              {/* Desktop Table View */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gold/10">
-                      <th className="text-left px-6 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Project</th>
-                      <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Client</th>
-                      <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
-                      <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Launch Date</th>
-                      <th className="w-10 px-4 py-3" />
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gold/5">
-                    {projects.map((p) => (
-                      <tr key={p.id} className="hover:bg-white/2 transition-colors group">
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
-                          <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
-                        </td>
-                        <td className="px-4 py-4 hidden md:table-cell">
-                          <p className="text-sm text-foreground">{p.client_name}</p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[p.status]}`}>
-                            {p.status}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 hidden lg:table-cell">
-                          <p className="text-sm text-muted-foreground">
-                            {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                          </p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
-                            <ChevronRight size={15} />
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile Card List View */}
-              <div className="block md:hidden divide-y divide-gold/5">
-                {projects.map((p) => (
-                  <div key={p.id} className="p-4 space-y-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gold/10">
+                    <th className="text-left px-6 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Project</th>
+                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Client</th>
+                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
+                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Launch Date</th>
+                    <th className="w-10 px-4 py-3" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gold/5">
+                  {projects.map((p) => (
+                    <tr key={p.id} className="hover:bg-white/2 transition-colors group">
+                      <td className="px-6 py-4">
                         <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
                         <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
-                      </div>
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_COLORS[p.status]}`}>
-                        {p.status}
+                      </td>
+                      <td className="px-4 py-4 hidden md:table-cell">
+                        <p className="text-sm text-foreground">{p.client_name}</p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`inline-block px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[p.status]}`}>
+                          {p.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 hidden lg:table-cell">
+                        <p className="text-sm text-muted-foreground">
+                          {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
+                          <ChevronRight size={15} />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card List View */}
+            <div className="block md:hidden divide-y divide-gold/5">
+              {projects.map((p) => (
+                <div key={p.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
+                      <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
+                    </div>
+                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_COLORS[p.status]}`}>
+                      {p.status}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
+                    <div>
+                      <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Client</span>
+                      <span className="text-foreground">{p.client_name}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Launch Target</span>
+                      <span className="text-foreground">
+                        {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
                       </span>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
-                      <div>
-                        <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Client</span>
-                        <span className="text-foreground">{p.client_name}</span>
-                      </div>
-                      <div>
-                        <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Launch Target</span>
-                        <span className="text-foreground">
-                          {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-end pt-2 border-t border-gold/5">
-                      <Link
-                        href={`/admin/projects/${p.id}`}
-                        className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
-                      >
-                        Open Project Workspace <ChevronRight size={12} />
-                      </Link>
-                    </div>
                   </div>
-                ))}
-              </div>
-            </>
-          )}
+
+                  <div className="flex items-center justify-end pt-2 border-t border-gold/5">
+                    <Link
+                      href={`/admin/projects/${p.id}`}
+                      className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
+                    >
+                      Open Project Workspace <ChevronRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         </div>
       )}
 

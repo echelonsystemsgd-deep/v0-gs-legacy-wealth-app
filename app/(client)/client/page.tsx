@@ -78,10 +78,10 @@ export default async function ClientDashboardPage() {
       {/* Welcome Header */}
       <div className="space-y-2">
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground">
-          Welcome back, {greetingName}
+          Client Operations Center: {greetingName}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Here is the current status of your digital build with GS Legacy Wealth.
+          System build telemetry online. Monitoring active milestone progress and system integrations.
         </p>
       </div>
 
@@ -92,9 +92,9 @@ export default async function ClientDashboardPage() {
             <FolderKanban size={28} className="text-gold" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-serif font-bold text-foreground">Project Setup in Progress</h2>
+            <h2 className="text-xl font-serif font-bold text-foreground">Initializing Operations Workspace</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We are currently preparing your project portal workspace. As soon as your strategy session outcomes are finalized and development pipelines are active, you will be able to track your build, check off design milestones, and access deliverables right here.
+              Establishing database containers and provisioning project telemetry. Your dedicated client portal will synchronize automatically as design parameters are finalized and active development commences.
             </p>
           </div>
           <div className="pt-2">
@@ -102,7 +102,7 @@ export default async function ClientDashboardPage() {
               href="/contact"
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl bg-gold/10 hover:bg-gold/15 text-gold border border-gold/25 transition-all duration-300"
             >
-              Contact Support <ArrowRight size={12} />
+              Request Status Update <ArrowRight size={12} />
             </Link>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default async function ClientDashboardPage() {
             {/* Status Card */}
             <div className="p-5 glass rounded-2xl border border-gold/10 flex items-center justify-between gap-4">
               <div className="space-y-1.5 min-w-0">
-                <span className="text-xs uppercase tracking-wider text-muted-foreground">Project Status</span>
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">Active Deployment Phase</span>
                 <p className="text-lg font-serif font-bold text-gradient-gold truncate">
                   {project.status}
                 </p>
@@ -129,7 +129,7 @@ export default async function ClientDashboardPage() {
               <div className="space-y-1.5 min-w-0">
                 <span className="text-xs uppercase tracking-wider text-muted-foreground">Target Launch</span>
                 <p className="text-lg font-serif font-bold text-foreground truncate">
-                  {project.target_launch_date ? new Date(project.target_launch_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Setting Date...'}
+                  {project.target_launch_date ? new Date(project.target_launch_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Determining Launch Vector...'}
                 </p>
               </div>
               <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -188,7 +188,7 @@ export default async function ClientDashboardPage() {
               {/* High-level checklist snapshot */}
               <div className="space-y-4">
                 <h3 className="text-sm font-serif font-bold text-foreground flex items-center gap-2">
-                  Project Path Summary
+                  System Implementation Phases
                 </h3>
 
                 <div className="space-y-2.5">
