@@ -1,8 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, DollarSign } from 'lucide-react'
+import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, DollarSign, Info } from 'lucide-react'
 import Link from 'next/link'
+import { ActivityLogPanel } from '@/components/admin/activity-log-panel'
 
 export default async function AdminDashboardPage() {
   const cookieStore = await cookies()
@@ -44,9 +45,11 @@ export default async function AdminDashboardPage() {
     .from('projects')
     .select('*', { count: 'exact', head: true })
 
+  // Fetch active bookings (status = 'Scheduled')
   const { count: sessionsCount } = await supabase
     .from('strategy_sessions')
     .select('*', { count: 'exact', head: true })
+    .eq('status', 'Scheduled')
 
   // Fetch financial aggregates from projects
   const { data: projectsFinancials } = await supabase
@@ -56,12 +59,12 @@ export default async function AdminDashboardPage() {
   const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
   const totalPipeline = projectsFinancials?.reduce((sum, p) => sum + ((Number(p.contract_value) - Number(p.amount_paid)) || 0), 0) || 0
 
-  // Fetch recent activity logs
+  // Fetch recent activity logs (up to 20 for filtering)
   const { data: recentLogs } = await supabase
     .from('activity_logs')
-    .select('id, action_type, target_table, created_at, profiles(full_name)')
+    .select('id, action_type, target_table, created_at, profiles(full_name, role)')
     .order('created_at', { ascending: false })
-    .limit(4)
+    .limit(20)
 
   // Fetch recent payments joined with projects for name context
   const { data: recentPayments } = await supabase
@@ -96,9 +99,16 @@ export default async function AdminDashboardPage() {
       {/* Metrics Row */}
       <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-6">
         {/* Total Sales Card */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
+            <div className="flex items-center gap-1.5 cursor-help">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
+              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
+              {/* Tooltip Content */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
+                Sum of all client payments successfully processed and recorded in the system.
+              </div>
+            </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               ${totalSales.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
@@ -110,9 +120,16 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Active Pipeline Card */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
+            <div className="flex items-center gap-1.5 cursor-help">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
+              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
+              {/* Tooltip Content */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
+                Outstanding contract balances for active projects (Total Contract Value minus Amount Paid).
+              </div>
+            </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               ${totalPipeline.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
@@ -124,9 +141,16 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Leads Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
+            <div className="flex items-center gap-1.5 cursor-help">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
+              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
+              {/* Tooltip Content */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
+                Total number of potential clients who submitted inquiries through the website.
+              </div>
+            </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
           </div>
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -136,9 +160,16 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Active Projects Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4">
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
+            <div className="flex items-center gap-1.5 cursor-help">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
+              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
+              {/* Tooltip Content */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
+                Number of client projects currently in progress (excluding completed or archived projects).
+              </div>
+            </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
           </div>
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -147,10 +178,17 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Strategy Sessions Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 col-span-2 md:col-span-1">
+        {/* Active Bookings Metric */}
+        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 col-span-2 md:col-span-1 relative group">
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Sessions</span>
+            <div className="flex items-center gap-1.5 cursor-help">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Bookings</span>
+              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
+              {/* Tooltip Content */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
+                Upcoming client and lead strategy sessions scheduled to take place.
+              </div>
+            </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
           </div>
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -162,40 +200,8 @@ export default async function AdminDashboardPage() {
 
       {/* Main Grid: Activity, Transactions & Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-        {/* Recent Activity Timeline */}
-        <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6">
-          <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
-            <Activity size={16} className="text-gold" /> System Activity
-          </h2>
-
-          <div className="relative border-l border-gold/15 pl-3.5 ml-1.5 space-y-6">
-            {recentLogs && recentLogs.length > 0 ? (
-              recentLogs.map((log) => (
-                <div key={log.id} className="relative space-y-1">
-                  <div className="absolute -left-[18.5px] top-1.5 w-2 h-2 rounded-full bg-gold border border-[#050505]" />
-                  <div className="flex justify-between items-start gap-3">
-                    <p className="text-xs font-semibold text-foreground">
-                      {log.action_type} on <span className="text-gold capitalize">{log.target_table}</span>
-                    </p>
-                    <span className="text-[9px] text-muted-foreground flex items-center gap-1 font-mono shrink-0">
-                      <Clock size={9} /> {new Date(log.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground">
-                    By: {(Array.isArray(log.profiles) ? log.profiles[0]?.full_name : (log.profiles as any)?.full_name) || 'System Auto'}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <div className="relative py-4 text-left pl-1">
-                <div className="absolute -left-[18.5px] top-2.5 w-2.5 h-2.5 rounded-full bg-gold/30 border border-[#050505] animate-pulse" />
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Operational feed quiet. System activity will stream here in real-time as administrative changes occur.
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Filterable Activity Log Panel */}
+        <ActivityLogPanel initialLogs={recentLogs} />
 
         {/* Recent Sales / Transactions Panel */}
         <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6">
