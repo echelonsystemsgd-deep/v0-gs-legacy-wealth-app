@@ -678,39 +678,39 @@ gantt
   * Enable RLS security guidelines.
   * Design auth templates: Login, Reset, forgot-password.
 
-* **Phase 2: Administrative Foundation & CRM Suite** (Days 7–12)
+* **Phase 2: Administrative Foundation & CRM Suite** (Days 7–12) - **[COMPLETED]**
   * [x] **Admin Core Infrastructure**
     * [x] Implement `AdminLayout` with Collapsible Sidebar (Leads, Projects, Clients, Bookings, Portfolio, Testimonials, Content, Media Library).
     * [x] Shared Admin Header with profile dropdown, Breadcrumbs, and Notification Center.
     * [x] Contextual Quick Actions system for common admin tasks.
-  * [ ] **Data Management & CRUD**
-    * [ ] CRUD for `leads` (capture source, status pipeline: new, contacted, qualified, converted, lost).
-    * [ ] CRUD for `clients` including linked project history and contact details.
-    * [ ] CRUD for `bookings` (strategy calls) including recurring availability logic and status tracking (scheduled, completed, cancelled, no-show).
-    * [ ] CRUD for `projects` (Master list with filtering by status: planning, in progress, review, delivered).
-    * [ ] CRUD for `portfolio` items with image support and project linkage.
-    * [ ] CRUD for `testimonials` with client linkage and approval/publish toggle.
-  * [ ] **Analytics & Features**
-    * [ ] Summary Dashboard with Summary Cards, Trend Indicators, and Date Range Filter.
-    * [ ] Real-time notification logic (Supabase Realtime for new bookings and new leads).
-    * [ ] Lead-to-Client conversion flow (one-click promote a Lead to a Client record on booking confirmation).
-  * [ ] **Security**
-    * [ ] Refine RLS policies for `admin` role write permissions.
+  * [x] **Data Management & CRUD**
+    * [x] CRUD for `leads` (capture source, status pipeline: new, contacted, qualified, converted, lost).
+    * [x] CRUD for `clients` including linked project history and contact details.
+    * [x] CRUD for `bookings` (strategy calls) including recurring availability logic and status tracking (scheduled, completed, cancelled, no-show).
+    * [x] CRUD for `projects` (Master list with filtering by status: planning, in progress, review, delivered).
+    * [x] CRUD for `portfolio` items with image support and project linkage.
+    * [x] CRUD for `testimonials` with client linkage and approval/publish toggle.
+  * [x] **Analytics & Features**
+    * [x] Summary Dashboard with Summary Cards, Trend Indicators, and Date Range Filter.
+    * [x] Real-time notification logic (Supabase Realtime for new bookings and new leads).
+    * [x] Lead-to-Client conversion flow (one-click promote a Lead to a Client record on booking confirmation).
+  * [x] **Security**
+    * [x] Refine RLS policies for `admin` role write permissions.
 
-* **Phase 3: Operational Integrations** (Days 13–19)
-  * Build project pipelines (Kanban boards and detailed milestone trackers).
-  * Build the private `project-assets` upload targets.
-  * Implement the Calendly webhook receiver function.
+* **Phase 3: Operational Integrations** (Days 13–19) - **[COMPLETED]**
+  * [x] Build project pipelines (Kanban boards and detailed milestone trackers).
+  * [x] Build the private `project-assets` upload targets.
+  * [x] Implement the Calendly webhook receiver function.
 
-* **Phase 4: Content Management** (Days 20–26)
-  * Set up public storage structures.
-  * Build UI modules editing portfolio projects and testimonials.
-  * Set up the website content editor updating landing page data.
+* **Phase 4: Content Management** (Days 20–26) - **[COMPLETED]**
+  * [x] Set up public storage structures.
+  * [x] Build UI modules editing portfolio projects and testimonials.
+  * [x] Set up the website content editor updating landing page data.
 
-* **Phase 5: Refinements & Handover** (Days 27–32)
-  * Set up security activity logging displays.
-  * Design visual loaders and error interfaces.
-  * Run tests checking permissions, flows, and responsive layouts.
+* **Phase 5: Refinements & Handover** (Days 27–32) - **[IN PROGRESS]**
+  * [x] Set up security activity logging displays.
+  * [x] Design visual loaders and error interfaces.
+  * [/] Run tests checking permissions, flows, and responsive layouts.
 
 ---
 

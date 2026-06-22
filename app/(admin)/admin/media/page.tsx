@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Upload, Trash2, Copy, Search, Filter, ImageIcon, Film, FileText, Loader2, Check, ExternalLink, RefreshCw
+  Upload, Trash2, Copy, Search, Filter, ImageIcon, Film, FileText, Loader2, Check, ExternalLink, RefreshCw, CheckCircle2
 } from 'lucide-react'
 
 type MediaAsset = {
@@ -146,29 +146,33 @@ export default function MediaPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-10 relative">
       {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-          <Check size={14} /> {toast}
+        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 size={14} className="text-green-400" /> {toast}
         </div>
       )}
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">Storage Explorer</p>
-          <h1 className="font-serif text-3xl font-bold text-foreground mt-1">Media Library</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage global assets, images, and video backgrounds.</p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
+            <ImageIcon size={12} /> Storage Explorer
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Media Library</h1>
+          <p className="text-sm text-muted-foreground">Manage global assets, images, and video backgrounds.</p>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
           <button
             onClick={fetchAssets}
-            className="p-2.5 rounded-xl bg-white/5 border border-gold/15 text-muted-foreground hover:text-foreground transition-all"
+            className="p-2.5 rounded-xl bg-white/5 border border-gold/15 text-muted-foreground hover:text-foreground transition-all cursor-pointer"
             title="Refresh assets grid"
           >
-            <RefreshCw size={15} />
+            <RefreshCw size={14} />
           </button>
-          <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold hover:shadow-[0_0_16px_rgba(212,175,55,0.35)] transition-all cursor-pointer">
-            {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
+          <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer">
+            {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
             <span>Upload File</span>
             <input type="file" onChange={handleUpload} disabled={uploading} className="hidden" />
           </label>

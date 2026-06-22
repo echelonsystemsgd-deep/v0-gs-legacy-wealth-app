@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar
+  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar, CheckCircle2
 } from 'lucide-react'
 
 type Profile = {
@@ -152,17 +152,22 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-10 relative">
       {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-          <Check size={14} /> {toast}
+        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 size={14} className="text-green-400" /> {toast}
         </div>
       )}
 
-      <div>
-        <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">Console</p>
-        <h1 className="font-serif text-3xl font-bold text-foreground mt-1">Settings</h1>
-        <p className="text-sm text-muted-foreground mt-1">Configure your personal profile, team permissions, and third-party tools.</p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
+            <Settings size={12} /> System Console Panel
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Settings</h1>
+          <p className="text-sm text-muted-foreground">Configure your personal profile, team permissions, and third-party tools.</p>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -266,10 +271,11 @@ export default function SettingsPage() {
           {activeTab === 'team' && (
             <div className="glass rounded-2xl border border-gold/10 p-6 space-y-4">
               <h2 className="font-serif text-xl font-bold text-foreground">Manage Console Roles</h2>
-              <div className="overflow-x-auto">
+              {/* Desktop Table view */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground">
+                    <tr className="border-b border-gold/10 text-xxs font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
                       <th className="py-3 px-4">User</th>
                       <th className="py-3 px-4">Status</th>
                       <th className="py-3 px-4">Access Level</th>
@@ -278,7 +284,7 @@ export default function SettingsPage() {
                   </thead>
                   <tbody className="divide-y divide-gold/5 text-sm">
                     {profiles.map((profile) => (
-                      <tr key={profile.id} className="hover:bg-white/2 transition-colors">
+                      <tr key={profile.id} className="hover:bg-white/[0.02] transition-colors">
                         <td className="py-3.5 px-4 flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
                             {profile.avatar_url ? (
@@ -312,7 +318,7 @@ export default function SettingsPage() {
                             <button
                               onClick={() => toggleUserRole(profile)}
                               disabled={profile.id === currentUser?.id}
-                              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                               title="Toggle admin role status"
                             >
                               <Shield size={14} />
@@ -320,7 +326,7 @@ export default function SettingsPage() {
                             <button
                               onClick={() => toggleUserSuspension(profile)}
                               disabled={profile.id === currentUser?.id}
-                              className={`p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed ${
+                              className={`p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer ${
                                 profile.is_suspended ? 'text-green-400' : 'text-red-400'
                               }`}
                               title={profile.is_suspended ? 'Activate Account' : 'Suspend Account'}
@@ -333,6 +339,67 @@ export default function SettingsPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile Card List view */}
+              <div className="block md:hidden space-y-4">
+                {profiles.map((profile) => (
+                  <div
+                    key={profile.id}
+                    className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all space-y-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
+                        {profile.avatar_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-xs font-bold text-gold">{profile.full_name?.[0] ?? 'U'}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-foreground text-sm truncate">{profile.full_name || 'Anonymous User'}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{profile.id}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gold/5 text-xs">
+                      <div className="flex gap-2">
+                        {profile.is_suspended ? (
+                          <span className="px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-[10px] font-semibold text-red-400">Suspended</span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full bg-green-500/10 border border-green-500/30 text-[10px] font-semibold text-green-400">Active</span>
+                        )}
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                          profile.role === 'admin' ? 'bg-gold/15 border border-gold/30 text-gold' : 'bg-white/5 border border-gold/10 text-muted-foreground'
+                        }`}>
+                          {profile.role.toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => toggleUserRole(profile)}
+                          disabled={profile.id === currentUser?.id}
+                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                          title="Toggle admin role status"
+                        >
+                          <Shield size={14} />
+                        </button>
+                        <button
+                          onClick={() => toggleUserSuspension(profile)}
+                          disabled={profile.id === currentUser?.id}
+                          className={`p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer ${
+                            profile.is_suspended ? 'text-green-400' : 'text-red-400'
+                          }`}
+                          title={profile.is_suspended ? 'Activate Account' : 'Suspend Account'}
+                        >
+                          {profile.is_suspended ? <UserCheck size={14} /> : <UserX size={14} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

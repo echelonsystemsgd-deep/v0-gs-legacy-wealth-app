@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles } from 'lucide-react'
+import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles, CheckCircle2 } from 'lucide-react'
 
 type SectionKey = 'hero' | 'cta' | 'process' | 'faq' | 'footer'
 
@@ -139,22 +139,26 @@ export default function ContentPage() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-          <Check size={14} /> {toast}
+        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 size={14} className="text-green-400" /> {toast}
         </div>
       )}
 
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">Customizer</p>
-          <h1 className="font-serif text-3xl font-bold text-foreground mt-1">Website Content</h1>
-          <p className="text-sm text-muted-foreground mt-1">Modify landing page text and configuration values instantly.</p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
+            <Sparkles size={12} /> Customizer CMS Panel
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Website Content</h1>
+          <p className="text-sm text-muted-foreground">Modify landing page text and configuration values instantly.</p>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
           <div className="bg-card border border-gold/15 rounded-xl p-0.5 flex">
             <button
               onClick={() => setEditMode('form')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 editMode === 'form' ? 'bg-gold text-background' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -162,7 +166,7 @@ export default function ContentPage() {
             </button>
             <button
               onClick={() => setEditMode('json')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 editMode === 'json' ? 'bg-gold text-background' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -171,7 +175,7 @@ export default function ContentPage() {
           </div>
           <button
             onClick={resetToDefault}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground hover:bg-white/8 transition-all"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-gold/15 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-white/8 transition-all cursor-pointer"
             title="Reset to static template values"
           >
             <RefreshCw size={13} /> Reset Section
@@ -179,7 +183,7 @@ export default function ContentPage() {
           <button
             onClick={handleSave}
             disabled={saving || !!jsonError}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.35)] transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold disabled:opacity-50 hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             Save Changes

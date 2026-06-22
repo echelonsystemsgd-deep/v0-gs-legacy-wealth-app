@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Plus, Edit2, Archive, ArchiveRestore, Star, Loader2, ImageIcon, ExternalLink, X, Save,
+  Plus, Edit2, Archive, ArchiveRestore, Star, Loader2, ImageIcon, ExternalLink, X, Save, CheckCircle2,
 } from 'lucide-react'
 
 type PortfolioItem = {
@@ -84,21 +84,39 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {toast && <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl">{toast}</div>}
-
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">Content</p>
-          <h1 className="font-serif text-3xl font-bold text-foreground mt-1">Portfolio</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your public case studies and projects.</p>
+    <div className="space-y-6 sm:space-y-10 relative">
+      {toast && (
+        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 size={14} className="text-green-400" /> {toast}
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowArchived((v) => !v)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${showArchived ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-card border-gold/15 text-muted-foreground hover:text-foreground'}`}>
+      )}
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
+            <ImageIcon size={12} /> CMS Showcase Content
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Portfolio</h1>
+          <p className="text-sm text-muted-foreground">Manage your public case studies and projects.</p>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
+          <button
+            onClick={() => setShowArchived((v) => !v)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+              showArchived
+                ? 'bg-amber-500/15 border-amber-500/30 text-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+                : 'bg-card border-gold/15 text-muted-foreground hover:text-foreground hover:border-gold/25'
+            }`}
+          >
             <Archive size={14} /> {showArchived ? 'Archived' : 'Show Archived'}
           </button>
-          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold hover:shadow-[0_0_16px_rgba(212,175,55,0.35)] transition-all">
-            <Plus size={15} /> Add Item
+          <button
+            onClick={openCreate}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+          >
+            <Plus size={14} /> Add Item
           </button>
         </div>
       </div>
@@ -162,11 +180,11 @@ export default function PortfolioPage() {
 
       {/* Modal */}
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass rounded-2xl border border-gold/15 p-6 w-full max-w-lg shadow-2xl space-y-5">
-            <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl font-bold text-foreground">{modal === 'edit' ? 'Edit Portfolio Item' : 'Add Portfolio Item'}</h2>
-              <button onClick={() => setModal(null)} className="text-muted-foreground hover:text-foreground text-xl leading-none"><X size={18} /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-lg glass border border-gold/15 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gold/10 pb-3">
+              <h2 className="font-serif text-lg font-bold text-foreground">{modal === 'edit' ? 'Edit Portfolio Item' : 'Add Portfolio Item'}</h2>
+              <button onClick={() => setModal(null)} className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"><X size={16} /></button>
             </div>
             <form onSubmit={handleSave} className="space-y-4">
               {[

@@ -19,6 +19,9 @@ import {
   Trash2,
   ShieldCheck,
   UserCheck,
+  AlertCircle,
+  Inbox,
+  CheckCircle2,
 } from 'lucide-react'
 
 const STATUS_OPTIONS = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost', 'Spam']
@@ -254,23 +257,30 @@ export default function LeadDetailPage() {
     <div className="space-y-6 max-w-5xl">
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-4 left-4 z-50 px-4 py-3 rounded-xl border text-sm font-medium shadow-xl transition-all ${toast.type === 'success' ? 'bg-green-500/15 border-green-500/30 text-green-400' : 'bg-red-500/15 border-red-500/30 text-red-400'}`}>
-          {toast.msg}
+        <div className={`fixed top-4 left-4 z-50 px-4 py-3 rounded-xl border text-sm font-medium shadow-xl flex items-center gap-2 animate-fade-in ${
+          toast.type === 'error'
+            ? 'bg-red-500/15 border-red-500/30 text-red-400'
+            : 'bg-green-500/15 border-green-500/30 text-green-400'
+        }`}>
+          {toast.type === 'error' ? <AlertCircle size={14} /> : <UserCheck size={14} />}
+          <span>{toast.msg}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/admin/leads" className="flex items-center justify-center w-8 h-8 rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:border-gold/30 transition-all">
+          <Link href="/admin/leads" className="flex items-center justify-center w-8 h-8 rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:border-gold/30 transition-all shrink-0">
             <ArrowLeft size={15} />
           </Link>
-          <div>
-            <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">Lead Detail</p>
-            <h1 className="font-serif text-2xl font-bold text-foreground mt-0.5">{lead.name}</h1>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-gold uppercase">
+              <Inbox size={12} /> Lead Workspace Details
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-0.5">{lead.name}</h1>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
           <button
             onClick={handleDelete}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-background text-sm font-bold border border-red-500/20 hover:border-red-500 transition-all cursor-pointer"

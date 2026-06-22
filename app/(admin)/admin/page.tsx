@@ -78,22 +78,24 @@ export default async function AdminDashboardPage() {
       {/* Page Title Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
             <Sparkles size={12} className="animate-pulse" /> Commander Overview
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Dashboard</h1>
           <p className="text-sm text-muted-foreground">
             Monitor leads, track project progress, and manage website content.
           </p>
         </div>
 
-        <Link
-          href="/"
-          target="_blank"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 text-xs font-semibold rounded-xl bg-gold/10 hover:bg-gold/15 text-gold border border-gold/25 transition-all duration-300 w-full sm:w-fit"
-        >
-          View Public Site <ExternalLink size={12} />
-        </Link>
+        <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
+          <Link
+            href="/"
+            target="_blank"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-gold/10 hover:bg-gold/15 text-gold border border-gold/25 transition-all duration-300 w-full sm:w-fit cursor-pointer"
+          >
+            View Public Site <ExternalLink size={12} />
+          </Link>
+        </div>
       </div>
 
       {/* Metrics Row */}

@@ -513,28 +513,28 @@ export default function BookingsPage() {
       <div className="space-y-6 sm:space-y-10 relative">
         {/* Toast Alert */}
         {toast && (
-            <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-              <CheckCircle2 size={14} /> {toast}
-            </div>
+          <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
+            <CheckCircle2 size={14} className="text-green-400" /> {toast}
+          </div>
         )}
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
+            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
               <CalendarIcon size={12} /> CRM Calendar Operations
             </div>
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Bookings & Sessions</h1>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Bookings & Sessions</h1>
             <p className="text-sm text-muted-foreground">Define your strategy packages and manage scheduled agency calls.</p>
           </div>
 
-          <div className="flex items-center gap-3 self-end sm:self-center">
+          <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
             <button
                 onClick={() => {
                   setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
                   setShowBookingModal(true)
                 }}
-                className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
             >
               <Plus size={14} /> Schedule Call
             </button>
@@ -682,8 +682,8 @@ export default function BookingsPage() {
                 )}
               </div>
 
-              {/* Table List */}
-              <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
+              {/* Desktop Table view */}
+              <div className="hidden md:block glass rounded-2xl border border-gold/10 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
@@ -854,6 +854,83 @@ export default function BookingsPage() {
                     </tbody>
                   </table>
                 </div>
+              </div>
+
+              {/* Mobile Card List view */}
+              <div className="block md:hidden space-y-4">
+                {sortedSessions.length > 0 ? (
+                  sortedSessions.map((session) => {
+                    const contactName = session.leads?.name || session.profiles?.full_name || 'System Intake'
+                    const company = session.leads?.business_name || (session.profiles ? 'Registered Client' : '')
+                    const email = session.leads?.email || session.profiles?.email || ''
+
+                    return (
+                      <div
+                        key={session.id}
+                        onClick={() => {
+                          setSelectedBooking(session)
+                          setShowViewModal(true)
+                        }}
+                        className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all space-y-3 cursor-pointer"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="font-semibold text-foreground text-sm">{contactName}</div>
+                            {company && <div className="text-[10px] text-gold/70 mt-0.5 uppercase tracking-wide">{company}</div>}
+                            <div className="text-[10px] text-muted-foreground">{email}</div>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 w-fit ${
+                            session.status === 'Completed' ? 'bg-green-500/10 border border-green-500/30 text-green-400' :
+                            session.status === 'Canceled' ? 'bg-red-500/10 border border-red-500/30 text-red-400' :
+                            session.status === 'No Show' ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400' :
+                            'bg-gold/15 border border-gold/30 text-gold'
+                          }`}>
+                            {session.status}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 justify-between items-center pt-2 border-t border-gold/5 text-xs">
+                          <div className="space-y-1">
+                            <span
+                              className="px-2 py-0.5 rounded-full text-[10px] font-semibold border inline-block"
+                              style={{
+                                borderColor: `${session.session_categories?.color_code || '#D4AF37'}30`,
+                                backgroundColor: `${session.session_categories?.color_code || '#D4AF37'}10`,
+                                color: session.session_categories?.color_code || '#D4AF37'
+                              }}
+                            >
+                              {session.session_categories?.name || 'General Strategy'}
+                            </span>
+                            <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <Clock size={10} /> {session.session_categories?.duration_minutes || 30} mins
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="font-semibold text-gold-light text-xs">
+                              {getPackageInvestment(session.session_categories?.slug || '')}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground mt-0.5">
+                              {new Date(session.scheduled_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })} at {new Date(session.scheduled_at).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div className="glass rounded-xl border border-gold/10 p-8 text-center text-muted-foreground">
+                    <Info size={20} className="mx-auto text-gold/30 mb-2" />
+                    No scheduled strategy sessions match your filters.
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1037,7 +1114,7 @@ export default function BookingsPage() {
       {/* MODAL 1: ADD / EDIT SESSION CATEGORY */}
       {showCategoryModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 animate-scale-up">
+          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
               <h2 className="font-serif text-lg font-bold text-foreground">
                 {categoryForm.id ? 'Edit Session Package' : 'Create Session Package'}
@@ -1126,8 +1203,8 @@ export default function BookingsPage() {
 
       {/* MODAL 2: SCHEDULE CALL (MANUAL BOOKING) */}
       {showBookingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
               <h2 className="font-serif text-lg font-bold text-foreground">Schedule Booking</h2>
               <button
@@ -1261,8 +1338,8 @@ export default function BookingsPage() {
 
       {/* MODAL 3: LOG OUTCOMES / OUTCOME LOGGER */}
       {showOutcomeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
               <h2 className="font-serif text-lg font-bold text-foreground">Log Outcomes & Notes</h2>
               <button
@@ -1361,7 +1438,7 @@ export default function BookingsPage() {
 
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-fade-in">
-            <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 animate-scale-up">
+            <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-6 animate-scale-up max-h-[85vh] overflow-y-auto">
               
               {/* Header */}
               <div className="flex justify-between items-start pb-4 border-b border-gold/10">
@@ -1551,7 +1628,7 @@ export default function BookingsPage() {
       {/* MODAL 5: SET AVAILABILITY RULE */}
       {showAvailabilityModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 animate-scale-up">
+          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
               <h2 className="font-serif text-lg font-bold text-foreground">
                 {availabilityForm.id ? 'Edit Availability Slot' : 'Add Availability Slot'}

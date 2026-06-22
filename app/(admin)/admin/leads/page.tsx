@@ -60,6 +60,7 @@ export default function LeadsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [toast, setToast] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
+  const [activeKanbanColumn, setActiveKanbanColumn] = useState<string>('New')
 
   // Manual Lead creation modal states
   const [showNewModal, setShowNewModal] = useState(false)
@@ -255,17 +256,19 @@ export default function LeadsPage() {
     <div className="space-y-6 sm:space-y-10 relative">
       {/* Toast Alert */}
       {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
+        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
           <CheckCircle2 size={14} className="text-green-400" /> {toast}
         </div>
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">CRM Operations</p>
-          <h1 className="font-serif text-3xl font-bold text-foreground mt-1">Leads Inbox</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-gold uppercase">
+            <Inbox size={12} /> CRM Lead Pipeline
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Leads Inbox</h1>
+          <p className="text-sm text-muted-foreground">
             Qualify incoming website enquiries and route prospect bookings.
           </p>
         </div>
@@ -274,7 +277,7 @@ export default function LeadsPage() {
             setLeadForm({ name: '', business_name: '', email: '', phone: '', website: '', service_interested: '', source: 'manual', status: 'New', notes: '' })
             setShowNewModal(true)
           }}
-          className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-gold to-gold-light text-background shadow-[0_0_16px_rgba(212,175,55,0.2)] hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer self-end sm:self-center"
         >
           <Plus size={14} /> New Lead
         </button>
@@ -404,12 +407,35 @@ export default function LeadsPage() {
             <p className="font-serif text-lg font-semibold text-foreground">No leads found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-start">
-            {['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost'].map((columnStatus) => {
-              const columnLeads = leads.filter((l) => l.status === columnStatus)
-              return (
-                <div key={columnStatus} className="glass rounded-2xl border border-gold/10 p-4 space-y-4 flex flex-col min-h-[450px] bg-white/[0.01]">
-                  {/* Column Header */}
+          <div className="space-y-4">
+            {/* Mobile Kanban Switcher */}
+            <div className="flex md:hidden border-b border-gold/10 overflow-x-auto scrollbar-none gap-2 pb-2 mb-2">
+              {['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost'].map((status) => {
+                const count = leads.filter(l => l.status === status).length
+                const isActive = activeKanbanColumn === status
+                return (
+                  <button
+                    key={status}
+                    onClick={() => setActiveKanbanColumn(status)}
+                    className={`px-3.5 py-2 border-b-2 text-xxs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                      isActive
+                        ? 'border-gold text-gold bg-gold/5 font-extrabold'
+                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {status} ({count})
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-start">
+              {['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost'].map((columnStatus) => {
+                const columnLeads = leads.filter((l) => l.status === columnStatus)
+                const isVisible = columnStatus === activeKanbanColumn
+                return (
+                  <div key={columnStatus} className={`glass rounded-2xl border border-gold/10 p-4 space-y-4 flex flex-col min-h-[450px] bg-white/[0.01] ${isVisible ? 'block' : 'hidden md:flex'}`}>
+                    {/* Column Header */}
                   <div className="flex items-center justify-between pb-2 border-b border-gold/5">
                     <div className="flex items-center gap-2">
                       <span className={`w-2.5 h-2.5 rounded-full ${
@@ -488,6 +514,7 @@ export default function LeadsPage() {
               )
             })}
           </div>
+          </div>
         )
       ) : (
         <div className="glass rounded-2xl border border-gold/10 overflow-hidden relative">
@@ -511,82 +538,137 @@ export default function LeadsPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-gold/10 bg-white/[0.01]">
-                    {/* Select All Checkbox */}
-                    <th className="w-12 px-6 py-4">
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.length === leads.length}
-                        onChange={(e) => handleSelectAll(e.target.checked)}
-                        className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
-                      />
-                    </th>
-                    <th className="px-6 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Name</th>
-                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Business</th>
-                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Service</th>
-                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
-                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden xl:table-cell">Source</th>
-                    <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Date</th>
-                    <th className="w-10 px-4 py-4" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gold/5">
-                  {leads.map((lead) => {
-                    const isChecked = selectedIds.includes(lead.id)
-                    return (
-                      <tr key={lead.id} className={`hover:bg-white/[0.01] transition-colors group ${isChecked ? 'bg-gold/5' : ''}`}>
-                        {/* Checkbox */}
-                        <td className="px-6 py-4">
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-gold/10 bg-white/[0.01]">
+                      {/* Select All Checkbox */}
+                      <th className="w-12 px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.length === leads.length}
+                          onChange={(e) => handleSelectAll(e.target.checked)}
+                          className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
+                        />
+                      </th>
+                      <th className="px-6 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Name</th>
+                      <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Business</th>
+                      <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Service</th>
+                      <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
+                      <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden xl:table-cell">Source</th>
+                      <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Date</th>
+                      <th className="w-10 px-4 py-4" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gold/5">
+                    {leads.map((lead) => {
+                      const isChecked = selectedIds.includes(lead.id)
+                      return (
+                        <tr key={lead.id} className={`hover:bg-white/[0.01] transition-colors group ${isChecked ? 'bg-gold/5' : ''}`}>
+                          {/* Checkbox */}
+                          <td className="px-6 py-4">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
+                              className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
+                            />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div>
+                              <p className="text-sm font-semibold text-foreground">{lead.name}</p>
+                              <p className="text-xs text-muted-foreground">{lead.email}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 hidden md:table-cell">
+                            <p className="text-sm text-foreground">{lead.business_name}</p>
+                          </td>
+                          <td className="px-4 py-4 hidden lg:table-cell">
+                            <p className="text-sm text-muted-foreground">{lead.service_interested ?? '—'}</p>
+                          </td>
+                          <td className="px-4 py-4">
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
+                              <Circle size={5} className="fill-current" />
+                              {lead.status}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 hidden xl:table-cell">
+                            <span className="text-xs text-muted-foreground capitalize">{lead.source}</span>
+                          </td>
+                          <td className="px-4 py-4 hidden lg:table-cell">
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4">
+                            <Link
+                              href={`/admin/leads/${lead.id}`}
+                              className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
+                            >
+                              <ChevronRight size={15} />
+                            </Link>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List View */}
+              <div className="block md:hidden divide-y divide-gold/5">
+                {leads.map((lead) => {
+                  const isChecked = selectedIds.includes(lead.id)
+                  return (
+                    <div key={lead.id} className={`p-4 space-y-3 ${isChecked ? 'bg-gold/5' : ''}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-3">
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={(e) => handleSelectRow(lead.id, e.target.checked)}
                             className="w-4 h-4 accent-gold cursor-pointer rounded border-gold/25 bg-background text-gold focus:ring-0 focus:ring-offset-0"
                           />
-                        </td>
-                        <td className="px-6 py-4">
                           <div>
                             <p className="text-sm font-semibold text-foreground">{lead.name}</p>
                             <p className="text-xs text-muted-foreground">{lead.email}</p>
                           </div>
-                        </td>
-                        <td className="px-4 py-4 hidden md:table-cell">
-                          <p className="text-sm text-foreground">{lead.business_name}</p>
-                        </td>
-                        <td className="px-4 py-4 hidden lg:table-cell">
-                          <p className="text-sm text-muted-foreground">{lead.service_interested ?? '—'}</p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
-                            <Circle size={5} className="fill-current" />
-                            {lead.status}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 hidden xl:table-cell">
-                          <span className="text-xs text-muted-foreground capitalize">{lead.source}</span>
-                        </td>
-                        <td className="px-4 py-4 hidden lg:table-cell">
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4">
-                          <Link
-                            href={`/admin/leads/${lead.id}`}
-                            className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
-                          >
-                            <ChevronRight size={15} />
-                          </Link>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </div>
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
+                          <Circle size={4} className="fill-current text-current" />
+                          {lead.status}
+                        </span>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
+                        <div>
+                          <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Business</span>
+                          <span className="text-foreground">{lead.business_name || '—'}</span>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Service</span>
+                          <span className="text-foreground truncate block">{lead.service_interested ?? '—'}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-gold/5">
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · <span className="capitalize">{lead.source}</span>
+                        </span>
+                        <Link
+                          href={`/admin/leads/${lead.id}`}
+                          className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
+                        >
+                          Details <ChevronRight size={12} />
+                        </Link>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
           )}
         </div>
       )}
