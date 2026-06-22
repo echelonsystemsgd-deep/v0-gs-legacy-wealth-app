@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 }
 
 const trustItems = [
-  { icon: Clock, text: "30-min focused session" },
-  { icon: Shield, text: "No obligation, no pressure" },
-  { icon: Star, text: "Limited spots each month" },
+  { icon: Clock, text: "30-minute clinical evaluation" },
+  { icon: Shield, text: "Candid operational analysis" },
+  { icon: Star, text: "Strictly limited allocations" },
 ]
 
 export default function BookPage() {
@@ -70,8 +70,8 @@ export default function BookPage() {
                 <span className="text-gradient-gold">Your Legacy</span>
               </h1>
               <p className="text-muted-foreground leading-relaxed">
-                Complete the short qualifier below and choose a time that suits you. We review your
-                brand before the call so every minute counts.
+                Our time is highly leveraged, and we expect the same of yours. Complete the qualification
+                criteria below to request an alignment session. If there is a fit, we will confirm your booking.
               </p>
             </div>
 

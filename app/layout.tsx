@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     default: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
     template: '%s | GS Legacy Wealth AI'
   },
-  description: 'We engineer digital assets that create authority, automate growth, and generate revenue. Premium AI-powered websites for ambitious businesses.',
+  description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
   applicationName: 'GS Legacy Wealth',
   keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
   authors: [{ name: 'GS Legacy Wealth' }],
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    description: 'Premium AI-powered websites for ambitious businesses. We engineer digital assets that create authority and generate revenue.',
+    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
     url: 'https://gslegacywealth.com',
     siteName: 'GS Legacy Wealth AI',
     images: [
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    description: 'Premium AI-powered websites for ambitious businesses.',
+    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
     images: ['/twitter-image.png'],
     creator: '@gslegacywealth',
   },

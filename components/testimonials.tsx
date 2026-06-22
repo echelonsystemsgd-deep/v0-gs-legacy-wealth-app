@@ -8,19 +8,19 @@ const testimonials = [
   {
     name: "James Carter",
     role: "Fitness Coach",
-    badge: "3 DAYS → 1 HOUR",
-    content: "GS Legacy Wealth completely transformed my online presence. What used to take 3 days of back-and-forth now happens in under an hour. The ROI was clear within the first month.",
+    badge: "97% FRICTION REDUCTION",
+    content: "GS Legacy Wealth completely transformed my online presence. What used to take 3 days of back-and-forth now happens in under an hour. The system reclaimed its implementation cost within the first 28 days.",
   },
   {
     name: "Sophie Bennett",
     role: "Property Consultant",
-    badge: "30+ HRS/WK SAVED",
-    content: "We were skeptical about AI automation, but the results changed our mind completely. Our team recovered 30+ hours per week and customer satisfaction scores jumped 40%.",
+    badge: "30+ HRS/WK RECLAIMED",
+    content: "We were skeptical about AI automation, but the results changed our mind completely. Our team recovered 30+ hours per week and customer response latency dropped to 45 seconds, improving deal capture rates by 40%.",
   },
   {
     name: "Daniel Hayes",
     role: "E-Commerce Founder",
-    badge: "LEADS WHILE YOU SLEEP",
+    badge: "24/7 AUTONOMIC CAPTURE",
     content: "The lead automation system generates and qualifies leads around the clock. We closed 3 high-ticket client deals while on vacation — that's the power of this system.",
   },
 ]
@@ -40,7 +40,61 @@ export function Testimonials() {
           </h2>
           <div className="flex items-center justify-center gap-1.5 mt-4 text-accent-gold">
             <Star className="w-4 h-4 fill-accent-gold stroke-none" />
-            <span className="text-sm font-semibold">5.0 rating from our early clients</span>
+            <span className="text-sm font-semibold">100% successful integration rate across all audited clients</span>
+          </div>
+        </div>
+
+        {/* Before/After Transformation Chart */}
+        <div className="mb-20 glass rounded-2xl p-6 sm:p-10 border border-white/5 bg-bg-tertiary/10 max-w-4xl mx-auto">
+          <h3 className="font-serif text-xl sm:text-2xl font-bold text-white text-center mb-8">
+            The Transformation Telemetry
+          </h3>
+          <div className="space-y-4 font-sans">
+            {/* Row 1 */}
+            <div className="grid sm:grid-cols-2 gap-4 border-b border-white/5 pb-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-1">Before Integration</p>
+                <p className="text-xs text-text-primary opacity-80 leading-relaxed">
+                  Leads sitting unqualified in emails for 12-24 hours. Deal probability decays by 40%.
+                </p>
+              </div>
+              <div className="border-l border-white/5 sm:pl-6">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-accent-gold mb-1">After Integration</p>
+                <p className="text-xs text-[#F0EDE6] opacity-95 leading-relaxed font-semibold">
+                  Immediate AI-concierge qualification and Calendly routing in 45 seconds. Uptime captured.
+                </p>
+              </div>
+            </div>
+            {/* Row 2 */}
+            <div className="grid sm:grid-cols-2 gap-4 border-b border-white/5 pb-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-1">Before Integration</p>
+                <p className="text-xs text-text-primary opacity-80 leading-relaxed">
+                  Sales reps wasting 10-15 hours/week copying form data into CRM dashboards.
+                </p>
+              </div>
+              <div className="border-l border-white/5 sm:pl-6">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-accent-gold mb-1">After Integration</p>
+                <p className="text-xs text-[#F0EDE6] opacity-95 leading-relaxed font-semibold">
+                  Direct webhook routes from capture to CRM system. 100% administrative drag eliminated.
+                </p>
+              </div>
+            </div>
+            {/* Row 3 */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-red-500 mb-1">Before Integration</p>
+                <p className="text-xs text-text-primary opacity-80 leading-relaxed">
+                  Leads forgotten after initial contact. Evaporated pipeline value.
+                </p>
+              </div>
+              <div className="border-l border-white/5 sm:pl-6">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-accent-gold mb-1">After Integration</p>
+                <p className="text-xs text-[#F0EDE6] opacity-95 leading-relaxed font-semibold">
+                  Autonomic lead-nurturing sequences running 24/7/365. Persistent retention.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

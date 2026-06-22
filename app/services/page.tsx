@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
   title: "Services",
-  description: "Explore our premium AI-powered digital solutions designed to elevate your brand and automate growth.",
+  description: "Forensic audits, bespoke authority platforms, and automated lead conduits. View our clinical execution protocol.",
 }
 
 export default function ServicesPage() {

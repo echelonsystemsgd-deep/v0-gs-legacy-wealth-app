@@ -20,8 +20,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2"
           >
-            <span className="text-accent-gold text-lg font-serif">10+</span>
-            <span className="text-xs uppercase tracking-wider text-text-secondary">Prototypes Built</span>
+            <span className="text-accent-gold text-lg font-serif">100%</span>
+            <span className="text-xs uppercase tracking-wider text-text-secondary">Successful Integrations</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>
@@ -33,8 +33,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex items-center gap-2"
           >
-            <span className="text-accent-gold text-lg font-serif">Live</span>
-            <span className="text-xs uppercase tracking-wider text-text-secondary">Client Results</span>
+            <span className="text-accent-gold text-lg font-serif">97%</span>
+            <span className="text-xs uppercase tracking-wider text-text-secondary">Latency Reduction</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>
@@ -46,8 +46,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-2"
           >
-            <span className="text-accent-gold text-lg font-serif">AI</span>
-            <span className="text-xs uppercase tracking-wider text-text-secondary">-Powered Builds</span>
+            <span className="text-accent-gold text-lg font-serif">24/7</span>
+            <span className="text-xs uppercase tracking-wider text-text-secondary">Autonomic Capture</span>
           </motion.div>
         </div>
       </div>

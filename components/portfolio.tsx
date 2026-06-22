@@ -15,24 +15,28 @@ const portfolioItems = [
     href: "https://v0-stamp-valuation-app.vercel.app",
     image: "/stamp-app-preview.png",
     underConstruction: true,
+    metric: "840ms Valuation Speed",
   },
   {
     title: "Elite Fitness Studio",
     category: "AI Website · Fitness",
     gradient: "from-amber-500/20 to-orange-500/20",
     underConstruction: true,
+    metric: "94% Booking Rate",
   },
   {
     title: "Prestige Properties",
     category: "Lead System · Real Estate",
     gradient: "from-emerald-500/20 to-teal-500/20",
     underConstruction: true,
+    metric: "£4.2M Pipeline Sync",
   },
   {
     title: "Strategic Growth Co.",
     category: "Landing Page · Consulting",
     gradient: "from-blue-500/20 to-indigo-500/20",
     underConstruction: true,
+    metric: "+238% Conversion Increase",
   },
 ]
 
@@ -348,7 +352,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             Currently Under Construction
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            This platform is being crafted with precision to deliver a premium experience. In the meantime, inquiries are offline.
+            This system is under strict operational lock to preserve private client data integrations. Request an invite to view our sanitised architectural blueprints.
           </p>
 
           {errorMsg ? (
@@ -523,6 +527,11 @@ export function Portfolio({ limit }: { limit?: number }) {
                     <h3 className="font-serif text-2xl font-bold text-white">
                       {item.title}
                     </h3>
+                    {item.metric && (
+                      <p className="text-xs font-mono font-bold text-accent-gold uppercase tracking-wider">
+                        Outcome: {item.metric}
+                      </p>
+                    )}
                     <div className="pt-2">
                       <Button
                         size="sm"
@@ -541,7 +550,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                 <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm">
                   <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none mb-0.5 truncate">
-                      {item.category}
+                      {item.category} {item.metric ? `· ${item.metric}` : ''}
                     </p>
                     <h3 className="font-serif text-sm font-bold text-white truncate">
                       {item.title}

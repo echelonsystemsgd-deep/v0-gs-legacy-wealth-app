@@ -38,13 +38,16 @@ export function Bottleneck() {
           className="text-center mb-16 max-w-3xl mx-auto"
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            The Bottleneck
+            Operational Friction
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
-            Is your business outgrowing your systems?
+            Manual friction is a direct tax on your margins.
           </h2>
           <p className="font-sans text-base text-text-primary opacity-75 leading-relaxed mt-6 max-w-2xl mx-auto">
-            When a business relies on manual effort for lead qualification, data transfer, and customer follow-ups, growth inevitably creates administrative friction. We replace manual bottlenecks with automated hubs so your team can focus on closing deals.
+            Relying on manual labor for lead qualification, data transfer, and pipeline routing is an operational leak. We replace structural friction with autonomous hubs, freeing your key players to focus entirely on conversion.
+          </p>
+          <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">
+            Every week operations remain manual is a compounding tax on your conversion margins. Waiting to automate doesn't save capital; it leaks it.
           </p>
         </motion.div>
 
@@ -129,9 +132,14 @@ export function Bottleneck() {
 
               {/* Toggle Switch */}
               <div className="w-full border-t border-white/5 pt-4 flex flex-col sm:flex-row gap-4 items-center sm:justify-between bg-transparent relative z-20 shrink-0">
-                <span className="text-xs font-semibold text-text-primary opacity-80 text-center sm:text-left leading-relaxed">
-                  {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
-                </span>
+                <div className="flex flex-col text-center sm:text-left">
+                  <span className="text-xs font-semibold text-text-primary opacity-80 leading-relaxed">
+                    {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
+                  </span>
+                  <a href="#pricing" className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block">
+                    Calculate Uptime Value & ROI →
+                  </a>
+                </div>
                 <Button
                   onClick={() => setIsOrdered(!isOrdered)}
                   size="sm"
@@ -167,7 +175,7 @@ export function Bottleneck() {
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We establish instant auto-engagement to capture leads. Benefit: Every lead engaged within 60 seconds of enquiry."
-                      : "Delayed response times cause high-value prospects to drop off and switch to faster competitors before you reply."
+                      : "Every minute a lead sits unqualified is a decay in conversion probability. We automate immediate, high-context engagement to capture intent before it cools."
                     }
                   </p>
                 </div>
@@ -185,7 +193,7 @@ export function Bottleneck() {
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We wire automated data pipelines from capture to CRM. Benefit: Reclaim significant administrative hours back every week."
-                      : "Your team loses hours every week to manual data entry, lead formatting, and repetitive dashboard busywork."
+                      : "Administrative drag dilutes your team's focus. We build direct pipelines from capture to CRM, eliminating repetitive entry entirely."
                     }
                   </p>
                 </div>
@@ -203,7 +211,7 @@ export function Bottleneck() {
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We configure smart CRM follow-ups and lead-nurtures. Benefit: Recover pipeline revenue that is normally lost to silence."
-                      : "Without structured automatic nurturing, warm leads are neglected and get lost in the sales pipeline."
+                      : "Systemic neglect kills deals. We engineer automated follow-up sequences that run indefinitely, ensuring no pipeline value evaporates."
                     }
                   </p>
                 </div>

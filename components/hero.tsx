@@ -25,7 +25,7 @@ export function Hero() {
           className="inline-flex items-center gap-2 mb-6"
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            AI-Powered Digital Growth Agency
+            Bespoke Digital Infrastructure & Autonomic Systems
           </span>
         </motion.div>
 
@@ -36,7 +36,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary leading-[1.15] text-balance mb-8 max-w-4xl"
         >
-          Websites That Command Authority. Systems That Generate Revenue.
+          We Build Digital Systems for Category Leaders. The Rest Chase Them.
         </motion.h1>
 
         {/* Subheadline */}
@@ -46,7 +46,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="font-sans text-base sm:text-lg text-text-primary opacity-90 max-w-[580px] leading-relaxed mb-10"
         >
-          We build premium AI-powered websites and automated lead systems for ambitious businesses ready to scale.
+          We do not build generic templates. We engineer high-performance visual platforms and automated pipelines for enterprises that require absolute leverage. Selectively aligned. Flawlessly executed.
         </motion.p>
 
         {/* Two CTA Buttons Side by Side */}
@@ -54,27 +54,32 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mb-16 w-full justify-center"
+          className="flex flex-col items-center gap-4 mb-16 w-full justify-center"
         >
-          <Button
-            asChild
-            size="lg"
-            className="w-full sm:w-auto px-8 py-7"
-          >
-            <Link href="/book" className="flex items-center justify-center gap-2">
-              Book Your Free Strategy Call
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="w-full sm:w-auto px-8 py-7"
+            >
+              <Link href="/book" className="flex items-center justify-center gap-2">
+                Apply for System Audit
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
 
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="w-full sm:w-auto px-8 py-7"
-          >
-            <Link href="/portfolio">See Our Work</Link>
-          </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto px-8 py-7"
+            >
+              <Link href="/portfolio">See Our Work</Link>
+            </Button>
+          </div>
+          <Link href="/process" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-2">
+            Unsure of your requirements? Review our Execution Protocol →
+          </Link>
         </motion.div>
 
         {/* Trust Bar */}
@@ -85,19 +90,19 @@ export function Hero() {
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-text-secondary border-t border-border-brand/20 pt-8 w-full max-w-3xl"
         >
           <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> 10+ prototype builds completed
+            <span className="text-accent-gold">✦</span> 10+ Bespoke Deployments
           </span>
           <span className="hidden sm:inline text-white/20">|</span>
           <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> AI-Powered
+            <span className="text-accent-gold">✦</span> Autonomic Orchestrations
           </span>
           <span className="hidden sm:inline text-white/20">|</span>
           <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> Mobile Optimised
+            <span className="text-accent-gold">✦</span> Fluid Mobile Architecture
           </span>
           <span className="hidden sm:inline text-white/20">|</span>
           <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> Results-Focused
+            <span className="text-accent-gold">✦</span> Guaranteed Throughput
           </span>
         </motion.div>
       </div>

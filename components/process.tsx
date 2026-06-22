@@ -7,30 +7,30 @@ import { ChevronDown, Sparkles } from "lucide-react"
 const steps = [
   {
     number: "01",
-    title: "Discovery & Audit",
-    sub: "We map every workflow bottleneck in your business",
-    details: "In a 30-minute deep-dive call, we dissect your operations step by step — identifying which processes are stealing the most time and money. We then produce a complete automation opportunity map ranked by impact and effort.",
+    title: "Forensic Operational Audit",
+    sub: "Identifying system leakage and administrative drag.",
+    details: "We dissect your operations to isolate where human friction costs you margins. We do not do casual chats; we execute a forensic analysis of your current systems.",
     deliverable: "Automation Opportunity Report"
   },
   {
     number: "02",
-    title: "Strategy & Blueprint",
-    sub: "A custom roadmap built around your exact needs",
-    details: "We map out the system architecture, CRM pipeline routes, and design blueprints. You receive a structured development scope showing exactly how inputs convert to outputs with clear ROI projections.",
+    title: "Architecture & Blueprint",
+    sub: "Designing custom pipelines built for leverage.",
+    details: "We map out the system architecture, CRM pipeline routes, and design blueprints. You receive an absolute layout showing exactly where manual labor is permanently replaced.",
     deliverable: "Bespoke System Architecture Blueprint"
   },
   {
     number: "03",
-    title: "Build & Integrate",
-    sub: "We build, test, and connect everything to your systems",
-    details: "We code your custom high-converting web platform, build automated pipelines, implement AI chatbots, and wire integrations across your CRM, email, and calendars. Everything is rigorously tested for zero error rates.",
+    title: "Bespoke Integration & Build",
+    sub: "Developing customized assets with zero templates.",
+    details: "We code your custom high-converting web presence and build automated pipelines. Zero template boilerplate. We build for maximum throughput and test for absolute resilience.",
     deliverable: "Verified Production Platform & AI Hub Sync"
   },
   {
     number: "04",
-    title: "Launch & Handover",
-    sub: "Go live with full team training and documentation",
-    details: "We deploy the systems live. We set up analytics, verify speed scores, and conduct training sessions with your team. You receive a walkthrough document detailing the architecture, guaranteeing zero operational friction.",
+    title: "Telemetric Handover",
+    sub: "Transitioning control with full telemetry setups.",
+    details: "We deploy the systems live under full validation. You receive complete telemetry dashboards and operational training. We build and test your new platform parallel to your current setup, guaranteeing a zero-downtime transition.",
     deliverable: "Scalable Infrastructure & 30-Day Launch Care"
   },
 ]
@@ -51,7 +51,7 @@ export function Process() {
             Our Process
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            From Kickoff to Full Automation
+            The Execution Protocol
           </h2>
         </div>
 

@@ -42,10 +42,10 @@ function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; pre
 
 const setupTiers = [
   {
-    name: "Launch",
+    name: "Vanguard",
     price: "1,500",
     interval: "one-time investment",
-    description: "Perfect for establishing a premium digital presence with elite speed.",
+    description: "For emerging brands establishing absolute category presence.",
     features: [
       "Custom Luxury Website (3 Pages)",
       "Premium Mobile Optimisation",
@@ -56,13 +56,13 @@ const setupTiers = [
     ],
     cta: "Book Discovery Session",
     featured: false,
-    tag: "Launch"
+    tag: "Vanguard"
   },
   {
-    name: "Legacy",
+    name: "Sovereign",
     price: "3,500",
     interval: "one-time investment",
-    description: "Full AI-powered custom system designed for authority and automatic scaling.",
+    description: "Full-scale autonomous web and AI integration. The benchmark for market dominance.",
     features: [
       "Custom Authority Website (Up to 8 Pages)",
       "Custom AI Chat Concierge Integration",
@@ -73,13 +73,13 @@ const setupTiers = [
     ],
     cta: "Book Strategy Session",
     featured: true,
-    tag: "Legacy"
+    tag: "Sovereign"
   },
   {
-    name: "Elite",
+    name: "Apex Suite",
     price: "7,000",
     interval: "one-time investment",
-    description: "The ultimate brand and automation takeover for absolute market dominance.",
+    description: "Total brand takeover and multi-agent system execution. For leaders requiring complete operational leverage.",
     features: [
       "Complete Brand Identity Suite (Logos, Guidelines)",
       "Multi-System Bespoke AI Workflows",
@@ -90,13 +90,13 @@ const setupTiers = [
     ],
     cta: "Book Strategy Session",
     featured: false,
-    tag: "Elite"
+    tag: "Apex Suite"
   },
 ]
 
 const retainerTiers = [
   {
-    name: "Ascent",
+    name: "Sentry Support",
     price: "499",
     interval: "billed monthly",
     description: "Continuous hosting, top-tier performance audits, and priority developer hours.",
@@ -110,10 +110,10 @@ const retainerTiers = [
     ],
     cta: "Book Discovery Session",
     featured: false,
-    tag: "Launch"
+    tag: "Vanguard"
   },
   {
-    name: "Sovereign",
+    name: "Velocity Optimization",
     price: "1,299",
     interval: "billed monthly",
     description: "Ongoing custom growth campaigns, advanced SEO, and bespoke AI tuning.",
@@ -127,10 +127,10 @@ const retainerTiers = [
     ],
     cta: "Book Strategy Session",
     featured: true,
-    tag: "Legacy"
+    tag: "Sovereign"
   },
   {
-    name: "Apex",
+    name: "Fractional Ops Takeover",
     price: "2,999",
     interval: "billed monthly",
     description: "Your complete external fractional Chief Technology & Marketing Team.",
@@ -144,7 +144,7 @@ const retainerTiers = [
     ],
     cta: "Book Strategy Session",
     featured: false,
-    tag: "Elite"
+    tag: "Apex Suite"
   },
 ]
 
@@ -205,10 +205,10 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
   const recommendedTier = 
     revenue < 15000 
-      ? "Launch" 
+      ? "Vanguard" 
       : revenue >= 15000 && revenue < 50000 
-      ? "Legacy" 
-      : "Elite"
+      ? "Sovereign" 
+      : "Apex Suite"
 
   if (isHomepage) {
     return (
@@ -221,8 +221,11 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               Investment
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-              Transparent Pricing. Premium Results.
+              Bespoke Capital Investments. Measurable Yields.
             </h2>
+            <p className="font-sans text-sm text-text-primary opacity-80 mt-4 max-w-xl mx-auto leading-relaxed">
+              We do not build administrative overhead. We deploy capital assets designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
+            </p>
 
             {/* Billing Toggle */}
             <div className="inline-flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative mt-2">
@@ -537,6 +540,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
             <span className="text-white">Strategic </span>
             <span className="text-gradient-gold">Investment Models</span>
           </h2>
+          <p className="font-sans text-sm text-muted-foreground mt-4 max-w-xl mx-auto leading-relaxed">
+            We do not build administrative overhead. We deploy capital assets designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
+          </p>
           
           <div className="inline-flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
             <button
@@ -695,9 +701,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                       <thead>
                         <tr className="border-b border-border">
                           <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-bg-primary z-20 border-r border-border">Feature Category</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Launch Setup</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Legacy System</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Elite Suite</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Vanguard Setup</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Sovereign System</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Apex Suite</th>
                         </tr>
                       </thead>
                       <tbody>

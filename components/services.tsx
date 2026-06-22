@@ -8,19 +8,22 @@ import Link from "next/link"
 
 const services = [
   {
-    title: "AI-Powered Business Websites",
-    description: "Stunning websites enhanced with AI features that engage visitors and convert them into clients.",
+    title: "Bespoke Authority Platforms",
+    description: "Web presence designed to project absolute category dominance. Built without templates, engineered for prestige.",
     icon: Globe,
+    outcome: "+238% Conversion Increase",
   },
   {
-    title: "High-Converting Landing Pages",
-    description: "Strategic landing pages designed to capture leads and drive high-ticket sales.",
+    title: "High-Yield Conversion Funnels",
+    description: "Digital architectures focused on a single outcome: turning high-intent traffic into qualified pipeline.",
     icon: FileText,
+    outcome: "97% Lead Response Speed",
   },
   {
-    title: "Automated Lead Generation",
-    description: "Smart automation that captures, qualifies, and nurtures leads while you sleep.",
+    title: "Autonomic Systems & AI Agents",
+    description: "Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.",
     icon: Zap,
+    outcome: "30+ Hours Reclaimed Weekly",
   },
 ]
 
@@ -37,7 +40,7 @@ export function Services({ limit }: { limit?: number }) {
             Our Services
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Premium Digital Solutions, Built to Perform
+            Custom Architectures Engineered for Leverage
           </h2>
         </div>
 
@@ -70,6 +73,13 @@ export function Services({ limit }: { limit?: number }) {
                       <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed min-h-[44px]">
                         {service.description}
                       </p>
+
+                      {/* Distributed Outcome Stat */}
+                      <div className="pt-2">
+                        <span className="font-mono text-xs font-bold text-accent-gold uppercase tracking-wider block">
+                          Target Yield: {service.outcome}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Learn More Link */}
@@ -99,6 +109,11 @@ export function Services({ limit }: { limit?: number }) {
             </Link>
           </div>
         )}
+
+        {/* Timing Objection Callout */}
+        <p className="text-center text-xs text-text-secondary mt-12 max-w-lg mx-auto leading-relaxed">
+          Standard development cycles take 3 to 6 months of back-and-forth friction. Our clinical Execution Protocol delivers custom operational systems fully verified in under 28 days.
+        </p>
       </div>
     </section>
   )

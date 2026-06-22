@@ -217,7 +217,7 @@ function BookingFlowInner() {
                 step >= s ? "text-foreground" : "text-text-secondary"
               }`}
             >
-              {s === 1 ? "Qualification" : "Schedule Call"}
+              {s === 1 ? "Vetting" : "Schedule Session"}
             </span>
             {s < 2 && <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />}
           </div>
@@ -241,7 +241,7 @@ function BookingFlowInner() {
                 Tell Us About Your Brand
               </h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                This takes 60 seconds. Your details pre-fill the scheduler — no double entry.
+                This takes 60 seconds. Due to high demand and bandwidth allocation, we are only accepting 2 new integration partnerships this month.
               </p>
             </div>
 
@@ -391,14 +391,14 @@ function BookingFlowInner() {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    Continue to Schedule
+                    Submit Qualification Form
                     <ArrowRight size={18} />
                   </span>
                 )}
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                No commitment. We&apos;ll review your business and give you honest feedback in 30 minutes — completely free.
+                Only qualified inquiries will receive confirmation. We review all applications within 1 business day.
               </p>
             </form>
           </motion.div>

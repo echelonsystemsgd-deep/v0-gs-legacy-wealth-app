@@ -5,11 +5,11 @@ import { ShieldCheck } from "lucide-react"
 import Image from "next/image"
 
 const differentiators = [
-  "Royal purple + gold brand aesthetic — built to stand out",
-  "AI-enhanced, not template-built",
-  "Delivered in days, not months",
-  "Conversion-first architecture on every build",
-  "Ongoing support & optimisation included",
+  "Bespoke visual identity aligned with category dominance.",
+  "Autonomous AI systems, never boilerplate templates.",
+  "Rapid execution paths designed to eliminate deployment lag.",
+  "Data-backed conversion architecture on every component.",
+  "Dedicated optimization retention to preserve system throughput.",
 ]
 
 export function WhyGSLegacy() {
@@ -39,7 +39,7 @@ export function WhyGSLegacy() {
             className="space-y-6"
           >
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              Built Different. Priced for Ambition.
+              Engineered for Leverage. Built for Prestige.
             </h2>
             <p className="font-sans text-base text-text-primary opacity-80 leading-relaxed max-w-xl">
               We focus on premium, custom digital assets tailored specifically for businesses ready to dominate their space. By combining luxury visual storytelling with AI automation, we ensure your online presence acts as a 24/7 revenue-generating asset rather than a static brochure.
@@ -74,6 +74,62 @@ export function WhyGSLegacy() {
             ))}
           </motion.div>
         </div>
+
+        {/* Contrast Comparison Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-16 pt-16 border-t border-white/5"
+        >
+          <h3 className="font-serif text-2xl font-bold text-white text-center mb-8">
+            The Structural Reality
+          </h3>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Standard Agency */}
+            <div className="p-6 rounded-xl border border-red-500/10 bg-red-500/5 space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">
+                Standard Agency Model
+              </span>
+              <ul className="space-y-2.5 text-xs text-text-primary opacity-70">
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500">✕</span> Boilerplate templates and generic layout setups.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500">✕</span> Delayed deployment paths taking 2 to 3 months.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500">✕</span> Disconnected lead qualifiers and manual CRM copying.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500">✕</span> Ongoing hourly overhead without performance guarantees.
+                </li>
+              </ul>
+            </div>
+            
+            {/* GS Legacy */}
+            <div className="p-6 rounded-xl border border-accent-gold/20 bg-accent-gold/5 space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-accent-gold">
+                GS Legacy Autonomic Systems
+              </span>
+              <ul className="space-y-2.5 text-xs text-[#F0EDE6] opacity-90">
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-gold">✦</span> Bespoke authority platforms built from the ground up.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-gold">✦</span> Rapid execution protocol delivering assets in under 28 days.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-gold">✦</span> Autonomous capture funnels with direct CRM data pipelines.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-accent-gold">✦</span> Clear capital investment aligned with guaranteed throughput.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

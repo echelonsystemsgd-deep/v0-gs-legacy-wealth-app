@@ -18,7 +18,7 @@ const faqs = [
   {
     question: "Are your pricing tiers one-time setups or recurring contracts?",
     answer:
-      "Our core builds (Launch, Legacy, and Elite) are structured as one-time setup investments. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers (Ascent, Sovereign, and Apex) for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning."
+      "Our core builds (Vanguard, Sovereign, and Apex Suite) are structured as one-time setup investments. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers (Sentry Support, Velocity Optimization, and Fractional Ops Takeover) for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning."
   },
   {
     question: "Will the custom website and dashboard run fast on mobile?",

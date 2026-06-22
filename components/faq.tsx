@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "Are the prices one-time fees or monthly subscriptions?",
     answer:
-      "Our main packages (Launch, Legacy, and Elite) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Ascent, Sovereign, and Apex) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
+      "Our main packages (Vanguard, Sovereign, and Apex Suite) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Sentry Support, Velocity Optimization, and Fractional Ops Takeover) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
   },
   {
     question: "What is your standard payment structure?",
@@ -27,7 +27,7 @@ const faqs = [
   {
     question: "Do you build custom AI automations beyond chatbots?",
     answer:
-      "Yes, absolutely. Under our Legacy and Elite tiers (as well as Sovereign and Apex retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
+      "Yes, absolutely. Under our Sovereign and Apex Suite tiers (as well as Velocity Optimization and Fractional Ops Takeover retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
   },
   {
     question: "Will the website work flawlessly on mobile?",
