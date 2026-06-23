@@ -101,7 +101,7 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.4 }}
-            className="relative w-full max-w-2xl max-h-[calc(100vh-2rem)] md:max-h-[85vh] bg-bg-tertiary border border-border-brand/45 rounded-2xl overflow-hidden glass shadow-2xl z-10 text-text-primary flex flex-col"
+            className="relative w-full max-w-4xl max-h-[calc(100vh-2rem)] md:max-h-[90vh] bg-bg-tertiary border border-border-brand/45 rounded-2xl overflow-hidden glass shadow-2xl z-10 text-text-primary flex flex-col"
           >
             {/* Close Button */}
             <button
@@ -130,10 +130,10 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
               </div>
 
               {/* Content Grid */}
-              <div className="grid md:grid-cols-12 gap-8 items-start">
+              <div className="grid lg:grid-cols-2 gap-8 items-start">
                 
                 {/* Inputs Column */}
-                <div className="md:col-span-7 space-y-6">
+                <div className="space-y-6">
                   <p className="text-xs text-text-secondary leading-relaxed">
                     Systems we deploy are designed to generate clear operational leverage. Adjust the parameters below to project the efficiency and potential revenue gains unlocked by custom automation.
                   </p>
@@ -230,7 +230,7 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
                 </div>
 
                 {/* Calculations & Recommended CTA Column */}
-                <div className="md:col-span-5 bg-bg-primary/50 border border-white/5 rounded-xl p-5 space-y-5">
+                <div className="bg-bg-primary/50 border border-white/5 rounded-xl p-5 space-y-5">
                   <div className="grid grid-cols-2 gap-3.5">
                     <div className="p-3 bg-bg-secondary/40 rounded-lg border border-white/5">
                       <div className="flex items-center gap-1.5 text-[10px] text-text-secondary mb-1">
