@@ -1,8 +1,8 @@
 "use client"
 
 import { useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { PhoneCall } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -41,11 +41,11 @@ interface CalendlyPopupButtonProps {
  * CalendlyPopupButton
  *
  * Triggers `Calendly.initPopupWidget()` using the same widget.js that is
- * loaded at root layout level (`strategy="lazyOnload"`).
+ * loaded at root layout level (`strategy="afterInteractive"`).
  *
  * Graceful degradation: if window.Calendly is not yet loaded (blocked by an
- * ad-blocker or not yet hydrated), the button falls back to a standard Next.js
- * Link navigating the user to the full `/book` inline embed page.
+ * ad-blocker or not yet hydrated), the button falls back to Next.js router
+ * navigation to the full /book inline embed page.
  */
 export function CalendlyPopupButton({
   label = "Book a Free Call",
@@ -53,47 +53,41 @@ export function CalendlyPopupButton({
   className,
   outline = false,
 }: CalendlyPopupButtonProps) {
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const Calendly = (window as any).Calendly
+  const router = useRouter()
 
-      // If Calendly widget script has loaded, open popup
-      if (Calendly && typeof Calendly.initPopupWidget === "function") {
-        e.preventDefault()
-        Calendly.initPopupWidget({
-          url: STYLED_CALENDLY_URL,
-          ...(prefill && {
-            prefill: {
-              name: prefill.name ?? "",
-              email: prefill.email ?? "",
-            },
-          }),
-        })
-      }
-      // Otherwise let the fallback <Link> handle navigation to /book
-    },
-    [prefill]
-  )
+  const handleClick = useCallback(() => {
+    const Calendly = (window as any).Calendly
+
+    if (Calendly && typeof Calendly.initPopupWidget === "function") {
+      Calendly.initPopupWidget({
+        url: STYLED_CALENDLY_URL,
+        ...(prefill && {
+          prefill: {
+            name: prefill.name ?? "",
+            email: prefill.email ?? "",
+          },
+        }),
+      })
+    } else {
+      // Calendly not available — fall back to the full inline embed page
+      router.push("/book")
+    }
+  }, [prefill, router])
 
   return (
-    // Wrap in a Link so that if JS is blocked / Calendly unavailable,
-    // the element is still a valid anchor that navigates to /book.
-    <Link href="/book" passHref legacyBehavior>
-      <Button
-        asChild={false}
-        variant={outline ? "outline" : "default"}
-        size="lg"
-        onClick={handleClick}
-        id="calendly-popup-cta"
-        className={cn(
-          "flex items-center gap-2",
-          outline && "border-accent-gold/40 text-accent-gold hover:bg-accent-gold/10",
-          className
-        )}
-      >
-        <PhoneCall size={16} className="shrink-0" />
-        {label}
-      </Button>
-    </Link>
+    <Button
+      variant={outline ? "outline" : "default"}
+      size="lg"
+      onClick={handleClick}
+      id="calendly-popup-cta"
+      className={cn(
+        "flex items-center gap-2",
+        outline && "border-accent-gold/40 text-accent-gold hover:bg-accent-gold/10",
+        className
+      )}
+    >
+      <PhoneCall size={16} className="shrink-0" />
+      {label}
+    </Button>
   )
 }

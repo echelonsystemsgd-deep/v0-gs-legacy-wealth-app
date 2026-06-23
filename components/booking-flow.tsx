@@ -254,9 +254,20 @@ function BookingFlowInner() {
   const [calendlyHeight, setCalendlyHeight] = useState("700px")
   const [calendlyLoaded, setCalendlyLoaded] = useState(false)
   const [calendlyTimedOut, setCalendlyTimedOut] = useState(false)
+  // True once the container div is actually in the DOM (callback ref fires)
+  const [containerReady, setContainerReady] = useState(false)
 
   const calendlyContainerRef = useRef<HTMLDivElement>(null)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Callback ref — fires the instant the container <div> mounts or unmounts.
+  // This solves the AnimatePresence mode="wait" timing race: the container is
+  // not in the DOM when useEffect([step]) first runs, so we track readiness
+  // explicitly and re-trigger init when it becomes true.
+  const setCalendlyRef = useCallback((node: HTMLDivElement | null) => {
+    ;(calendlyContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = node
+    setContainerReady(!!node)
+  }, [])
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -394,10 +405,12 @@ function BookingFlowInner() {
     return () => window.removeEventListener("message", handleCalendlyMessage)
   }, [])
 
-  // ── Initialise / re-initialise widget when step → 2 ──────────────────────
+  // ── Initialise / re-initialise widget when step → 2 AND container is mounted
+  // containerReady becomes true via the callback ref the moment the <div> paints.
+  // This eliminates the AnimatePresence mode="wait" race where the container
+  // is not yet in the DOM when step changes.
   useEffect(() => {
-    if (step !== 2) return
-    if (!calendlyContainerRef.current) return
+    if (step !== 2 || !containerReady || !calendlyContainerRef.current) return
 
     // Reset state for fresh init
     setCalendlyLoaded(false)
@@ -456,7 +469,7 @@ function BookingFlowInner() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step])
+  }, [step, containerReady])
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -944,7 +957,7 @@ function BookingFlowInner() {
               role="region"
               aria-label="Calendly booking calendar"
             >
-              {/* Skeleton — visible until first page_height event */}
+              {/* Skeleton overlay — visible until first page_height event fires */}
               <AnimatePresence>
                 {!calendlyLoaded && !calendlyTimedOut && (
                   <motion.div
@@ -959,17 +972,30 @@ function BookingFlowInner() {
                 )}
               </AnimatePresence>
 
-              {/* Fallback — shown after 8-second timeout */}
-              {calendlyTimedOut && !calendlyLoaded ? (
-                <CalendlyFallback url={CALENDLY_URL} />
-              ) : (
-                /* Calendly JS widget renders into this div */
-                <div
-                  ref={calendlyContainerRef}
-                  className="calendly-inline-widget relative z-0"
-                  style={{ minWidth: "320px", height: calendlyHeight }}
-                />
-              )}
+              {/* Fallback overlay — shown after timeout, sits on top of container */}
+              <AnimatePresence>
+                {calendlyTimedOut && !calendlyLoaded && (
+                  <motion.div
+                    key="fallback"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="absolute inset-0 z-20 flex items-center justify-center bg-bg-primary"
+                  >
+                    <CalendlyFallback url={CALENDLY_URL} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/*
+                Calendly JS widget ALWAYS renders into this div.
+                It must never be conditionally unmounted — the ref must stay
+                stable so initInlineWidget always has a valid parentElement.
+              */}
+              <div
+                ref={setCalendlyRef}
+                className="calendly-inline-widget relative z-0"
+                style={{ minWidth: "320px", height: calendlyHeight }}
+              />
             </div>
 
             <button
