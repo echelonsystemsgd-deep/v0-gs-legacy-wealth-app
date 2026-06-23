@@ -39,13 +39,14 @@ export default function LoginPage() {
 
       if (profile?.role === 'admin') {
         router.push('/admin')
+      } else if (profile?.role === 'client') {
+        router.push('/client')
       } else {
         router.push('/dashboard')
       }
     } else {
       router.push('/dashboard')
     }
-    router.refresh()
   }
 
   return (

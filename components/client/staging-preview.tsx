@@ -20,6 +20,7 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
   const terminalEndRef = useRef<HTMLDivElement>(null)
+  const isInitialMount = useRef(true)
 
   // Initialize and append real and simulated log streams
   useEffect(() => {
@@ -46,8 +47,12 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
     setLogs([...initialLogs, ...mappedUpdates])
   }, [projectUpdates])
 
-  // Scroll terminal logs to bottom when updated
+  // Scroll terminal logs to bottom when updated (skip initial mount)
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [logs])
 
