@@ -21,7 +21,6 @@ import {
   AlertCircle,
   TrendingUp,
   Clock,
-  ShieldAlert,
 } from "lucide-react"
 
 // ---------------------------------------------------------------------------
@@ -246,7 +245,6 @@ function BookingFlowInner() {
   const [step, setStep] = useState<1 | 2>(1)
   const [subStep, setSubStep] = useState<number>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isDisqualified, setIsDisqualified] = useState(false)
   const [errors, setErrors] = useState<
     Partial<Record<keyof FormData, string>>
   >({})
@@ -350,12 +348,8 @@ function BookingFlowInner() {
 
       setIsSubmitting(false)
 
-      // Q4 revenue threshold check (Under £5,000 is disqualified)
-      if (dataToSubmit.monthlyRevenue === "Under £5,000") {
-        setIsDisqualified(true)
-      } else {
-        setStep(2)
-      }
+      // Everyone gets Calendly — no revenue gate
+      setStep(2)
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch (err: any) {
       setIsSubmitting(false)
@@ -885,49 +879,6 @@ function BookingFlowInner() {
                     <ChevronRight size={16} />
                   </>
                 )}
-              </Button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* ================================================================
-            DISQUALIFIED STATE — Polite criteria redirection page
-            ================================================================ */}
-        {isDisqualified && (
-          <motion.div
-            key="disqualified"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="glass rounded-2xl p-8 sm:p-10 border border-accent-gold/20 text-center space-y-6 max-w-xl mx-auto shadow-2xl"
-          >
-            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-accent-gold/5 border border-accent-gold/20 mx-auto">
-              <ShieldAlert size={28} className="text-accent-gold" />
-            </div>
-
-            <div className="space-y-3">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-                Thank You, {formData.fullName.split(" ")[0]}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                We appreciate you taking the time to share your details. To maintain the elite quality of our custom AI integrations, we are currently only partnering with businesses generating a minimum revenue of <strong className="text-accent-gold font-semibold">£5,000/month</strong>.
-              </p>
-              <p className="text-xs text-text-secondary leading-relaxed max-w-md mx-auto">
-                We've saved your details and will keep you updated if our partnership capacity or structure changes. Let's stay in touch.
-              </p>
-            </div>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button asChild size="lg" className="w-full sm:w-auto px-8">
-                <Link href="/">
-                  Return to Homepage
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto px-8 border-accent-gold/25 text-accent-gold hover:bg-accent-gold/10">
-                <Link href="/portfolio">
-                  Browse Portfolio
-                </Link>
               </Button>
             </div>
           </motion.div>
