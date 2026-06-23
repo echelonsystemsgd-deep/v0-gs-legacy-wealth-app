@@ -44,7 +44,8 @@ const setupTiers = [
   {
     name: "Vanguard",
     price: "1,500",
-    interval: "one-time investment",
+    interval: "£375 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£375) linked to build progress",
     description: "For emerging brands establishing absolute category presence.",
     features: [
       "Custom Luxury Website (3 Pages)",
@@ -61,7 +62,8 @@ const setupTiers = [
   {
     name: "Sovereign",
     price: "3,500",
-    interval: "one-time investment",
+    interval: "£875 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£875) linked to build progress",
     description: "Full-scale autonomous web and AI integration. The benchmark for market dominance.",
     features: [
       "Custom Authority Website (Up to 8 Pages)",
@@ -78,7 +80,8 @@ const setupTiers = [
   {
     name: "Apex Suite",
     price: "7,000",
-    interval: "one-time investment",
+    interval: "£1,750 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£1,750) linked to build progress",
     description: "Total brand takeover and multi-agent system execution. For leaders requiring complete operational leverage.",
     features: [
       "Complete Brand Identity Suite (Logos, Guidelines)",
@@ -315,6 +318,12 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                           <span className="text-[10px] text-accent-gold uppercase tracking-wider font-semibold block mt-1">
                             {tier.interval}
                           </span>
+                          {billingCycle === "setup" && (tier as any).milestoneBreakdown && (
+                            <div className="mt-2.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-white/70 leading-relaxed flex items-center gap-2">
+                              <span className="text-accent-gold font-bold font-sans text-xs shrink-0">％</span>
+                              <span>{(tier as any).milestoneBreakdown}</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Features */}
@@ -636,6 +645,12 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                           <span className="text-xs text-accent uppercase tracking-widest font-semibold block mt-1">
                             {tier.interval}
                           </span>
+                          {billingCycle === "setup" && (tier as any).milestoneBreakdown && (
+                            <div className="mt-3 p-2.5 rounded-lg bg-white/[0.02] border border-white/5 text-[11px] text-muted-foreground leading-relaxed flex items-center gap-2">
+                              <span className="text-accent-gold font-bold font-sans text-xs shrink-0">％</span>
+                              <span>{(tier as any).milestoneBreakdown}</span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="space-y-4 mb-10">

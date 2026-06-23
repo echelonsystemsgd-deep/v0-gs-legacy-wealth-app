@@ -41,6 +41,7 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   }
 
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
+  const firstLocked = milestones.find(m => hasContract && percent < m.threshold)
 
   return (
     <div className="p-6 glass rounded-2xl border border-gold/10 flex flex-col items-center space-y-6 relative overflow-hidden h-full shadow-lg">
@@ -205,7 +206,11 @@ export function ProjectTelemetry({ project }: ProjectProps) {
                     </p>
                     {!isUnlocked && hasContract && (
                       <p className="text-[10px] text-gold font-mono mt-1.5 border-t border-white/5 pt-1">
-                        Requires additional {formatCurrency(requiredAmount - amountPaid)} settled.
+                        {firstLocked?.name === m.name ? (
+                          <>Requires additional {formatCurrency(requiredAmount - amountPaid)} settled to unlock (Target: {formatCurrency(requiredAmount)}).</>
+                        ) : (
+                          <>Requires {formatCurrency(requiredAmount)} total settled to unlock.</>
+                        )}
                       </p>
                     )}
                   </div>

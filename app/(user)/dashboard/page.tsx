@@ -61,12 +61,11 @@ export default async function UserDashboardPage({
     }
   }
 
-  // Find projects matching client name
-  const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+  // Find project strictly mapped by client_id
   const { data: project } = await supabase
     .from('projects')
     .select('*')
-    .or(`client_name.ilike.%${profile.first_name}%,client_name.ilike.%${fullName}%`)
+    .eq('client_id', user.id)
     .maybeSingle()
 
   // Fetch project assets if project exists
