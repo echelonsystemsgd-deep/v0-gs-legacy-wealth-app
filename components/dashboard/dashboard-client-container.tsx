@@ -4,6 +4,8 @@ import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { UserNotificationCenter } from '@/components/dashboard/user-notification-center'
+import { Watermark } from '@/components/watermark'
 import {
   Calendar,
   ArrowRight,
@@ -72,6 +74,16 @@ type Asset = {
   created_at: string
 }
 
+type Session = {
+  id: string
+  lead_id: string | null
+  calendly_event_id: string | null
+  scheduled_at: string
+  status: 'Scheduled' | 'Canceled' | 'No Show' | 'Completed'
+  notes: string | null
+  outcomes: string | null
+}
+
 interface DashboardClientContainerProps {
   profile: Profile
   lead: Lead | null
@@ -79,6 +91,7 @@ interface DashboardClientContainerProps {
   initialAssets: Asset[]
   testimonials?: any[]
   portfolioItems?: any[]
+  initialSession?: Session | null
 }
 
 // ─── Tab Definitions ──────────────────────────────────────────────────────────
@@ -92,6 +105,7 @@ export default function DashboardClientContainer({
   initialAssets,
   testimonials = [],
   portfolioItems = [],
+  initialSession = null,
 }: DashboardClientContainerProps) {
   const router = useRouter()
   const supabase = createClient()
@@ -100,6 +114,7 @@ export default function DashboardClientContainer({
   // Local States
   const [lead, setLead] = useState<Lead | null>(initialLead)
   const [assets, setAssets] = useState<Asset[]>(initialAssets)
+  const [session, setSession] = useState<Session | null>(initialSession)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -230,6 +245,8 @@ export default function DashboardClientContainer({
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/3 blur-[130px]" />
       </div>
 
+      <Watermark position="center" opacity={0.02} />
+
       {/* ── Sticky Top Bar ─────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/90 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4 shrink-0">
         {/* Brand mark */}
@@ -263,6 +280,7 @@ export default function DashboardClientContainer({
           >
             <Globe size={15} />
           </Link>
+          <UserNotificationCenter />
           <form action="/auth/signout" method="post">
             <button
               type="submit"
@@ -408,7 +426,7 @@ export default function DashboardClientContainer({
                   {[
                     { label: 'Upload Asset', sub: 'Send brand files or briefs', icon: Upload, action: () => setClientTab('assets') },
                     { label: 'View Analytics', sub: 'Live automation metrics', icon: BarChart3, action: () => setClientTab('insights') },
-                    { label: 'Book Call', sub: 'Schedule a check-in', icon: Calendar, href: '/book' },
+                    { label: 'Book Call', sub: 'Schedule a check-in', icon: Calendar, href: '/dashboard/book' },
                   ].map((item) => (
                     item.href ? (
                       <Link key={item.label} href={item.href}
@@ -646,8 +664,62 @@ export default function DashboardClientContainer({
                   </div>
                 </div>
 
-                {/* VIP Strategy Session Spotlight */}
-                {lead?.status !== 'Call Booked' ? (
+                {/* VIP Strategy Session Spotlight / Scheduled Session */}
+                {session && session.status === 'Scheduled' ? (
+                  <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/25 relative overflow-hidden space-y-5">
+                    <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                      <CheckCircle2 size={120} className="text-green-500" />
+                    </div>
+                    
+                    <div className="space-y-2 max-w-lg">
+                      <span className="px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/30 text-[10px] font-bold text-green-400 uppercase tracking-wider">
+                        Strategy Session Scheduled
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold text-foreground">
+                        Your Vetting Session is Confirmed
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        We have allocated an integration engineering slot for you. Your session is scheduled for:
+                      </p>
+                      <div className="p-4 rounded-xl bg-black/40 border border-gold/10 inline-block font-mono text-sm text-gold mt-1">
+                        {new Date(session.scheduled_at).toLocaleString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
+                      <Link
+                        href="/dashboard/book"
+                        className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        Reschedule / Modify Call
+                      </Link>
+                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <Sparkles size={12} className="text-gold animate-pulse" /> Meeting link has been dispatched to your email
+                      </div>
+                    </div>
+                  </div>
+                ) : lead?.status === 'Call Booked' ? (
+                  <div className="p-6 rounded-2xl bg-green-500/5 border border-green-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-green-400" /> Operational Audit Confirmed
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        Your session allocation is locked. Our lead architect is analyzing your preliminary business parameters to isolate margin friction prior to the call.
+                      </p>
+                    </div>
+                    <span className="px-3 py-1 bg-green-500/10 border border-green-500/25 rounded-lg text-green-400 text-xs font-bold font-mono">
+                      Allocated
+                    </span>
+                  </div>
+                ) : (
                   <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-gold/15 to-transparent border border-gold/25 relative overflow-hidden space-y-6">
                     <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                       <Calendar size={120} className="text-gold" />
@@ -665,31 +737,31 @@ export default function DashboardClientContainer({
                       </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                      <Link
-                        href="/book"
-                        className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5"
-                      >
-                        Submit Vetting Application <ArrowRight size={13} />
-                      </Link>
-                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                        <Sparkles size={12} className="text-gold animate-pulse" /> Vetted alignment only · Strictly limited bandwidth allocations
+                    {lead?.business_name ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-gold uppercase tracking-wider">
+                          <CheckCircle2 size={14} className="text-green-400" /> Enterprise parameters registered.
+                        </div>
+                        <Link
+                          href="/dashboard/book"
+                          className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-gold hover:bg-gold-light text-background font-serif font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+                        >
+                          Open Visual Booking Calendar <ArrowRight size={13} />
+                        </Link>
                       </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-6 rounded-2xl bg-green-500/5 border border-green-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                        <CheckCircle2 size={16} className="text-green-400" /> Operational Audit Confirmed
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        Your session allocation is locked. Our lead architect is analyzing your preliminary business parameters to isolate margin friction prior to the call.
-                      </p>
-                    </div>
-                    <span className="px-3 py-1 bg-green-500/10 border border-green-500/25 rounded-lg text-green-400 text-xs font-bold font-mono">
-                      Allocated
-                    </span>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <button
+                          onClick={() => setUserTab('profile')}
+                          className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          Register Profile Details to Unlock Vetting <ArrowRight size={13} />
+                        </button>
+                        <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                          <Sparkles size={12} className="text-gold animate-pulse" /> Vetted alignment only · Strictly limited bandwidth allocations
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -711,7 +783,7 @@ export default function DashboardClientContainer({
                           Provisioning active systems triggers sub-second staging render channels, database schema mapping, and automated asset delivery pipelines here.
                         </p>
                         {lead?.status !== 'Call Booked' ? (
-                          <Link href="/book" className="mt-4 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gold text-background text-[10px] font-bold hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
+                          <Link href="/dashboard/book" className="mt-4 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gold text-background text-[10px] font-bold hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all">
                             Apply for Vetting to Unlock <ArrowRight size={10} />
                           </Link>
                         ) : (
@@ -797,7 +869,7 @@ export default function DashboardClientContainer({
                               <p className="text-[10px] text-muted-foreground mt-0.5">Isolate margin leaks and design system leverage points.</p>
                             </div>
                             {lead?.status !== 'Call Booked' && (
-                              <Link href="/book"
+                              <Link href="/dashboard/book"
                                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-gold text-background font-bold text-[10px] hover:shadow-[0_0_12px_rgba(212,175,55,0.25)] transition-all self-start sm:self-auto shrink-0">
                                 Apply Now <ArrowRight size={10} />
                               </Link>

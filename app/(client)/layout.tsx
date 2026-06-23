@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { ClientSidebar } from '@/components/client/sidebar'
 import { createClient } from '@/lib/supabase/server'
+import { UserNotificationCenter } from '@/components/dashboard/user-notification-center'
+import { Watermark } from '@/components/watermark'
 
 export const metadata: Metadata = {
   title: 'Client Dashboard',
@@ -33,6 +35,8 @@ export default async function ClientLayout({ children }: { children: React.React
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-gold/3 blur-[120px]" />
       </div>
 
+      <Watermark position="center" opacity={0.02} />
+
       {/* Sidebar */}
       <ClientSidebar />
 
@@ -43,6 +47,8 @@ export default async function ClientLayout({ children }: { children: React.React
           <div className="w-10 lg:hidden shrink-0" />
           <div className="flex-1" />
           <div className="flex items-center gap-3.5">
+            <UserNotificationCenter />
+            <div className="h-5 w-px bg-gold/10 hidden sm:block" />
             <span className="text-xs text-muted-foreground hidden sm:block">
               {profile.full_name ?? user.email}
             </span>

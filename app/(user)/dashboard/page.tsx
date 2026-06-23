@@ -41,6 +41,20 @@ export default async function UserDashboardPage() {
     .eq('email', user.email)
     .maybeSingle()
 
+  // Fetch strategy session if lead exists
+  let initialSession = null
+  if (lead) {
+    const { data: sessions } = await supabase
+      .from('strategy_sessions')
+      .select('*')
+      .eq('lead_id', lead.id)
+      .order('scheduled_at', { ascending: false })
+      .limit(1)
+    if (sessions && sessions.length > 0) {
+      initialSession = sessions[0]
+    }
+  }
+
   // Find projects matching client name
   const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
   const { data: project } = await supabase
@@ -81,6 +95,7 @@ export default async function UserDashboardPage() {
       initialAssets={initialAssets}
       testimonials={testimonials ?? []}
       portfolioItems={portfolioItems ?? []}
+      initialSession={initialSession}
     />
   )
 }

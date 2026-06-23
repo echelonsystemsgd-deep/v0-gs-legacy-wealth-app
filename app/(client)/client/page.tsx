@@ -67,6 +67,31 @@ export default async function ClientDashboardPage() {
     unreadMessagesCount = count || 0
   }
 
+  // Fetch upcoming scheduled strategy session for client
+  let upcomingSession = null
+  const { data: sessions } = await supabase
+    .from('strategy_sessions')
+    .select('*')
+    .eq('client_id', user.id)
+    .eq('status', 'Scheduled')
+    .order('scheduled_at', { ascending: true })
+    .limit(1)
+  if (sessions && sessions.length > 0) {
+    upcomingSession = sessions[0]
+  }
+
+  // Fetch recent messages preview
+  let recentMessages = []
+  if (project) {
+    const { data: messages } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('project_id', project.id)
+      .order('created_at', { descending: true })
+      .limit(3)
+    recentMessages = messages ?? []
+  }
+
   const greetingName = profile.first_name || profile.full_name || 'Client'
 
   // Standard visual stages mapping
@@ -195,30 +220,50 @@ export default async function ClientDashboardPage() {
                   {stages.map((stage, idx) => {
                     const isCompleted = idx < currentStageIndex
                     const isActive = idx === currentStageIndex
+                    const subTasks: Record<string, string[]> = {
+                      'Discovery': ['Brand consultation & assets gathered', 'User telemetry & system requirements documented'],
+                      'Design': ['Figma interactive wireframes created', 'Premium brand identity & asset system sign-off'],
+                      'Development': ['Next.js core application scaffolding', 'Supabase database & schema setup', 'Calendly & notification services integration'],
+                      'Revision': ['Staging preview deployment', 'Lead capture forms & CRM pipeline validation', 'Performance & RLS security audit'],
+                      'Complete': ['Production server setup', 'Domain delegation & live deployment']
+                    }
 
                     return (
-                      <div
-                        key={stage}
-                        className={`flex items-center gap-3.5 p-3 rounded-xl border transition-all ${
-                          isActive 
-                            ? 'bg-gold/5 border-gold/30 text-foreground' 
-                            : isCompleted 
-                              ? 'bg-white/[0.01] border-transparent text-muted-foreground' 
-                              : 'bg-transparent border-transparent text-muted-foreground/40'
-                        }`}
-                      >
-                        {isCompleted ? (
-                          <CheckCircle2 size={16} className="text-gold shrink-0" />
-                        ) : isActive ? (
-                          <CheckCircle2 size={16} className="text-gold shrink-0 animate-pulse" />
-                        ) : (
-                          <Circle size={16} className="text-muted-foreground/30 shrink-0" />
-                        )}
-                        <span className="text-sm font-semibold">{stage}</span>
-                        {isActive && (
-                          <span className="ml-auto text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 text-gold animate-pulse">
-                            Active Phase
-                          </span>
+                      <div key={stage} className="space-y-2">
+                        <div
+                          className={`flex items-center gap-3.5 p-3 rounded-xl border transition-all ${
+                            isActive 
+                              ? 'bg-gold/5 border-gold/30 text-foreground' 
+                              : isCompleted 
+                                ? 'bg-white/[0.01] border-transparent text-muted-foreground' 
+                                : 'bg-transparent border-transparent text-muted-foreground/40'
+                          }`}
+                        >
+                          {isCompleted ? (
+                            <CheckCircle2 size={16} className="text-gold shrink-0" />
+                          ) : isActive ? (
+                            <CheckCircle2 size={16} className="text-gold shrink-0 animate-pulse" />
+                          ) : (
+                            <Circle size={16} className="text-muted-foreground/30 shrink-0" />
+                          )}
+                          <span className="text-sm font-semibold">{stage}</span>
+                          {isActive && (
+                            <span className="ml-auto text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 text-gold animate-pulse">
+                              Active Phase
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Render detailed sub-tasks */}
+                        {(isActive || isCompleted) && subTasks[stage] && (
+                          <div className="pl-9 pb-2 space-y-1.5 animate-fade-in">
+                            {subTasks[stage].map((task) => (
+                              <div key={task} className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <CheckCircle2 size={11} className={isCompleted ? "text-gold/35" : "text-gold"} />
+                                <span>{task}</span>
+                              </div>
+                            ))}
+                          </div>
                         )}
                       </div>
                     )
@@ -229,6 +274,47 @@ export default async function ClientDashboardPage() {
 
             {/* Right Col - Quick Links / Support details */}
             <div className="space-y-6 sm:space-y-8">
+              {/* Sync Call Card */}
+              <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
+                <h3 className="text-sm font-bold text-gold uppercase tracking-wider flex items-center gap-1.5">
+                  <Calendar size={14} /> Milestone Sync Call
+                </h3>
+                <div className="space-y-3">
+                  {upcomingSession ? (
+                    <div className="p-3 rounded-xl bg-green-500/5 border border-green-500/20 space-y-2">
+                      <p className="text-xs text-foreground font-semibold">Sync Scheduled</p>
+                      <p className="text-xxs text-muted-foreground font-mono">
+                        {new Date(upcomingSession.scheduled_at).toLocaleString([], {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                      <Link
+                        href="/dashboard/book"
+                        className="text-xxs font-bold text-gold hover:underline flex items-center gap-1 mt-1 font-sans"
+                      >
+                        Reschedule sync →
+                      </Link>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Need a progress review or design sync call with our engineering lead? Book an inline check-in.
+                      </p>
+                      <Link
+                        href="/dashboard/book"
+                        className="w-full py-2.5 px-4 rounded-xl bg-gold/10 hover:bg-gold/15 border border-gold/25 text-xs font-semibold text-gold transition-all duration-300 flex items-center justify-between text-center cursor-pointer font-serif"
+                      >
+                        <span>Schedule Dev Sync</span> <ArrowRight size={12} />
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </section>
+
               {/* Quick status report */}
               <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
                 <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Site Access</h3>
@@ -247,16 +333,44 @@ export default async function ClientDashboardPage() {
 
               {/* Client support center card */}
               <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
-                <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Project Support</h3>
-                <div className="space-y-3">
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Have questions about your project, content updates, or changes? Msg us directly.
-                  </p>
+                <div className="flex justify-between items-center">
+                  <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Project Support</h3>
+                  {unreadMessagesCount > 0 && (
+                    <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                  )}
+                </div>
+                <div className="space-y-4">
+                  {recentMessages.length > 0 ? (
+                    <div className="space-y-2.5">
+                      {recentMessages.map((msg: any) => {
+                        const isAdmin = msg.sender_id !== user.id
+                        return (
+                          <div key={msg.id} className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
+                            <div className="flex justify-between text-[10px]">
+                              <span className={isAdmin ? "text-purple-400 font-bold" : "text-gold font-bold"}>
+                                {isAdmin ? "Engineering Team" : "You"}
+                              </span>
+                              <span className="text-muted-foreground font-mono">
+                                {new Date(msg.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-1 leading-snug">
+                              {msg.content}
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Have questions about your project, content updates, or changes? Msg us directly.
+                    </p>
+                  )}
                   <Link
                     href="/client/messages"
                     className="w-full py-2.5 px-4 rounded-xl bg-[#1A0A2E]/50 hover:bg-[#1A0A2E]/70 border border-purple-500/20 hover:border-purple-500/40 text-xs font-semibold text-foreground transition-all duration-300 flex items-center justify-between"
                   >
-                    Message Team <ArrowRight size={12} />
+                    <span>Open Message Hub</span> <ArrowRight size={12} />
                   </Link>
                 </div>
               </section>
