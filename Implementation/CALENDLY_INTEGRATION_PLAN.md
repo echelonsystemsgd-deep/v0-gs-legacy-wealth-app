@@ -43,6 +43,47 @@ The `/book` route and `BookingFlow` component **already exist** with a working 2
 
 ---
 
+## A.1) Interactive Multi-Page Vetting Flow
+
+To prevent lead fatigue and increase completion rates, the single-step qualification form has been redesigned into an interactive, multi-page vetted flow containing **5 numbered steps** before displaying the booking calendar:
+
+### 1. The 5 Questions & Options
+- **Question 1: Contact Identity** (Full Name & Email Address)
+  - *Purpose:* Primary identification for CRM capture and automatic Calendly pre-filling.
+- **Question 2: Brand/Business Details** (Company/Brand Name & Optional Website URL)
+  - *Purpose:* Contextual research for digital audits prior to the session.
+- **Question 3: Primary Priority** (Radio cards)
+  - *Options:* No website yet, Outdated website, Not getting leads, Want to modernise / add AI features.
+- **Question 4: Current Monthly Revenue** (Radio cards — Gating step)
+  - *Options:*
+    - Under £5,000 / month
+    - £5,000 – £20,000 / month
+    - £20,000 – £50,000 / month
+    - £50,000+ / month
+- **Question 5: Launch Timeline** (Radio cards)
+  - *Options:* Immediately, Within 1 month, 1 – 3 months, Just researching.
+
+### 2. Gating and Redirection Logic (Q4 Gate)
+- **Criteria:** We filter out low-volume leads to protect operational bandwidth. The threshold is set to **£5,000/month**.
+- **Action:**
+  - If a user completes Step 5 and selected **"Under £5,000"** on Q4, their details are submitted to `/api/forms/submit` but they are redirected to a polite **Disqualification screen** explaining our criteria, with buttons directing them to browse our portfolio or return home.
+  - If their revenue is **£5,000/month or higher**, they are routed directly to **Step 2 (Calendly Calendar)**.
+
+### 3. Data Integration and Prefill Mapping
+Upon step 5 completion, data is persisted to the database and sent to the owner via Resend:
+- **`notes` database field:** Formatted as:
+  `Biggest Challenge: [Challenge]\nMonthly Revenue: [Revenue]\nStart Timeline: [Timeline]`
+- **Calendly Prefill parameters:**
+  - `name`: User's full name (Prefilled in widget)
+  - `email`: User's email (Prefilled in widget)
+  - `a1` (Question 1 in Calendly): User's Website URL
+  - `a2` (Question 2 in Calendly): User's Biggest Challenge
+  - `a3` (Question 3 in Calendly): User's Monthly Revenue
+  - `a4` (Question 4 in Calendly): User's Launch Timeline
+
+---
+
+
 ## B) Step-by-Step Task Checklist
 
 ### Phase 1 — Environment & Config

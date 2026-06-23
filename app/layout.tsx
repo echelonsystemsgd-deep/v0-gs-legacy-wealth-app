@@ -123,11 +123,12 @@ export default function RootLayout({
           Calendly widget.js — loaded at root so it is available for both:
           1. The inline embed on /book (step 2)
           2. CalendlyPopupButton on any marketing page
-          lazyOnload defers until after hydration, keeping LCP unaffected.
+          afterInteractive loads right after hydration so window.Calendly is
+          ready before the user can reach the calendar step.
         */}
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </body>
     </html>

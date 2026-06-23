@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import Link from "next/link"
 
 import {
   ArrowRight,
@@ -13,9 +14,13 @@ import {
   Building2,
   CheckCircle2,
   ChevronRight,
+  ChevronLeft,
   Loader2,
   ExternalLink,
   AlertCircle,
+  TrendingUp,
+  Clock,
+  ShieldAlert,
 } from "lucide-react"
 
 // ---------------------------------------------------------------------------
@@ -42,12 +47,26 @@ type Challenge =
   | "Not getting leads"
   | "Want to modernise / add AI features"
 
+type Revenue =
+  | "Under £5,000"
+  | "£5,000 – £20,000"
+  | "£20,000 – £50,000"
+  | "£50,000+"
+
+type Timeline =
+  | "Immediately"
+  | "Within 1 month"
+  | "1 – 3 months"
+  | "Just researching"
+
 interface FormData {
   fullName: string
   email: string
-  websiteUrl: string
   companyName: string
+  websiteUrl: string
   biggestChallenge: Challenge | ""
+  monthlyRevenue: Revenue | ""
+  startTimeline: Timeline | ""
 }
 
 const challengeOptions: {
@@ -77,23 +96,92 @@ const challengeOptions: {
   },
 ]
 
+const revenueOptions: {
+  value: Revenue
+  label: string
+  description: string
+}[] = [
+  {
+    value: "Under £5,000",
+    label: "Under £5,000 / month",
+    description: "Early-stage or solopreneur seeking initial growth systems",
+  },
+  {
+    value: "£5,000 – £20,000",
+    label: "£5,000 – £20,000 / month",
+    description: "Established brand ready to scale operations and lead capture",
+  },
+  {
+    value: "£20,000 – £50,000",
+    label: "£20,000 – £50,000 / month",
+    description: "High-growth business ready for advanced custom systems & AI",
+  },
+  {
+    value: "£50,000+",
+    label: "£50,000+ / month",
+    description: "Enterprise leader seeking to optimise at scale & automate fully",
+  },
+]
+
+const timelineOptions: {
+  value: Timeline
+  label: string
+  description: string
+}[] = [
+  {
+    value: "Immediately",
+    label: "Immediately",
+    description: "I am ready to kick off development right away",
+  },
+  {
+    value: "Within 1 month",
+    label: "Within 1 month",
+    description: "Aligning budget, assets, or internal stakeholders",
+  },
+  {
+    value: "1 – 3 months",
+    label: "1 – 3 months",
+    description: "Mapping out strategic quarterly goals",
+  },
+  {
+    value: "Just researching",
+    label: "Just researching",
+    description: "Gathering information and looking at potential partners",
+  },
+]
+
 // ---------------------------------------------------------------------------
-// Validation helper
+// Validation helper per sub-step
 // ---------------------------------------------------------------------------
-function validateForm(
+function validateSubStep(
+  subStep: number,
   data: FormData
 ): Partial<Record<keyof FormData, string>> {
   const errors: Partial<Record<keyof FormData, string>> = {}
-  if (!data.fullName.trim()) errors.fullName = "Full name is required."
-  if (!data.email.trim()) {
-    errors.email = "Email is required."
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = "Please enter a valid email address."
+  if (subStep === 1) {
+    if (!data.fullName.trim()) errors.fullName = "Full name is required."
+    if (!data.email.trim()) {
+      errors.email = "Email is required."
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      errors.email = "Please enter a valid email address."
+    }
+  } else if (subStep === 2) {
+    if (!data.companyName.trim()) {
+      errors.companyName = "Company / brand name is required."
+    }
+  } else if (subStep === 3) {
+    if (!data.biggestChallenge) {
+      errors.biggestChallenge = "Please select your biggest priority."
+    }
+  } else if (subStep === 4) {
+    if (!data.monthlyRevenue) {
+      errors.monthlyRevenue = "Please select your monthly revenue."
+    }
+  } else if (subStep === 5) {
+    if (!data.startTimeline) {
+      errors.startTimeline = "Please select your timeline."
+    }
   }
-  if (!data.companyName.trim())
-    errors.companyName = "Company / brand name is required."
-  if (!data.biggestChallenge)
-    errors.biggestChallenge = "Please select your biggest challenge."
   return errors
 }
 
@@ -154,7 +242,9 @@ function CalendlyFallback({ url }: { url: string }) {
 // ---------------------------------------------------------------------------
 function BookingFlowInner() {
   const [step, setStep] = useState<1 | 2>(1)
+  const [subStep, setSubStep] = useState<number>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isDisqualified, setIsDisqualified] = useState(false)
   const [errors, setErrors] = useState<
     Partial<Record<keyof FormData, string>>
   >({})
@@ -171,9 +261,11 @@ function BookingFlowInner() {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
-    websiteUrl: "",
     companyName: "",
+    websiteUrl: "",
     biggestChallenge: "",
+    monthlyRevenue: "",
+    startTimeline: "",
   })
 
   const updateField = <K extends keyof FormData>(
@@ -184,17 +276,38 @@ function BookingFlowInner() {
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }))
   }
 
-  // ── Form submit ────────────────────────────────────────────────────────────
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // ── Navigation helpers ─────────────────────────────────────────────────────
+  const handleNext = () => {
     setSubmitError(null)
-    const validationErrors = validateForm(formData)
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
+    const stepErrors = validateSubStep(subStep, formData)
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors)
       return
     }
 
+    if (subStep < 5) {
+      setSubStep((prev) => prev + 1)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    } else {
+      // Sub-step 5 next triggers full form submission
+      submitForm()
+    }
+  }
+
+  const handleBack = () => {
+    if (subStep > 1) {
+      setSubStep((prev) => prev - 1)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
+  // ── Form submit ────────────────────────────────────────────────────────────
+  const submitForm = async () => {
     setIsSubmitting(true)
+    setSubmitError(null)
+
+    // Build notes block summarizing the multi-page details
+    const notesSummary = `Biggest Challenge: ${formData.biggestChallenge}\nMonthly Revenue: ${formData.monthlyRevenue}\nStart Timeline: ${formData.startTimeline}`
 
     try {
       const res = await fetch("/api/forms/submit", {
@@ -206,7 +319,7 @@ function BookingFlowInner() {
           email: formData.email,
           business_name: formData.companyName,
           website: formData.websiteUrl || null,
-          notes: formData.biggestChallenge,
+          notes: notesSummary,
         }),
       })
 
@@ -219,7 +332,13 @@ function BookingFlowInner() {
       }
 
       setIsSubmitting(false)
-      setStep(2)
+
+      // Q4 revenue threshold check (Under £5,000 is disqualified)
+      if (formData.monthlyRevenue === "Under £5,000") {
+        setIsDisqualified(true)
+      } else {
+        setStep(2)
+      }
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch (err: any) {
       setIsSubmitting(false)
@@ -236,8 +355,10 @@ function BookingFlowInner() {
     params.set("email", formData.email)
     params.set("a1", formData.websiteUrl)
     params.set("a2", formData.biggestChallenge)
+    params.set("a3", formData.monthlyRevenue)
+    params.set("a4", formData.startTimeline)
     return `${CALENDLY_URL}?${params.toString()}`
-  }, [formData.fullName, formData.email, formData.websiteUrl, formData.biggestChallenge])
+  }, [formData])
 
   // ── Global postMessage handler (height + event_scheduled) ─────────────────
   useEffect(() => {
@@ -289,10 +410,11 @@ function BookingFlowInner() {
 
     const doInit = () => {
       if (!calendlyContainerRef.current) return
+      // Note: `resize` is NOT a valid Calendly API option — omit it.
+      // Height changes are handled via the postMessage "calendly.page_height" event.
       ;(window as any).Calendly.initInlineWidget({
         url: calendlyUrl,
         parentElement: calendlyContainerRef.current,
-        resize: true, // Calendly native auto-resize (pairs with page_height listener)
         prefill: {
           name: formData.fullName,
           email: formData.email,
@@ -300,27 +422,38 @@ function BookingFlowInner() {
       })
     }
 
-    // Start 8-second fallback timer
+    // Unified cleanup refs — always cleaned up regardless of which branch runs
+    let pollInterval: ReturnType<typeof setInterval> | null = null
+
+    // Start 15-second fallback timer (give iframe enough time to paint)
     fallbackTimerRef.current = setTimeout(() => {
       setCalendlyTimedOut(true)
-    }, 8000)
+    }, 15000)
 
-    // If widget.js is already on window (loaded from root layout), init now.
-    // Otherwise poll every 100 ms until it appears (should be < 1 s).
+    // If widget.js is already on window (afterInteractive loads it promptly),
+    // init immediately. Otherwise poll every 100 ms until it appears.
     if (typeof window !== "undefined" && (window as any).Calendly) {
       doInit()
     } else {
-      const poll = setInterval(() => {
+      pollInterval = setInterval(() => {
         if ((window as any).Calendly) {
-          clearInterval(poll)
+          clearInterval(pollInterval!)
+          pollInterval = null
           doInit()
         }
       }, 100)
-      return () => clearInterval(poll)
     }
 
+    // Single unified cleanup — runs on unmount OR when step changes away from 2
     return () => {
-      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current)
+      if (fallbackTimerRef.current) {
+        clearTimeout(fallbackTimerRef.current)
+        fallbackTimerRef.current = null
+      }
+      if (pollInterval) {
+        clearInterval(pollInterval)
+        pollInterval = null
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
@@ -328,271 +461,439 @@ function BookingFlowInner() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* ── Step Indicator ── */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
-        {[1, 2].map((s) => (
-          <div key={s} className="flex items-center gap-3">
-            <motion.div
-              animate={{
-                backgroundColor:
-                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
-                borderColor:
-                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
-              }}
-              className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
-            >
-              {step > s ? (
-                <CheckCircle2 size={18} className="text-bg-primary" />
-              ) : (
-                <span
-                  className={`text-sm font-bold font-serif ${
-                    step >= s ? "text-bg-primary" : "text-accent-gold/60"
-                  }`}
-                >
-                  {s}
-                </span>
+      {/* ── Step Indicator (Hidden if disqualified) ── */}
+      {!isDisqualified && (
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
+          {[1, 2].map((s) => (
+            <div key={s} className="flex items-center gap-3">
+              <motion.div
+                animate={{
+                  backgroundColor:
+                    step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
+                  borderColor:
+                    step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
+                }}
+                className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
+              >
+                {step > s ? (
+                  <CheckCircle2 size={18} className="text-bg-primary" />
+                ) : (
+                  <span
+                    className={`text-sm font-bold font-serif ${
+                      step >= s ? "text-bg-primary" : "text-accent-gold/60"
+                    }`}
+                  >
+                    {s}
+                  </span>
+                )}
+              </motion.div>
+              <span
+                className={`text-sm font-semibold tracking-wide transition-colors ${
+                  step >= s ? "text-foreground" : "text-text-secondary"
+                }`}
+              >
+                {s === 1 ? `Vetting` : "Schedule Session"}
+              </span>
+              {s < 2 && (
+                <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />
               )}
-            </motion.div>
-            <span
-              className={`text-sm font-semibold tracking-wide transition-colors ${
-                step >= s ? "text-foreground" : "text-text-secondary"
-              }`}
-            >
-              {s === 1 ? "Vetting" : "Schedule Session"}
-            </span>
-            {s < 2 && (
-              <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />
-            )}
-          </div>
-        ))}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {/* ================================================================
-            STEP 1 — Qualification Form
+            STEP 1 — Qualification Form (Multi-page)
             ================================================================ */}
-        {step === 1 && (
+        {step === 1 && !isDisqualified && (
           <motion.div
-            key="step1"
-            initial={{ opacity: 0, x: -30 }}
+            key={`substep-${subStep}`}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.4 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
           >
-            <div className="mb-8">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground mb-2">
-                Tell Us About Your Brand
-              </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                This takes 60 seconds. Due to high demand and bandwidth
-                allocation, we are only accepting 2 new integration partnerships
-                this month.
-              </p>
+            {/* Numbered Progress Header */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-accent-gold">
+                <span>Question {subStep} of 5</span>
+                <span>{Math.round((subStep / 5) * 100)}% Complete</span>
+              </div>
+              <div className="w-full h-1 bg-background border border-border-brand/10 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-accent-gold"
+                  initial={{ width: `${((subStep - 1) / 5) * 100}%` }}
+                  animate={{ width: `${(subStep / 5) * 100}%` }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-              {/* -- Contact Details -- */}
-              <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-5">
-                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">
-                  Contact Details
-                </p>
-
-                {/* Full Name */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="fullName"
-                    className="text-sm font-medium text-foreground flex items-center gap-2"
-                  >
-                    <User size={14} className="text-accent-gold" /> Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    placeholder="e.g. James Morgan"
-                    value={formData.fullName}
-                    onChange={(e) => updateField("fullName", e.target.value)}
-                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
-                      errors.fullName
-                        ? "border-red-500/60"
-                        : "border-border-brand/20 hover:border-accent-gold/40"
-                    }`}
-                  />
-                  {errors.fullName && (
-                    <p className="text-xs text-red-400 mt-1">
-                      {errors.fullName}
+            {/* Content Pages */}
+            <div className="glass rounded-2xl p-6 sm:p-8 border border-border-brand/20 space-y-6">
+              {/* PAGE 1: Contact Details */}
+              {subStep === 1 && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-1">
+                      Who should we ask for?
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      We'll pre-fill these on the booking calendar to save you time.
                     </p>
-                  )}
-                </div>
+                  </div>
 
-                {/* Email */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium text-foreground flex items-center gap-2"
-                  >
-                    <Mail size={14} className="text-accent-gold" /> Email
-                    Address
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="e.g. james@yourbrand.com"
-                    value={formData.email}
-                    onChange={(e) => updateField("email", e.target.value)}
-                    className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
-                      errors.email
-                        ? "border-red-500/60"
-                        : "border-border-brand/20 hover:border-accent-gold/40"
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="text-xs text-red-400 mt-1">{errors.email}</p>
-                  )}
-                </div>
+                  {/* Full Name */}
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="fullName"
+                      className="text-sm font-medium text-foreground flex items-center gap-2"
+                    >
+                      <User size={14} className="text-accent-gold" /> Full Name
+                    </label>
+                    <input
+                      id="fullName"
+                      type="text"
+                      placeholder="e.g. Gurtej Singh"
+                      value={formData.fullName}
+                      onChange={(e) => updateField("fullName", e.target.value)}
+                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-gold/30 transition-all ${
+                        errors.fullName
+                          ? "border-red-500/60"
+                          : "border-border-brand/20 hover:border-accent-gold/40"
+                      }`}
+                    />
+                    {errors.fullName && (
+                      <p className="text-xs text-red-400 mt-1">{errors.fullName}</p>
+                    )}
+                  </div>
 
-                {/* Company + Website */}
-                <div className="grid sm:grid-cols-2 gap-5">
+                  {/* Email */}
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="email"
+                      className="text-sm font-medium text-foreground flex items-center gap-2"
+                    >
+                      <Mail size={14} className="text-accent-gold" /> Email Address
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="e.g. gurtej@yourbrand.com"
+                      value={formData.email}
+                      onChange={(e) => updateField("email", e.target.value)}
+                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-gold/30 transition-all ${
+                        errors.email
+                          ? "border-red-500/60"
+                          : "border-border-brand/20 hover:border-accent-gold/40"
+                      }`}
+                    />
+                    {errors.email && (
+                      <p className="text-xs text-red-400 mt-1">{errors.email}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 2: Brand Context */}
+              {subStep === 2 && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-1">
+                      Tell us about your brand
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Let us research your current digital presence before the call.
+                    </p>
+                  </div>
+
+                  {/* Company Name */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="companyName"
                       className="text-sm font-medium text-foreground flex items-center gap-2"
                     >
-                      <Building2 size={14} className="text-accent-gold" />{" "}
-                      Company / Brand
+                      <Building2 size={14} className="text-accent-gold" /> Company Name
                     </label>
                     <input
                       id="companyName"
                       type="text"
-                      placeholder="e.g. Morgan Ventures"
+                      placeholder="e.g. GS Ventures"
                       value={formData.companyName}
-                      onChange={(e) =>
-                        updateField("companyName", e.target.value)
-                      }
-                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
+                      onChange={(e) => updateField("companyName", e.target.value)}
+                      className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-gold/30 transition-all ${
                         errors.companyName
                           ? "border-red-500/60"
                           : "border-border-brand/20 hover:border-accent-gold/40"
                       }`}
                     />
                     {errors.companyName && (
-                      <p className="text-xs text-red-400 mt-1">
-                        {errors.companyName}
-                      </p>
+                      <p className="text-xs text-red-400 mt-1">{errors.companyName}</p>
                     )}
                   </div>
 
+                  {/* Website URL */}
                   <div className="space-y-1.5">
                     <label
                       htmlFor="websiteUrl"
                       className="text-sm font-medium text-foreground flex items-center gap-2"
                     >
-                      <Globe size={14} className="text-accent-gold" /> Website{" "}
-                      <span className="text-muted-foreground text-xs">
-                        (optional)
-                      </span>
+                      <Globe size={14} className="text-accent-gold" /> Website URL{" "}
+                      <span className="text-muted-foreground text-xs">(optional)</span>
                     </label>
                     <input
                       id="websiteUrl"
                       type="url"
-                      placeholder="https://yourbrand.com"
+                      placeholder="e.g. https://yourbrand.com"
                       value={formData.websiteUrl}
-                      onChange={(e) =>
-                        updateField("websiteUrl", e.target.value)
-                      }
-                      className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
+                      onChange={(e) => updateField("websiteUrl", e.target.value)}
+                      className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-gold/30 transition-all"
                     />
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* -- Biggest Challenge -- */}
-              <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-4">
-                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">
-                  Biggest Challenge
-                </p>
-                <div className="space-y-3">
-                  {challengeOptions.map((opt) => {
-                    const selected = formData.biggestChallenge === opt.value
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        id={`challenge-${opt.value.replace(/\s+/g, "-")}`}
-                        onClick={() =>
-                          updateField("biggestChallenge", opt.value)
-                        }
-                        className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-purple/40 ${
-                          selected
-                            ? "border-accent-gold bg-accent-gold/10"
-                            : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
-                        }`}
-                      >
-                        <div
-                          className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+              {/* PAGE 3: Challenge */}
+              {subStep === 3 && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-1">
+                      What is your primary priority?
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Select the option that best matches your immediate requirements.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {challengeOptions.map((opt) => {
+                      const selected = formData.biggestChallenge === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => updateField("biggestChallenge", opt.value)}
+                          className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
                             selected
-                              ? "border-accent-gold bg-accent-gold"
-                              : "border-accent-gold/40"
+                              ? "border-accent-gold bg-accent-gold/10"
+                              : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
                           }`}
                         >
-                          {selected && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />
-                          )}
-                        </div>
-                        <div>
-                          <p
-                            className={`text-sm font-semibold ${
-                              selected ? "text-accent-gold" : "text-foreground"
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+                              selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
                             }`}
                           >
-                            {opt.label}
-                          </p>
-                          <p className="text-xs text-text-secondary">
-                            {opt.description}
-                          </p>
-                        </div>
-                      </button>
-                    )
-                  })}
+                            {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-semibold ${selected ? "text-accent-gold" : "text-foreground"}`}>
+                              {opt.label}
+                            </p>
+                            <p className="text-xs text-text-secondary">{opt.description}</p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {errors.biggestChallenge && (
+                    <p className="text-xs text-red-400 mt-1">{errors.biggestChallenge}</p>
+                  )}
                 </div>
-                {errors.biggestChallenge && (
-                  <p className="text-xs text-red-400">
-                    {errors.biggestChallenge}
-                  </p>
-                )}
-              </div>
+              )}
+
+              {/* PAGE 4: Monthly Revenue */}
+              {subStep === 4 && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-1 flex items-center gap-2">
+                      <TrendingUp size={22} className="text-accent-gold" /> Current monthly revenue
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      This helps us gauge project scale and customize our operational framework.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {revenueOptions.map((opt) => {
+                      const selected = formData.monthlyRevenue === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => updateField("monthlyRevenue", opt.value)}
+                          className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
+                            selected
+                              ? "border-accent-gold bg-accent-gold/10"
+                              : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+                              selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
+                            }`}
+                          >
+                            {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-semibold ${selected ? "text-accent-gold" : "text-foreground"}`}>
+                              {opt.label}
+                            </p>
+                            <p className="text-xs text-text-secondary">{opt.description}</p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {errors.monthlyRevenue && (
+                    <p className="text-xs text-red-400 mt-1">{errors.monthlyRevenue}</p>
+                  )}
+                </div>
+              )}
+
+              {/* PAGE 5: Timeline */}
+              {subStep === 5 && (
+                <div className="space-y-5">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground mb-1 flex items-center gap-2">
+                      <Clock size={20} className="text-accent-gold" /> Desired launch timeline
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Helps us schedule our development velocity and resource availability.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {timelineOptions.map((opt) => {
+                      const selected = formData.startTimeline === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => updateField("startTimeline", opt.value)}
+                          className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
+                            selected
+                              ? "border-accent-gold bg-accent-gold/10"
+                              : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+                              selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
+                            }`}
+                          >
+                            {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-semibold ${selected ? "text-accent-gold" : "text-foreground"}`}>
+                              {opt.label}
+                            </p>
+                            <p className="text-xs text-text-secondary">{opt.description}</p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {errors.startTimeline && (
+                    <p className="text-xs text-red-400 mt-1">{errors.startTimeline}</p>
+                  )}
+                </div>
+              )}
 
               {submitError && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl">
                   {submitError}
                 </div>
               )}
+            </div>
 
-              {/* -- Submit -- */}
+            {/* Back / Next Buttons */}
+            <div className="flex items-center justify-between gap-4">
+              {subStep > 1 ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  onClick={handleBack}
+                  className="flex items-center gap-2 border-border-brand/20 text-foreground hover:bg-background/40"
+                >
+                  <ChevronLeft size={16} />
+                  Back
+                </Button>
+              ) : (
+                <div /> // Placeholder to push Next button to right
+              )}
+
               <Button
-                type="submit"
+                type="button"
                 size="lg"
                 disabled={isSubmitting}
-                id="booking-submit"
-                className="w-full py-6 text-base"
+                onClick={handleNext}
+                className="flex items-center gap-2 min-w-[120px]"
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <Loader2 size={18} className="animate-spin" />
-                    Securing your spot…
-                  </span>
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Submitting…
+                  </>
+                ) : subStep === 5 ? (
+                  <>
+                    Submit Qualification
+                    <ArrowRight size={16} />
+                  </>
                 ) : (
-                  <span className="flex items-center gap-2">
-                    Submit Qualification Form
-                    <ArrowRight size={18} />
-                  </span>
+                  <>
+                    Continue
+                    <ChevronRight size={16} />
+                  </>
                 )}
               </Button>
+            </div>
+          </motion.div>
+        )}
 
-              <p className="text-center text-xs text-muted-foreground">
-                Only qualified inquiries will receive confirmation. We review
-                all applications within 1 business day.
+        {/* ================================================================
+            DISQUALIFIED STATE — Polite criteria redirection page
+            ================================================================ */}
+        {isDisqualified && (
+          <motion.div
+            key="disqualified"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass rounded-2xl p-8 sm:p-10 border border-accent-gold/20 text-center space-y-6 max-w-xl mx-auto shadow-2xl"
+          >
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-accent-gold/5 border border-accent-gold/20 mx-auto">
+              <ShieldAlert size={28} className="text-accent-gold" />
+            </div>
+
+            <div className="space-y-3">
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
+                Thank You, {formData.fullName.split(" ")[0]}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                We appreciate you taking the time to share your details. To maintain the elite quality of our custom AI integrations, we are currently only partnering with businesses generating a minimum revenue of <strong className="text-accent-gold font-semibold">£5,000/month</strong>.
               </p>
-            </form>
+              <p className="text-xs text-text-secondary leading-relaxed max-w-md mx-auto">
+                We've saved your details and will keep you updated if our partnership capacity or structure changes. Let's stay in touch.
+              </p>
+            </div>
+
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button asChild size="lg" className="w-full sm:w-auto px-8">
+                <Link href="/">
+                  Return to Homepage
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto px-8 border-accent-gold/25 text-accent-gold hover:bg-accent-gold/10">
+                <Link href="/portfolio">
+                  Browse Portfolio
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         )}
 
@@ -618,17 +919,21 @@ function BookingFlowInner() {
                   Details captured, {formData.fullName.split(" ")[0]}!
                 </p>
                 <p className="text-xs text-text-secondary">
-                  Now pick a time below. Your name and email are already
-                  pre-filled.
+                  Now pick a time below. Your details are pre-filled.
                 </p>
               </div>
             </div>
 
-            {/* Selected Challenge Tag */}
+            {/* Selected Info Tags */}
             <div className="flex flex-wrap gap-2">
               {formData.biggestChallenge && (
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
                   {formData.biggestChallenge}
+                </span>
+              )}
+              {formData.monthlyRevenue && (
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
+                  {formData.monthlyRevenue}/mo
                 </span>
               )}
             </div>
@@ -670,6 +975,7 @@ function BookingFlowInner() {
             <button
               onClick={() => {
                 setStep(1)
+                setSubStep(5)
                 setCalendlyLoaded(false)
                 setCalendlyTimedOut(false)
               }}
