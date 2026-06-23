@@ -8,7 +8,11 @@ import { usePathname } from "next/navigation"
 
 export function StickyCTAButton() {
   const pathname = usePathname()
-  const [isVisible, setIsVisible] = useState(false)
+  const [scrolledPastHero, setScrolledPastHero] = useState(false)
+  const [footerVisible, setFooterVisible] = useState(false)
+
+  // Derived: show only when past hero AND footer isn't encroaching
+  const isVisible = scrolledPastHero && !footerVisible
 
   // Do not render the Sticky CTA Button on admin, client, dashboard, auth, or booking pages
   const excludedPrefixes = [
@@ -24,18 +28,35 @@ export function StickyCTAButton() {
   ]
   const isExcluded = excludedPrefixes.some((prefix) => pathname?.startsWith(prefix))
 
+  // Show after scrolling past the hero section (~600px)
   useEffect(() => {
     const handleScroll = () => {
-      // Show button after scrolling past the hero section (approx 600px)
-      if (window.scrollY > 600) {
-        setIsVisible(true)
-      } else {
-        setIsVisible(false)
-      }
+      setScrolledPastHero(window.scrollY > 600)
     }
-
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Hide when footer enters the viewport — using a 100px rootMargin buffer
+  // so the fade-out completes before any visual overlap occurs
+  useEffect(() => {
+    const footer = document.querySelector("footer")
+    if (!footer) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setFooterVisible(entry.isIntersecting)
+      },
+      {
+        // Shrink the bottom of the "viewport" by 100px — the footer is
+        // considered "visible" (and the widget hides) 100px before it
+        // would naturally enter the viewport from below
+        rootMargin: "0px 0px -100px 0px",
+      }
+    )
+
+    observer.observe(footer)
+    return () => observer.disconnect()
   }, [])
 
   if (isExcluded) return null
