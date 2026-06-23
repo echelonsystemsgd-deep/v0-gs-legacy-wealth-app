@@ -10,6 +10,18 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Privacy Policy",
+            "description": "Our privacy policy outlines how we handle and protect your personal information.",
+            "url": "https://gslegacywealth.com/privacy"
+          })
+        }}
+      />
       <Navbar />
       <PageHeader 
         title="Privacy"

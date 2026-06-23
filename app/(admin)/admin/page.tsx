@@ -1,40 +1,10 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, DollarSign, Info } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, PoundSterling, Info } from 'lucide-react'
 import Link from 'next/link'
 import { ActivityLogPanel } from '@/components/admin/activity-log-panel'
 
 export default async function AdminDashboardPage() {
-  const cookieStore = await cookies()
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/login')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || profile.role !== 'admin') {
-    redirect('/dashboard')
-  }
+  const supabase = await createClient()
 
   // Fetch real database metrics
   const { count: leadsCount } = await supabase
@@ -112,12 +82,12 @@ export default async function AdminDashboardPage() {
               </div>
             </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
-              ${totalSales.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              £{totalSales.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <DollarSign size={16} className="text-gold sm:hidden" />
-            <DollarSign size={18} className="text-gold hidden sm:block" />
+            <PoundSterling size={16} className="text-gold sm:hidden" />
+            <PoundSterling size={18} className="text-gold hidden sm:block" />
           </div>
         </div>
 
@@ -133,7 +103,7 @@ export default async function AdminDashboardPage() {
               </div>
             </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
-              ${totalPipeline.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              £{totalPipeline.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -208,7 +178,7 @@ export default async function AdminDashboardPage() {
         {/* Recent Sales / Transactions Panel */}
         <section className="p-4 sm:p-6 glass rounded-2xl border border-gold/10 space-y-4 sm:space-y-6">
           <h2 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
-            <DollarSign size={16} className="text-gold" /> Recent Sales
+            <PoundSterling size={16} className="text-gold" /> Recent Sales
           </h2>
 
           <div className="divide-y divide-gold/10">
@@ -229,7 +199,7 @@ export default async function AdminDashboardPage() {
                   <div className="text-right shrink-0">
                     <span className="text-sm font-serif font-bold text-gold flex items-center gap-1 justify-end">
                       <span className="w-1.2 h-1.2 rounded-full bg-green-500 animate-pulse shrink-0" />
-                      +${Number(payment.amount).toLocaleString('en-US')}
+                      +£{Number(payment.amount).toLocaleString('en-GB')}
                     </span>
                     <span className="block text-[8px] uppercase tracking-wider text-green-400 font-bold mt-0.5">
                       {payment.status}

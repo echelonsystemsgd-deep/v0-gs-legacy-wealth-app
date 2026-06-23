@@ -90,7 +90,7 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-3 pt-2 text-text-primary opacity-70">
               <a 
-                href="https://instagram.com" 
+                href="https://instagram.com/gslegacywealth" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="hover:text-accent-gold transition-colors"
@@ -99,7 +99,7 @@ export function Footer() {
                 <Instagram size={18} />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/gs-legacy-wealth" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="hover:text-accent-gold transition-colors"
@@ -137,7 +137,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-65">
           <p>
-            © {new Date().getFullYear()} GS Legacy Wealth · Privacy Policy · All Rights Reserved
+            © {new Date().getFullYear()} GS Legacy Wealth. All Rights Reserved.
           </p>
           <div className="flex justify-center gap-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-accent-gold transition-colors">

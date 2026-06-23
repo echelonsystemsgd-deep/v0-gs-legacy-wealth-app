@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ShieldAlert, ArrowRight, Home, LogOut } from 'lucide-react'
@@ -7,6 +8,37 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function UnauthorizedPage() {
   const router = useRouter()
+  const [dashboardUrl, setDashboardUrl] = useState('/')
+
+  useEffect(() => {
+    const checkRole = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          
+          if (profile?.role === 'admin') {
+            setDashboardUrl('/admin')
+          } else if (profile?.role === 'client') {
+            setDashboardUrl('/client')
+          } else {
+            setDashboardUrl('/dashboard')
+          }
+        } else {
+          setDashboardUrl('/login')
+        }
+      } catch (err) {
+        console.error('Error resolving dashboard URL:', err)
+        setDashboardUrl('/')
+      }
+    }
+    checkRole()
+  }, [])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -40,7 +72,7 @@ export default function UnauthorizedPage() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto pt-2">
           <Link
-            href="/dashboard"
+            href={dashboardUrl}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold to-gold-light text-background font-bold text-sm px-5 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.35)] transition-all duration-300"
           >
             Dashboard <ArrowRight size={15} />

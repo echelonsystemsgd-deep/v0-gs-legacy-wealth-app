@@ -210,7 +210,7 @@ export async function POST(request: Request) {
       customerBodyHeader = "You are in the queue."
       customerBodyText = "We have recorded your email request for early access. You will receive an immediate notification as soon as the platform goes live."
       actionButtonText = "Explore Our Services"
-      actionButtonUrl = "https://gslegacywealth.com/services"
+      actionButtonUrl = "https://gslegacywealth.com/portfolio"
     }
 
     const customerEmailHtml = `

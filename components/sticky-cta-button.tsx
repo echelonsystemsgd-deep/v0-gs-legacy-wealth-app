@@ -56,8 +56,9 @@ export function StickyCTAButton() {
               <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
                 <span className="font-serif font-bold text-lg">GS</span>
               </div>
-              <span className="font-medium text-sm text-background pr-4 hidden sm:block whitespace-nowrap">
-                GS Concierge
+              <span className="font-medium text-xs sm:text-sm text-background pr-3 sm:pr-4 whitespace-nowrap">
+                <span className="sm:hidden">Book Call</span>
+                <span className="hidden sm:inline">GS Concierge</span>
               </span>
             </div>
           </Link>

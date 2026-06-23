@@ -116,9 +116,9 @@ const retainerTiers = [
     name: "Velocity Optimization",
     price: "1,299",
     interval: "billed monthly",
-    description: "Ongoing custom growth campaigns, advanced SEO, and bespoke AI tuning.",
+    description: "Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.",
     features: [
-      "Everything in Ascent Support",
+      "Everything in Sentry Support",
       "Continuous AI Chatbot Re-training & Updates",
       "1 Custom High-Converting Landing Page/mo",
       "Advanced SEO Content & Competitor Strategy",
@@ -135,7 +135,7 @@ const retainerTiers = [
     interval: "billed monthly",
     description: "Your complete external fractional Chief Technology & Marketing Team.",
     features: [
-      "Everything in Sovereign Growth",
+      "Everything in Velocity Optimization",
       "Weekly High-Level Growth Consulting Call",
       "Unlimited System & UI Adjustments",
       "New AI Workflow Builds & Automations",

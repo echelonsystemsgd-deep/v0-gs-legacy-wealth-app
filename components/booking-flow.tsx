@@ -206,9 +206,9 @@ function CalendlySkeleton() {
 }
 
 // ---------------------------------------------------------------------------
-// CalendlyFallback — shown after 8 s if widget never fires page_height
+// CalendlyFallback — shown after 15 s if widget never fires page_height
 // ---------------------------------------------------------------------------
-function CalendlyFallback({ url }: { url: string }) {
+function CalendlyFallback({ url, onRetry }: { url: string; onRetry?: () => void }) {
   return (
     <div className="glass rounded-2xl p-10 border border-accent-gold/20 text-center space-y-5">
       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-accent-gold/10 border border-accent-gold/20 mx-auto">
@@ -223,16 +223,27 @@ function CalendlyFallback({ url }: { url: string }) {
           still book directly on Calendly.
         </p>
       </div>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        id="calendly-fallback-link"
-        className="inline-flex items-center gap-2 text-accent-gold underline underline-offset-4 text-sm font-semibold hover:opacity-80 transition-opacity"
-      >
-        Open booking calendar
-        <ExternalLink size={14} />
-      </a>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="inline-flex items-center justify-center bg-accent-gold text-bg-primary text-xs font-bold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+          >
+            Try Again
+          </button>
+        )}
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          id="calendly-fallback-link"
+          className="inline-flex items-center gap-1.5 text-accent-gold underline underline-offset-4 text-xs font-semibold hover:opacity-80 transition-opacity"
+        >
+          Open booking calendar
+          <ExternalLink size={12} />
+        </a>
+      </div>
     </div>
   )
 }
@@ -250,6 +261,9 @@ function BookingFlowInner() {
   >({})
   const [submitError, setSubmitError] = useState<string | null>(null)
 
+  // Top wrapper ref for scrolling
+  const containerRef = useRef<HTMLDivElement>(null)
+
   // Calendly widget state
   const [calendlyHeight, setCalendlyHeight] = useState("700px")
   const [calendlyLoaded, setCalendlyLoaded] = useState(false)
@@ -259,6 +273,7 @@ function BookingFlowInner() {
 
   const calendlyContainerRef = useRef<HTMLDivElement>(null)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
 
   // Callback ref — fires the instant the container <div> mounts or unmounts.
   // This solves the AnimatePresence mode="wait" timing race: the container is
@@ -298,7 +313,7 @@ function BookingFlowInner() {
 
     if (subStep < 5) {
       setSubStep((prev) => prev + 1)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
     } else {
       // Sub-step 5 next triggers full form submission
       submitForm()
@@ -308,7 +323,7 @@ function BookingFlowInner() {
   const handleBack = () => {
     if (subStep > 1) {
       setSubStep((prev) => prev - 1)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
     } else {
       router.push("/")
     }
@@ -350,7 +365,7 @@ function BookingFlowInner() {
 
       // Everyone gets Calendly — no revenue gate
       setStep(2)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
     } catch (err: any) {
       setIsSubmitting(false)
       setSubmitError(
@@ -417,7 +432,9 @@ function BookingFlowInner() {
     setCalendlyTimedOut(false)
 
     // Clear any previous widget instance to avoid duplicate iframes
-    calendlyContainerRef.current.innerHTML = ""
+    if (calendlyContainerRef.current) {
+      calendlyContainerRef.current.innerHTML = ""
+    }
 
     const calendlyUrl = buildCalendlyUrl()
 
@@ -435,17 +452,15 @@ function BookingFlowInner() {
       })
     }
 
-    // Unified cleanup refs — always cleaned up regardless of which branch runs
-    let pollInterval: ReturnType<typeof setInterval> | null = null
-
     // Start 15-second fallback timer (give iframe enough time to paint)
     fallbackTimerRef.current = setTimeout(() => {
       setCalendlyTimedOut(true)
     }, 15000)
 
-    // If widget.js is already on window (afterInteractive loads it promptly),
-    // init immediately. Otherwise poll every 100 ms until it appears.
-    if (typeof window !== "undefined" && (window as any).Calendly) {
+    // Poll for the globally loaded Calendly widget.js script
+    let pollInterval: ReturnType<typeof setInterval> | null = null
+
+    if ((window as any).Calendly) {
       doInit()
     } else {
       pollInterval = setInterval(() => {
@@ -454,7 +469,7 @@ function BookingFlowInner() {
           pollInterval = null
           doInit()
         }
-      }, 100)
+      }, 50)
     }
 
     // Single unified cleanup — runs on unmount OR when step changes away from 2
@@ -469,57 +484,55 @@ function BookingFlowInner() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, containerReady])
+  }, [step, containerReady, retryCount])
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      {/* ── Step Indicator (Hidden if disqualified) ── */}
-      {!isDisqualified && (
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
-          {[1, 2].map((s) => (
-            <div key={s} className="flex items-center gap-3">
-              <motion.div
-                animate={{
-                  backgroundColor:
-                    step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
-                  borderColor:
-                    step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
-                }}
-                className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
-              >
-                {step > s ? (
-                  <CheckCircle2 size={18} className="text-bg-primary" />
-                ) : (
-                  <span
-                    className={`text-sm font-bold font-serif ${
-                      step >= s ? "text-bg-primary" : "text-accent-gold/60"
-                    }`}
-                  >
-                    {s}
-                  </span>
-                )}
-              </motion.div>
-              <span
-                className={`text-sm font-semibold tracking-wide transition-colors ${
-                  step >= s ? "text-foreground" : "text-text-secondary"
-                }`}
-              >
-                {s === 1 ? `Vetting` : "Schedule Session"}
-              </span>
-              {s < 2 && (
-                <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />
+    <div ref={containerRef} className="w-full max-w-2xl mx-auto">
+      {/* ── Step Indicator ── */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
+        {[1, 2].map((s) => (
+          <div key={s} className="flex items-center gap-3">
+            <motion.div
+              animate={{
+                backgroundColor:
+                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
+                borderColor:
+                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
+              }}
+              className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
+            >
+              {step > s ? (
+                <CheckCircle2 size={18} className="text-bg-primary" />
+              ) : (
+                <span
+                  className={`text-sm font-bold font-serif ${
+                    step >= s ? "text-bg-primary" : "text-accent-gold/60"
+                  }`}
+                >
+                  {s}
+                </span>
               )}
-            </div>
-          ))}
-        </div>
-      )}
+            </motion.div>
+            <span
+              className={`text-sm font-semibold tracking-wide transition-colors ${
+                step >= s ? "text-foreground" : "text-text-secondary"
+              }`}
+            >
+              {s === 1 ? `Vetting` : "Schedule Session"}
+            </span>
+            {s < 2 && (
+              <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />
+            )}
+          </div>
+        ))}
+      </div>
 
       <AnimatePresence mode="wait">
         {/* ================================================================
             STEP 1 — Qualification Form (Multi-page)
             ================================================================ */}
-        {step === 1 && !isDisqualified && (
+        {step === 1 && (
           <motion.div
             key={`substep-${subStep}`}
             initial={{ opacity: 0, x: 20 }}
@@ -691,7 +704,7 @@ function BookingFlowInner() {
                             updateField("biggestChallenge", opt.value)
                             setTimeout(() => {
                               setSubStep(4)
-                              window.scrollTo({ top: 0, behavior: "smooth" })
+                              containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
                             }, 300)
                           }}
                           className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
@@ -746,7 +759,7 @@ function BookingFlowInner() {
                             updateField("monthlyRevenue", opt.value)
                             setTimeout(() => {
                               setSubStep(5)
-                              window.scrollTo({ top: 0, behavior: "smooth" })
+                              containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
                             }, 300)
                           }}
                           className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
@@ -955,7 +968,14 @@ function BookingFlowInner() {
                     animate={{ opacity: 1 }}
                     className="absolute inset-0 z-20 flex items-center justify-center bg-bg-primary"
                   >
-                    <CalendlyFallback url={CALENDLY_URL} />
+                    <CalendlyFallback
+                      url={CALENDLY_URL}
+                      onRetry={() => {
+                        setCalendlyTimedOut(false)
+                        setCalendlyLoaded(false)
+                        setRetryCount((prev) => prev + 1)
+                      }}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -967,7 +987,7 @@ function BookingFlowInner() {
               */}
               <div
                 ref={setCalendlyRef}
-                className="calendly-inline-widget relative z-0"
+                className="relative z-0"
                 style={{ minWidth: "320px", height: calendlyHeight }}
               />
             </div>

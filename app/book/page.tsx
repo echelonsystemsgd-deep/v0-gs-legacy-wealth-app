@@ -33,7 +33,7 @@ export default function BookPage() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-12 w-12 transition-transform group-hover:scale-105 duration-300">
               <Image
-                src="/GS_Legacy_Wealth-removebg-preview.png"
+                src="/GS_Legacy_Wealth_Watermark-removebg-preview.png"
                 alt="GS Legacy Wealth"
                 fill
                 className="object-contain"

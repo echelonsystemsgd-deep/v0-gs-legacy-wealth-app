@@ -10,6 +10,18 @@ export const metadata = {
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Terms of Service",
+            "description": "Read our Terms of Service to understand your rights and obligations when using our solutions.",
+            "url": "https://gslegacywealth.com/terms"
+          })
+        }}
+      />
       <Navbar />
       <PageHeader 
         title="Terms of"
