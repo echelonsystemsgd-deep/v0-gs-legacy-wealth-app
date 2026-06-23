@@ -4,6 +4,8 @@ import { AdminSidebar } from '@/components/admin/sidebar'
 import { createClient } from '@/lib/supabase/server'
 import { NotificationCenter } from '@/components/admin/notification-center'
 
+import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
+
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
 }
@@ -44,14 +46,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="flex items-center gap-3.5">
             <NotificationCenter />
             <div className="h-5 w-px bg-gold/10" />
-            <span className="text-xs text-muted-foreground hidden sm:block">
-              {profile.full_name ?? user.email}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
-              <span className="text-xxs font-bold text-gold uppercase">
-                {(profile.full_name ?? user.email ?? 'A')[0]}
-              </span>
-            </div>
+            <UserProfileDropdown
+              fullName={profile.full_name}
+              email={user.email!}
+              avatarLetter={(profile.full_name ?? user.email ?? 'A')[0]}
+              profileLink="/admin/settings"
+            />
           </div>
         </header>
 

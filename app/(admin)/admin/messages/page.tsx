@@ -38,7 +38,7 @@ export default function AdminMessageDesk() {
   const [chatInput, setChatInput] = useState('')
   const [sendingMsg, setSendingMsg] = useState(false)
   const [adminUserId, setAdminUserId] = useState<string | null>(null)
-  const chatEndRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   // Get admin user session ID on load
   useEffect(() => {
@@ -98,7 +98,10 @@ export default function AdminMessageDesk() {
 
   // Scroll chat window to bottom
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = chatContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
   }, [selectedProjectId, allMessages])
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -316,7 +319,7 @@ export default function AdminMessageDesk() {
               </div>
 
               {/* Message List Area */}
-              <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-[#0A0A0A]/30 scrollbar-thin">
+              <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-[#0A0A0A]/30 scrollbar-thin">
                 {activeMessages.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto space-y-3">
                     <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center">
@@ -361,7 +364,6 @@ export default function AdminMessageDesk() {
                     )
                   })
                 )}
-                <div ref={chatEndRef} />
               </div>
 
               {/* Chat Input Area */}

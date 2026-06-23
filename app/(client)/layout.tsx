@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/server'
 import { UserNotificationCenter } from '@/components/dashboard/user-notification-center'
 import { Watermark } from '@/components/watermark'
 
+import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
+
 export const metadata: Metadata = {
   title: 'Client Dashboard',
 }
@@ -47,16 +49,14 @@ export default async function ClientLayout({ children }: { children: React.React
           <div className="w-10 lg:hidden shrink-0" />
           <div className="flex-1" />
           <div className="flex items-center gap-3.5">
-            <UserNotificationCenter />
-            <div className="h-5 w-px bg-gold/10 hidden sm:block" />
-            <span className="text-xs text-muted-foreground hidden sm:block">
-              {profile.full_name ?? user.email}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
-              <span className="text-xxs font-bold text-gold uppercase">
-                {(profile.full_name ?? user.email ?? 'C')[0]}
-              </span>
-            </div>
+            <UserNotificationCenter userId={user.id} />
+            <div className="h-5 w-px bg-gold/10" />
+            <UserProfileDropdown
+              fullName={profile.full_name}
+              email={user.email!}
+              avatarLetter={(profile.full_name ?? user.email ?? 'C')[0]}
+              profileLink="/profile"
+            />
           </div>
         </header>
 

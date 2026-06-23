@@ -16,7 +16,7 @@ type NotificationItem = {
   link: string
 }
 
-export function UserNotificationCenter() {
+export function UserNotificationCenter({ userId }: { userId?: string }) {
   const supabase = createClient()
   const router = useRouter()
   const [notifications, setNotifications] = useState<NotificationItem[]>([])
@@ -36,21 +36,20 @@ export function UserNotificationCenter() {
 
   // Fetch initial notifications and subscribe to real-time additions
   useEffect(() => {
-    let channel: any
+    let active = true
+    let channel: any = null
+    let resolvedUserId: string | null = userId || null
 
-    const setupNotifications = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
+    const initAndSubscribe = async (uid: string) => {
       // Load recent notifications
       const { data, error } = await supabase
         .from('user_notifications')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', uid)
         .order('created_at', { ascending: false })
         .limit(20)
 
-      if (data) {
+      if (active && data) {
         setNotifications(
           data.map((n) => ({
             id: n.id,
@@ -63,18 +62,21 @@ export function UserNotificationCenter() {
         )
       }
 
+      if (!active) return
+
       // Realtime channel filter by user_id
       channel = supabase
-        .channel(`user_notifs_${user.id}`)
+        .channel(`user_notifs_${uid}`)
         .on(
           'postgres_changes',
           {
             event: 'INSERT',
             schema: 'public',
             table: 'user_notifications',
-            filter: `user_id=eq.${user.id}`,
+            filter: `user_id=eq.${uid}`,
           },
           (payload) => {
+            if (!active) return
             const newNotif = payload.new
             const item: NotificationItem = {
               id: newNotif.id,
@@ -100,14 +102,27 @@ export function UserNotificationCenter() {
         .subscribe()
     }
 
-    setupNotifications()
+    const start = async () => {
+      if (!resolvedUserId) {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user || !active) return
+        resolvedUserId = user.id
+      }
+      initAndSubscribe(resolvedUserId)
+    }
+
+    start()
 
     return () => {
+      active = false
       if (channel) {
         supabase.removeChannel(channel)
+      } else if (resolvedUserId) {
+        const cachedChannel = supabase.channel(`user_notifs_${resolvedUserId}`)
+        supabase.removeChannel(cachedChannel)
       }
     }
-  }, [supabase, router])
+  }, [supabase, router, userId])
 
   const unreadCount = notifications.filter((n) => !n.isRead).length
 

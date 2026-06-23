@@ -29,11 +29,14 @@ export function MessagesClientContainer({
   const [messages, setMessages] = useState<MessageItem[]>(initialMessages)
   const [inputText, setInputText] = useState('')
   const [sending, setSending] = useState(false)
-  const chatEndRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   // Scroll to bottom helper
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = chatContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
   }
 
   useEffect(() => {
@@ -122,7 +125,7 @@ export function MessagesClientContainer({
       </div>
 
       {/* Messages Panel */}
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-4 bg-black/20">
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-4 bg-black/20">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center">
@@ -167,7 +170,6 @@ export function MessagesClientContainer({
             )
           })
         )}
-        <div ref={chatEndRef} />
       </div>
 
       {/* Input Tray */}

@@ -108,6 +108,16 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // For protected routes, set no-store to prevent back button BFcache recovery
+  if (
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/client') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/profile')
+  ) {
+    supabaseResponse.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
+  }
+
   return supabaseResponse
 }
 

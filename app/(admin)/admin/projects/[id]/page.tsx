@@ -64,7 +64,7 @@ export default function ProjectDetailPage() {
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   
-  const chatEndRef = useRef<HTMLDivElement>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type })
@@ -73,7 +73,10 @@ export default function ProjectDetailPage() {
 
   // Auto scroll chat to bottom
   const scrollToChatBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = chatContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
   }
 
   useEffect(() => {
@@ -545,7 +548,7 @@ export default function ProjectDetailPage() {
             </div>
 
             {/* Message lists */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-black/10">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-black/10">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center px-4 space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground/60">No conversation history.</p>
@@ -573,7 +576,6 @@ export default function ProjectDetailPage() {
                   )
                 })
               )}
-              <div ref={chatEndRef} />
             </div>
 
             {/* Input tray */}

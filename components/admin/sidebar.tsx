@@ -47,8 +47,7 @@ export function AdminSidebar() {
   const handleSignOut = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    window.location.href = '/login'
   }
 
   // Close sidebar on navigation change on mobile

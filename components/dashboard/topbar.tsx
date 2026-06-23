@@ -2,27 +2,21 @@
 
 import { usePathname, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Globe, LogOut } from 'lucide-react'
 import { UserNotificationCenter } from '@/components/dashboard/user-notification-center'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+
+import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
 
 interface UserTopbarProps {
   fullName: string | null
   email: string
+  userId: string
 }
 
-export function UserTopbar({ fullName, email }: UserTopbarProps) {
+export function UserTopbar({ fullName, email, userId }: UserTopbarProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
-
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
-  }
 
   // Generate breadcrumbs
   const getBreadcrumbs = () => {
@@ -75,35 +69,14 @@ export function UserTopbar({ fullName, email }: UserTopbarProps) {
 
       {/* Right Actions */}
       <div className="flex items-center gap-2 shrink-0">
-        <div className="h-5 w-px bg-gold/10 hidden sm:block" />
-        <span className="text-xs text-muted-foreground hidden sm:block truncate max-w-[120px]">
-          {fullName ?? email.split('@')[0]}
-        </span>
+        <UserNotificationCenter userId={userId} />
         <div className="h-5 w-px bg-gold/10" />
-        
-        <Link
-          href="/"
-          className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all"
-          title="View Public Site"
-        >
-          <Globe size={15} />
-        </Link>
-
-        <UserNotificationCenter />
-
-        <button
-          onClick={handleSignOut}
-          className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
-          title="Sign Out"
-        >
-          <LogOut size={15} />
-        </button>
-
-        <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center select-none">
-          <span className="text-xs font-bold text-gold">
-            {initials}
-          </span>
-        </div>
+        <UserProfileDropdown
+          fullName={fullName}
+          email={email}
+          avatarLetter={initials}
+          profileLink="/dashboard?tab=profile"
+        />
       </div>
     </header>
   )

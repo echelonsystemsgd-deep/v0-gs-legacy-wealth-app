@@ -19,8 +19,7 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
   const [iframeKey, setIframeKey] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
-  const terminalEndRef = useRef<HTMLDivElement>(null)
-  const isInitialMount = useRef(true)
+  const terminalContainerRef = useRef<HTMLDivElement>(null)
 
   // Initialize and append real and simulated log streams
   useEffect(() => {
@@ -47,13 +46,12 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
     setLogs([...initialLogs, ...mappedUpdates])
   }, [projectUpdates])
 
-  // Scroll terminal logs to bottom when updated (skip initial mount)
+  // Scroll terminal logs to bottom when updated
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false
-      return
+    const container = terminalContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
     }
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [logs])
 
   // Periodic simulation of active developer workspace sync
@@ -173,7 +171,7 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
           </div>
 
           {/* Scrolling Logs Display */}
-          <div className="flex-1 p-3 overflow-y-auto font-mono text-[9px] text-[#A27E1C] space-y-1.5 bg-[#050505] leading-relaxed scrollbar-thin select-none max-h-[350px] lg:max-h-[330px]">
+          <div ref={terminalContainerRef} className="flex-1 p-3 overflow-y-auto font-mono text-[9px] text-[#A27E1C] space-y-1.5 bg-[#050505] leading-relaxed scrollbar-thin select-none max-h-[350px] lg:max-h-[330px]">
             {logs.map((log, idx) => {
               let colorClass = 'text-gold-dark'
               if (log.includes('[SYS]')) colorClass = 'text-purple-400'
@@ -191,7 +189,6 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
               <span className="w-1.5 h-3 bg-gold animate-pulse inline-block" />
               <span className="text-[8px] text-muted-foreground/40 font-mono">listening...</span>
             </div>
-            <div ref={terminalEndRef} />
           </div>
         </div>
       </div>

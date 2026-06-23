@@ -56,7 +56,7 @@ export default async function UserDashboardLayout({
       {/* Main Content Area */}
       <div className="flex-1 lg:ml-64 ml-0 relative z-10 min-h-screen flex flex-col">
         {/* Top bar */}
-        <UserTopbar fullName={profile.full_name} email={user.email!} />
+        <UserTopbar fullName={profile.full_name} email={user.email!} userId={user.id} />
 
         {/* Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
