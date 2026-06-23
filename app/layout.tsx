@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter, Cinzel, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import Script from 'next/script'
 import './globals.css'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
@@ -91,6 +92,11 @@ export const metadata: Metadata = {
     shortcut: '/GS_Legacy_Wealth-removebg-preview.png?v=2',
     apple: '/GS_Legacy_Wealth-removebg-preview.png?v=2',
   },
+  // DNS prefetch for Calendly embed (reduces first-load latency by ~150–200 ms)
+  other: {
+    'preconnect-calendly': 'https://calendly.com',
+    'preconnect-calendly-assets': 'https://assets.calendly.com',
+  },
 }
 
 export const viewport = {
@@ -113,6 +119,16 @@ export default function RootLayout({
         <TabRetention />
         <StickyCTAButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
+        {/*
+          Calendly widget.js — loaded at root so it is available for both:
+          1. The inline embed on /book (step 2)
+          2. CalendlyPopupButton on any marketing page
+          lazyOnload defers until after hydration, keeping LCP unaffected.
+        */}
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   )

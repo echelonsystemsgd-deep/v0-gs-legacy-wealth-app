@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect, useRef, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import Script from "next/script"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 import {
   ArrowRight,
@@ -14,12 +14,33 @@ import {
   CheckCircle2,
   ChevronRight,
   Loader2,
+  ExternalLink,
+  AlertCircle,
 } from "lucide-react"
 
-// -------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Calendly config — sourced from env vars so no URL/colour is hardcoded
+// ---------------------------------------------------------------------------
+const CALENDLY_URL =
+  process.env.NEXT_PUBLIC_CALENDLY_URL ??
+  "https://calendly.com/gslegacywealth/30min"
+
+const CALENDLY_PARAMS = new URLSearchParams({
+  background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",
+  text_color: process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "F0EDE6",
+  primary_color: process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C9A227",
+  hide_landing_page_details: "1",
+  hide_gdpr_banner: "1",
+})
+
+// ---------------------------------------------------------------------------
 // Types
-// -------------------------------------------------------------------
-type Challenge = "No website yet" | "Outdated website" | "Not getting leads" | "Want to modernise / add AI features"
+// ---------------------------------------------------------------------------
+type Challenge =
+  | "No website yet"
+  | "Outdated website"
+  | "Not getting leads"
+  | "Want to modernise / add AI features"
 
 interface FormData {
   fullName: string
@@ -29,7 +50,11 @@ interface FormData {
   biggestChallenge: Challenge | ""
 }
 
-const challengeOptions: { value: Challenge; label: string; description: string }[] = [
+const challengeOptions: {
+  value: Challenge
+  label: string
+  description: string
+}[] = [
   {
     value: "No website yet",
     label: "No website yet",
@@ -52,10 +77,12 @@ const challengeOptions: { value: Challenge; label: string; description: string }
   },
 ]
 
-// -------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // Validation helper
-// -------------------------------------------------------------------
-function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
+// ---------------------------------------------------------------------------
+function validateForm(
+  data: FormData
+): Partial<Record<keyof FormData, string>> {
   const errors: Partial<Record<keyof FormData, string>> = {}
   if (!data.fullName.trim()) errors.fullName = "Full name is required."
   if (!data.email.trim()) {
@@ -63,20 +90,83 @@ function validateForm(data: FormData): Partial<Record<keyof FormData, string>> {
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
     errors.email = "Please enter a valid email address."
   }
-  if (!data.companyName.trim()) errors.companyName = "Company / brand name is required."
-  if (!data.biggestChallenge) errors.biggestChallenge = "Please select your biggest challenge."
+  if (!data.companyName.trim())
+    errors.companyName = "Company / brand name is required."
+  if (!data.biggestChallenge)
+    errors.biggestChallenge = "Please select your biggest challenge."
   return errors
 }
 
-// -------------------------------------------------------------------
-// Inner component (uses useSearchParams — must be inside Suspense)
-// -------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// CalendlySkeleton — shown while widget.js loads or calendar paints
+// ---------------------------------------------------------------------------
+function CalendlySkeleton() {
+  return (
+    <div
+      className="calendly-skeleton rounded-2xl"
+      style={{ minHeight: "700px" }}
+      aria-label="Loading booking calendar…"
+    >
+      <div className="flex flex-col items-center justify-center h-full gap-4 py-32 opacity-60">
+        <Loader2 size={28} className="animate-spin text-accent-gold/60" />
+        <p className="text-xs text-muted-foreground tracking-wide">
+          Loading your booking calendar…
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// CalendlyFallback — shown after 8 s if widget never fires page_height
+// ---------------------------------------------------------------------------
+function CalendlyFallback({ url }: { url: string }) {
+  return (
+    <div className="glass rounded-2xl p-10 border border-accent-gold/20 text-center space-y-5">
+      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-accent-gold/10 border border-accent-gold/20 mx-auto">
+        <AlertCircle size={22} className="text-accent-gold" />
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-foreground">
+          Calendar couldn't load
+        </p>
+        <p className="text-xs text-muted-foreground leading-relaxed max-w-xs mx-auto">
+          This is usually caused by an ad-blocker or a slow connection. You can
+          still book directly on Calendly.
+        </p>
+      </div>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        id="calendly-fallback-link"
+        className="inline-flex items-center gap-2 text-accent-gold underline underline-offset-4 text-sm font-semibold hover:opacity-80 transition-opacity"
+      >
+        Open booking calendar
+        <ExternalLink size={14} />
+      </a>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Inner component — must live inside <Suspense> because it reads route state
+// ---------------------------------------------------------------------------
 function BookingFlowInner() {
   const [step, setStep] = useState<1 | 2>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormData, string>>
+  >({})
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Calendly widget state
   const [calendlyHeight, setCalendlyHeight] = useState("700px")
+  const [calendlyLoaded, setCalendlyLoaded] = useState(false)
+  const [calendlyTimedOut, setCalendlyTimedOut] = useState(false)
+
+  const calendlyContainerRef = useRef<HTMLDivElement>(null)
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -86,12 +176,15 @@ function BookingFlowInner() {
     biggestChallenge: "",
   })
 
-  const updateField = <K extends keyof FormData>(key: K, value: FormData[K]) => {
+  const updateField = <K extends keyof FormData>(
+    key: K,
+    value: FormData[K]
+  ) => {
     setFormData((prev) => ({ ...prev, [key]: value }))
-    // Clear error on change
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }))
   }
 
+  // ── Form submit ────────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
@@ -104,11 +197,11 @@ function BookingFlowInner() {
     setIsSubmitting(true)
 
     try {
-      const res = await fetch('/api/forms/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/forms/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          source: 'booking_form',
+          source: "booking_form",
           name: formData.fullName,
           email: formData.email,
           business_name: formData.companyName,
@@ -119,7 +212,10 @@ function BookingFlowInner() {
 
       const result = await res.json()
       if (!res.ok) {
-        throw new Error(result.error || "Failed to record qualification details. Please try again.")
+        throw new Error(
+          result.error ||
+            "Failed to record qualification details. Please try again."
+        )
       }
 
       setIsSubmitting(false)
@@ -127,78 +223,121 @@ function BookingFlowInner() {
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch (err: any) {
       setIsSubmitting(false)
-      setSubmitError(err.message || "Failed to submit. Please try again or book directly.")
+      setSubmitError(
+        err.message || "Failed to submit. Please try again or book directly."
+      )
     }
   }
 
-  // -------------------------------------------------------------------
-  // Build Calendly URL with pre-fill and custom styling
-  // -------------------------------------------------------------------
-  const calendlyBase = "https://calendly.com/gslegacywealth/30min"
-  const calendlyParams = new URLSearchParams({
-    background_color: "0A0A0A",
-    text_color: "F0EDE6",
-    primary_color: "C9A227",
-    hide_landing_page_details: "1",
-    hide_gdpr_banner: "1",
-    name: formData.fullName,
-    email: formData.email,
-    a1: formData.websiteUrl,
-    a2: formData.biggestChallenge,
-  })
-  const calendlyUrl = `${calendlyBase}?${calendlyParams.toString()}`
+  // ── Build the Calendly URL with brand params + prefill ────────────────────
+  const buildCalendlyUrl = useCallback(() => {
+    const params = new URLSearchParams(CALENDLY_PARAMS)
+    params.set("name", formData.fullName)
+    params.set("email", formData.email)
+    params.set("a1", formData.websiteUrl)
+    params.set("a2", formData.biggestChallenge)
+    return `${CALENDLY_URL}?${params.toString()}`
+  }, [formData.fullName, formData.email, formData.websiteUrl, formData.biggestChallenge])
 
-  // Listen to Calendly's postMessage height events to adjust frame height dynamically
+  // ── Global postMessage handler (height + event_scheduled) ─────────────────
   useEffect(() => {
     const handleCalendlyMessage = (e: MessageEvent) => {
-      if (e.origin === "https://calendly.com" && e.data && e.data.event === "calendly.page_height") {
-        const height = e.data.payload.height
-        setCalendlyHeight(`${height}px`)
+      if (e.origin !== "https://calendly.com") return
+      if (!e.data?.event) return
+
+      switch (e.data.event) {
+        case "calendly.page_height": {
+          const h = e.data.payload?.height
+          if (h) {
+            setCalendlyHeight(`${h}px`)
+            setCalendlyLoaded(true)
+            // Cancel fallback timer — widget loaded successfully
+            if (fallbackTimerRef.current) {
+              clearTimeout(fallbackTimerRef.current)
+              fallbackTimerRef.current = null
+            }
+          }
+          break
+        }
+        case "calendly.event_scheduled": {
+          toast.success("Your call is booked! 🎉 Check your email for confirmation.", {
+            duration: 6000,
+            id: "calendly-booked",
+          })
+          break
+        }
       }
     }
+
     window.addEventListener("message", handleCalendlyMessage)
     return () => window.removeEventListener("message", handleCalendlyMessage)
   }, [])
 
-  // Re-init the Calendly inline widget whenever step 2 is shown
-  const calendlyContainerRef = useRef<HTMLDivElement>(null)
+  // ── Initialise / re-initialise widget when step → 2 ──────────────────────
   useEffect(() => {
     if (step !== 2) return
-    // Give the DOM a tick to paint the container, then init
-    const timer = setTimeout(() => {
-      if (
-        typeof window !== "undefined" &&
-        (window as any).Calendly &&
-        calendlyContainerRef.current
-      ) {
-        ;(window as any).Calendly.initInlineWidget({
-          url: calendlyUrl,
-          parentElement: calendlyContainerRef.current,
-          resize: true, // Enable native auto-resize support in Calendly
-          prefill: {
-            name: formData.fullName,
-            email: formData.email,
-          },
-        })
-      }
-    }, 300)
-    return () => clearTimeout(timer)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!calendlyContainerRef.current) return
+
+    // Reset state for fresh init
+    setCalendlyLoaded(false)
+    setCalendlyTimedOut(false)
+
+    // Clear any previous widget instance to avoid duplicate iframes
+    calendlyContainerRef.current.innerHTML = ""
+
+    const calendlyUrl = buildCalendlyUrl()
+
+    const doInit = () => {
+      if (!calendlyContainerRef.current) return
+      ;(window as any).Calendly.initInlineWidget({
+        url: calendlyUrl,
+        parentElement: calendlyContainerRef.current,
+        resize: true, // Calendly native auto-resize (pairs with page_height listener)
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+        },
+      })
+    }
+
+    // Start 8-second fallback timer
+    fallbackTimerRef.current = setTimeout(() => {
+      setCalendlyTimedOut(true)
+    }, 8000)
+
+    // If widget.js is already on window (loaded from root layout), init now.
+    // Otherwise poll every 100 ms until it appears (should be < 1 s).
+    if (typeof window !== "undefined" && (window as any).Calendly) {
+      doInit()
+    } else {
+      const poll = setInterval(() => {
+        if ((window as any).Calendly) {
+          clearInterval(poll)
+          doInit()
+        }
+      }, 100)
+      return () => clearInterval(poll)
+    }
+
+    return () => {
+      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
 
-  // -------------------------------------------------------------------
-  // Render
-  // -------------------------------------------------------------------
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* ---- Step Indicator ---- */}
+      {/* ── Step Indicator ── */}
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 mb-10">
         {[1, 2].map((s) => (
           <div key={s} className="flex items-center gap-3">
             <motion.div
               animate={{
-                backgroundColor: step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
-                borderColor: step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
+                backgroundColor:
+                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.15)",
+                borderColor:
+                  step >= s ? "rgb(201, 162, 39)" : "rgba(201, 162, 39, 0.3)",
               }}
               className="w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors duration-300"
             >
@@ -206,7 +345,9 @@ function BookingFlowInner() {
                 <CheckCircle2 size={18} className="text-bg-primary" />
               ) : (
                 <span
-                  className={`text-sm font-bold font-serif ${step >= s ? "text-bg-primary" : "text-accent-gold/60"}`}
+                  className={`text-sm font-bold font-serif ${
+                    step >= s ? "text-bg-primary" : "text-accent-gold/60"
+                  }`}
                 >
                   {s}
                 </span>
@@ -219,7 +360,9 @@ function BookingFlowInner() {
             >
               {s === 1 ? "Vetting" : "Schedule Session"}
             </span>
-            {s < 2 && <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />}
+            {s < 2 && (
+              <ChevronRight size={16} className="text-accent-gold/40 shrink-0" />
+            )}
           </div>
         ))}
       </div>
@@ -241,18 +384,25 @@ function BookingFlowInner() {
                 Tell Us About Your Brand
               </h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                This takes 60 seconds. Due to high demand and bandwidth allocation, we are only accepting 2 new integration partnerships this month.
+                This takes 60 seconds. Due to high demand and bandwidth
+                allocation, we are only accepting 2 new integration partnerships
+                this month.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               {/* -- Contact Details -- */}
               <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-5">
-                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">Contact Details</p>
+                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">
+                  Contact Details
+                </p>
 
                 {/* Full Name */}
                 <div className="space-y-1.5">
-                  <label htmlFor="fullName" className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <label
+                    htmlFor="fullName"
+                    className="text-sm font-medium text-foreground flex items-center gap-2"
+                  >
                     <User size={14} className="text-accent-gold" /> Full Name
                   </label>
                   <input
@@ -262,18 +412,26 @@ function BookingFlowInner() {
                     value={formData.fullName}
                     onChange={(e) => updateField("fullName", e.target.value)}
                     className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
-                      errors.fullName ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
+                      errors.fullName
+                        ? "border-red-500/60"
+                        : "border-border-brand/20 hover:border-accent-gold/40"
                     }`}
                   />
                   {errors.fullName && (
-                    <p className="text-xs text-red-400 mt-1">{errors.fullName}</p>
+                    <p className="text-xs text-red-400 mt-1">
+                      {errors.fullName}
+                    </p>
                   )}
                 </div>
 
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-sm font-medium text-foreground flex items-center gap-2">
-                    <Mail size={14} className="text-accent-gold" /> Email Address
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium text-foreground flex items-center gap-2"
+                  >
+                    <Mail size={14} className="text-accent-gold" /> Email
+                    Address
                   </label>
                   <input
                     id="email"
@@ -282,7 +440,9 @@ function BookingFlowInner() {
                     value={formData.email}
                     onChange={(e) => updateField("email", e.target.value)}
                     className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
-                      errors.email ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
+                      errors.email
+                        ? "border-red-500/60"
+                        : "border-border-brand/20 hover:border-accent-gold/40"
                     }`}
                   />
                   {errors.email && (
@@ -290,38 +450,55 @@ function BookingFlowInner() {
                   )}
                 </div>
 
-                {/* Company + Website — side by side on md+ */}
+                {/* Company + Website */}
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label htmlFor="companyName" className="text-sm font-medium text-foreground flex items-center gap-2">
-                      <Building2 size={14} className="text-accent-gold" /> Company / Brand
+                    <label
+                      htmlFor="companyName"
+                      className="text-sm font-medium text-foreground flex items-center gap-2"
+                    >
+                      <Building2 size={14} className="text-accent-gold" />{" "}
+                      Company / Brand
                     </label>
                     <input
                       id="companyName"
                       type="text"
                       placeholder="e.g. Morgan Ventures"
                       value={formData.companyName}
-                      onChange={(e) => updateField("companyName", e.target.value)}
+                      onChange={(e) =>
+                        updateField("companyName", e.target.value)
+                      }
                       className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
-                        errors.companyName ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
+                        errors.companyName
+                          ? "border-red-500/60"
+                          : "border-border-brand/20 hover:border-accent-gold/40"
                       }`}
                     />
                     {errors.companyName && (
-                      <p className="text-xs text-red-400 mt-1">{errors.companyName}</p>
+                      <p className="text-xs text-red-400 mt-1">
+                        {errors.companyName}
+                      </p>
                     )}
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="websiteUrl" className="text-sm font-medium text-foreground flex items-center gap-2">
+                    <label
+                      htmlFor="websiteUrl"
+                      className="text-sm font-medium text-foreground flex items-center gap-2"
+                    >
                       <Globe size={14} className="text-accent-gold" /> Website{" "}
-                      <span className="text-muted-foreground text-xs">(optional)</span>
+                      <span className="text-muted-foreground text-xs">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       id="websiteUrl"
                       type="url"
                       placeholder="https://yourbrand.com"
                       value={formData.websiteUrl}
-                      onChange={(e) => updateField("websiteUrl", e.target.value)}
+                      onChange={(e) =>
+                        updateField("websiteUrl", e.target.value)
+                      }
                       className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
                     />
                   </div>
@@ -330,7 +507,9 @@ function BookingFlowInner() {
 
               {/* -- Biggest Challenge -- */}
               <div className="glass rounded-2xl p-6 border border-border-brand/20 space-y-4">
-                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">Biggest Challenge</p>
+                <p className="text-xs uppercase tracking-widest text-accent-gold font-bold">
+                  Biggest Challenge
+                </p>
                 <div className="space-y-3">
                   {challengeOptions.map((opt) => {
                     const selected = formData.biggestChallenge === opt.value
@@ -339,7 +518,9 @@ function BookingFlowInner() {
                         key={opt.value}
                         type="button"
                         id={`challenge-${opt.value.replace(/\s+/g, "-")}`}
-                        onClick={() => updateField("biggestChallenge", opt.value)}
+                        onClick={() =>
+                          updateField("biggestChallenge", opt.value)
+                        }
                         className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-purple/40 ${
                           selected
                             ? "border-accent-gold bg-accent-gold/10"
@@ -348,27 +529,37 @@ function BookingFlowInner() {
                       >
                         <div
                           className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
-                            selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
+                            selected
+                              ? "border-accent-gold bg-accent-gold"
+                              : "border-accent-gold/40"
                           }`}
                         >
-                          {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
+                          {selected && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />
+                          )}
                         </div>
                         <div>
-                          <p className={`text-sm font-semibold ${selected ? "text-accent-gold" : "text-foreground"}`}>
+                          <p
+                            className={`text-sm font-semibold ${
+                              selected ? "text-accent-gold" : "text-foreground"
+                            }`}
+                          >
                             {opt.label}
                           </p>
-                          <p className="text-xs text-text-secondary">{opt.description}</p>
+                          <p className="text-xs text-text-secondary">
+                            {opt.description}
+                          </p>
                         </div>
                       </button>
                     )
                   })}
                 </div>
                 {errors.biggestChallenge && (
-                  <p className="text-xs text-red-400">{errors.biggestChallenge}</p>
+                  <p className="text-xs text-red-400">
+                    {errors.biggestChallenge}
+                  </p>
                 )}
               </div>
-
-
 
               {submitError && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl">
@@ -398,7 +589,8 @@ function BookingFlowInner() {
               </Button>
 
               <p className="text-center text-xs text-muted-foreground">
-                Only qualified inquiries will receive confirmation. We review all applications within 1 business day.
+                Only qualified inquiries will receive confirmation. We review
+                all applications within 1 business day.
               </p>
             </form>
           </motion.div>
@@ -422,59 +614,65 @@ function BookingFlowInner() {
                 <CheckCircle2 size={20} className="text-green-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-foreground">Details captured, {formData.fullName.split(" ")[0]}!</p>
+                <p className="text-sm font-bold text-foreground">
+                  Details captured, {formData.fullName.split(" ")[0]}!
+                </p>
                 <p className="text-xs text-text-secondary">
-                  Now pick a time below. Your name and email are already pre-filled.
+                  Now pick a time below. Your name and email are already
+                  pre-filled.
                 </p>
               </div>
             </div>
 
-            {/* Selected Summary */}
+            {/* Selected Challenge Tag */}
             <div className="flex flex-wrap gap-2">
               {formData.biggestChallenge && (
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
                   {formData.biggestChallenge}
                 </span>
               )}
-
             </div>
 
-            {/* Calendly JS widget — official embed method */}
-            <Script
-              src="https://assets.calendly.com/assets/external/widget.js"
-              strategy="lazyOnload"
-              onLoad={() => {
-                if (
-                  typeof window !== "undefined" &&
-                  (window as any).Calendly &&
-                  calendlyContainerRef.current
-                ) {
-                  ;(window as any).Calendly.initInlineWidget({
-                    url: calendlyUrl,
-                    parentElement: calendlyContainerRef.current,
-                    prefill: {
-                      name: formData.fullName,
-                      email: formData.email,
-                    },
-                  })
-                }
-              }}
-            />
-            <div className="relative rounded-2xl overflow-hidden border border-border-brand/20 bg-bg-primary shadow-2xl">
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <Loader2 size={24} className="text-accent-gold/40 animate-spin" />
-              </div>
-              {/* The Calendly widget renders into this div */}
-              <div
-                ref={calendlyContainerRef}
-                className="calendly-inline-widget relative z-10"
-                data-url={calendlyUrl}
-                style={{ minWidth: "320px", height: calendlyHeight }}
-              />
+            {/* ── Calendly widget area ── */}
+            <div
+              className="relative rounded-2xl overflow-hidden border border-border-brand/20 bg-bg-primary shadow-2xl calendly-widget-wrapper"
+              role="region"
+              aria-label="Calendly booking calendar"
+            >
+              {/* Skeleton — visible until first page_height event */}
+              <AnimatePresence>
+                {!calendlyLoaded && !calendlyTimedOut && (
+                  <motion.div
+                    key="skeleton"
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 z-10"
+                  >
+                    <CalendlySkeleton />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Fallback — shown after 8-second timeout */}
+              {calendlyTimedOut && !calendlyLoaded ? (
+                <CalendlyFallback url={CALENDLY_URL} />
+              ) : (
+                /* Calendly JS widget renders into this div */
+                <div
+                  ref={calendlyContainerRef}
+                  className="calendly-inline-widget relative z-0"
+                  style={{ minWidth: "320px", height: calendlyHeight }}
+                />
+              )}
             </div>
 
             <button
-              onClick={() => setStep(1)}
+              onClick={() => {
+                setStep(1)
+                setCalendlyLoaded(false)
+                setCalendlyTimedOut(false)
+              }}
               className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-2"
             >
               ← Go back and edit my details
@@ -486,9 +684,9 @@ function BookingFlowInner() {
   )
 }
 
-// -------------------------------------------------------------------
-// Exported wrapper — wraps inner in Suspense for useSearchParams
-// -------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Exported wrapper — Suspense boundary for any future useSearchParams usage
+// ---------------------------------------------------------------------------
 export function BookingFlow() {
   return (
     <Suspense

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { CalendlyPopupButton } from "@/components/calendly-popup-button"
 
 export function CTA() {
   return (
@@ -44,7 +45,7 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full sm:w-auto pt-4"
+          className="w-full sm:w-auto pt-4 flex flex-col sm:flex-row items-center gap-3"
         >
           <Button
             asChild
@@ -55,6 +56,12 @@ export function CTA() {
               Initiate Clinical Audit
             </Link>
           </Button>
+          {/* Secondary: lower-friction popup for users not ready for the full form */}
+          <CalendlyPopupButton
+            label="Quick Preview Call"
+            outline
+            className="w-full sm:w-auto px-8 py-7"
+          />
         </motion.div>
       </div>
     </section>

@@ -110,9 +110,33 @@ export default function BookPage() {
           </div>
 
           {/* ---- Right Column: Booking Flow ---- */}
-          <div>
+          <div className="space-y-4">
+            {/* GDPR / Data Notice — replaces the hidden Calendly in-widget banner */}
+            <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-accent-gold/10 bg-accent-gold/5">
+              <Shield size={13} className="text-accent-gold/70 mt-0.5 shrink-0" />
+              <p className="text-xxs text-muted-foreground leading-relaxed">
+                Your name, email, and responses are captured here and shared with{" "}
+                <a
+                  href="https://calendly.com/pages/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-accent-gold transition-colors"
+                >
+                  Calendly
+                </a>{" "}
+                solely to power your booking. We do not sell your data. See our{" "}
+                <a
+                  href="/privacy"
+                  className="underline underline-offset-2 hover:text-accent-gold transition-colors"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </p>
+            </div>
             <BookingFlow />
           </div>
+
         </div>
       </div>
     </main>
