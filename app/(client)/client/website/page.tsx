@@ -1,8 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { Globe, ExternalLink, Sparkles, MessageSquare, ArrowRight } from 'lucide-react'
+import { Globe, ExternalLink, Sparkles, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { WebsitePreviewClient } from '@/components/client/website-preview-client'
 
 export default async function ClientWebsitePage() {
   const cookieStore = await cookies()
@@ -87,22 +88,8 @@ export default async function ClientWebsitePage() {
           </div>
         </div>
       ) : (
-        /* Active Staging Build Iframe */
-        <div className="flex-1 flex flex-col gap-4">
-          <div className="flex items-center gap-3 bg-[#111111] border border-gold/10 px-4 py-2.5 rounded-xl text-xs text-muted-foreground">
-            <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shrink-0" />
-            <span className="truncate">Staging URL: <a href={activeUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-gold">{activeUrl}</a></span>
-          </div>
-
-          <div className="flex-1 min-h-[500px] lg:min-h-[600px] glass rounded-2xl border border-gold/15 overflow-hidden shadow-2xl relative">
-            <iframe
-              src={activeUrl}
-              title="Site Preview"
-              className="w-full h-full border-0 bg-black"
-              sandbox="allow-scripts allow-same-origin allow-forms"
-            />
-          </div>
-        </div>
+        /* Active Staging Build — client component handles iframe + error state */
+        <WebsitePreviewClient activeUrl={activeUrl} />
       )}
     </div>
   )

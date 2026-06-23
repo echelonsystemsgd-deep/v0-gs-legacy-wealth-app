@@ -91,7 +91,7 @@ export default async function ClientDashboardPage() {
       .from('messages')
       .select('*')
       .eq('project_id', project.id)
-      .order('created_at', { descending: true })
+      .order('created_at', { ascending: false })
       .limit(3)
     recentMessages = messages ?? []
   }

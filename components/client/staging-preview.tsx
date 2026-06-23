@@ -154,7 +154,6 @@ export function StagingPreview({ previewUrl, projectUpdates }: StagingPreviewPro
               title="Staging Preview Sandbox"
               className="absolute inset-0 w-full h-full border-0 bg-[#0A0A0A]"
               loading="lazy"
-              sandbox="allow-scripts allow-same-origin allow-forms"
             />
           </div>
         </div>
