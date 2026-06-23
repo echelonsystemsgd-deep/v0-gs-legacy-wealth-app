@@ -241,13 +241,44 @@ export function ClientBookingCalendar({ userId, userRole, userEmail }: ClientBoo
     scheduledAt.setHours(h, m, 0, 0)
 
     try {
+      let currentLeadId = leadId
+      if (userRole !== 'client' && !currentLeadId) {
+        // Query profile for name if available to create a lead
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, first_name, last_name')
+          .eq('id', userId)
+          .maybeSingle()
+
+        const name = profile?.full_name || 
+                     (profile?.first_name || profile?.last_name 
+                      ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() 
+                      : userEmail.split('@')[0])
+
+        const { data: newLead, error: leadError } = await supabase
+          .from('leads')
+          .insert({
+            name: name,
+            business_name: 'To Be Specified',
+            email: userEmail,
+            status: 'New',
+            source: 'booking'
+          })
+          .select('id')
+          .single()
+
+        if (leadError) throw leadError
+        currentLeadId = newLead.id
+        setLeadId(currentLeadId)
+      }
+
       const payload = {
         category_id: selectedCategory.id,
         scheduled_at: scheduledAt.toISOString(),
         status: 'Scheduled',
         notes: notes || null,
         client_id: userRole === 'client' ? userId : null,
-        lead_id: userRole !== 'client' ? leadId : null
+        lead_id: userRole !== 'client' ? currentLeadId : null
       }
 
       const { error: insertError } = await supabase
@@ -333,7 +364,7 @@ export function ClientBookingCalendar({ userId, userRole, userEmail }: ClientBoo
   ]
 
   return (
-    <div className="max-w-4xl w-full mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Step Stepper Header */}
       <div className="flex items-center gap-4 bg-white/[0.02] border border-gold/10 p-4 rounded-2xl select-none">
         {([

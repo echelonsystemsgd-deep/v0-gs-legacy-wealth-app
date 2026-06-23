@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -92,6 +92,7 @@ interface DashboardClientContainerProps {
   testimonials?: any[]
   portfolioItems?: any[]
   initialSession?: Session | null
+  defaultTab?: 'overview' | 'profile' | 'vault'
 }
 
 // ─── Tab Definitions ──────────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ export default function DashboardClientContainer({
   testimonials = [],
   portfolioItems = [],
   initialSession = null,
+  defaultTab = 'overview',
 }: DashboardClientContainerProps) {
   const router = useRouter()
   const supabase = createClient()
@@ -130,7 +132,13 @@ export default function DashboardClientContainer({
 
   // Tabs
   const [clientTab, setClientTab] = useState<ClientTab>('overview')
-  const [userTab, setUserTab] = useState<UserTab>('overview')
+  const [userTab, setUserTab] = useState<UserTab>(defaultTab)
+
+  useEffect(() => {
+    if (defaultTab) {
+      setUserTab(defaultTab)
+    }
+  }, [defaultTab])
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -238,83 +246,22 @@ export default function DashboardClientContainer({
   // ─────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F0EDE6] relative overflow-hidden flex flex-col">
-      {/* Ambient background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gold/5 blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/3 blur-[130px]" />
+    <div className="max-w-7xl w-full mx-auto space-y-6 relative z-10 flex-1">
+      {/* ── Page Heading ─────────────────────────────────────────────────── */}
+      <div className="space-y-1 pb-6 border-b border-gold/15">
+        <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
+          <Sparkles size={12} className="animate-pulse" />
+          {profile.role === 'client' ? 'Active Client Suite' : 'Qualified Sandbox Preview'}
+        </div>
+        <h1 className="hidden sm:block text-2xl sm:text-3xl font-serif font-bold text-foreground">
+          {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Credentialed Access Node'}
+        </h1>
+        <p className="text-xs text-muted-foreground max-w-md">
+          {profile.role === 'client'
+            ? 'Track your live AI project, deliverables, and asset pipeline.'
+            : 'Temporary sandbox clearance active. Register operational parameters below to evaluate custom alignment.'}
+        </p>
       </div>
-
-      <Watermark position="center" opacity={0.02} />
-
-      {/* ── Sticky Top Bar ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/90 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4 shrink-0">
-        {/* Brand mark */}
-        <div className="flex items-center gap-2.5 flex-1 min-w-0">
-          <div className="w-7 h-7 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
-            <Sparkles size={11} className="text-gold" />
-          </div>
-          <div className="hidden sm:block">
-            <p className="font-serif text-xs font-bold text-foreground leading-none">GS Legacy Wealth</p>
-            <p className="text-[10px] text-gold/60 font-semibold uppercase tracking-widest mt-0.5">
-              {profile.role === 'client' ? 'Client Suite' : 'Qualified Sandbox'}
-            </p>
-          </div>
-          {/* Greeting shown only on mobile inside the top bar */}
-          <p className="sm:hidden text-sm font-serif font-bold text-foreground truncate">
-            {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Sandbox Clearance Active'}
-          </p>
-        </div>
-
-        {/* Right actions */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="h-5 w-px bg-gold/10 hidden sm:block" />
-          <span className="text-xs text-muted-foreground hidden sm:block truncate max-w-[120px]">
-            {profile.full_name ?? profile.first_name ?? ''}
-          </span>
-          <div className="h-5 w-px bg-gold/10" />
-          <Link
-            href="/"
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all"
-            title="View Public Site"
-          >
-            <Globe size={15} />
-          </Link>
-          <UserNotificationCenter />
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
-              title="Sign Out"
-            >
-              <LogOut size={15} />
-            </button>
-          </form>
-          <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
-            <span className="text-xs font-bold text-gold uppercase">
-              {(profile.first_name ?? profile.full_name ?? 'U')[0]}
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-5xl w-full mx-auto px-4 pt-6 pb-28 sm:py-10 space-y-8 relative z-10 flex-1">
-
-        {/* ── Page Heading ─────────────────────────────────────────────────── */}
-        <div className="space-y-1 pb-6 border-b border-gold/15">
-          <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
-            <Sparkles size={12} className="animate-pulse" />
-            {profile.role === 'client' ? 'Active Client Suite' : 'Qualified Sandbox Preview'}
-          </div>
-          <h1 className="hidden sm:block text-2xl sm:text-3xl font-serif font-bold text-foreground">
-            {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Credentialed Access Node'}
-          </h1>
-          <p className="text-xs text-muted-foreground max-w-md">
-            {profile.role === 'client'
-              ? 'Track your live AI project, deliverables, and asset pipeline.'
-              : 'Temporary sandbox clearance active. Register operational parameters below to evaluate custom alignment.'}
-          </p>
-        </div>
 
         {/* ═══════════════════════════════════════════════════════════════════
             CLIENT DASHBOARD (tabbed)
@@ -751,12 +698,12 @@ export default function DashboardClientContainer({
                       </div>
                     ) : (
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <button
-                          onClick={() => setUserTab('profile')}
+                        <Link
+                          href="/dashboard/book"
                           className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-background font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all flex items-center gap-1.5 cursor-pointer"
                         >
-                          Register Profile Details to Unlock Vetting <ArrowRight size={13} />
-                        </button>
+                          Book Vetting Session Now <ArrowRight size={13} />
+                        </Link>
                         <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                           <Sparkles size={12} className="text-gold animate-pulse" /> Vetted alignment only · Strictly limited bandwidth allocations
                         </div>
@@ -1109,7 +1056,6 @@ export default function DashboardClientContainer({
 
           </div>
         )}
-      </div>
 
       {/* ── Mobile Bottom Navigation ─────────────────────────────────────── */}
       <nav className="sm:hidden fixed bottom-0 inset-x-0 z-20 border-t border-gold/10 bg-[#050505]/95 backdrop-blur-md">
@@ -1155,10 +1101,6 @@ export default function DashboardClientContainer({
           )}
         </div>
       </nav>
-
-      <footer className="w-full border-t border-gold/10 py-5 text-center text-xs text-muted-foreground relative z-10 bg-[#050505]/80 backdrop-blur-md">
-        © {new Date().getFullYear()} GS Legacy Wealth AI. All rights reserved.
-      </footer>
     </div>
   )
 }

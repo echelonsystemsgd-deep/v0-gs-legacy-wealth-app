@@ -1,41 +1,36 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { useState } from 'react'
 import {
   LayoutDashboard,
-  FolderKanban,
-  Globe,
-  Clock,
-  MessageSquare,
+  CalendarDays,
+  CalendarRange,
+  Bell,
+  UserRound,
   LogOut,
   ChevronRight,
   Menu,
   X,
-  CalendarDays,
-  Bell,
-  UserRound,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
-  { href: '/client', label: 'Overview', icon: LayoutDashboard },
-  { href: '/client/progress', label: 'Project Progress', icon: FolderKanban },
-  { href: '/client/website', label: 'My Website', icon: Globe },
-  { href: '/client/updates', label: 'Updates', icon: Clock },
-  { href: '/client/messages', label: 'Messages', icon: MessageSquare },
-  { href: '/dashboard/book', label: 'Book a Session', icon: CalendarDays },
-  { href: '/client/notifications', label: 'Notifications', icon: Bell },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/book?tab=book', label: 'Book a Session', icon: CalendarDays },
+  { href: '/dashboard/book?tab=my-bookings', label: 'My Bookings', icon: CalendarRange },
+  { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
 ]
 
 const accountItems = [
-  { href: '/profile', label: 'Profile Settings', icon: UserRound },
+  { href: '/dashboard?tab=profile', label: 'Profile Settings', icon: UserRound },
 ]
 
-export function ClientSidebar() {
+export function UserSidebar() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -48,6 +43,22 @@ export function ClientSidebar() {
 
   const handleLinkClick = () => {
     setIsOpen(false)
+  }
+
+  // Check if link is active
+  const checkActive = (href: string) => {
+    const [path, query] = href.split('?')
+    if (pathname !== path) return false
+    if (!query) {
+      // If link has no query, but current URL has tab=profile, then this link (e.g. /dashboard) is NOT active
+      if (searchParams.get('tab') === 'profile') return false
+      return true
+    }
+    const params = new URLSearchParams(query)
+    for (const [key, val] of params.entries()) {
+      if (searchParams.get(key) !== val) return false
+    }
+    return true
   }
 
   return (
@@ -84,7 +95,7 @@ export function ClientSidebar() {
             </div>
             <div>
               <p className="font-serif text-sm font-bold text-foreground leading-tight">GS Legacy</p>
-              <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest font-sans">Client Portal</p>
+              <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest font-sans">Sandbox Suite</p>
             </div>
           </div>
 
@@ -100,7 +111,7 @@ export function ClientSidebar() {
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
           {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive = href === '/client' ? pathname === '/client' : pathname.startsWith(href)
+            const isActive = checkActive(href)
             return (
               <Link
                 key={href}
@@ -129,7 +140,7 @@ export function ClientSidebar() {
           </div>
 
           {accountItems.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname.startsWith(href)
+            const isActive = checkActive(href)
             return (
               <Link
                 key={href}
@@ -163,7 +174,6 @@ export function ClientSidebar() {
           </Link>
           <button
             onClick={handleSignOut}
-            id="client-signout"
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all duration-200 cursor-pointer"
           >
             <LogOut size={16} className="shrink-0" />

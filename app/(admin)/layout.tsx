@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/sidebar'
 import { createClient } from '@/lib/supabase/server'
 import { NotificationCenter } from '@/components/admin/notification-center'
-import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -27,7 +26,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-background flex">
-      <Toaster position="top-right" theme="dark" richColors closeButton />
       {/* Ambient background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-64 w-[500px] h-[500px] rounded-full bg-gold/3 blur-[160px]" />

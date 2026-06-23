@@ -3,7 +3,13 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import DashboardClientContainer from '@/components/dashboard/dashboard-client-container'
 
-export default async function UserDashboardPage() {
+export default async function UserDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>
+}) {
+  const resolvedParams = await searchParams
+  const defaultTab = resolvedParams.tab || 'overview'
   const cookieStore = await cookies()
 
   const supabase = createServerClient(
@@ -96,6 +102,7 @@ export default async function UserDashboardPage() {
       testimonials={testimonials ?? []}
       portfolioItems={portfolioItems ?? []}
       initialSession={initialSession}
+      defaultTab={defaultTab as any}
     />
   )
 }

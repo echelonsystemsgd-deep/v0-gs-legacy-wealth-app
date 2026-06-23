@@ -5,6 +5,7 @@ import './globals.css'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
+import { Toaster } from '@/components/ui/sonner'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -107,6 +108,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
+        <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />
         <TabRetention />
         <StickyCTAButton />
