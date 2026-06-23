@@ -126,6 +126,16 @@ export default function RootLayout({
           afterInteractive loads right after hydration so window.Calendly is
           ready before the user can reach the calendar step.
         */}
+        {/*
+          Calendly popup CSS — REQUIRED for initPopupWidget() to render the
+          popup overlay correctly. Without this stylesheet the JS fires but
+          the modal is invisible (no backdrop, no frame). The inline embed
+          on /book does NOT need this; only the popup CTA does.
+        */}
+        <link
+          rel="stylesheet"
+          href="https://assets.calendly.com/assets/external/widget.css"
+        />
         <Script
           src="https://assets.calendly.com/assets/external/widget.js"
           strategy="afterInteractive"
