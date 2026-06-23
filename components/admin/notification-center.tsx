@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Bell, Inbox, Calendar, Check, Trash2, UserPlus, Sparkles } from 'lucide-react'
+import { Bell, Inbox, Calendar, Check, Trash2, UserPlus, Sparkles, MessageSquare } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 type NotificationItem = {
   id: string
-  type: 'lead' | 'booking'
+  type: 'lead' | 'booking' | 'message'
   title: string
   description: string
   timestamp: Date
@@ -35,8 +35,13 @@ export function NotificationCenter() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Subscribe to real-time events on leads and strategy_sessions tables
+  // Subscribe to real-time events on leads, strategy_sessions, and messages tables
   useEffect(() => {
+    let currentAdminId: string | null = null
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) currentAdminId = data.user.id
+    })
+
     // 1. Subscribe to new leads
     const leadsChannel = supabase
       .channel('realtime_leads')
@@ -113,9 +118,50 @@ export function NotificationCenter() {
       )
       .subscribe()
 
+    // 3. Subscribe to new messages
+    const messagesChannel = supabase
+      .channel('realtime_admin_messages')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        async (payload) => {
+          const newMsg = payload.new as any
+          if (currentAdminId && newMsg.sender_id === currentAdminId) return
+
+          // Query sender profile and project details
+          const [senderRes, projectRes] = await Promise.all([
+            supabase.from('profiles').select('full_name').eq('id', newMsg.sender_id).maybeSingle(),
+            supabase.from('projects').select('project_name').eq('id', newMsg.project_id).maybeSingle(),
+          ])
+
+          const senderName = senderRes.data?.full_name || 'Client'
+          const projectName = projectRes.data?.project_name || 'Project'
+
+          const item: NotificationItem = {
+            id: newMsg.id || `msg-${Date.now()}`,
+            type: 'message',
+            title: `New Message from ${senderName}`,
+            description: `[${projectName}]: ${newMsg.content}`,
+            timestamp: new Date(),
+            isRead: false,
+            link: '/admin/messages'
+          }
+          setNotifications((prev) => [item, ...prev])
+          toast.info(`Message from ${senderName}`, {
+            description: `[${projectName}]: ${newMsg.content}`,
+            action: {
+              label: 'Reply',
+              onClick: () => router.push('/admin/messages')
+            }
+          })
+        }
+      )
+      .subscribe()
+
     return () => {
       supabase.removeChannel(leadsChannel)
       supabase.removeChannel(bookingsChannel)
+      supabase.removeChannel(messagesChannel)
     }
   }, [supabase])
 
@@ -210,9 +256,17 @@ export function NotificationCenter() {
                   <div className={`p-2.5 rounded-xl border shrink-0 mt-0.5 ${
                     item.type === 'lead'
                       ? 'bg-blue-500/10 border-blue-500/25 text-blue-400'
-                      : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
+                      : item.type === 'message'
+                        ? 'bg-amber-500/10 border-amber-500/25 text-amber-400'
+                        : 'bg-purple-500/10 border-purple-500/25 text-purple-400'
                   }`}>
-                    {item.type === 'lead' ? <UserPlus size={15} /> : <Calendar size={15} />}
+                    {item.type === 'lead' ? (
+                      <UserPlus size={15} />
+                    ) : item.type === 'message' ? (
+                      <MessageSquare size={15} />
+                    ) : (
+                      <Calendar size={15} />
+                    )}
                   </div>
 
                   {/* Content */}

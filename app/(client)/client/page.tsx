@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ProjectTelemetry } from '@/components/client/project-telemetry'
 import { QuickMessageReply } from '@/components/client/quick-message-reply'
 import { StageApprovalButton } from '@/components/client/stage-approval-button'
+import { StagingPreview } from '@/components/client/staging-preview'
 
 export default async function ClientDashboardPage() {
   const cookieStore = await cookies()
@@ -103,6 +104,17 @@ export default async function ClientDashboardPage() {
       .select('*, approved_by_profile:profiles(first_name, last_name, full_name)')
       .eq('project_id', project.id)
     approvals = appData ?? []
+  }
+
+  // Fetch recent project updates for the logs
+  let projectUpdates: any[] = []
+  if (project) {
+    const { data: upLogs } = await supabase
+      .from('project_updates')
+      .select('id, title, created_at')
+      .eq('project_id', project.id)
+      .order('created_at', { ascending: true })
+    projectUpdates = upLogs ?? []
   }
 
   const greetingName = profile.first_name || profile.full_name || 'Client'
@@ -314,51 +326,10 @@ export default async function ClientDashboardPage() {
 
               {/* Staging Preview Browser Frame */}
               {project.preview_url && (
-                <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4 shadow-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Live Staging Preview</h3>
-                      <p className="text-xxs text-muted-foreground">Interactive web instance synchronizing with recent git deployments.</p>
-                    </div>
-                    <Link
-                      href={project.preview_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xxs font-bold text-gold hover:underline flex items-center gap-1 font-mono"
-                    >
-                      Open in new tab <ExternalLink size={10} />
-                    </Link>
-                  </div>
-
-                  {/* Browser Mockup Frame */}
-                  <div className="rounded-xl border border-white/10 overflow-hidden shadow-2xl bg-black/40">
-                    {/* Browser Toolbar */}
-                    <div className="bg-[#111111] px-4 py-2 border-b border-white/5 flex items-center gap-3">
-                      {/* Red, Yellow, Green Window Dots */}
-                      <div className="flex gap-1.5 shrink-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                      </div>
-                      
-                      {/* URL Bar */}
-                      <div className="flex-1 bg-white/[0.03] border border-white/5 rounded px-3 py-0.5 text-[10px] text-muted-foreground font-mono truncate text-center select-none">
-                        {project.preview_url.replace(/^https?:\/\//, '')}
-                      </div>
-                    </div>
-
-                    {/* Frame Content */}
-                    <div className="relative aspect-video w-full">
-                      <iframe
-                        src={project.preview_url}
-                        title="Staging Preview"
-                        className="absolute inset-0 w-full h-full border-0 bg-[#0A0A0A]"
-                        loading="lazy"
-                        sandbox="allow-scripts allow-same-origin allow-forms"
-                      />
-                    </div>
-                  </div>
-                </section>
+                <StagingPreview
+                  previewUrl={project.preview_url}
+                  projectUpdates={projectUpdates}
+                />
               )}
             </section>
 

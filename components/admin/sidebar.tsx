@@ -20,6 +20,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  MessageSquare,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -28,6 +29,7 @@ const navItems = [
   { href: '/admin/leads', label: 'Leads', icon: Inbox },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { href: '/admin/clients', label: 'Client Directory', icon: Users },
+  { href: '/admin/messages', label: 'Message Desk', icon: MessageSquare },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/portfolio', label: 'Portfolio', icon: ImageIcon },
   { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
