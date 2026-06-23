@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import {
   ArrowRight,
@@ -241,6 +242,7 @@ function CalendlyFallback({ url }: { url: string }) {
 // Inner component — must live inside <Suspense> because it reads route state
 // ---------------------------------------------------------------------------
 function BookingFlowInner() {
+  const router = useRouter()
   const [step, setStep] = useState<1 | 2>(1)
   const [subStep, setSubStep] = useState<number>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -309,16 +311,20 @@ function BookingFlowInner() {
     if (subStep > 1) {
       setSubStep((prev) => prev - 1)
       window.scrollTo({ top: 0, behavior: "smooth" })
+    } else {
+      router.push("/")
     }
   }
 
   // ── Form submit ────────────────────────────────────────────────────────────
-  const submitForm = async () => {
+  const submitForm = async (customData?: FormData) => {
     setIsSubmitting(true)
     setSubmitError(null)
 
+    const dataToSubmit = customData || formData
+
     // Build notes block summarizing the multi-page details
-    const notesSummary = `Biggest Challenge: ${formData.biggestChallenge}\nMonthly Revenue: ${formData.monthlyRevenue}\nStart Timeline: ${formData.startTimeline}`
+    const notesSummary = `Biggest Challenge: ${dataToSubmit.biggestChallenge}\nMonthly Revenue: ${dataToSubmit.monthlyRevenue}\nStart Timeline: ${dataToSubmit.startTimeline}`
 
     try {
       const res = await fetch("/api/forms/submit", {
@@ -326,10 +332,10 @@ function BookingFlowInner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           source: "booking_form",
-          name: formData.fullName,
-          email: formData.email,
-          business_name: formData.companyName,
-          website: formData.websiteUrl || null,
+          name: dataToSubmit.fullName,
+          email: dataToSubmit.email,
+          business_name: dataToSubmit.companyName,
+          website: dataToSubmit.websiteUrl || null,
           notes: notesSummary,
         }),
       })
@@ -345,7 +351,7 @@ function BookingFlowInner() {
       setIsSubmitting(false)
 
       // Q4 revenue threshold check (Under £5,000 is disqualified)
-      if (formData.monthlyRevenue === "Under £5,000") {
+      if (dataToSubmit.monthlyRevenue === "Under £5,000") {
         setIsDisqualified(true)
       } else {
         setStep(2)
@@ -687,7 +693,13 @@ function BookingFlowInner() {
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => updateField("biggestChallenge", opt.value)}
+                          onClick={() => {
+                            updateField("biggestChallenge", opt.value)
+                            setTimeout(() => {
+                              setSubStep(4)
+                              window.scrollTo({ top: 0, behavior: "smooth" })
+                            }, 300)
+                          }}
                           className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
                             selected
                               ? "border-accent-gold bg-accent-gold/10"
@@ -736,7 +748,13 @@ function BookingFlowInner() {
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => updateField("monthlyRevenue", opt.value)}
+                          onClick={() => {
+                            updateField("monthlyRevenue", opt.value)
+                            setTimeout(() => {
+                              setSubStep(5)
+                              window.scrollTo({ top: 0, behavior: "smooth" })
+                            }, 300)
+                          }}
                           className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
                             selected
                               ? "border-accent-gold bg-accent-gold/10"
@@ -785,7 +803,16 @@ function BookingFlowInner() {
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => updateField("startTimeline", opt.value)}
+                          onClick={() => {
+                            updateField("startTimeline", opt.value)
+                            const latestData = {
+                              ...formData,
+                              startTimeline: opt.value
+                            }
+                            setTimeout(() => {
+                              submitForm(latestData)
+                            }, 300)
+                          }}
                           className={`w-full text-left flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
                             selected
                               ? "border-accent-gold bg-accent-gold/10"
@@ -824,20 +851,16 @@ function BookingFlowInner() {
 
             {/* Back / Next Buttons */}
             <div className="flex items-center justify-between gap-4">
-              {subStep > 1 ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  onClick={handleBack}
-                  className="flex items-center gap-2 border-border-brand/20 text-foreground hover:bg-background/40"
-                >
-                  <ChevronLeft size={16} />
-                  Back
-                </Button>
-              ) : (
-                <div /> // Placeholder to push Next button to right
-              )}
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={handleBack}
+                className="flex items-center gap-2 border-border-brand/20 text-foreground hover:bg-background/40"
+              >
+                <ChevronLeft size={16} />
+                Back
+              </Button>
 
               <Button
                 type="button"

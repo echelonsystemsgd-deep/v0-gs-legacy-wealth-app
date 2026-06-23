@@ -264,7 +264,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
           {/* Pricing Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 items-stretch">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {activeTiers.map((tier, index) => (
                 <motion.div
                   key={`homepage-${billingCycle}-${tier.name}`}
@@ -580,7 +580,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
         {/* Pricing Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {activeTiers.map((tier, index) => {
               const isRecommended = recommendedTier === tier.tag
               return (
