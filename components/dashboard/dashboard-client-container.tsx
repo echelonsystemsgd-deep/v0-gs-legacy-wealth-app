@@ -680,7 +680,7 @@ export default function DashboardClientContainer({
                         Request System Architecture Alignment & Allocation
                       </h3>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        To maintain system integrity and throughput, we restrict monthly client intake to exactly 3 priority builds. In this 30-minute operational audit with our engineering lead, we will map your structural bottlenecks and draft a custom telemetry flowchart (valued at $1,500).
+                        To maintain system integrity and throughput, we restrict monthly client intake to exactly 3 priority builds. In this 30-minute operational audit with our engineering lead, we will map your structural bottlenecks and draft a custom telemetry flowchart (valued at £1,500).
                       </p>
                     </div>
 

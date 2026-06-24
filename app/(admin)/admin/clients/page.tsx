@@ -387,7 +387,7 @@ export default function ClientsPage() {
             </div>
             <div className="text-[10px] text-gold flex items-center gap-1.5 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0 animate-pulse" />
-              {activeProj.status} · ${activeProj.amount_paid.toLocaleString()} Paid
+              {activeProj.status} · £{activeProj.amount_paid.toLocaleString()} Paid
             </div>
           </div>
         )
@@ -1015,7 +1015,7 @@ export default function ClientsPage() {
                                   {p.status}
                                 </span>
                                 <span className="text-[9px] text-muted-foreground">
-                                  Paid: ${p.amount_paid.toLocaleString()} / ${p.contract_value.toLocaleString()}
+                                  Paid: £{p.amount_paid.toLocaleString()} / £{p.contract_value.toLocaleString()}
                                 </span>
                               </div>
                             </div>

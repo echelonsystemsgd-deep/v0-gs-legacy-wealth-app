@@ -33,9 +33,9 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   ]
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-GB', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'GBP',
       maximumFractionDigits: 0,
     }).format(val)
   }
@@ -130,7 +130,7 @@ export function ProjectTelemetry({ project }: ProjectProps) {
             Settled Balance
           </span>
           <span className="text-sm font-semibold text-gold font-mono">
-            {hasContract ? formatCurrency(amountPaid) : '$0'}
+            {hasContract ? formatCurrency(amountPaid) : '£0'}
           </span>
         </div>
       </div>

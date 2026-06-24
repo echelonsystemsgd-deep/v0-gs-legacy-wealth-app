@@ -405,7 +405,7 @@ export default function ProjectDetailPage() {
 
               {/* Contract Value */}
               <div>
-                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Contract Value ($)</label>
+                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Contract Value (£)</label>
                 <input
                   type="number"
                   value={contractValue}
@@ -417,7 +417,7 @@ export default function ProjectDetailPage() {
 
               {/* Amount Paid */}
               <div>
-                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Amount Paid ($)</label>
+                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Amount Paid (£)</label>
                 <input
                   type="number"
                   value={amountPaid}

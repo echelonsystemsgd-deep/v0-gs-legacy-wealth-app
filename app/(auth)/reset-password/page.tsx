@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
 
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.updateUser({ password })
+    const { data, error } = await supabase.auth.updateUser({ password })
 
     if (error) {
       setError(error.message || 'Failed to update password. The reset link may have expired.')
@@ -36,7 +36,24 @@ export default function ResetPasswordPage() {
       return
     }
 
-    router.push('/admin')
+    const user = data?.user
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role === 'admin') {
+        router.push('/admin')
+      } else if (profile?.role === 'client') {
+        router.push('/client')
+      } else {
+        router.push('/dashboard')
+      }
+    } else {
+      router.push('/admin')
+    }
     router.refresh()
   }
 
