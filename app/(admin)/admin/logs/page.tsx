@@ -24,6 +24,7 @@ export default function LogsPage() {
   const [logins, setLogins] = useState<LoginRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('all')
   const [toast, setToast] = useState<string | null>(null)
   const [inspectLog, setInspectLog] = useState<ActivityLog | null>(null)
 
@@ -35,6 +36,10 @@ export default function LogsPage() {
       let query = supabase
         .from('activity_logs')
         .select('id, action_type, target_table, target_id, details, created_at, profiles(full_name, avatar_url)')
+
+      if (categoryFilter !== 'all') {
+        query = query.eq('target_table', categoryFilter)
+      }
 
       if (searchQuery) {
         query = query.or(`action_type.ilike.%${searchQuery}%,target_table.ilike.%${searchQuery}%`)
@@ -57,7 +62,7 @@ export default function LogsPage() {
       setLogins((data as any) ?? [])
     }
     setLoading(false)
-  }, [activeTab, searchQuery, supabase])
+  }, [activeTab, searchQuery, categoryFilter, supabase])
 
   useEffect(() => {
     fetchData()
@@ -92,6 +97,20 @@ export default function LogsPage() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
+          {activeTab === 'activity' && (
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="bg-card border border-gold/15 hover:border-gold/25 rounded-xl px-3 py-2 text-sm text-foreground outline-none cursor-pointer [color-scheme:dark] focus:ring-2 focus:ring-gold/20 transition-all"
+            >
+              <option value="all">All Activity</option>
+              <option value="messages">Messages Only</option>
+              <option value="project_updates">Project Updates Only</option>
+              <option value="leads">Lead Activity Only</option>
+              <option value="strategy_sessions">Bookings Only</option>
+              <option value="login_history">Auth Sign-Ins Only</option>
+            </select>
+          )}
           <div className="relative w-full sm:w-64">
             <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
@@ -115,7 +134,7 @@ export default function LogsPage() {
       {/* Tabs */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">
         <button
-          onClick={() => { setActiveTab('activity'); setSearchQuery('') }}
+          onClick={() => { setActiveTab('activity'); setSearchQuery(''); setCategoryFilter('all') }}
           className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
             activeTab === 'activity'
               ? 'border-gold text-gold bg-gold/5'
@@ -125,7 +144,7 @@ export default function LogsPage() {
           <FileText size={14} /> Activity Stream
         </button>
         <button
-          onClick={() => { setActiveTab('logins'); setSearchQuery('') }}
+          onClick={() => { setActiveTab('logins'); setSearchQuery(''); setCategoryFilter('all') }}
           className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
             activeTab === 'logins'
               ? 'border-gold text-gold bg-gold/5'

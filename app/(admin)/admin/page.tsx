@@ -1,10 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
-import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, PoundSterling, Info } from 'lucide-react'
+import { Users, FolderKanban, Calendar, Sparkles, Activity, Clock, Plus, ExternalLink, PoundSterling, Info, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { ActivityLogPanel } from '@/components/admin/activity-log-panel'
 
-export default async function AdminDashboardPage() {
+export default async function AdminDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ modal?: string }>
+}) {
   const supabase = await createClient()
+  const resolvedParams = await searchParams
+  const showSalesModal = resolvedParams.modal === 'sales'
+  const showPipelineModal = resolvedParams.modal === 'pipeline'
 
   // Fetch real database metrics
   const { count: leadsCount } = await supabase
@@ -21,10 +28,11 @@ export default async function AdminDashboardPage() {
     .select('*', { count: 'exact', head: true })
     .eq('status', 'Scheduled')
 
-  // Fetch financial aggregates from projects
+  // Fetch financial aggregates and details from projects (exclude archived)
   const { data: projectsFinancials } = await supabase
     .from('projects')
-    .select('amount_paid, contract_value')
+    .select('id, project_name, client_name, status, amount_paid, contract_value')
+    .eq('is_archived', false)
 
   const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
   const totalPipeline = projectsFinancials?.reduce((sum, p) => sum + ((Number(p.contract_value) - Number(p.amount_paid)) || 0), 0) || 0
@@ -36,12 +44,12 @@ export default async function AdminDashboardPage() {
     .order('created_at', { ascending: false })
     .limit(20)
 
-  // Fetch recent payments joined with projects for name context
+  // Fetch recent payments joined with projects for name context (10 if sales modal is open, else 4)
   const { data: recentPayments } = await supabase
     .from('payments')
     .select('id, amount, notes, status, created_at, projects(project_name)')
     .order('created_at', { ascending: false })
-    .limit(4)
+    .limit(showSalesModal ? 10 : 4)
 
   return (
     <div className="space-y-6 sm:space-y-10 relative">
@@ -70,104 +78,85 @@ export default async function AdminDashboardPage() {
 
       {/* Metrics Row */}
       <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-6">
-        {/* Total Sales Card */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
+        {/* Total Sales (Capital Realised) Card */}
+        <Link
+          href="?modal=sales"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer"
+        >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <div className="flex items-center gap-1.5 cursor-help">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Sales</span>
-              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
-              {/* Tooltip Content */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
-                Sum of all client payments successfully processed and recorded in the system.
-              </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Capital Realised</span>
+              <Info size={11} className="text-muted-foreground/45 group-hover:text-gold transition-colors shrink-0" />
             </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               £{totalSales.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <PoundSterling size={16} className="text-gold sm:hidden" />
-            <PoundSterling size={18} className="text-gold hidden sm:block" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+            <PoundSterling size={18} className="text-gold" />
           </div>
-        </div>
+        </Link>
 
-        {/* Active Pipeline Card */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
+        {/* Pipeline (Projected Value) Card */}
+        <Link
+          href="?modal=pipeline"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer"
+        >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <div className="flex items-center gap-1.5 cursor-help">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Pipeline</span>
-              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
-              {/* Tooltip Content */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
-                Outstanding contract balances for active projects (Total Contract Value minus Amount Paid).
-              </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Projected Value</span>
+              <Info size={11} className="text-muted-foreground/45 group-hover:text-gold transition-colors shrink-0" />
             </div>
             <p className="text-lg sm:text-2xl font-serif font-bold text-gradient-gold truncate">
               £{totalPipeline.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Sparkles size={16} className="text-gold sm:hidden" />
-            <Sparkles size={18} className="text-gold hidden sm:block" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+            <Sparkles size={18} className="text-gold" />
           </div>
-        </div>
+        </Link>
 
-        {/* Leads Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
+        {/* Total Leads (Inbound Pipelines) Card */}
+        <Link
+          href="/admin/leads"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer"
+        >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <div className="flex items-center gap-1.5 cursor-help">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Total Leads</span>
-              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
-              {/* Tooltip Content */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
-                Total number of potential clients who submitted inquiries through the website.
-              </div>
-            </div>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">Inbound Pipelines</span>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{leadsCount ?? 0}</p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Users size={16} className="text-gold sm:hidden" />
-            <Users size={18} className="text-gold hidden sm:block" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+            <Users size={18} className="text-gold" />
           </div>
-        </div>
+        </Link>
 
-        {/* Active Projects Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group">
+        {/* Active Projects (Active Mandates) Card */}
+        <Link
+          href="/admin/projects"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer"
+        >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <div className="flex items-center gap-1.5 cursor-help">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Projects</span>
-              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
-              {/* Tooltip Content */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
-                Number of client projects currently in progress (excluding completed or archived projects).
-              </div>
-            </div>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">Active Mandates</span>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{projectsCount ?? 0}</p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <FolderKanban size={16} className="text-gold sm:hidden" />
-            <FolderKanban size={18} className="text-gold hidden sm:block" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+            <FolderKanban size={18} className="text-gold" />
           </div>
-        </div>
+        </Link>
 
-        {/* Active Bookings Metric */}
-        <div className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(212,175,55,0.05)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 col-span-2 md:col-span-1 relative group">
+        {/* Active Bookings (Scheduled Briefings) Card */}
+        <Link
+          href="/admin/bookings"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 col-span-2 md:col-span-1 relative group cursor-pointer"
+        >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
-            <div className="flex items-center gap-1.5 cursor-help">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground">Active Bookings</span>
-              <Info size={12} className="text-muted-foreground/45 hover:text-gold transition-colors shrink-0" />
-              {/* Tooltip Content */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-[#0C0C0C]/95 border border-gold/20 rounded-xl text-[10px] text-muted-foreground leading-normal shadow-[0_4px_20px_rgba(0,0,0,0.8)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none backdrop-blur-md">
-                Upcoming client and lead strategy sessions scheduled to take place.
-              </div>
-            </div>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">Scheduled Briefings</span>
             <p className="text-lg sm:text-2xl font-serif font-bold text-foreground truncate">{sessionsCount ?? 0}</p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <Calendar size={16} className="text-gold sm:hidden" />
-            <Calendar size={18} className="text-gold hidden sm:block" />
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+            <Calendar size={18} className="text-gold" />
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* Main Grid: Activity, Transactions & Actions */}
@@ -226,26 +215,144 @@ export default async function AdminDashboardPage() {
 
           <div className="space-y-2 mt-4 flex-1 flex flex-col justify-end">
             <Link
-              href="/admin/leads"
+              href="/admin/projects?create=true"
               className="w-full py-2.5 px-4 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-300 flex items-center justify-between"
             >
-              Manage Leads <Plus size={12} />
+              Deploy Client Mandate <ArrowUpRight size={12} />
+            </Link>
+            <Link
+              href="/admin/leads?status=New"
+              className="w-full py-2.5 px-4 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-300 flex items-center justify-between"
+            >
+              Assess CRM Pipeline <ArrowUpRight size={12} />
+            </Link>
+            <Link
+              href="/admin/bookings?schedule=true"
+              className="w-full py-2.5 px-4 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-300 flex items-center justify-between"
+            >
+              Initiate Strategic Call <ArrowUpRight size={12} />
             </Link>
             <Link
               href="/admin/projects"
               className="w-full py-2.5 px-4 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-300 flex items-center justify-between"
             >
-              Track Projects <Plus size={12} />
-            </Link>
-            <Link
-              href="/admin/testimonials"
-              className="w-full py-2.5 px-4 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-300 flex items-center justify-between"
-            >
-              Add Testimonial <Plus size={12} />
+              Verify Phase Approvals <ArrowUpRight size={12} />
             </Link>
           </div>
         </section>
       </div>
+
+      {/* Sales Modal */}
+      {showSalesModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+          <div className="w-full max-w-2xl glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-4 max-h-[85vh] overflow-y-auto relative">
+            <div className="flex items-center justify-between border-b border-gold/10 pb-3">
+              <h3 className="font-serif text-lg font-bold text-foreground">Capital Realised Breakdown</h3>
+              <Link href="/admin" className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5">&times;</Link>
+            </div>
+            
+            <div className="divide-y divide-gold/10">
+              {recentPayments && recentPayments.length > 0 ? (
+                (recentPayments as any[]).map((payment) => (
+                  <div key={payment.id} className="py-3 flex items-center justify-between gap-3 first:pt-0 last:pb-0">
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate">
+                        {payment.projects?.project_name || 'Custom Project'}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground truncate mt-0.5">
+                        {payment.notes || 'Milestone payment'}
+                      </p>
+                      <p className="text-[9px] text-gold/60 font-mono mt-0.5">
+                        {new Date(payment.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-sm font-serif font-bold text-gold">
+                        +£{Number(payment.amount).toLocaleString('en-GB')}
+                      </span>
+                      <span className="block text-[8px] uppercase tracking-wider text-green-400 font-bold mt-0.5">
+                        {payment.status}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="py-6 text-center text-xs text-muted-foreground">No payments recorded yet.</p>
+              )}
+            </div>
+            
+            <div className="flex justify-end pt-2">
+              <Link
+                href="/admin"
+                className="px-4 py-2 rounded-xl border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all"
+              >
+                Close Breakdown
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pipeline Modal */}
+      {showPipelineModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+          <div className="w-full max-w-3xl glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-4 max-h-[85vh] overflow-y-auto relative">
+            <div className="flex items-center justify-between border-b border-gold/10 pb-3">
+              <h3 className="font-serif text-lg font-bold text-foreground">Active Projects Pipeline</h3>
+              <Link href="/admin" className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5">&times;</Link>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-gold/10 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
+                    <th className="py-3 px-4">Project Name</th>
+                    <th className="py-3 px-4">Client Name</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">Contract Value</th>
+                    <th className="py-3 px-4">Amount Paid</th>
+                    <th className="py-3 px-4 text-right font-bold text-gold">Unpaid Balance</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gold/5">
+                  {projectsFinancials && projectsFinancials.length > 0 ? (
+                    projectsFinancials.map((p) => {
+                      const balance = (Number(p.contract_value) || 0) - (Number(p.amount_paid) || 0)
+                      return (
+                        <tr key={p.id} className="hover:bg-white/[0.01]">
+                          <td className="py-3 px-4 font-semibold text-foreground">{p.project_name}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{p.client_name}</td>
+                          <td className="py-3 px-4">
+                            <span className="px-2 py-0.5 rounded bg-gold/5 border border-gold/20 text-[9px] font-bold text-gold">
+                              {p.status}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 font-mono text-muted-foreground">£{(Number(p.contract_value) || 0).toLocaleString()}</td>
+                          <td className="py-3 px-4 font-mono text-muted-foreground">£{(Number(p.amount_paid) || 0).toLocaleString()}</td>
+                          <td className="py-3 px-4 font-mono text-right font-bold text-gold">£{balance.toLocaleString()}</td>
+                        </tr>
+                      )
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-muted-foreground">No active mandates telemetry.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="flex justify-end pt-2">
+              <Link
+                href="/admin"
+                className="px-4 py-2 rounded-xl border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all"
+              >
+                Close Pipeline
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

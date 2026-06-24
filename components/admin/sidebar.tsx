@@ -10,10 +10,6 @@ import {
   Users,
   FolderKanban,
   Calendar,
-  ImageIcon,
-  MessageSquareQuote,
-  FileEdit,
-  HardDrive,
   Settings,
   ScrollText,
   LogOut,
@@ -21,6 +17,8 @@ import {
   Menu,
   X,
   MessageSquare,
+  Bell,
+  Globe,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -31,12 +29,10 @@ const navItems = [
   { href: '/admin/clients', label: 'Client Directory', icon: Users },
   { href: '/admin/messages', label: 'Message Desk', icon: MessageSquare },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
-  { href: '/admin/portfolio', label: 'Portfolio', icon: ImageIcon },
-  { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
-  { href: '/admin/content', label: 'Content', icon: FileEdit },
-  { href: '/admin/media', label: 'Media Library', icon: HardDrive },
+  { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
   { href: '/admin/logs', label: 'Activity Logs', icon: ScrollText },
+  { href: '/', label: 'View Public Site', icon: Globe },
 ]
 
 export function AdminSidebar() {
@@ -123,13 +119,6 @@ export function AdminSidebar() {
 
       {/* Footer / Sign Out */}
       <div className="px-3 py-4 border-t border-gold/10">
-        <Link
-          href="/"
-          onClick={handleLinkClick}
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all mb-1"
-        >
-          View Public Site →
-        </Link>
         <button
           onClick={handleSignOut}
           id="admin-signout"

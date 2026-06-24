@@ -55,7 +55,7 @@ export default function AdminMessageDesk() {
           supabase
             .from('projects')
             .select('id, project_name, client_name, client_id, preview_url, status')
-            .is('is_archived', false),
+            .eq('is_archived', false),
           supabase
             .from('messages')
             .select('*')

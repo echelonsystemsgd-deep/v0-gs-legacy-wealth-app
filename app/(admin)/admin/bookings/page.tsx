@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Calendar as CalendarIcon,
@@ -59,6 +60,8 @@ type SimpleClient = { id: string; full_name: string; email: string; role?: strin
 
 export default function BookingsPage() {
   const supabase = createClient()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<'bookings' | 'categories' | 'availability'>('bookings')
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -99,6 +102,20 @@ export default function BookingsPage() {
     time: '',
     notes: ''
   })
+
+  // Initialize booking form from query parameters
+  useEffect(() => {
+    const schedule = searchParams.get('schedule')
+    if (schedule === 'true') {
+      const leadId = searchParams.get('lead_id') || ''
+      setBookingForm((prev) => ({
+        ...prev,
+        targetType: 'lead',
+        targetId: leadId,
+      }))
+      setShowBookingModal(true)
+    }
+  }, [searchParams])
 
   const [showOutcomeModal, setShowOutcomeModal] = useState(false)
   const [outcomeForm, setOutcomeForm] = useState({
@@ -316,6 +333,14 @@ export default function BookingsPage() {
     }
   }
 
+  const handleCloseBookingModal = () => {
+    setShowBookingModal(false)
+    setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
+    if (searchParams.get('schedule') === 'true') {
+      router.replace('/admin/bookings')
+    }
+  }
+
   // CRUD Booking
   const handleSaveBooking = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -344,7 +369,7 @@ export default function BookingsPage() {
 
       if (error) throw error
       triggerToast('Booking scheduled successfully.')
-      setShowBookingModal(false)
+      handleCloseBookingModal()
       fetchData()
     } catch (err: any) {
       triggerToast(`Scheduling failed: ${err.message}`)
@@ -1265,7 +1290,7 @@ export default function BookingsPage() {
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
               <h2 className="font-serif text-lg font-bold text-foreground">Schedule Booking</h2>
               <button
-                onClick={() => setShowBookingModal(false)}
+                onClick={handleCloseBookingModal}
                 className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
               >
                 ✕
@@ -1375,7 +1400,7 @@ export default function BookingsPage() {
               <div className="pt-3 flex justify-end gap-3 border-t border-gold/10">
                 <button
                   type="button"
-                  onClick={() => setShowBookingModal(false)}
+                  onClick={handleCloseBookingModal}
                   className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   Cancel

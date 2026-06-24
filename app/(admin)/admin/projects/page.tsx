@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Plus,
@@ -41,6 +41,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ProjectsPage() {
   const supabase = createClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<'kanban' | 'list'>('kanban')
@@ -54,6 +55,23 @@ export default function ProjectsPage() {
     client_name: '', project_name: '', service_type: '', description: '', notes: '',
     start_date: '', target_launch_date: '',
   })
+
+  // Initialize form and open modal from query parameters
+  useEffect(() => {
+    const create = searchParams.get('create')
+    if (create === 'true') {
+      const clientName = searchParams.get('client_name') || ''
+      const projectName = searchParams.get('project_name') || ''
+      const serviceType = searchParams.get('service_type') || ''
+      setForm((prev) => ({
+        ...prev,
+        client_name: clientName,
+        project_name: projectName,
+        service_type: serviceType,
+      }))
+      setShowNewModal(true)
+    }
+  }, [searchParams])
 
   const showToast = (msg: string) => {
     setToast(msg)
@@ -73,6 +91,14 @@ export default function ProjectsPage() {
 
   useEffect(() => { fetchProjects() }, [fetchProjects])
 
+  const handleCloseNewModal = () => {
+    setShowNewModal(false)
+    setForm({ client_name: '', project_name: '', service_type: '', description: '', notes: '', start_date: '', target_launch_date: '' })
+    if (searchParams.get('create') === 'true') {
+      router.replace('/admin/projects')
+    }
+  }
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
@@ -84,8 +110,7 @@ export default function ProjectsPage() {
     })
     setSaving(false)
     if (error) { showToast('Failed to create project.'); return }
-    setShowNewModal(false)
-    setForm({ client_name: '', project_name: '', service_type: '', description: '', notes: '', start_date: '', target_launch_date: '' })
+    handleCloseNewModal()
     fetchProjects()
     showToast('Project created!')
   }
@@ -325,7 +350,7 @@ export default function ProjectsPage() {
           <div className="glass rounded-2xl border border-gold/15 p-6 w-full max-w-lg space-y-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-xl font-bold text-foreground">New Project</h2>
-              <button onClick={() => setShowNewModal(false)} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none">×</button>
+              <button onClick={handleCloseNewModal} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none">×</button>
             </div>
             <form onSubmit={handleCreate} className="space-y-4">
               {[
@@ -369,7 +394,7 @@ export default function ProjectsPage() {
                 className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
               />
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setShowNewModal(false)} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all">
+                <button type="button" onClick={handleCloseNewModal} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all">
                   Cancel
                 </button>
                 <button

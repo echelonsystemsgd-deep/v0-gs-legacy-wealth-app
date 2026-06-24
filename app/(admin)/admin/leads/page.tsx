@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Search,
@@ -53,16 +53,25 @@ const ALL_STATUSES = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won',
 export default function LeadsPage() {
   const supabase = createClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string[]>([])
+  const [serviceFilter, setServiceFilter] = useState('All')
+  const [sourceFilter, setSourceFilter] = useState('All')
   const [showFilters, setShowFilters] = useState(false)
   const [activeTab, setActiveTab] = useState<'active' | 'archived' | 'spam'>('active')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [toast, setToast] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table')
   const [activeKanbanColumn, setActiveKanbanColumn] = useState<string>('New')
+  
+  // Pipeline headers & dynamic filter lists
+  const [statusCounts, setStatusCounts] = useState<Record<string, number>>({})
+  const [servicesList, setServicesList] = useState<string[]>([])
+  const [sourcesList, setSourcesList] = useState<string[]>([])
 
   // Manual Lead creation modal states
   const [showNewModal, setShowNewModal] = useState(false)
@@ -78,6 +87,40 @@ export default function LeadsPage() {
     notes: ''
   })
   const [savingLead, setSavingLead] = useState(false)
+
+  // Initialize status filter from URL query param if present
+  useEffect(() => {
+    const statusParam = searchParams.get('status')
+    if (statusParam) {
+      setStatusFilter([statusParam])
+      setShowFilters(true)
+    }
+  }, [searchParams])
+
+  // Load distinct filters and total counts
+  const loadFiltersAndCounts = useCallback(async () => {
+    // Fetch counts
+    const { data: allActiveLeads } = await supabase
+      .from('leads')
+      .select('status, service_interested, source')
+      .eq('is_archived', false)
+      .neq('status', 'Spam')
+
+    if (allActiveLeads) {
+      // Status counts
+      const counts = allActiveLeads.reduce((acc: Record<string, number>, curr) => {
+        acc[curr.status] = (acc[curr.status] || 0) + 1
+        return acc
+      }, {})
+      setStatusCounts(counts)
+
+      // Service and Source options
+      const services = Array.from(new Set(allActiveLeads.map(d => d.service_interested).filter(Boolean))) as string[]
+      const sources = Array.from(new Set(allActiveLeads.map(d => d.source).filter(Boolean))) as string[]
+      setServicesList(services)
+      setSourcesList(sources)
+    }
+  }, [supabase])
 
   const handleUpdateLeadStatus = async (id: string, status: string) => {
     setLoading(true)
@@ -152,6 +195,12 @@ export default function LeadsPage() {
     if (statusFilter.length > 0 && activeTab !== 'spam') {
       query = query.in('status', statusFilter)
     }
+    if (serviceFilter !== 'All') {
+      query = query.eq('service_interested', serviceFilter)
+    }
+    if (sourceFilter !== 'All') {
+      query = query.eq('source', sourceFilter)
+    }
     if (search.trim()) {
       query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,business_name.ilike.%${search}%`)
     }
@@ -162,13 +211,14 @@ export default function LeadsPage() {
     } else {
       setLeads(data ?? [])
     }
+    await loadFiltersAndCounts()
     setLoading(false)
-  }, [activeTab, statusFilter, search, supabase])
+  }, [activeTab, statusFilter, serviceFilter, sourceFilter, search, supabase, loadFiltersAndCounts])
 
   // Clear selections when switching tab or search/filter changes
   useEffect(() => {
     setSelectedIds([])
-  }, [activeTab, search, statusFilter])
+  }, [activeTab, search, statusFilter, serviceFilter, sourceFilter])
 
   useEffect(() => {
     const timer = setTimeout(fetchLeads, 300)
@@ -285,6 +335,19 @@ export default function LeadsPage() {
         </button>
       </div>
 
+      {/* Visual Pipeline Headers */}
+      <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won', 'Lost'].map((status) => {
+          const count = statusCounts[status] || 0
+          return (
+            <div key={status} className="p-4 glass border border-gold/10 rounded-2xl flex flex-col justify-between hover:border-gold/20 transition-all">
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">{status}</span>
+              <span className="text-2xl font-serif font-bold text-foreground mt-1.5">{count}</span>
+            </div>
+          )
+        })}
+      </section>
+
       {/* Tabs Menu */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">
         <button
@@ -344,7 +407,7 @@ export default function LeadsPage() {
             onClick={() => setShowFilters((v) => !v)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all cursor-pointer ${showFilters ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-card border-gold/15 text-muted-foreground hover:text-foreground hover:border-gold/25'}`}
           >
-            <Filter size={15} /> Filters {statusFilter.length > 0 && `(${statusFilter.length})`}
+            <Filter size={15} /> Filters {(statusFilter.length > 0 || serviceFilter !== 'All' || sourceFilter !== 'All') && '(Active)'}
           </button>
         )}
 
@@ -375,22 +438,58 @@ export default function LeadsPage() {
         )}
       </div>
 
-      {/* Status filter chips */}
+      {/* Advanced filters dropdown overlay */}
       {showFilters && activeTab !== 'spam' && (
-        <div className="flex flex-wrap gap-2 p-4 glass rounded-xl border border-gold/10">
-          <p className="text-xs font-semibold text-muted-foreground w-full mb-1">Filter by Status:</p>
-          {ALL_STATUSES.filter(s => s !== 'Spam').map((s) => (
+        <div className="flex flex-col gap-4 p-4 glass rounded-xl border border-gold/10">
+          <div className="flex flex-wrap gap-2">
+            <p className="text-xs font-semibold text-muted-foreground w-full mb-1">Filter by Status:</p>
+            {ALL_STATUSES.filter(s => s !== 'Spam').map((s) => (
+              <button
+                key={s}
+                onClick={() => toggleStatus(s)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${statusFilter.includes(s) ? STATUS_COLORS[s] : 'bg-card border-gold/15 text-muted-foreground hover:border-gold/30'}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gold/5">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">Service Interested</label>
+              <select
+                value={serviceFilter}
+                onChange={(e) => setServiceFilter(e.target.value)}
+                className="w-full bg-card border border-gold/15 hover:border-gold/25 rounded-xl px-3 py-2 text-xs text-foreground outline-none cursor-pointer [color-scheme:dark]"
+              >
+                <option value="All">All Services</option>
+                {servicesList.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">Traffic Source</label>
+              <select
+                value={sourceFilter}
+                onChange={(e) => setSourceFilter(e.target.value)}
+                className="w-full bg-card border border-gold/15 hover:border-gold/25 rounded-xl px-3 py-2 text-xs text-foreground outline-none cursor-pointer [color-scheme:dark]"
+              >
+                <option value="All">All Sources</option>
+                {sourcesList.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {(statusFilter.length > 0 || serviceFilter !== 'All' || sourceFilter !== 'All') && (
             <button
-              key={s}
-              onClick={() => toggleStatus(s)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${statusFilter.includes(s) ? STATUS_COLORS[s] : 'bg-card border-gold/15 text-muted-foreground hover:border-gold/30'}`}
+              onClick={() => { setStatusFilter([]); setServiceFilter('All'); setSourceFilter('All') }}
+              className="px-4 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground border border-gold/10 hover:border-gold/25 transition-all cursor-pointer w-fit"
             >
-              {s}
-            </button>
-          ))}
-          {statusFilter.length > 0 && (
-            <button onClick={() => setStatusFilter([])} className="px-3 py-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground border border-gold/10 hover:border-gold/25 transition-all cursor-pointer">
-              Clear All
+              Clear All Filters
             </button>
           )}
         </div>
@@ -412,7 +511,7 @@ export default function LeadsPage() {
               <h3 className="font-serif text-sm font-bold text-foreground">Lead Ledger Empty</h3>
               <p className="text-xs text-muted-foreground mt-1">No prospect records match these filter options. Initialize a manual lead record to begin.</p>
             </div>
-            <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer">
+            <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold">
               Add Manual Lead
             </button>
           </div>
@@ -489,31 +588,40 @@ export default function LeadsPage() {
                           </div>
 
                           {/* Card Action Row */}
-                          <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                            {/* Quick Status Dropdown Selector */}
-                            <select
-                              value={lead.status}
-                              onClick={(e) => e.stopPropagation()}
-                              onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
-                              className="bg-transparent text-[9px] text-muted-foreground hover:text-foreground font-semibold border-0 p-0 outline-none w-20 [color-scheme:dark] cursor-pointer"
-                            >
-                              <option value="New" className="bg-[#0C0C0C]">New</option>
-                              <option value="Contacted" className="bg-[#0C0C0C]">Contacted</option>
-                              <option value="Call Booked" className="bg-[#0C0C0C]">Call Booked</option>
-                              <option value="Proposal Sent" className="bg-[#0C0C0C]">Proposal Sent</option>
-                              <option value="Won" className="bg-[#0C0C0C]">Won</option>
-                              <option value="Lost" className="bg-[#0C0C0C]">Lost</option>
-                              <option value="Spam" className="bg-[#0C0C0C]">Spam</option>
-                            </select>
+                          <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                            {/* Inline status select */}
+                            <div className="flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
+                              <span className="text-[9px] text-muted-foreground font-semibold">Status:</span>
+                              <select
+                                value={lead.status}
+                                onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                                className="bg-transparent text-[9px] text-foreground font-bold border-0 p-0 outline-none w-24 [color-scheme:dark] cursor-pointer text-right"
+                              >
+                                <option value="New" className="bg-[#0C0C0C]">New</option>
+                                <option value="Contacted" className="bg-[#0C0C0C]">Contacted</option>
+                                <option value="Call Booked" className="bg-[#0C0C0C]">Call Booked</option>
+                                <option value="Proposal Sent" className="bg-[#0C0C0C]">Proposal Sent</option>
+                                <option value="Won" className="bg-[#0C0C0C]">Won</option>
+                                <option value="Lost" className="bg-[#0C0C0C]">Lost</option>
+                                <option value="Spam" className="bg-[#0C0C0C]">Spam</option>
+                              </select>
+                            </div>
 
-                            {/* Detail Link Button */}
-                            <Link
-                              href={`/admin/leads/${lead.id}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="text-[10px] text-gold font-bold flex items-center hover:underline"
-                            >
-                              Details <ChevronRight size={10} />
-                            </Link>
+                            {/* Convert & Book Quick links */}
+                            <div className="flex items-center justify-between gap-1 pt-1.5" onClick={(e) => e.stopPropagation()}>
+                              <Link
+                                href={`/admin/projects?create=true&client_name=${encodeURIComponent(lead.name)}&project_name=${encodeURIComponent(lead.business_name ? lead.business_name + ' Build' : lead.name + ' Project')}&service_type=${encodeURIComponent(lead.service_interested || '')}`}
+                                className="px-2 py-1 rounded bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-[9px] font-bold transition-all text-center flex-1"
+                              >
+                                Convert
+                              </Link>
+                              <Link
+                                href={`/admin/bookings?schedule=true&lead_id=${lead.id}`}
+                                className="px-2 py-1 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[9px] font-bold transition-all text-center flex-1"
+                              >
+                                Book Call
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       ))
@@ -550,10 +658,10 @@ export default function LeadsPage() {
               <div>
                 <h3 className="font-serif text-sm font-bold text-foreground">Lead Ledger Empty</h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {search || statusFilter.length > 0 ? 'No results match your search parameters.' : 'No prospects are currently in this pipeline.'}
+                  {search || statusFilter.length > 0 || serviceFilter !== 'All' || sourceFilter !== 'All' ? 'No results match your search parameters.' : 'No prospects are currently in this pipeline.'}
                 </p>
               </div>
-              <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer">
+              <button onClick={() => setShowNewModal(true)} className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold">
                 Add Manual Lead
               </button>
             </div>
@@ -579,7 +687,7 @@ export default function LeadsPage() {
                       <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
                       <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden xl:table-cell">Source</th>
                       <th className="px-4 py-4 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Date</th>
-                      <th className="w-10 px-4 py-4" />
+                      <th className="px-4 py-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gold/5">
@@ -612,11 +720,17 @@ export default function LeadsPage() {
                           <td className="px-4 py-4 hidden lg:table-cell">
                             <p className="text-sm text-muted-foreground">{lead.service_interested ?? '—'}</p>
                           </td>
-                          <td className="px-4 py-4">
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
-                              <Circle size={5} className="fill-current" />
-                              {lead.status}
-                            </span>
+                          {/* Inline Status Selection */}
+                          <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                            <select
+                              value={lead.status}
+                              onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                              className={`bg-transparent text-xxs font-bold border border-gold/10 hover:border-gold/30 rounded-lg px-2.5 py-1 outline-none cursor-pointer [color-scheme:dark] ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground'}`}
+                            >
+                              {ALL_STATUSES.map((s) => (
+                                <option key={s} value={s} className="bg-[#0C0C0C] text-foreground">{s}</option>
+                              ))}
+                            </select>
                           </td>
                           <td className="px-4 py-4 hidden xl:table-cell">
                             <span className="text-xs text-muted-foreground capitalize">{lead.source}</span>
@@ -626,13 +740,30 @@ export default function LeadsPage() {
                               {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </span>
                           </td>
-                          <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
-                            <Link
-                              href={`/admin/leads/${lead.id}`}
-                              className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all"
-                            >
-                              <ChevronRight size={15} />
-                            </Link>
+                          {/* Quick Action Controls */}
+                          <td className="px-4 py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-2">
+                              <Link
+                                href={`/admin/projects?create=true&client_name=${encodeURIComponent(lead.name)}&project_name=${encodeURIComponent(lead.business_name && lead.business_name !== 'N/A' ? lead.business_name + ' Build' : lead.name + ' Project')}&service_type=${encodeURIComponent(lead.service_interested || '')}`}
+                                className="px-2.5 py-1.5 rounded-lg bg-gold/10 hover:bg-gold/15 text-gold border border-gold/20 text-[10px] font-bold transition-all shrink-0 hover:shadow-sm"
+                                title="Convert to Client"
+                              >
+                                Convert
+                              </Link>
+                              <Link
+                                href={`/admin/bookings?schedule=true&lead_id=${lead.id}`}
+                                className="px-2.5 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/15 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold transition-all shrink-0 hover:shadow-sm"
+                                title="Book Strategy Session"
+                              >
+                                Book Call
+                              </Link>
+                              <Link
+                                href={`/admin/leads/${lead.id}`}
+                                className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground transition-all shrink-0"
+                              >
+                                <ChevronRight size={14} />
+                              </Link>
+                            </div>
                           </td>
                         </tr>
                       )
@@ -666,10 +797,18 @@ export default function LeadsPage() {
                             <p className="text-xs text-muted-foreground">{lead.email}</p>
                           </div>
                         </div>
-                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground border-gold/10'}`}>
-                          <Circle size={4} className="fill-current text-current" />
-                          {lead.status}
-                        </span>
+                        {/* Inline select status for mobile */}
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <select
+                            value={lead.status}
+                            onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
+                            className={`bg-transparent text-[10px] font-bold border border-gold/10 hover:border-gold/25 rounded-lg px-2 py-0.5 outline-none cursor-pointer [color-scheme:dark] ${STATUS_COLORS[lead.status] ?? 'bg-card text-muted-foreground'}`}
+                          >
+                            {ALL_STATUSES.map((s) => (
+                              <option key={s} value={s} className="bg-[#0C0C0C] text-foreground">{s}</option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
                       
                       <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
@@ -683,17 +822,31 @@ export default function LeadsPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-gold/5">
+                      {/* Mobile action panel */}
+                      <div className="flex items-center justify-between pt-2.5 border-t border-gold/5 gap-2" onClick={(e) => e.stopPropagation()}>
                         <span className="text-[10px] text-muted-foreground">
-                          {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} · <span className="capitalize">{lead.source}</span>
+                          {new Date(lead.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
-                        <Link
-                          href={`/admin/leads/${lead.id}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
-                        >
-                          Details <ChevronRight size={12} />
-                        </Link>
+                        <div className="flex items-center gap-1.5">
+                          <Link
+                            href={`/admin/projects?create=true&client_name=${encodeURIComponent(lead.name)}&project_name=${encodeURIComponent(lead.business_name && lead.business_name !== 'N/A' ? lead.business_name + ' Build' : lead.name + ' Project')}&service_type=${encodeURIComponent(lead.service_interested || '')}`}
+                            className="px-2 py-1 rounded bg-gold/10 hover:bg-gold/15 text-gold border border-gold/20 text-[9px] font-bold transition-all"
+                          >
+                            Convert
+                          </Link>
+                          <Link
+                            href={`/admin/bookings?schedule=true&lead_id=${lead.id}`}
+                            className="px-2 py-1 rounded bg-indigo-500/10 hover:bg-indigo-500/15 text-indigo-400 border border-indigo-500/20 text-[9px] font-bold transition-all"
+                          >
+                            Book
+                          </Link>
+                          <Link
+                            href={`/admin/leads/${lead.id}`}
+                            className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline ml-1"
+                          >
+                            Details <ChevronRight size={12} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   )

@@ -251,15 +251,15 @@ export default function DashboardClientContainer({
       <div className="space-y-1 pb-6 border-b border-gold/15">
         <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gold uppercase">
           <Sparkles size={12} className="animate-pulse" />
-          {profile.role === 'client' ? 'Active Client Suite' : 'Qualified Sandbox Preview'}
+          {profile.role === 'client' ? 'Active Client Suite' : 'Cohort Intake Vetting'}
         </div>
         <h1 className="hidden sm:block text-2xl sm:text-3xl font-serif font-bold text-foreground">
-          {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Credentialed Access Node'}
+          {profile.role === 'client' ? `${getGreeting()}, ${profile.first_name || 'Partner'}` : 'Qualified Sandbox Intake'}
         </h1>
         <p className="text-xs text-muted-foreground max-w-md">
           {profile.role === 'client'
             ? 'Track your live AI project, deliverables, and asset pipeline.'
-            : 'Temporary sandbox clearance active. Register operational parameters below to evaluate custom alignment.'}
+            : 'Temporary sandbox clearance active. We accept exactly 3 priority build mandates monthly. Request a briefing below to secure your allocation.'}
         </p>
       </div>
 
@@ -763,7 +763,7 @@ export default function DashboardClientContainer({
 
                   {/* Right: The Blueprint Journey Stepper */}
                   <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">The Onboarding Blueprint</h3>
+                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold">Mandate Activation Blueprint</h3>
                     
                     <section className="p-5 glass rounded-2xl border border-gold/10 space-y-5">
                       <div className="relative border-l border-gold/10 pl-6 ml-3 space-y-6 py-1">
@@ -772,8 +772,8 @@ export default function DashboardClientContainer({
                           <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center">
                             <CheckCircle2 size={9} className="text-green-400" />
                           </div>
-                          <h4 className="text-xs font-bold text-foreground">Step 1: Portal Credentials Provisioned</h4>
-                          <p className="text-[10px] text-muted-foreground mt-0.5">Sandbox profile established and secured.</p>
+                          <h4 className="text-xs font-bold text-foreground">Step 1: Security Clearance Active</h4>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">Sandbox profile established and vetted.</p>
                         </div>
 
                         {/* Step 2 */}
@@ -787,9 +787,9 @@ export default function DashboardClientContainer({
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                              <h4 className="text-xs font-bold text-foreground">Step 2: Register Operational Parameters</h4>
+                              <h4 className="text-xs font-bold text-foreground">Step 2: Define System Parameters</h4>
                               <p className="text-[10px] text-muted-foreground mt-0.5">
-                                {lead?.business_name ? `Parameters registered: "${lead.business_name}"` : 'Input your enterprise scaling bottleneck.'}
+                                {lead?.business_name ? `Parameters registered: "${lead.business_name}"` : 'Outline enterprise infrastructure bottleneck.'}
                               </p>
                             </div>
                             {!lead?.business_name && (
@@ -812,8 +812,8 @@ export default function DashboardClientContainer({
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                              <h4 className="text-xs font-bold text-foreground">Step 3: Request Vetting Strategy Session</h4>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">Isolate margin leaks and design system leverage points.</p>
+                              <h4 className="text-xs font-bold text-foreground">Step 3: Secure Priority Briefing</h4>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">Strictly restricted to 3 priority cohort build allocations monthly.</p>
                             </div>
                             {lead?.status !== 'Call Booked' && (
                               <Link href="/dashboard/book"

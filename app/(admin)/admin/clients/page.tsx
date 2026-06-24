@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import {
   Users as UsersIcon,
@@ -1019,6 +1020,12 @@ export default function ClientsPage() {
                                 </span>
                               </div>
                             </div>
+                            <Link
+                              href={`/admin/projects/${p.id}`}
+                              className="px-2.5 py-1 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 text-[9px] font-bold transition-all shrink-0 hover:shadow-sm"
+                            >
+                              View Project
+                            </Link>
                           </div>
                         ))}
                       </div>

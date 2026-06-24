@@ -128,10 +128,10 @@ export default async function ClientDashboardPage() {
       {/* Welcome Header */}
       <div className="space-y-2">
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground">
-          Client Operations Center: {greetingName}
+          Operations Command: {greetingName}
         </h1>
         <p className="text-sm text-muted-foreground">
-          System build telemetry online. Monitoring active milestone progress and system integrations.
+          System build telemetry active. Monitoring bespoke asset allocation, milestone trajectory, and integration vector pipelines.
         </p>
       </div>
 

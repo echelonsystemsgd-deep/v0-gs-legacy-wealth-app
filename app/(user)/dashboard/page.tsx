@@ -40,6 +40,10 @@ export default async function UserDashboardPage({
     redirect('/login')
   }
 
+  if (profile.role === 'client') {
+    redirect('/client')
+  }
+
   // Find matching lead in CRM by email
   const { data: lead } = await supabase
     .from('leads')
