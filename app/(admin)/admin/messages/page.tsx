@@ -40,6 +40,65 @@ export default function AdminMessageDesk() {
   const [adminUserId, setAdminUserId] = useState<string | null>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
+  // Request notification permissions on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
+    }
+  }, [])
+
+  const playChime = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioCtx) return
+      const ctx = new AudioCtx()
+      
+      const osc1 = ctx.createOscillator()
+      const gain1 = ctx.createGain()
+      osc1.type = 'sine'
+      osc1.frequency.setValueAtTime(587.33, ctx.currentTime) // D5
+      gain1.gain.setValueAtTime(0.08, ctx.currentTime)
+      gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+      osc1.connect(gain1)
+      gain1.connect(ctx.destination)
+      osc1.start()
+      osc1.stop(ctx.currentTime + 0.3)
+      
+      setTimeout(() => {
+        const osc2 = ctx.createOscillator()
+        const gain2 = ctx.createGain()
+        osc2.type = 'sine'
+        osc2.frequency.setValueAtTime(880, ctx.currentTime) // A5
+        gain2.gain.setValueAtTime(0.08, ctx.currentTime)
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4)
+        osc2.connect(gain2)
+        gain2.connect(ctx.destination)
+        osc2.start()
+        osc2.stop(ctx.currentTime + 0.4)
+      }, 70)
+    } catch (e) {
+      console.warn('Audio blocked', e)
+    }
+  }
+
+  const startTitleFlash = () => {
+    let showMsg = true
+    const originalTitle = document.title
+    const flashInterval = setInterval(() => {
+      document.title = showMsg ? '💬 New Message!' : originalTitle
+      showMsg = !showMsg
+    }, 1200)
+
+    const stopFlash = () => {
+      clearInterval(flashInterval)
+      document.title = originalTitle
+      window.removeEventListener('focus', stopFlash)
+    }
+    window.addEventListener('focus', stopFlash)
+  }
+
   // Get admin user session ID on load
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -83,10 +142,39 @@ export default function AdminMessageDesk() {
         { event: 'INSERT', schema: 'public', table: 'messages' },
         (payload) => {
           const newMsg = payload.new as Message
+          const isFromOther = newMsg.sender_id !== adminUserId
+
+          if (isFromOther) {
+            playChime()
+
+            if (
+              typeof window !== 'undefined' &&
+              'Notification' in window &&
+              Notification.permission === 'granted'
+            ) {
+              new Notification('New Client Message', {
+                body: newMsg.content,
+                icon: '/favicon.ico',
+              })
+            }
+
+            if (document.hidden) {
+              startTitleFlash()
+            }
+          }
+
           setAllMessages((prev) => {
             if (prev.some((m) => m.id === newMsg.id)) return prev
             return [...prev, newMsg]
           })
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'messages' },
+        (payload) => {
+          const oldMsg = payload.old as Message
+          setAllMessages((prev) => prev.filter((m) => m.id !== oldMsg.id))
         }
       )
       .subscribe()
@@ -94,7 +182,7 @@ export default function AdminMessageDesk() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase])
+  }, [supabase, adminUserId])
 
   // Scroll chat window to bottom
   useEffect(() => {
@@ -129,6 +217,22 @@ export default function AdminMessageDesk() {
       toast.error('Network disconnect detected.')
     } finally {
       setSendingMsg(false)
+    }
+  }
+
+  const handleUnsendMessage = async (messageId: string) => {
+    try {
+      const { error } = await supabase.from('messages').delete().eq('id', messageId)
+      if (error) {
+        console.error('Delete error:', error)
+        toast.error('Failed to unsend message.')
+      } else {
+        setAllMessages((prev) => prev.filter((m) => m.id !== messageId))
+        toast.success('Message unsent.')
+      }
+    } catch (err) {
+      console.error('Delete exception:', err)
+      toast.error('Failed to delete message.')
     }
   }
 
@@ -355,10 +459,22 @@ export default function AdminMessageDesk() {
                           {/* Message Content */}
                           <p className="whitespace-pre-wrap font-sans">{msg.content}</p>
                           
-                          {/* Message Timestamp */}
-                          <span className="text-[7px] text-muted-foreground/45 block text-right mt-1.5 font-mono">
-                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
+                          {/* Message Timestamp & Unsend */}
+                          <div className="flex justify-between items-center mt-1.5 gap-4">
+                            {isMe && (
+                              <button
+                                type="button"
+                                onClick={() => handleUnsendMessage(msg.id)}
+                                className="text-[8px] text-red-400/70 hover:text-red-400 transition-colors uppercase font-bold tracking-wider cursor-pointer font-sans"
+                                title="Unsend message"
+                              >
+                                Unsend
+                              </button>
+                            )}
+                            <span className="text-[8px] text-muted-foreground/50 block ml-auto font-mono">
+                              {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     )

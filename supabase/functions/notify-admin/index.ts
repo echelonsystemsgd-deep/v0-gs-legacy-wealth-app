@@ -64,6 +64,19 @@ Deno.serve(async (req) => {
           timestamp: new Date().toISOString()
         }
       ]
+    } else if (table === 'messages' && type === 'INSERT') {
+      message = `💬 **New Client Message!**`
+      embeds = [
+        {
+          title: `Message from ${record.sender_name || 'Client'}`,
+          color: 13938487, // Gold #D4AF37
+          fields: [
+            { name: 'Content', value: record.content || '—', inline: false },
+            { name: 'Dashboard Link', value: 'https://gslegacywealth.com/admin/messages', inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]
     } else {
       // Catch-all system fallback
       message = `🔔 DB Trigger Event: ${type} on table "${table}"`

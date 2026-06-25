@@ -31,6 +31,65 @@ export function MessagesClientContainer({
   const [sending, setSending] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
+  // Request notification permissions on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
+    }
+  }, [])
+
+  const playChime = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+      if (!AudioCtx) return
+      const ctx = new AudioCtx()
+      
+      const osc1 = ctx.createOscillator()
+      const gain1 = ctx.createGain()
+      osc1.type = 'sine'
+      osc1.frequency.setValueAtTime(587.33, ctx.currentTime) // D5
+      gain1.gain.setValueAtTime(0.08, ctx.currentTime)
+      gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+      osc1.connect(gain1)
+      gain1.connect(ctx.destination)
+      osc1.start()
+      osc1.stop(ctx.currentTime + 0.3)
+      
+      setTimeout(() => {
+        const osc2 = ctx.createOscillator()
+        const gain2 = ctx.createGain()
+        osc2.type = 'sine'
+        osc2.frequency.setValueAtTime(880, ctx.currentTime) // A5
+        gain2.gain.setValueAtTime(0.08, ctx.currentTime)
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4)
+        osc2.connect(gain2)
+        gain2.connect(ctx.destination)
+        osc2.start()
+        osc2.stop(ctx.currentTime + 0.4)
+      }, 70)
+    } catch (e) {
+      console.warn('Audio blocked', e)
+    }
+  }
+
+  const startTitleFlash = () => {
+    let showMsg = true
+    const originalTitle = document.title
+    const flashInterval = setInterval(() => {
+      document.title = showMsg ? '💬 New Message!' : originalTitle
+      showMsg = !showMsg
+    }, 1200)
+
+    const stopFlash = () => {
+      clearInterval(flashInterval)
+      document.title = originalTitle
+      window.removeEventListener('focus', stopFlash)
+    }
+    window.addEventListener('focus', stopFlash)
+  }
+
   // Scroll to bottom helper
   const scrollToBottom = () => {
     const container = chatContainerRef.current
@@ -57,6 +116,26 @@ export function MessagesClientContainer({
         },
         async (payload) => {
           const newMsg = payload.new as any
+          const isFromOther = newMsg.sender_id !== clientId
+
+          if (isFromOther) {
+            playChime()
+
+            if (
+              typeof window !== 'undefined' &&
+              'Notification' in window &&
+              Notification.permission === 'granted'
+            ) {
+              new Notification('New Message from Support', {
+                body: newMsg.content,
+                icon: '/favicon.ico',
+              })
+            }
+
+            if (document.hidden) {
+              startTitleFlash()
+            }
+          }
           
           // Check if message is already in list (prevents duplicates from rapid loads)
           setMessages((prev) => {
@@ -73,12 +152,25 @@ export function MessagesClientContainer({
           })
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'messages',
+          filter: `project_id=eq.${projectId}`,
+        },
+        (payload) => {
+          const oldMsg = payload.old as any
+          setMessages((prev) => prev.filter((m) => m.id !== oldMsg.id))
+        }
+      )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase, projectId])
+  }, [supabase, projectId, clientId])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,11 +191,38 @@ export function MessagesClientContainer({
         console.error('Error inserting message', error)
         // Put text back in input if it fails
         setInputText(textToSend)
+      } else {
+        // Trigger webhook alert for the admin
+        await supabase.functions.invoke('notify-admin', {
+          body: {
+            table: 'messages',
+            type: 'INSERT',
+            record: {
+              content: textToSend,
+              sender_id: clientId,
+              project_id: projectId,
+              sender_name: clientName,
+            },
+          },
+        }).catch((err) => console.error('Failed to notify admin:', err))
       }
     } catch (err) {
       console.error('Error sending message', err)
     } finally {
       setSending(false)
+    }
+  }
+
+  const handleUnsendMessage = async (messageId: string) => {
+    try {
+      const { error } = await supabase.from('messages').delete().eq('id', messageId)
+      if (error) {
+        console.error('Error deleting message', error)
+      } else {
+        setMessages((prev) => prev.filter((m) => m.id !== messageId))
+      }
+    } catch (err) {
+      console.error('Error unsending message', err)
     }
   }
 
@@ -141,6 +260,7 @@ export function MessagesClientContainer({
         ) : (
           messages.map((msg) => {
             const isMe = msg.sender_id === clientId
+            const isWithin15Min = new Date().getTime() - new Date(msg.created_at).getTime() < 15 * 60 * 1000
             return (
               <div
                 key={msg.id}
@@ -161,10 +281,22 @@ export function MessagesClientContainer({
                   {/* Content */}
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                   
-                  {/* Time */}
-                  <span className="text-[8px] text-muted-foreground/50 block text-right mt-1.5 font-mono">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
+                  {/* Time & Unsend */}
+                  <div className="flex justify-between items-center mt-1.5 gap-4">
+                    {isMe && isWithin15Min && (
+                      <button
+                        type="button"
+                        onClick={() => handleUnsendMessage(msg.id)}
+                        className="text-[8px] text-red-400/70 hover:text-red-400 transition-colors uppercase font-bold tracking-wider cursor-pointer"
+                        title="Unsend message"
+                      >
+                        Unsend
+                      </button>
+                    )}
+                    <span className="text-[8px] text-muted-foreground/50 block ml-auto font-mono">
+                      {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
                 </div>
               </div>
             )
