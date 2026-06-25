@@ -297,3 +297,52 @@ input[type="range"]::-moz-range-thumb:active {
   min-height: 700px;
 }
 
+/**
+ * Calendly widget — dark brand theming
+ *
+ * APPROACH: CSS `filter` on the <iframe> element itself.
+ *
+ * The Calendly calendar renders inside a cross-origin iframe so we cannot
+ * reach its DOM with CSS. However we CAN apply a CSS filter to the iframe
+ * *element* (which lives in our document) — this affects the visual rendering
+ * of the entire iframe at the compositing layer.
+ *
+ * Filter maths:
+ *   invert(1)         → white #FFF   → black  #000  (our bg: #0A0A0A ✓)
+ *                     → blue  #0069FF → amber  #FF9600
+ *   hue-rotate(10deg) → amber nudged toward gold  #F5A800 ≈ brand #C9A227 ✓
+ *   saturate(0.9)     → slight desaturate to avoid oversaturation
+ *   brightness(0.95)  → micro-darkening to match #0A0A0A target
+ *
+ * Profile images will appear colour-inverted — acceptable trade-off for a
+ * fully dark-branded calendar on the free Calendly plan. Upgrading to
+ * Calendly Standard ($10/mo) and using the background_color/primary_color
+ * URL params (already set in env vars) will override this filter with native
+ * theming and restore image colours.
+ */
+.calendly-widget-wrapper {
+  background-color: #0A0A0A !important;
+  color-scheme: dark;
+}
+
+/* Target the iframe Calendly injects — filter converts white/blue → dark/gold */
+.calendly-widget-wrapper iframe,
+.calendly-inline-widget iframe {
+  filter: invert(1) hue-rotate(10deg) saturate(0.9) brightness(0.95) !important;
+  color-scheme: dark;
+  will-change: opacity;
+}
+
+/* Inline widget shell Calendly injects around the iframe */
+.calendly-inline-widget {
+  background-color: #0A0A0A !important;
+}
+
+/* Undo the filter on any <img> elements Calendly injects outside the iframe
+   (e.g. the host avatar shown in the widget header on some event types).
+   Double-invert restores original colours for images only. */
+.calendly-inline-widget img,
+.calendly-widget-wrapper img {
+  filter: invert(1) hue-rotate(-10deg) saturate(1.1) brightness(1.05);
+}
+

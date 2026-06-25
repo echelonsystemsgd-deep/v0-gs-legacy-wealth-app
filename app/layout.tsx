@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter, Cinzel, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import Script from 'next/script'
+import { CalendlyInit } from '@/components/calendly-init'
 import './globals.css'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
@@ -136,10 +136,12 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://assets.calendly.com/assets/external/widget.css"
         />
-        <Script
-          src="https://assets.calendly.com/assets/external/widget.js"
-          strategy="afterInteractive"
-        />
+        {/*
+          CalendlyInit is a Client Component — it owns the <Script> tag so
+          the onReady event handler is legal (RSC cannot use event handlers).
+          It also initialises the brand-gold badge widget once the script loads.
+        */}
+        <CalendlyInit />
       </body>
     </html>
   )

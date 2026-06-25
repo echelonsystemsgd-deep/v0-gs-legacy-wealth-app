@@ -8,6 +8,7 @@
 > **Auth/DB:** Supabase SSR
 > **Deploy target:** Vercel
 > **Monitoring:** Sentry
+> **Last updated:** 2026-06-25 (Session 2 — fixes & badge widget)
 
 ---
 
@@ -84,6 +85,40 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 ---
 
 
+---
+
+## Session 2 Changes — 2026-06-25
+
+### Bug Fix: Progress Bar Showed 20% on Load
+- **Problem:** `subStep / 5 * 100` evaluated to 20% on Question 1 before any input.
+- **Fix:** Changed to `(subStep - 1) / 5 * 100` for the label; bar `initial` is `Math.max(0, (subStep-2)/5*100)` and `animate` is `(subStep-1)/5*100`. Now starts at 0% and reaches 100% after completing Q5.
+- **File:** `components/booking-flow.tsx` L548, L553–554
+
+### Enhancement: Calendly Dark Theme Hardening (3-Layer Approach)
+- **Layer 1 — URL params:** `background_color=0A0A0A&text_color=F0EDE6&primary_color=C9A227` already present and correctly formatted — no change needed.
+- **Layer 2 — Inline style:** Wrapper `<div>` now has `style={{ background: "#0A0A0A" }}` so the container is always dark even before/around the iframe.
+- **Layer 3 — CSS:** Added `.calendly-widget-wrapper`, `.calendly-widget-wrapper iframe`, and `.calendly-inline-widget` rules to `globals.css` with `background-color: #0A0A0A !important` and `color-scheme: dark`.
+- **File:** `components/booking-flow.tsx` L942, `app/globals.css` L288–320
+
+### Enhancement: Sticky CTA → Opens Calendly Popup Directly
+- **Before:** GS Concierge button was a `<Link href="/book">` — required a full page navigation.
+- **After:** Calls `Calendly.initPopupWidget({ url: CALENDLY_POPUP_URL })` with dark brand colour params. Falls back to `router.push("/book")` if script not yet loaded.
+- **File:** `components/sticky-cta-button.tsx`
+
+### ~~Enhancement: Calendly Badge Widget~~ — REVERTED (Brand Decision)
+- **Initially added:** `Calendly.initBadgeWidget()` in `app/layout.tsx` via Script `onReady` callback.
+- **Reverted reason:** A floating "Book a Strategy Call" pill contradicts the Machiavellian repositioning plan. The brand positions booking as *selective and scarce* — visitors apply, we confirm. A persistent floating badge signals eager availability and undermines that authority posture.
+- **Resolution:** Badge widget is intentionally omitted in `components/calendly-init.tsx` (documented in code). Script still loads for the inline embed and popup CTAs, which are gated behind the 5-step qualification flow.
+- **RSC fix also applied:** Moved script to a `"use client"` component (`calendly-init.tsx`) since `onReady` is an event handler and cannot be used in React Server Components.
+- **Files:** `components/calendly-init.tsx` (NEW), `app/layout.tsx`
+
+### Bug Fix: Mobile Nav Auth Flash
+- **Problem:** `loading` state initialised to `true` on every page load, causing mobile menu to show a blank skeleton placeholder while `getUser()` made its network round-trip — even when already logged in.
+- **Fix:** Both `user` and `loading` are seeded from Supabase's localStorage cache (`sb-ladebhmyywkcqtyazxxk-auth-token`) synchronously during React's initial render via lazy state initialisers. If a cached session exists → `loading: false`, nav renders immediately.
+- **File:** `components/navbar.tsx` L40–70
+
+---
+
 ## B) Step-by-Step Task Checklist
 
 ### Phase 1 — Environment & Config
@@ -99,12 +134,19 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 - [x] CLS prevention: `contain: layout style` on wrapper
 - [x] Accessibility: `aria-label` and `role="region"` on container
 - [x] 8-second fallback: if widget never loads, show branded fallback with direct Calendly link
-- [x] Calendly script moved to `app/layout.tsx` (root layout, `lazyOnload`)
+- [x] Calendly script moved to `app/layout.tsx` (root layout, `afterInteractive`)
+- [x] Dark theme — 3-layer: URL params + inline style + CSS rules in `globals.css`
+- [x] Progress bar fix: starts at 0% on Q1, reaches 100% after Q5 submit
 
 ### Phase 3 — Modal/Popup CTA Flow
 - [x] Create `components/calendly-popup-button.tsx`
 - [x] Add popup CTA as secondary button in `components/cta.tsx`
-- [x] `sticky-cta-button.tsx` unchanged — inline embed remains primary flow
+- [x] `sticky-cta-button.tsx` upgraded — now opens `initPopupWidget()` directly (falls back to `/book`)
+
+### Phase 3a — Badge Widget (Brand-Aligned Decision)
+- [~] ~~`initBadgeWidget` initialised~~ — **reverted**: floating badge contradicts selective gatekeeping brand posture
+- [x] `CalendlyInit` client component created — script loads cleanly, badge omitted by design
+- [x] RSC error fixed: `onReady` event handler moved to `"use client"` component
 
 ### Phase 4 — GDPR & Privacy
 - [x] On-page GDPR disclosure added to `/book` page (replaces hidden banner — see decision below)
@@ -114,6 +156,10 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 - [x] `widget.js` script moved to root layout
 - [x] DNS preconnect hints added to root layout
 - [x] Fallback UI implemented in `booking-flow.tsx`
+
+### Phase 5a — Mobile Nav Auth Flash (New)
+- [x] Lazy state initialisers seed `user` and `loading` from Supabase localStorage cache
+- [x] Nav renders correct logged-in state immediately on page load — no blank skeleton flash
 
 ### Phase 6 — QA
 - [ ] Run QA checklist (Section E) — manual
@@ -129,13 +175,16 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 
 | File | Action | Summary |
 |------|--------|---------|
-| `app/layout.tsx` | MODIFY | Add Calendly `<Script>` + DNS preconnect at root level |
-| `components/booking-flow.tsx` | MODIFY | Fix race, add skeleton, fallback, toast, accessibility, env vars |
+| `app/layout.tsx` | MODIFY | Calendly `<Script>` replaced with `<CalendlyInit />` client component |
+| `components/calendly-init.tsx` | NEW | Client component owning Calendly script load (badge widget intentionally omitted — brand decision) |
+| `components/booking-flow.tsx` | MODIFY | Race fix, skeleton, fallback, toast, accessibility, env vars, dark theme CSS, progress bar fix |
 | `components/calendly-popup-button.tsx` | NEW | Modal/popup trigger component |
-| `components/cta.tsx` | MODIFY | Add secondary popup CTA button |
-| `app/book/page.tsx` | MODIFY | Add on-page GDPR disclosure notice |
-| `app/globals.css` | MODIFY | Skeleton shimmer + container constraint CSS |
-| `.env.local.example` | MODIFY | Add Calendly env var documentation |
+| `components/cta.tsx` | MODIFY | Secondary popup CTA button |
+| `components/sticky-cta-button.tsx` | MODIFY | Upgraded from Link→/book to `initPopupWidget()` with fallback |
+| `app/book/page.tsx` | MODIFY | On-page GDPR disclosure notice |
+| `app/globals.css` | MODIFY | Skeleton shimmer + container constraint + Calendly dark theme CSS |
+| `.env.local.example` | MODIFY | Calendly env var documentation |
+| `components/navbar.tsx` | MODIFY | Mobile nav auth flash fix — lazy state from localStorage cache |
 
 ---
 

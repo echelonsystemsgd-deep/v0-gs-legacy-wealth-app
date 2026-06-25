@@ -32,8 +32,8 @@ const CALENDLY_URL =
 
 const CALENDLY_PARAMS = new URLSearchParams({
   background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",
-  text_color: process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "F0EDE6",
-  primary_color: process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C9A227",
+  text_color:       process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "F0EDE6",
+  primary_color:    process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C9A227",
   hide_landing_page_details: "1",
   hide_gdpr_banner: "1",
 })
@@ -545,13 +545,13 @@ function BookingFlowInner() {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-accent-gold">
                 <span>Question {subStep} of 5</span>
-                <span>{Math.round((subStep / 5) * 100)}% Complete</span>
+                <span>{Math.round(((subStep - 1) / 5) * 100)}% Complete</span>
               </div>
               <div className="w-full h-1 bg-background border border-border-brand/10 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-accent-gold"
-                  initial={{ width: `${((subStep - 1) / 5) * 100}%` }}
-                  animate={{ width: `${(subStep / 5) * 100}%` }}
+                  initial={{ width: `${Math.max(0, ((subStep - 2) / 5) * 100)}%` }}
+                  animate={{ width: `${((subStep - 1) / 5) * 100}%` }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
@@ -940,9 +940,10 @@ function BookingFlowInner() {
 
             {/* ── Calendly widget area ── */}
             <div
-              className="relative rounded-2xl overflow-hidden border border-border-brand/20 bg-bg-primary shadow-2xl calendly-widget-wrapper"
+              className="relative rounded-2xl overflow-hidden border border-border-brand/20 shadow-2xl calendly-widget-wrapper"
               role="region"
               aria-label="Calendly booking calendar"
+              style={{ background: "#0A0A0A" }}
             >
               {/* Skeleton overlay — visible until first page_height event fires */}
               <AnimatePresence>
@@ -981,7 +982,7 @@ function BookingFlowInner() {
               </AnimatePresence>
 
               {/*
-                Calendly JS widget ALWAYS renders into this div.
+                Calendly JS widget renders into this div.
                 It must never be conditionally unmounted — the ref must stay
                 stable so initInlineWidget always has a valid parentElement.
               */}

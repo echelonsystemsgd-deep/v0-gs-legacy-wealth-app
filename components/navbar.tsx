@@ -37,10 +37,33 @@ export function Navbar() {
   const router = useRouter()
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const supabase = createClient()
+  // Seed from cached local session immediately so the nav renders
+  // the correct state on first paint — before the async getUser() network
+  // round-trip completes. This eliminates the blank-button flash on mobile.
+  const [user, setUser] = useState<any>(() => {
+    if (typeof window === "undefined") return null
+    try {
+      // Supabase SSR client stores the session under this stable key
+      const raw = localStorage.getItem("sb-ladebhmyywkcqtyazxxk-auth-token")
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        return parsed?.user ?? null
+      }
+    } catch {}
+    return null
+  })
+  const [profile, setProfile] = useState<any>(null)
+  // Only show loading skeleton if there is genuinely no cached session;
+  // this avoids the blank-button flash when the user is already logged in.
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === "undefined") return true
+    try {
+      const raw = localStorage.getItem("sb-ladebhmyywkcqtyazxxk-auth-token")
+      return !raw
+    } catch {}
+    return true
+  })
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
