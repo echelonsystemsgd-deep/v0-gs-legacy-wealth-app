@@ -97,7 +97,7 @@ export default function ContactPage() {
                     <span className="text-accent-gold">✦</span> Quick technical assessment of your current website/systems.
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-accent-gold">✦</span> A free 30-minute strategy call to design your automation opportunity map.
+                    <span className="text-accent-gold">✦</span> A clinical evaluation to map your automation leverage opportunity.
                   </li>
                 </ul>
               </div>

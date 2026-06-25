@@ -917,7 +917,7 @@ function BookingFlowInner() {
                     className="absolute inset-0 z-20 flex items-center justify-center bg-bg-primary"
                   >
                     <CalendlyFallback
-                      url={CALENDLY_URL}
+                      url={buildCalendlyUrl()}
                       onRetry={() => {
                         setCalendlyTimedOut(false)
                         setCalendlyLoaded(false)
@@ -936,13 +936,6 @@ function BookingFlowInner() {
                 style={{ height: calendlyHeight, minWidth: "320px", border: "none" }}
                 title="Book your strategy session — GS Legacy Wealth"
                 loading="lazy"
-                onLoad={() => {
-                  setCalendlyLoaded(true)
-                  if (fallbackTimerRef.current) {
-                    clearTimeout(fallbackTimerRef.current)
-                    fallbackTimerRef.current = null
-                  }
-                }}
               />
             </div>
 

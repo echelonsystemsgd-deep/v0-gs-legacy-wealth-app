@@ -19,6 +19,8 @@ import {
   MessageSquare,
   Bell,
   Globe,
+  Star,
+  Image as ImageIcon,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -30,6 +32,10 @@ const navItems = [
   { href: '/admin/messages', label: 'Message Desk', icon: MessageSquare },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
   { href: '/admin/notifications', label: 'Notifications', icon: Bell },
+  { href: '/admin/portfolio', label: 'Portfolio', icon: FolderKanban },
+  { href: '/admin/testimonials', label: 'Testimonials', icon: Star },
+  { href: '/admin/content', label: 'Content', icon: ScrollText },
+  { href: '/admin/media', label: 'Media Library', icon: ImageIcon },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
   { href: '/admin/logs', label: 'Activity Logs', icon: ScrollText },
   { href: '/', label: 'View Public Site', icon: Globe },

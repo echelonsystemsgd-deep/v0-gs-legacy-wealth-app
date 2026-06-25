@@ -28,7 +28,7 @@ export default function PricingPage() {
             System Performance SLA
           </span>
           <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white">
-            Uptime, Uptime, Speed & Telemetry Guarantees
+            Uptime, Speed & Telemetry Guarantees
           </h3>
           <p className="font-sans text-sm text-text-primary opacity-80 max-w-2xl mx-auto leading-relaxed">
             Every GS Legacy custom deployment operates under a strict performance SLA. We guarantee a Mobile PageSpeed score of 90+ and immediate database replication failovers. Our engineering team maintains active telemetry dashboards to verify system throughput 24/7/365.

@@ -12,6 +12,7 @@ export function Footer() {
     { name: "Process", href: "/process" },
     { name: "Portfolio", href: "/portfolio" },
     { name: "Pricing", href: "/pricing" },
+    { name: "Testimonials", href: "/testimonials" },
     { name: "Contact", href: "/contact" },
   ]
 
@@ -116,7 +117,7 @@ export function Footer() {
               Start a Project
             </h4>
             <p className="font-sans text-xs text-text-primary opacity-60 leading-relaxed">
-              Secure your strategy session to reserve your spot and design your legacy.
+              Request an alignment session. Strictly limited allocations each month.
             </p>
             <div className="pt-2">
               <Button 
@@ -125,7 +126,7 @@ export function Footer() {
                 className="px-4 py-2 text-xs"
               >
                 <Link href="/book" className="inline-flex items-center gap-2">
-                  <span>Book a Call</span>
+                  <span>Initiate Clinical Audit</span>
                   <ArrowRight size={12} />
                 </Link>
               </Button>

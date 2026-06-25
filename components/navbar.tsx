@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X, User, LogOut, LayoutDashboard, Globe } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
+import { BrandLogo } from "@/components/brand-logo"
 import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
 import { createClient } from "@/lib/supabase/client"
@@ -38,32 +38,9 @@ export function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement>(null)
 
   const supabase = createClient()
-  // Seed from cached local session immediately so the nav renders
-  // the correct state on first paint — before the async getUser() network
-  // round-trip completes. This eliminates the blank-button flash on mobile.
-  const [user, setUser] = useState<any>(() => {
-    if (typeof window === "undefined") return null
-    try {
-      // Supabase SSR client stores the session under this stable key
-      const raw = localStorage.getItem("sb-ladebhmyywkcqtyazxxk-auth-token")
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        return parsed?.user ?? null
-      }
-    } catch {}
-    return null
-  })
+  const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
-  // Only show loading skeleton if there is genuinely no cached session;
-  // this avoids the blank-button flash when the user is already logged in.
-  const [loading, setLoading] = useState(() => {
-    if (typeof window === "undefined") return true
-    try {
-      const raw = localStorage.getItem("sb-ladebhmyywkcqtyazxxk-auth-token")
-      return !raw
-    } catch {}
-    return true
-  })
+  const [loading, setLoading] = useState(true)
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
@@ -98,6 +75,22 @@ export function Navbar() {
 
   useEffect(() => {
     const checkUser = async () => {
+      // Fast path: seed from cached session before network round-trip
+      try {
+        const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)/)?.[1]
+        const storageKey = projectRef ? `sb-${projectRef}-auth-token` : null
+        if (storageKey) {
+          const raw = localStorage.getItem(storageKey)
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            if (parsed?.user) {
+              setUser(parsed.user)
+              setLoading(false)
+            }
+          }
+        }
+      } catch {}
+
       try {
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
@@ -220,9 +213,9 @@ export function Navbar() {
             aria-label="Go to homepage top"
           >
             <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-14 w-14"}`}>
-              <Image 
-                src="/GS_Legacy_Wealth_Watermark-removebg-preview.png" 
-                alt="GS Legacy Wealth Crest" 
+              <BrandLogo
+                variant="watermark"
+                alt="GS Legacy Wealth Crest"
                 fill
                 className="object-contain"
                 priority
@@ -333,7 +326,7 @@ export function Navbar() {
                   variant="outline"
                   className="px-6 py-2"
                 >
-                  <Link href="/book">Book a Strategy Call</Link>
+                  <Link href="/book">Apply for System Audit</Link>
                 </Button>
               </>
             )}
@@ -463,7 +456,7 @@ export function Navbar() {
                   className="w-full py-6 text-lg"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
-                    Book a Strategy Call
+                    Apply for System Audit
                   </Link>
                 </Button>
               </div>

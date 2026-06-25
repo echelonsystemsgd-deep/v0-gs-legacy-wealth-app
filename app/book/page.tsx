@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import Image from "next/image"
+import { BrandLogo } from "@/components/brand-logo"
 import { ArrowLeft, Shield, Clock, Star } from "lucide-react"
 import { BookingFlow } from "@/components/booking-flow"
 
@@ -29,16 +29,10 @@ export default function BookPage() {
 
       {/* Top Nav Bar */}
       <header className="relative z-10 border-b border-accent-gold/10 glass">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 min-h-16 flex items-center justify-between py-4">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-12 w-12 transition-transform group-hover:scale-105 duration-300">
-              <Image
-                src="/GS_Legacy_Wealth_Watermark-removebg-preview.png"
-                alt="GS Legacy Wealth"
-                fill
-                className="object-contain"
-                priority
-              />
+              <BrandLogo variant="watermark" alt="GS Legacy Wealth" fill className="object-contain" priority />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent-gold hidden sm:block">
               GS Legacy Wealth
@@ -63,11 +57,11 @@ export default function BookPage() {
           <div className="lg:sticky lg:top-24 space-y-8">
             <div className="space-y-4">
               <p className="text-xs font-bold uppercase tracking-widest text-accent-gold">
-                Strategy Session
+                Clinical Evaluation
               </p>
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                Let&apos;s Build{" "}
-                <span className="text-gradient-gold">Your Legacy</span>
+                Request{" "}
+                <span className="text-gradient-gold">Alignment</span>
               </h1>
               <p className="text-muted-foreground leading-relaxed">
                 Our time is highly leveraged, and we expect the same of yours. Complete the qualification
@@ -95,8 +89,7 @@ export default function BookPage() {
                 ))}
               </div>
               <p className="text-sm text-foreground italic leading-relaxed">
-                &ldquo;The strategy call alone was worth it — they identified conversion gaps I had
-                missed for two years.&rdquo;
+                &ldquo;The clinical evaluation alone identified conversion gaps we had missed for two years.&rdquo;
               </p>
               <p className="text-xs text-muted-foreground font-semibold">— Daniel K., Founder, Kensington Advisory</p>
             </div>

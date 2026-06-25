@@ -74,7 +74,7 @@ export function Bottleneck() {
 
               {/* Interactive Node Graph */}
               <div className="flex-1 w-full flex items-center justify-center pt-8 pb-4">
-                <svg viewBox="0 0 400 400" className="w-full h-full max-h-[220px] xs:max-h-[260px] sm:max-h-[320px]">
+                <svg viewBox="0 0 400 400" className="w-full h-full max-h-[220px] sm:max-h-[320px]">
                   {/* Connection Lines */}
                   {isOrdered ? (
                     <>

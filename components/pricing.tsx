@@ -55,7 +55,7 @@ const setupTiers = [
       "30 Days Dedicated Post-Launch Support",
       "Elite UI Styling & Smooth Animations",
     ],
-    cta: "Book Discovery Session",
+    cta: "Request Alignment",
     featured: false,
     tag: "Vanguard"
   },
@@ -73,7 +73,7 @@ const setupTiers = [
       "Advanced Premium SEO Strategy & Copywriting",
       "90 Days Dedicated Post-Launch Support",
     ],
-    cta: "Book Strategy Session",
+    cta: "Initiate Audit",
     featured: true,
     tag: "Sovereign"
   },
@@ -91,7 +91,7 @@ const setupTiers = [
       "Priority VIP Developer Access & Support",
       "Unlimited Fine-Tuning Revisions",
     ],
-    cta: "Book Strategy Session",
+    cta: "Initiate Audit",
     featured: false,
     tag: "Apex Suite"
   },
@@ -111,7 +111,7 @@ const retainerTiers = [
       "24/7 Critical System Monitoring",
       "Same-Day Urgent Edits Turnaround",
     ],
-    cta: "Book Discovery Session",
+    cta: "Request Alignment",
     featured: false,
     tag: "Vanguard"
   },
@@ -128,7 +128,7 @@ const retainerTiers = [
       "Weekly Lead Funnel Optimization",
       "10 Dedicated Developer/Designer Hours/mo",
     ],
-    cta: "Book Strategy Session",
+    cta: "Initiate Audit",
     featured: true,
     tag: "Sovereign"
   },
@@ -145,7 +145,7 @@ const retainerTiers = [
       "Bespoke Cold Email/Marketing System setups",
       "Direct Slack Hotline to Core Founders",
     ],
-    cta: "Book Strategy Session",
+    cta: "Initiate Audit",
     featured: false,
     tag: "Apex Suite"
   },
@@ -347,7 +347,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                         className="w-full py-5 text-xs"
                       >
                         <Link href={`/book?tier=${tier.tag}`}>
-                          <span>Book Strategy Session</span>
+                          <span>Initiate Audit</span>
                         </Link>
                       </Button>
                     </CardContent>

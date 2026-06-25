@@ -40,6 +40,10 @@ export default async function UserDashboardLayout({
     redirect('/login')
   }
 
+  if (profile.role === 'client') {
+    redirect('/client')
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-[#F0EDE6] relative overflow-hidden flex">
       {/* Ambient background */}

@@ -23,6 +23,7 @@ export function StickyCTAButton() {
     '/reset-password',
     '/signup',
     '/book',
+    '/success',
     '/unauthorized'
   ]
   const isExcluded = excludedPrefixes.some((prefix) => pathname?.startsWith(prefix))
@@ -81,8 +82,7 @@ export function StickyCTAButton() {
                 <span className="font-serif font-bold text-lg">GS</span>
               </div>
               <span className="font-medium text-xs sm:text-sm text-background pr-3 sm:pr-4 whitespace-nowrap">
-                <span className="sm:hidden">Book Call</span>
-                <span className="hidden sm:inline">GS Concierge</span>
+                Apply for Audit
               </span>
             </div>
           </Link>
