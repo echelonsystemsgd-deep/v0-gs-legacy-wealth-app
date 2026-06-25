@@ -28,29 +28,65 @@ export default function LoginPage() {
     setLoading(true)
 
     const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError(error.message || 'Invalid credentials. Please check your email and password.')
+    if (signInError) {
+      setError(signInError.message || 'Invalid credentials. Please check your email and password.')
       setLoading(false)
       return
     }
 
     const user = data?.user
-    if (user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
+    if (!user) {
+      setError('Sign-in succeeded but no user session was returned. Please try again.')
+      setLoading(false)
+      return
+    }
 
-      if (profile?.role === 'admin') {
-        router.push('/admin')
-      } else if (profile?.role === 'client') {
-        router.push('/client')
-      } else {
-        router.push('/dashboard')
-      }
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role, is_suspended')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile) {
+      setError('Your account exists but has no profile record. Contact support to complete setup.')
+      await supabase.auth.signOut()
+      setLoading(false)
+      return
+    }
+
+    if (profile.is_suspended) {
+      setError('This account has been suspended. Contact support for assistance.')
+      await supabase.auth.signOut()
+      setLoading(false)
+      return
+    }
+
+    const role = profile.role as string
+
+    if (loginType === 'admin' && role !== 'admin') {
+      setError(
+        `This email is registered as a ${role} account, not admin. Use the Client Login tab, or sign in with your admin email.`
+      )
+      await supabase.auth.signOut()
+      setLoading(false)
+      return
+    }
+
+    if (loginType === 'client' && role === 'admin') {
+      // Admins may use either tab — route to admin portal
+      router.refresh()
+      router.push('/admin')
+      return
+    }
+
+    router.refresh()
+
+    if (role === 'admin') {
+      router.push('/admin')
+    } else if (role === 'client') {
+      router.push('/client')
     } else {
       router.push('/dashboard')
     }
