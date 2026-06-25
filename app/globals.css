@@ -325,10 +325,20 @@ input[type="range"]::-moz-range-thumb:active {
   color-scheme: dark;
 }
 
-/* Target the iframe Calendly injects — filter converts white/blue → dark/gold */
+/*
+ * CSS filter fallback — superseded by plain iframe src URL colour params (Session 3).
+ * Kept commented for instant rollback if native theming is blocked on the account.
+ */
+/*
 .calendly-widget-wrapper iframe,
 .calendly-inline-widget iframe {
   filter: invert(1) hue-rotate(10deg) saturate(0.9) brightness(0.95) !important;
+  color-scheme: dark;
+  will-change: opacity;
+}
+*/
+
+.calendly-widget-wrapper iframe {
   color-scheme: dark;
   will-change: opacity;
 }
@@ -341,8 +351,10 @@ input[type="range"]::-moz-range-thumb:active {
 /* Undo the filter on any <img> elements Calendly injects outside the iframe
    (e.g. the host avatar shown in the widget header on some event types).
    Double-invert restores original colours for images only. */
+/*
 .calendly-inline-widget img,
 .calendly-widget-wrapper img {
   filter: invert(1) hue-rotate(-10deg) saturate(1.1) brightness(1.05);
 }
+*/
 

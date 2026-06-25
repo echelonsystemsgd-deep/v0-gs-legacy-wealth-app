@@ -8,6 +8,7 @@ __v0_jsx-dev-runtime.ts
 
 # Environment variables
 .env*.local
+.cursor/mcp.json
 
 # Common ignores
 node_modules

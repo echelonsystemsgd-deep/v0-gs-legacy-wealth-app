@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
   title: "Our Process",
-  description: "Discover our proven 4-step process for delivering exceptional digital solutions and maximizing ROI.",
+  description: "Forensic audits, bespoke authority platforms, and automated lead conduits. View our clinical execution protocol.",
 }
 
 export default function ProcessPage() {

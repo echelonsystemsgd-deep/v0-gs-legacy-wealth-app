@@ -8,7 +8,7 @@
 > **Auth/DB:** Supabase SSR
 > **Deploy target:** Vercel
 > **Monitoring:** Sentry
-> **Last updated:** 2026-06-25 (Session 2 — fixes & badge widget)
+> **Last updated:** 2026-06-25 (Session 3 — plain iframe migration)
 
 ---
 
@@ -19,7 +19,7 @@ The `/book` route and `BookingFlow` component **already exist** with a working 2
 | Step | What exists today |
 |------|-------------------|
 | Step 1 | Qualification form (name, email, company, website, challenge) → POSTs to `/api/forms/submit` |
-| Step 2 | Calendly inline widget via `Calendly.initInlineWidget()`, `next/script` lazyOnload, prefill + brand params wired |
+| Step 2 | Calendly plain `<iframe src={url}>` embed with brand colour URL params, prefill via URL, postMessage auto-resize |
 
 **The core embed is already partially implemented.** This plan focuses on **hardening, fixing known gaps, adding the modal/popup flow, and documenting every decision** — not starting from zero.
 
@@ -27,18 +27,18 @@ The `/book` route and `BookingFlow` component **already exist** with a working 2
 
 ## A) Recommended Embed Approach
 
-### Decision: Advanced JS Embed (`Calendly.initInlineWidget`) ✅ — Already Chosen
+### Decision: Plain `<iframe src={url}>` ✅ — Session 3 Migration
 
-| | Advanced JS Embed | Plain `<iframe>` |
+| | Advanced JS Embed (`initInlineWidget`) | Plain `<iframe>` |
 |---|---|---|
-| **Prefill** | ✅ Native `prefill` object | ✅ Via URL params only |
-| **Auto-resize** | ✅ `resize: true` built in | ❌ Fixed height or manual postMessage |
-| **Modal/popup** | ✅ `Calendly.initPopupWidget()` — same script | ❌ Separate implementation needed |
-| **No SSR risk** | ✅ Guard with `typeof window !== 'undefined'` | ✅ iframes are inert on SSR |
-| **Script size** | ~50 KB gzipped, loaded `lazyOnload` | Zero extra JS |
-| **Brand params** | Identical for both | Identical for both |
+| **Prefill** | ✅ Native `prefill` object | ✅ Via URL params (`name`, `email`, `a1`–`a4`) |
+| **Auto-resize** | ✅ Built in | ✅ `calendly.page_height` postMessage (same handler) |
+| **Modal/popup** | ✅ `Calendly.initPopupWidget()` — same script | N/A — popup still uses JS API via `calendly-init.tsx` |
+| **Brand colour params (free plan)** | ❌ JS API ignores URL colour params | ✅ Server renders colours when URL is iframe `src` |
+| **Script dependency for inline embed** | Required — polling race possible | None — browser fetches iframe directly |
+| **Script size** | ~50 KB gzipped, loaded `lazyOnload` | Zero extra JS for inline embed |
 
-**Why JS embed wins:** The existing `BookingFlow` already uses `Calendly.initInlineWidget()` correctly. The same `widget.js` powers the popup variant too — zero extra payload for adding the optional modal flow.
+**Why plain iframe wins for Step 2:** Colour params (`background_color`, `primary_color`, `text_color`) are server-side rendering hints — they only take effect when the URL is fetched directly as the iframe `src`, not when injected by the Calendly JS API on the free plan. `widget.js` still loads globally for popup CTAs (`CalendlyPopupButton`, sticky CTA).
 
 > **Assumption:** A single Event Type URL is used (`https://calendly.com/gslegacywealth/30min` — already in the codebase). If this URL changes, update via env var (see Section D).
 
@@ -84,6 +84,21 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 
 ---
 
+
+---
+
+---
+
+## Session 3 Changes — 2026-06-25
+
+### Migration: `initInlineWidget` → Plain `<iframe>` Embed (#11)
+- **Problem:** On the free Calendly plan, `Calendly.initInlineWidget()` ignores `background_color`, `primary_color`, and `text_color` URL params — calendar rendered white/blue despite correct params in `buildCalendlyUrl()`.
+- **Fix:** Replaced JS API inline embed with a direct `<iframe src={buildCalendlyUrl()}>` so Calendly's server applies colour params natively.
+- **Removed:** `containerReady` state, `calendlyContainerRef`, `setCalendlyRef` callback ref, `initInlineWidget` useEffect (~60 lines), `window.Calendly` polling for inline embed.
+- **Added:** React `<iframe>` with `key={retryCount}` for clean remount on retry, `onLoad` handler to clear skeleton + fallback timer.
+- **Kept unchanged:** `buildCalendlyUrl()`, `calendly.page_height` + `calendly.event_scheduled` postMessage handlers, skeleton overlay, 15s fallback, Step 2 surrounding UI.
+- **CSS:** Commented out iframe `filter` invert hack in `globals.css` — superseded by native colour params via iframe src. Filter left commented for instant rollback.
+- **Files:** `components/booking-flow.tsx`, `app/globals.css`
 
 ---
 
@@ -135,7 +150,8 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 - [x] Accessibility: `aria-label` and `role="region"` on container
 - [x] 8-second fallback: if widget never loads, show branded fallback with direct Calendly link
 - [x] Calendly script moved to `app/layout.tsx` (root layout, `afterInteractive`)
-- [x] Dark theme — 3-layer: URL params + inline style + CSS rules in `globals.css`
+- [x] Plain iframe migration: `initInlineWidget` → `<iframe src={buildCalendlyUrl()}>` (Session 3 — native dark theme on free plan)
+- [x] CSS filter fallback commented out in `globals.css` (native colour params via iframe src)
 - [x] Progress bar fix: starts at 0% on Q1, reaches 100% after Q5 submit
 
 ### Phase 3 — Modal/Popup CTA Flow
@@ -177,12 +193,12 @@ Upon step 5 completion, data is persisted to the database and sent to the owner 
 |------|--------|---------|
 | `app/layout.tsx` | MODIFY | Calendly `<Script>` replaced with `<CalendlyInit />` client component |
 | `components/calendly-init.tsx` | NEW | Client component owning Calendly script load (badge widget intentionally omitted — brand decision) |
-| `components/booking-flow.tsx` | MODIFY | Race fix, skeleton, fallback, toast, accessibility, env vars, dark theme CSS, progress bar fix |
+| `components/booking-flow.tsx` | MODIFY | Session 3: plain iframe embed replaces initInlineWidget; race fix, skeleton, fallback, toast, accessibility, env vars, progress bar fix |
 | `components/calendly-popup-button.tsx` | NEW | Modal/popup trigger component |
 | `components/cta.tsx` | MODIFY | Secondary popup CTA button |
 | `components/sticky-cta-button.tsx` | MODIFY | Upgraded from Link→/book to `initPopupWidget()` with fallback |
 | `app/book/page.tsx` | MODIFY | On-page GDPR disclosure notice |
-| `app/globals.css` | MODIFY | Skeleton shimmer + container constraint + Calendly dark theme CSS |
+| `app/globals.css` | MODIFY | Skeleton shimmer + container constraint + Calendly dark theme CSS (iframe filter commented out Session 3) |
 | `.env.local.example` | MODIFY | Calendly env var documentation |
 | `components/navbar.tsx` | MODIFY | Mobile nav auth flash fix — lazy state from localStorage cache |
 
@@ -272,7 +288,7 @@ The widget will always look like "a dark-themed Calendly" inside our branded con
 
 ### Prefill Architecture
 
-**Now:** Step 1 form → `Calendly.initInlineWidget({ prefill: { name, email } })` + URL params `a1`, `a2`
+**Now:** Step 1 form → plain `<iframe src={buildCalendlyUrl()}>` with URL params `name`, `email`, `a1`–`a4` + brand colour params
 
 **Future (optional):** Homepage pre-form → `sessionStorage` → read on `/book` mount:
 ```typescript

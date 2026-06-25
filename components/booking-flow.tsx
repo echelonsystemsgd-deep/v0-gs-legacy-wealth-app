@@ -268,21 +268,9 @@ function BookingFlowInner() {
   const [calendlyHeight, setCalendlyHeight] = useState("700px")
   const [calendlyLoaded, setCalendlyLoaded] = useState(false)
   const [calendlyTimedOut, setCalendlyTimedOut] = useState(false)
-  // True once the container div is actually in the DOM (callback ref fires)
-  const [containerReady, setContainerReady] = useState(false)
 
-  const calendlyContainerRef = useRef<HTMLDivElement>(null)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [retryCount, setRetryCount] = useState(0)
-
-  // Callback ref — fires the instant the container <div> mounts or unmounts.
-  // This solves the AnimatePresence mode="wait" timing race: the container is
-  // not in the DOM when useEffect([step]) first runs, so we track readiness
-  // explicitly and re-trigger init when it becomes true.
-  const setCalendlyRef = useCallback((node: HTMLDivElement | null) => {
-    ;(calendlyContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = node
-    setContainerReady(!!node)
-  }, [])
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
@@ -420,71 +408,24 @@ function BookingFlowInner() {
     return () => window.removeEventListener("message", handleCalendlyMessage)
   }, [])
 
-  // ── Initialise / re-initialise widget when step → 2 AND container is mounted
-  // containerReady becomes true via the callback ref the moment the <div> paints.
-  // This eliminates the AnimatePresence mode="wait" race where the container
-  // is not yet in the DOM when step changes.
+  // ── Step 2: reset loading state + start fallback timer (plain iframe — no JS API)
   useEffect(() => {
-    if (step !== 2 || !containerReady || !calendlyContainerRef.current) return
+    if (step !== 2) return
 
-    // Reset state for fresh init
     setCalendlyLoaded(false)
     setCalendlyTimedOut(false)
 
-    // Clear any previous widget instance to avoid duplicate iframes
-    if (calendlyContainerRef.current) {
-      calendlyContainerRef.current.innerHTML = ""
-    }
-
-    const calendlyUrl = buildCalendlyUrl()
-
-    const doInit = () => {
-      if (!calendlyContainerRef.current) return
-      // Note: `resize` is NOT a valid Calendly API option — omit it.
-      // Height changes are handled via the postMessage "calendly.page_height" event.
-      ;(window as any).Calendly.initInlineWidget({
-        url: calendlyUrl,
-        parentElement: calendlyContainerRef.current,
-        prefill: {
-          name: formData.fullName,
-          email: formData.email,
-        },
-      })
-    }
-
-    // Start 15-second fallback timer (give iframe enough time to paint)
     fallbackTimerRef.current = setTimeout(() => {
       setCalendlyTimedOut(true)
     }, 15000)
 
-    // Poll for the globally loaded Calendly widget.js script
-    let pollInterval: ReturnType<typeof setInterval> | null = null
-
-    if ((window as any).Calendly) {
-      doInit()
-    } else {
-      pollInterval = setInterval(() => {
-        if ((window as any).Calendly) {
-          clearInterval(pollInterval!)
-          pollInterval = null
-          doInit()
-        }
-      }, 50)
-    }
-
-    // Single unified cleanup — runs on unmount OR when step changes away from 2
     return () => {
       if (fallbackTimerRef.current) {
         clearTimeout(fallbackTimerRef.current)
         fallbackTimerRef.current = null
       }
-      if (pollInterval) {
-        clearInterval(pollInterval)
-        pollInterval = null
-      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, containerReady, retryCount])
+  }, [step, retryCount])
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -883,7 +824,7 @@ function BookingFlowInner() {
                   </>
                 ) : subStep === 5 ? (
                   <>
-                    Submit Qualification
+                    Submit Qualification Form
                     <ArrowRight size={16} />
                   </>
                 ) : (
@@ -894,6 +835,12 @@ function BookingFlowInner() {
                 )}
               </Button>
             </div>
+
+            {subStep === 5 && (
+              <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                Only qualified inquiries will receive confirmation. We review all applications within 1 business day.
+              </p>
+            )}
           </motion.div>
         )}
 
@@ -981,15 +928,21 @@ function BookingFlowInner() {
                 )}
               </AnimatePresence>
 
-              {/*
-                Calendly JS widget renders into this div.
-                It must never be conditionally unmounted — the ref must stay
-                stable so initInlineWidget always has a valid parentElement.
-              */}
-              <div
-                ref={setCalendlyRef}
+              <iframe
+                key={retryCount}
+                src={buildCalendlyUrl()}
+                width="100%"
                 className="relative z-0"
-                style={{ minWidth: "320px", height: calendlyHeight }}
+                style={{ height: calendlyHeight, minWidth: "320px", border: "none" }}
+                title="Book your strategy session — GS Legacy Wealth"
+                loading="lazy"
+                onLoad={() => {
+                  setCalendlyLoaded(true)
+                  if (fallbackTimerRef.current) {
+                    clearTimeout(fallbackTimerRef.current)
+                    fallbackTimerRef.current = null
+                  }
+                }}
               />
             </div>
 

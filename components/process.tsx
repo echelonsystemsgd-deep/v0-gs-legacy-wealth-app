@@ -30,7 +30,7 @@ const steps = [
     number: "04",
     title: "Telemetric Handover",
     sub: "Transitioning control with full telemetry setups.",
-    details: "We deploy the systems live under full validation. You receive complete telemetry dashboards and operational training. We build and test your new platform parallel to your current setup, guaranteeing a zero-downtime transition.",
+    details: "We deploy the systems live under full validation. You receive complete telemetry dashboards and operational training. We don't hand over a draft; we deliver a high-yield asset.",
     deliverable: "Scalable Infrastructure & 30-Day Launch Care"
   },
 ]

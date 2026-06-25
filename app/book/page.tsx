@@ -5,9 +5,9 @@ import { ArrowLeft, Shield, Clock, Star } from "lucide-react"
 import { BookingFlow } from "@/components/booking-flow"
 
 export const metadata: Metadata = {
-  title: "Book a Strategy Call",
+  title: "Request Alignment Session",
   description:
-    "Reserve your exclusive strategy session. Tell us about your brand and book a call — we'll pre-fill your details so you can focus on the conversation.",
+    "Complete the qualification criteria to request a clinical evaluation session. Strictly limited allocations — vetted partnerships only.",
 }
 
 const trustItems = [
