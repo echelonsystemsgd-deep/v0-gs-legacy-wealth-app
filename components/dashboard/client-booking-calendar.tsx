@@ -23,6 +23,7 @@ type SessionCategory = {
   duration_minutes: number
   description: string | null
   color_code: string
+  billing_type?: 'one-time' | 'monthly'
 }
 
 type AvailabilityRule = {

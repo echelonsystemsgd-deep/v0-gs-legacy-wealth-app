@@ -27,6 +27,7 @@ type BookedSession = {
     slug: string
     duration_minutes: number
     color_code: string
+    billing_type?: 'one-time' | 'monthly'
   } | null
 }
 
@@ -77,7 +78,8 @@ export function MyBookingsCalendar({ userId, userRole, userEmail }: MyBookingsCa
           name,
           slug,
           duration_minutes,
-          color_code
+          color_code,
+          billing_type
         )
       `)
 

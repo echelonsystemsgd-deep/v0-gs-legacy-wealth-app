@@ -38,6 +38,7 @@ type SessionCategory = {
   description: string | null
   color_code: string
   is_active: boolean
+  billing_type: 'one-time' | 'monthly'
 }
 
 type StrategySession = {
@@ -90,7 +91,7 @@ export default function BookingsPage() {
 
   // Modals States
   const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [categoryForm, setCategoryForm] = useState({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37' })
+  const [categoryForm, setCategoryForm] = useState({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37', billingType: 'one-time' as 'one-time' | 'monthly' })
 
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [bookingForm, setBookingForm] = useState({
@@ -136,6 +137,27 @@ export default function BookingsPage() {
     setTimeout(() => setToast(null), 3000)
   }
 
+  const [syncingAvailability, setSyncingAvailability] = useState(false)
+
+  const handleSyncCalendlyAvailability = async () => {
+    setSyncingAvailability(true)
+    try {
+      const response = await fetch('/api/admin/sync-availability', {
+        method: 'POST',
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to sync availability')
+      }
+      triggerToast(result.message || 'Availability synced successfully.')
+      fetchData()
+    } catch (err: any) {
+      triggerToast(`Sync failed: ${err.message}`)
+    } finally {
+      setSyncingAvailability(false)
+    }
+  }
+
   // Fetch Database Data
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -155,7 +177,7 @@ export default function BookingsPage() {
           id, lead_id, client_id, scheduled_at, status, notes, outcomes, category_id,
           leads(id, name, email, business_name),
           profiles(id, full_name, email),
-          session_categories(id, name, slug, duration_minutes, description, color_code, is_active)
+          session_categories(id, name, slug, duration_minutes, description, color_code, is_active, billing_type)
         `)
           .order('scheduled_at', { ascending: false })
       setDbSessions((sess as any) ?? [])
@@ -306,7 +328,8 @@ export default function BookingsPage() {
       duration_minutes: Number(categoryForm.duration),
       description: categoryForm.description || null,
       color_code: categoryForm.color,
-      is_active: true
+      is_active: true,
+      billing_type: categoryForm.billingType
     }
 
     try {
@@ -978,7 +1001,7 @@ export default function BookingsPage() {
                 <h3 className="font-serif text-lg font-bold text-foreground">Available Consulting Slots</h3>
                 <button
                   onClick={() => {
-                    setCategoryForm({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37' })
+                    setCategoryForm({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37', billingType: 'one-time' })
                     setShowCategoryModal(true)
                   }}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
@@ -1000,7 +1023,7 @@ export default function BookingsPage() {
                   </div>
                   <button
                     onClick={() => {
-                      setCategoryForm({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37' })
+                      setCategoryForm({ id: '', name: '', slug: '', duration: 30, description: '', color: '#D4AF37', billingType: 'one-time' })
                       setShowCategoryModal(true)
                     }}
                     className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
@@ -1017,16 +1040,21 @@ export default function BookingsPage() {
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span
-                            className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
-                            style={{
-                              borderColor: `${category.color_code}30`,
-                              backgroundColor: `${category.color_code}10`,
-                              color: category.color_code
-                            }}
-                          >
-                            {category.name}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="px-2.5 py-0.5 rounded-full text-xxs font-semibold border"
+                              style={{
+                                borderColor: `${category.color_code}30`,
+                                backgroundColor: `${category.color_code}10`,
+                                color: category.color_code
+                              }}
+                            >
+                              {category.name}
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 text-muted-foreground">
+                              {category.billing_type === 'monthly' ? 'Monthly' : 'One-Time'}
+                            </span>
+                          </div>
                           <span className="text-xs text-muted-foreground flex items-center gap-1 font-semibold">
                             <Clock size={12} /> {category.duration_minutes} Minutes
                           </span>
@@ -1050,7 +1078,8 @@ export default function BookingsPage() {
                                 slug: category.slug,
                                 duration: category.duration_minutes,
                                 description: category.description || '',
-                                color: category.color_code
+                                color: category.color_code,
+                                billingType: (category.billing_type as 'one-time' | 'monthly') || 'one-time'
                               })
                               setShowCategoryModal(true)
                             }}
@@ -1083,15 +1112,25 @@ export default function BookingsPage() {
                   <h3 className="font-serif text-lg font-bold text-foreground">Consultation Hours</h3>
                   <p className="text-xs text-muted-foreground">Define your weekly active time slots for consultations.</p>
                 </div>
-                <button
-                  onClick={() => {
-                    setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
-                    setShowAvailabilityModal(true)
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
-                >
-                  <Plus size={12} /> Add Rule
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    disabled={syncingAvailability}
+                    onClick={handleSyncCalendlyAvailability}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold bg-gold/10 hover:bg-gold text-white hover:text-background transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <RefreshCw size={12} className={syncingAvailability ? "animate-spin" : ""} />
+                    {syncingAvailability ? 'Syncing...' : 'Sync with Calendly'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                      setShowAvailabilityModal(true)
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
+                  >
+                    <Plus size={12} /> Add Rule
+                  </button>
+                </div>
               </div>
 
               {dbAvailability.length === 0 ? (
@@ -1105,15 +1144,25 @@ export default function BookingsPage() {
                       No weekly availability rules are currently defined. Set your active day and hour ranges to open calendar slots for client bookings.
                     </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
-                      setShowAvailabilityModal(true)
-                    }}
-                    className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
-                  >
-                    Add Availability Rule
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => {
+                        setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                        setShowAvailabilityModal(true)
+                      }}
+                      className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                    >
+                      Add Availability Rule
+                    </button>
+                    <button
+                      disabled={syncingAvailability}
+                      onClick={handleSyncCalendlyAvailability}
+                      className="flex items-center gap-1.5 px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      <RefreshCw size={11} className={syncingAvailability ? "animate-spin" : ""} />
+                      {syncingAvailability ? 'Syncing...' : 'Sync with Calendly'}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 /* Weekly Visual Grid */
@@ -1249,6 +1298,18 @@ export default function BookingsPage() {
                     />
                   </div>
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Billing / Package Type</label>
+                <select
+                  value={categoryForm.billingType}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, billingType: e.target.value as 'one-time' | 'monthly' })}
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                >
+                  <option value="one-time">One-Time Setup</option>
+                  <option value="monthly">Monthly Retainer</option>
+                </select>
               </div>
 
               <div className="space-y-1">
