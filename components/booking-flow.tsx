@@ -936,6 +936,13 @@ function BookingFlowInner() {
                 style={{ height: calendlyHeight, minWidth: "320px", border: "none" }}
                 title="Book your strategy session — GS Legacy Wealth"
                 loading="lazy"
+                onLoad={() => {
+                  setCalendlyLoaded(true)
+                  if (fallbackTimerRef.current) {
+                    clearTimeout(fallbackTimerRef.current)
+                    fallbackTimerRef.current = null
+                  }
+                }}
               />
             </div>
 
