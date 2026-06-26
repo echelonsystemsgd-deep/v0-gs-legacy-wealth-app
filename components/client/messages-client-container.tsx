@@ -191,20 +191,6 @@ export function MessagesClientContainer({
         console.error('Error inserting message', error)
         // Put text back in input if it fails
         setInputText(textToSend)
-      } else {
-        // Trigger webhook alert for the admin
-        await supabase.functions.invoke('notify-admin', {
-          body: {
-            table: 'messages',
-            type: 'INSERT',
-            record: {
-              content: textToSend,
-              sender_id: clientId,
-              project_id: projectId,
-              sender_name: clientName,
-            },
-          },
-        }).catch((err) => console.error('Failed to notify admin:', err))
       }
     } catch (err) {
       console.error('Error sending message', err)

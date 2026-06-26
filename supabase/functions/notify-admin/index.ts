@@ -1,6 +1,6 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-token',
 }
 
 Deno.serve(async (req) => {
@@ -9,6 +9,15 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const webhookToken = Deno.env.get('INTERNAL_WEBHOOK_TOKEN')
+    if (webhookToken && req.headers.get('x-webhook-token') !== webhookToken) {
+      console.warn('Unauthorized invocation: invalid webhook token.')
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     const payload = await req.json()
     const { table, type, record } = payload
 
