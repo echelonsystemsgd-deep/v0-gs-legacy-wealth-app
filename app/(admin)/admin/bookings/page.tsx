@@ -137,26 +137,7 @@ export default function BookingsPage() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  const [syncingAvailability, setSyncingAvailability] = useState(false)
-
-  const handleSyncCalendlyAvailability = async () => {
-    setSyncingAvailability(true)
-    try {
-      const response = await fetch('/api/admin/sync-availability', {
-        method: 'POST',
-      })
-      const result = await response.json()
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to sync availability')
-      }
-      triggerToast(result.message || 'Availability synced successfully.')
-      fetchData()
-    } catch (err: any) {
-      triggerToast(`Sync failed: ${err.message}`)
-    } finally {
-      setSyncingAvailability(false)
-    }
-  }
+  const [calendlySynced, setCalendlySynced] = useState(false)
 
   // Fetch Database Data
   const fetchData = useCallback(async () => {
@@ -197,13 +178,32 @@ export default function BookingsPage() {
           .eq('is_suspended', false)
       setDbClients((cls as any) ?? [])
 
-      // 5. Fetch availability rules
-      const { data: avRules } = await supabase
-          .from('availability_rules')
-          .select('*')
-          .order('day_of_week', { ascending: true })
-          .order('start_time', { ascending: true })
-      setDbAvailability(avRules ?? [])
+      // 5. Fetch availability rules and automatically sync
+      try {
+        const res = await fetch('/api/availability')
+        const data = await res.json()
+        if (data.success) {
+          setDbAvailability(data.rules ?? [])
+          setCalendlySynced(data.synced ?? false)
+        } else {
+          const { data: avRules } = await supabase
+              .from('availability_rules')
+              .select('*')
+              .order('day_of_week', { ascending: true })
+              .order('start_time', { ascending: true })
+          setDbAvailability(avRules ?? [])
+          setCalendlySynced(false)
+        }
+      } catch (e) {
+        console.error('Failed to fetch availability API:', e)
+        const { data: avRules } = await supabase
+            .from('availability_rules')
+            .select('*')
+            .order('day_of_week', { ascending: true })
+            .order('start_time', { ascending: true })
+        setDbAvailability(avRules ?? [])
+        setCalendlySynced(false)
+      }
 
     } catch (err: any) {
       triggerToast(`Database fetch error: ${err.message}`)
@@ -1109,28 +1109,33 @@ export default function BookingsPage() {
             <div className="space-y-6">
               <div className="flex justify-between items-center flex-wrap gap-4">
                 <div className="space-y-1">
-                  <h3 className="font-serif text-lg font-bold text-foreground">Consultation Hours</h3>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-serif text-lg font-bold text-foreground">Consultation Hours</h3>
+                    {calendlySynced ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-gold/15 border border-gold/30 text-gold">
+                        <Sparkles size={10} /> Synced with Calendly (Read-Only)
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/5 border border-white/10 text-muted-foreground">
+                        <Clock size={10} /> Calendly Sync Inactive (Manual Mode)
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-muted-foreground">Define your weekly active time slots for consultations.</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    disabled={syncingAvailability}
-                    onClick={handleSyncCalendlyAvailability}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold bg-gold/10 hover:bg-gold text-white hover:text-background transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <RefreshCw size={12} className={syncingAvailability ? "animate-spin" : ""} />
-                    {syncingAvailability ? 'Syncing...' : 'Sync with Calendly'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
-                      setShowAvailabilityModal(true)
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
-                  >
-                    <Plus size={12} /> Add Rule
-                  </button>
-                </div>
+                {!calendlySynced && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                        setShowAvailabilityModal(true)
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer"
+                    >
+                      <Plus size={12} /> Add Rule
+                    </button>
+                  </div>
+                )}
               </div>
 
               {dbAvailability.length === 0 ? (
@@ -1141,28 +1146,25 @@ export default function BookingsPage() {
                   <div>
                     <h3 className="font-serif text-sm font-bold text-foreground">Consultation Availability Empty</h3>
                     <p className="text-xs text-muted-foreground mt-1">
-                      No weekly availability rules are currently defined. Set your active day and hour ranges to open calendar slots for client bookings.
+                      {calendlySynced 
+                        ? 'No availability schedules found in your configured Calendly account. Make sure to define active hours in your Calendly Event Type.'
+                        : 'No weekly availability rules are currently defined. Set your active day and hour ranges to open calendar slots for client bookings.'
+                      }
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => {
-                        setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
-                        setShowAvailabilityModal(true)
-                      }}
-                      className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
-                    >
-                      Add Availability Rule
-                    </button>
-                    <button
-                      disabled={syncingAvailability}
-                      onClick={handleSyncCalendlyAvailability}
-                      className="flex items-center gap-1.5 px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg border border-gold/25 hover:border-gold/40 text-gold bg-gold/5 hover:bg-gold/10 transition-all cursor-pointer disabled:opacity-50"
-                    >
-                      <RefreshCw size={11} className={syncingAvailability ? "animate-spin" : ""} />
-                      {syncingAvailability ? 'Syncing...' : 'Sync with Calendly'}
-                    </button>
-                  </div>
+                  {!calendlySynced && (
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => {
+                          setAvailabilityForm({ id: '', day: 1, start: '09:00', end: '17:00' })
+                          setShowAvailabilityModal(true)
+                        }}
+                        className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
+                      >
+                        Add Availability Rule
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 /* Weekly Visual Grid */
@@ -1198,30 +1200,32 @@ export default function BookingsPage() {
                                     className="group flex items-center justify-between gap-2 px-2.5 py-1 bg-gold/5 border border-gold/10 rounded-lg text-xxs font-medium text-gold-light"
                                   >
                                     <span>{cleanStart} - {cleanEnd}</span>
-                                    <div className="flex gap-1">
-                                      <button
-                                        onClick={() => {
-                                          setAvailabilityForm({
-                                            id: rule.id,
-                                            day: rule.day_of_week,
-                                            start: cleanStart,
-                                            end: cleanEnd
-                                          })
-                                          setShowAvailabilityModal(true)
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-gold transition-opacity cursor-pointer p-0.5"
-                                        title="Edit Slot"
-                                      >
-                                        <Edit2 size={10} />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDeleteAvailability(rule.id)}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity cursor-pointer p-0.5"
-                                        title="Delete Slot"
-                                      >
-                                        <Trash2 size={10} />
-                                      </button>
-                                    </div>
+                                    {!calendlySynced && (
+                                      <div className="flex gap-1">
+                                        <button
+                                          onClick={() => {
+                                            setAvailabilityForm({
+                                              id: rule.id,
+                                              day: rule.day_of_week,
+                                              start: cleanStart,
+                                              end: cleanEnd
+                                            })
+                                            setShowAvailabilityModal(true)
+                                          }}
+                                          className="opacity-0 group-hover:opacity-100 hover:text-gold transition-opacity cursor-pointer p-0.5"
+                                          title="Edit Slot"
+                                        >
+                                          <Edit2 size={10} />
+                                        </button>
+                                        <button
+                                          onClick={() => handleDeleteAvailability(rule.id)}
+                                          className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity cursor-pointer p-0.5"
+                                          title="Delete Slot"
+                                        >
+                                          <Trash2 size={10} />
+                                        </button>
+                                      </div>
+                                    )}
                                   </div>
                                 )
                               })

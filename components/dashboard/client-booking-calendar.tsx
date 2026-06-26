@@ -92,11 +92,25 @@ export function ClientBookingCalendar({ userId, userRole, userEmail }: ClientBoo
           .order('name', { ascending: true })
         setCategories(cats ?? [])
 
-        // 3. Fetch availability rules
-        const { data: avs } = await supabase
-          .from('availability_rules')
-          .select('*')
-        setAvailability(avs ?? [])
+        // 3. Fetch availability rules and automatically sync
+        try {
+          const res = await fetch('/api/availability')
+          const data = await res.json()
+          if (data.success) {
+            setAvailability(data.rules ?? [])
+          } else {
+            const { data: avs } = await supabase
+              .from('availability_rules')
+              .select('*')
+            setAvailability(avs ?? [])
+          }
+        } catch (e) {
+          console.error('Failed to fetch availability API:', e)
+          const { data: avs } = await supabase
+            .from('availability_rules')
+            .select('*')
+          setAvailability(avs ?? [])
+        }
 
         // 4. Fetch booked sessions in the next 60 days
         const startDate = new Date().toISOString()
