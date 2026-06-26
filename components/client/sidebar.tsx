@@ -65,11 +65,11 @@ export function ClientSidebar() {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-30 transition-opacity duration-300"
         />
       )}
 
-      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-30 transition-[left] duration-300 lg:left-0 ${isOpen ? 'left-0' : 'left-[-256px]'}`}>
+      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:relative lg:left-0`}>
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
           <div className="flex items-center gap-3">

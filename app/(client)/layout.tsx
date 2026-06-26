@@ -4,8 +4,11 @@ import { ClientSidebar } from '@/components/client/sidebar'
 import { createClient } from '@/lib/supabase/server'
 import { UserNotificationCenter } from '@/components/dashboard/user-notification-center'
 import { Watermark } from '@/components/watermark'
-
 import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
+import { InspectorProvider } from '@/hooks/use-inspector'
+import { PortalHub } from '@/components/dashboard/portal-hub'
+import { InspectorPanel } from '@/components/dashboard/inspector-panel'
+import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
 
 export const metadata: Metadata = {
   title: 'Client Dashboard',
@@ -28,43 +31,55 @@ export default async function ClientLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Ambient background glows */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Royal Purple Glow */}
-        <div className="absolute top-0 left-64 w-[500px] h-[500px] rounded-full bg-purple-900/10 blur-[160px]" />
-        {/* Gold Glow */}
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-gold/3 blur-[120px]" />
-      </div>
+    <InspectorProvider>
+      <div className="min-h-screen bg-[#050505] text-foreground flex relative overflow-hidden">
+        {/* Ambient background glows */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {/* Royal Purple Glow */}
+          <div className="absolute top-0 left-64 w-[500px] h-[500px] rounded-full bg-purple-900/10 blur-[160px]" />
+          {/* Gold Glow */}
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-gold/3 blur-[120px]" />
+        </div>
 
-      <Watermark position="center" opacity={0.02} />
+        <Watermark position="center" opacity={0.02} />
 
-      {/* Sidebar */}
-      <ClientSidebar />
+        {/* Zone 1: Switcher */}
+        <PortalHub />
 
-      {/* Main content area */}
-      <div className="flex-1 lg:ml-64 ml-0 relative z-10 min-h-screen flex flex-col">
-        {/* Top bar */}
-        <header className="sticky top-0 z-10 h-14 border-b border-gold/10 bg-background/80 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
-          <div className="w-10 lg:hidden shrink-0" />
-          <div className="flex-1" />
-          <div className="flex items-center gap-3.5">
-            <UserNotificationCenter userId={user.id} />
-            <div className="h-5 w-px bg-gold/10" />
-            <UserProfileDropdown
-              fullName={profile.full_name}
-              email={user.email!}
-              avatarLetter={(profile.full_name ?? user.email ?? 'C')[0]}
-              profileLink="/profile"
-            />
+        {/* Zone 2: Navigation */}
+        <ClientSidebar />
+
+        {/* Zone 3 & 4 Container */}
+        <div className="flex-1 flex flex-col min-w-0 relative z-10 min-h-screen">
+          {/* Top bar */}
+          <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/85 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
+            <div className="w-10 lg:hidden shrink-0" />
+            <div className="flex-1" />
+            <div className="flex items-center gap-3.5">
+              <InspectorToggle />
+              <div className="h-5 w-px bg-gold/10" />
+              <UserNotificationCenter userId={user.id} />
+              <div className="h-5 w-px bg-gold/10" />
+              <UserProfileDropdown
+                fullName={profile.full_name}
+                email={user.email!}
+                avatarLetter={(profile.full_name ?? user.email ?? 'C')[0]}
+                profileLink="/profile"
+              />
+            </div>
+          </header>
+
+          {/* Main content + Inspector */}
+          <div className="flex-1 flex overflow-hidden">
+            <main className="flex-1 overflow-y-auto p-4 sm:p-8">
+              {children}
+            </main>
+            {/* Zone 4: Inspector Panel */}
+            <InspectorPanel />
           </div>
-        </header>
-
-        {/* Page content */}
-        <main className="flex-1 p-4 sm:p-8">
-          {children}
-        </main>
+        </div>
       </div>
-    </div>
+    </InspectorProvider>
   )
 }
+

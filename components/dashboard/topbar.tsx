@@ -6,6 +6,7 @@ import { UserNotificationCenter } from '@/components/dashboard/user-notification
 import { useRouter } from 'next/navigation'
 
 import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
+import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
 
 interface UserTopbarProps {
   fullName: string | null
@@ -69,6 +70,8 @@ export function UserTopbar({ fullName, email, userId }: UserTopbarProps) {
 
       {/* Right Actions */}
       <div className="flex items-center gap-2 shrink-0">
+        <InspectorToggle />
+        <div className="h-5 w-px bg-gold/10" />
         <UserNotificationCenter userId={userId} />
         <div className="h-5 w-px bg-gold/10" />
         <UserProfileDropdown

@@ -353,3 +353,62 @@ input[type="range"]::-moz-range-thumb:active {
   filter: invert(1) hue-rotate(-10deg) saturate(1.1) brightness(1.05);
 }
 
+/* Discord-inspired dashboard redesign styles */
+
+.discord-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.discord-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.discord-scroll::-webkit-scrollbar-thumb {
+  background: rgba(201, 162, 39, 0.2);
+  border-radius: 9999px;
+}
+.discord-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 162, 39, 0.4);
+}
+.discord-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 162, 39, 0.2) transparent;
+}
+
+.portal-icon {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.portal-icon:hover {
+  border-radius: 12px !important;
+  background-color: var(--color-accent-gold) !important;
+  color: #000000 !important;
+}
+.portal-icon-active {
+  border-radius: 12px !important;
+  background-color: var(--color-accent-gold) !important;
+  color: #000000 !important;
+}
+
+/* Active channel link notch indicator */
+.channel-link-active {
+  position: relative;
+}
+.channel-link-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 4px;
+  background-color: var(--color-accent-gold);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* Gold dividers */
+.gold-divider-gradient {
+  background: linear-gradient(to right, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.05) 50%, transparent 100%);
+}
+
+
