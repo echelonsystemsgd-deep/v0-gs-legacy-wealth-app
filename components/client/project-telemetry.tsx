@@ -25,11 +25,11 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   const strokeOffset = circumference - (percent / 100) * circumference
 
   const milestones = [
-    { name: 'Discovery', threshold: 0, desc: 'Initial phase. Unlocked upon project initialization.' },
-    { name: 'Design', threshold: 25, desc: 'Figma wireframes & brand planning. Unlocks at 25% payment.' },
-    { name: 'Development', threshold: 50, desc: 'Core app build & database schema. Unlocks at 50% payment.' },
-    { name: 'Revision', threshold: 75, desc: 'Preview staging & lead form verification. Unlocks at 75% payment.' },
-    { name: 'Complete', threshold: 100, desc: 'Live deployment & domain delegation. Unlocks at 100% payment.' },
+    { name: 'Discovery', threshold: 0, desc: 'The strategic foundation. Unlocked upon project initialisation — brand consultation, intelligence gathering, and requirement documentation commences.' },
+    { name: 'Design', threshold: 25, desc: 'Precision brand execution and Figma architecture blueprints. Unlocks upon 25% settlement — your visual identity takes form.' },
+    { name: 'Development', threshold: 50, desc: 'Core system build, database schema, and automation pipelines. Unlocks upon 50% settlement — the engine comes online.' },
+    { name: 'Revision', threshold: 75, desc: 'Staging environment preview, lead-form verification and refinement. Unlocks upon 75% settlement — your system is tested under operational conditions.' },
+    { name: 'Complete', threshold: 100, desc: 'Live deployment, domain delegation and full handover. Unlocks upon 100% settlement — your asset is live and operational.' },
   ]
 
   const formatCurrency = (val: number) => {
@@ -47,8 +47,8 @@ export function ProjectTelemetry({ project }: ProjectProps) {
     <div className="p-6 glass rounded-2xl border border-gold/10 flex flex-col items-center space-y-6 relative overflow-hidden h-full shadow-lg">
       <div className="w-full flex items-center justify-between">
         <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Financial Telemetry</h3>
-        <span className="text-[10px] text-muted-foreground font-mono bg-white/[0.03] px-2 py-0.5 rounded border border-white/5">
-          USD SECURE
+        <span className="text-[10px] text-gold/70 font-mono bg-gold/5 px-2 py-0.5 rounded border border-gold/15 tracking-widest">
+          £ GBP SECURED
         </span>
       </div>
 
@@ -130,7 +130,7 @@ export function ProjectTelemetry({ project }: ProjectProps) {
             Settled Balance
           </span>
           <span className="text-sm font-semibold text-gold font-mono">
-            {hasContract ? formatCurrency(amountPaid) : '£0'}
+            {formatCurrency(amountPaid)}
           </span>
         </div>
       </div>
@@ -143,7 +143,10 @@ export function ProjectTelemetry({ project }: ProjectProps) {
         
         <div className="space-y-2.5">
           {milestones.map((m) => {
-            const isUnlocked = hasContract && percent >= m.threshold
+            const stages = ['Discovery', 'Design', 'Development', 'Revision', 'Complete']
+            const currentStageIndex = stages.indexOf(project.status)
+            const milestoneIndex = stages.indexOf(m.name)
+            const isUnlocked = (hasContract && percent >= m.threshold) || (milestoneIndex !== -1 && milestoneIndex <= currentStageIndex)
             const isHovered = activeTooltip === m.name
             const requiredAmount = (m.threshold / 100) * contractValue
 

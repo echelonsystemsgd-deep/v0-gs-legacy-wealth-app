@@ -58,6 +58,7 @@ export default function ProjectsPage() {
   }
 
   const [projects, setProjects] = useState<Project[]>([])
+  const [clients, setClients] = useState<{ id: string; full_name: string | null; email: string | null }[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<'kanban' | 'list'>('kanban')
   const [activeKanbanColumn, setActiveKanbanColumn] = useState<string>('Discovery')
@@ -66,9 +67,11 @@ export default function ProjectsPage() {
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
+  const today = new Date().toISOString().split('T')[0]
   const [form, setForm] = useState({
     client_name: '', project_name: '', service_type: '', description: '', notes: '',
-    start_date: '', target_launch_date: '',
+    start_date: today, target_launch_date: '',
+    contract_value: '', amount_paid: '', client_id: '',
   })
 
   // Initialize form and open modal from query parameters
@@ -95,12 +98,12 @@ export default function ProjectsPage() {
 
   const fetchProjects = useCallback(async () => {
     setLoading(true)
-    const { data } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('is_archived', showArchived)
-      .order('created_at', { ascending: false })
-    setProjects(data ?? [])
+    const [{ data: projectData }, { data: clientData }] = await Promise.all([
+      supabase.from('projects').select('*').eq('is_archived', showArchived).order('created_at', { ascending: false }),
+      supabase.from('profiles').select('id, full_name, email').eq('role', 'client'),
+    ])
+    setProjects(projectData ?? [])
+    setClients(clientData ?? [])
     setLoading(false)
   }, [showArchived])
 
@@ -108,7 +111,8 @@ export default function ProjectsPage() {
 
   const handleCloseNewModal = () => {
     setShowNewModal(false)
-    setForm({ client_name: '', project_name: '', service_type: '', description: '', notes: '', start_date: '', target_launch_date: '' })
+    const today = new Date().toISOString().split('T')[0]
+    setForm({ client_name: '', project_name: '', service_type: '', description: '', notes: '', start_date: today, target_launch_date: '', contract_value: '', amount_paid: '', client_id: '' })
     if (searchParams.get('create') === 'true') {
       router.replace('/admin/projects')
     }
@@ -117,16 +121,27 @@ export default function ProjectsPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    const { error } = await supabase.from('projects').insert({
-      ...form,
+    const { data: newProject, error } = await supabase.from('projects').insert({
+      client_name: form.client_name,
+      project_name: form.project_name,
+      service_type: form.service_type || null,
+      description: form.description || null,
+      notes: form.notes || null,
       start_date: form.start_date || null,
       target_launch_date: form.target_launch_date || null,
+      contract_value: parseFloat(form.contract_value) || 0,
+      amount_paid: parseFloat(form.amount_paid) || 0,
+      client_id: form.client_id || null,
       status: 'Discovery',
-    })
+    }).select().single()
     setSaving(false)
     if (error) { showToast('Failed to create project.'); return }
     handleCloseNewModal()
-    fetchProjects()
+    if (newProject) {
+      router.push(`/admin/projects/${newProject.id}`)
+    } else {
+      fetchProjects()
+    }
     showToast('Project created!')
   }
 
@@ -405,63 +420,142 @@ export default function ProjectsPage() {
       {/* New Project Modal */}
       {showNewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass rounded-2xl border border-gold/15 p-6 w-full max-w-lg space-y-5 shadow-2xl">
+          <div className="glass rounded-2xl border border-gold/15 p-6 w-full max-w-xl space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl font-bold text-foreground">New Project</h2>
-              <button onClick={handleCloseNewModal} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none">×</button>
+              <div>
+                <h2 className="font-serif text-xl font-bold text-foreground">Initialise New Project</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Auto-provisions client portal, welcome update &amp; onboarding action request.</p>
+              </div>
+              <button onClick={handleCloseNewModal} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none cursor-pointer">×</button>
             </div>
             <form onSubmit={handleCreate} className="space-y-4">
-              {[
-                { id: 'project_name', label: 'Project Name', required: true },
-                { id: 'client_name', label: 'Client Name', required: true },
-                { id: 'service_type', label: 'Service Type' },
-              ].map(({ id, label, required }) => (
-                <div key={id} className="space-y-1.5">
-                  <label htmlFor={id} className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{label}</label>
+              {/* Project + Client Name */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label htmlFor="project_name" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Project Name *</label>
                   <input
-                    id={id}
-                    required={required}
-                    value={(form as any)[id]}
-                    onChange={(e) => setForm((prev) => ({ ...prev, [id]: e.target.value }))}
+                    id="project_name"
+                    required
+                    value={form.project_name}
+                    onChange={(e) => setForm((prev) => ({ ...prev, project_name: e.target.value }))}
                     className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
                   />
                 </div>
-              ))}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { id: 'start_date', label: 'Start Date' },
-                  { id: 'target_launch_date', label: 'Target Launch' },
-                ].map(({ id, label }) => (
-                  <div key={id} className="space-y-1.5">
-                    <label htmlFor={id} className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{label}</label>
-                    <input
-                      id={id}
-                      type="date"
-                      value={(form as any)[id]}
-                      onChange={(e) => setForm((prev) => ({ ...prev, [id]: e.target.value }))}
-                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
-                    />
-                  </div>
-                ))}
+                <div className="space-y-1.5">
+                  <label htmlFor="client_name" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Client Name *</label>
+                  <input
+                    id="client_name"
+                    required
+                    value={form.client_name}
+                    onChange={(e) => setForm((prev) => ({ ...prev, client_name: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
               </div>
+
+              {/* Portal Account + Service Type */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label htmlFor="client_id" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Link Portal Account</label>
+                  <select
+                    id="client_id"
+                    value={form.client_id}
+                    onChange={(e) => setForm((prev) => ({ ...prev, client_id: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  >
+                    <option value="">No portal link yet</option>
+                    {clients.map((c) => (
+                      <option key={c.id} value={c.id}>{c.full_name || 'Client'} ({c.email})</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor="service_type" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Service Type</label>
+                  <input
+                    id="service_type"
+                    value={form.service_type}
+                    onChange={(e) => setForm((prev) => ({ ...prev, service_type: e.target.value }))}
+                    placeholder="e.g. Full Website Build"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Contract Value + Amount Paid */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label htmlFor="contract_value" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Contract Value (£)</label>
+                  <input
+                    id="contract_value"
+                    type="number"
+                    min="0"
+                    value={form.contract_value}
+                    onChange={(e) => setForm((prev) => ({ ...prev, contract_value: e.target.value }))}
+                    placeholder="0"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor="amount_paid" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Amount Paid (£)</label>
+                  <input
+                    id="amount_paid"
+                    type="number"
+                    min="0"
+                    value={form.amount_paid}
+                    onChange={(e) => setForm((prev) => ({ ...prev, amount_paid: e.target.value }))}
+                    placeholder="0"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Dates */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label htmlFor="start_date" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Start Date</label>
+                  <input
+                    id="start_date"
+                    type="date"
+                    value={form.start_date}
+                    onChange={(e) => setForm((prev) => ({ ...prev, start_date: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor="target_launch_date" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Target Launch</label>
+                  <input
+                    id="target_launch_date"
+                    type="date"
+                    value={form.target_launch_date}
+                    onChange={(e) => setForm((prev) => ({ ...prev, target_launch_date: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+              </div>
+
               <textarea
-                placeholder="Description (optional)"
+                placeholder="Description / scope overview (optional)"
                 rows={2}
                 value={form.description}
                 onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                 className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
               />
+
+              <div className="p-3 rounded-xl bg-gold/[0.03] border border-gold/10 text-[10px] text-muted-foreground leading-relaxed">
+                <span className="text-gold font-bold">Auto-provisioned on creation:</span> Welcome update in client feed · Brand &amp; assets onboarding action request · Client portal access (if linked)
+              </div>
+
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={handleCloseNewModal} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all">
+                <button type="button" onClick={handleCloseNewModal} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all cursor-pointer">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-60 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all"
+                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-60 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
                 >
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-                  Create Project
+                  Initialise Project
                 </button>
               </div>
             </form>

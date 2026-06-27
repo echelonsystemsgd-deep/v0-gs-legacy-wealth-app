@@ -6,7 +6,6 @@ import { UserNotificationCenter } from '@/components/dashboard/user-notification
 import { Watermark } from '@/components/watermark'
 import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
 import { InspectorProvider } from '@/hooks/use-inspector'
-import { PortalHub } from '@/components/dashboard/portal-hub'
 import { InspectorPanel } from '@/components/dashboard/inspector-panel'
 import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
 
@@ -42,9 +41,6 @@ export default async function ClientLayout({ children }: { children: React.React
         </div>
 
         <Watermark position="center" opacity={0.02} />
-
-        {/* Zone 1: Switcher */}
-        <PortalHub />
 
         {/* Zone 2: Navigation */}
         <ClientSidebar />

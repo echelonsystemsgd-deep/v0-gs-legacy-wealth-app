@@ -26,9 +26,10 @@ export default function ClientNotificationsPage() {
 
   // Fetch initial notifications and subscribe to real-time additions
   useEffect(() => {
-    let channel: any
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    let cancelled = false
 
-    const setupNotifications = async () => {
+    const loadNotifications = async () => {
       setLoading(true)
       setError(null)
       try {
@@ -39,7 +40,7 @@ export default function ClientNotificationsPage() {
         }
         setUserId(user.id)
 
-        // Load recent notifications
+        // Load notifications from DB (always works regardless of realtime)
         const { data, error: fetchError } = await supabase
           .from('user_notifications')
           .select('*')
@@ -48,7 +49,7 @@ export default function ClientNotificationsPage() {
 
         if (fetchError) throw fetchError
 
-        if (data) {
+        if (data && !cancelled) {
           setNotifications(
             data.map((n) => ({
               id: n.id,
@@ -61,42 +62,50 @@ export default function ClientNotificationsPage() {
           )
         }
 
-        // Realtime channel filter by user_id
-        channel = supabase
-          .channel(`client_page_notifs_${user.id}`)
-          .on(
-            'postgres_changes',
-            {
-              event: 'INSERT',
-              schema: 'public',
-              table: 'user_notifications',
-              filter: `user_id=eq.${user.id}`,
-            },
-            (payload) => {
-              const newNotif = payload.new
-              const item: NotificationItem = {
-                id: newNotif.id,
-                title: newNotif.title,
-                description: newNotif.description,
-                timestamp: new Date(newNotif.created_at),
-                isRead: newNotif.is_read,
-                link: newNotif.link || '#',
-              }
-
-              setNotifications((prev) => [item, ...prev])
-            }
-          )
-          .subscribe()
+        // Set up realtime subscription separately — failures here are non-fatal
+        if (!cancelled) {
+          try {
+            channel = supabase
+              .channel(`notifs_${user.id}_${Date.now()}`)
+              .on(
+                'postgres_changes',
+                {
+                  event: 'INSERT',
+                  schema: 'public',
+                  table: 'user_notifications',
+                  filter: `user_id=eq.${user.id}`,
+                },
+                (payload) => {
+                  if (cancelled) return
+                  const newNotif = payload.new as any
+                  const item: NotificationItem = {
+                    id: newNotif.id,
+                    title: newNotif.title,
+                    description: newNotif.description,
+                    timestamp: new Date(newNotif.created_at),
+                    isRead: newNotif.is_read,
+                    link: newNotif.link || '#',
+                  }
+                  setNotifications((prev) => [item, ...prev])
+                }
+              )
+              .subscribe()
+          } catch (realtimeErr) {
+            // Realtime failing is non-fatal — the page still shows notifications from DB
+            console.warn('Realtime subscription skipped:', realtimeErr)
+          }
+        }
       } catch (err: any) {
-        setError('Failed to load notifications: ' + err.message)
+        if (!cancelled) setError('Failed to load notifications: ' + err.message)
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
 
-    setupNotifications()
+    loadNotifications()
 
     return () => {
+      cancelled = true
       if (channel) {
         supabase.removeChannel(channel)
       }

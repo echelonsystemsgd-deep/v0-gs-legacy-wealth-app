@@ -51,7 +51,7 @@ export default async function ProfilePage() {
         subtitle="Manage your personal details, contact coordinates, and secure digital credentials."
       />
       <div className="max-w-4xl mx-auto px-4 pb-24 relative z-10">
-        <ProfileClientContainer initialProfile={profile} email={user.email || ''} />
+        <ProfileClientContainer initialProfile={profile} email={user.email || ''} userRole={profile.role} />
       </div>
       <Footer />
     </main>

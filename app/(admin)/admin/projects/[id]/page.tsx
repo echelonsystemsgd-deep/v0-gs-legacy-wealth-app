@@ -7,7 +7,8 @@ import { createClient } from '@/lib/supabase/client'
 import {
   ArrowLeft, Save, Archive, ArchiveRestore, Loader2,
   Upload, File, Trash2, Calendar, CheckCircle2, Circle,
-  Send, MessageSquare, Plus, Clock, Sparkles, AlertCircle, FolderKanban
+  Send, MessageSquare, Plus, Clock, Sparkles, AlertCircle, FolderKanban,
+  CalendarClock, TriangleAlert, ChevronDown
 } from 'lucide-react'
 
 const STATUS_STEPS = ['Discovery', 'Design', 'Development', 'Revision', 'Complete']
@@ -30,6 +31,7 @@ type Asset = { id: string; file_name: string; file_url: string; file_size: numbe
 type ClientProfile = { id: string; full_name: string | null; email: string | null }
 type UpdateItem = { id: string; title: string; description: string | null; created_at: string }
 type MessageItem = { id: string; content: string; created_at: string; sender_id: string }
+type ActionRequest = { id: string; title: string; description: string; status: 'pending' | 'submitted' | 'completed'; client_response: string | null; submitted_at: string | null; completed_at: string | null; created_at: string }
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -53,6 +55,14 @@ export default function ProjectDetailPage() {
   const [amountPaid, setAmountPaid] = useState('')
   const [serviceType, setServiceType] = useState('')
   const [description, setDescription] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [targetLaunchDate, setTargetLaunchDate] = useState('')
+
+  // Extension Override state
+  const [showExtensionPanel, setShowExtensionPanel] = useState(false)
+  const [extensionReason, setExtensionReason] = useState('')
+  const [extensionDate, setExtensionDate] = useState('')
+  const [applyingExtension, setApplyingExtension] = useState(false)
   
   // Updates & Messages states
   const [newUpdateTitle, setNewUpdateTitle] = useState('')
@@ -65,6 +75,13 @@ export default function ProjectDetailPage() {
   
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+
+  // Action Requests
+  const [actionRequests, setActionRequests] = useState<ActionRequest[]>([])
+  const [newRequestTitle, setNewRequestTitle] = useState('')
+  const [newRequestDesc, setNewRequestDesc] = useState('')
+  const [postingRequest, setPostingRequest] = useState(false)
+  const [completingRequest, setCompletingRequest] = useState<string | null>(null)
   
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
@@ -96,13 +113,15 @@ export default function ProjectDetailPage() {
         { data: assetData },
         { data: clientData },
         { data: updatesData },
-        { data: messagesData }
+        { data: messagesData },
+        { data: actionData },
       ] = await Promise.all([
         supabase.from('projects').select('*').eq('id', id).single(),
         supabase.from('project_assets').select('*').eq('project_id', id).order('created_at', { ascending: false }),
         supabase.from('profiles').select('id, full_name, email').eq('role', 'client'),
         supabase.from('project_updates').select('*').eq('project_id', id).order('created_at', { ascending: false }),
         supabase.from('messages').select('*').eq('project_id', id).order('created_at', { ascending: true }),
+        supabase.from('project_action_requests').select('*').eq('project_id', id).order('created_at', { ascending: false }),
       ])
 
       if (proj) {
@@ -116,11 +135,14 @@ export default function ProjectDetailPage() {
         setAmountPaid(proj.amount_paid?.toString() ?? '0')
         setServiceType(proj.service_type ?? '')
         setDescription(proj.description ?? '')
+        setStartDate(proj.start_date ?? '')
+        setTargetLaunchDate(proj.target_launch_date ?? '')
       }
       setAssets(assetData ?? [])
       setClients(clientData ?? [])
       setUpdates(updatesData ?? [])
       setMessages(messagesData ?? [])
+      setActionRequests((actionData as ActionRequest[]) ?? [])
       setLoading(false)
     }
     load()
@@ -166,6 +188,9 @@ export default function ProjectDetailPage() {
     }
   }, [supabase, id])
 
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(val)
+
   const handleSave = async () => {
     setSaving(true)
     const cVal = parseFloat(contractValue) || 0
@@ -179,27 +204,78 @@ export default function ProjectDetailPage() {
       contract_value: cVal,
       amount_paid: aPaid,
       service_type: serviceType || null,
-      description: description || null
+      description: description || null,
+      start_date: startDate || null,
+      target_launch_date: targetLaunchDate || null,
     }).eq('id', id)
     setSaving(false)
-    
-    if (error) {
-      showToast('Failed to save.', 'error')
-      return
-    }
+    if (error) { showToast('Failed to save.', 'error'); return }
     showToast('Project updated.')
-    setProject((p) => p ? { 
-      ...p, 
-      notes, 
-      status, 
-      client_id: clientId || null, 
-      live_url: liveUrl || null, 
-      preview_url: previewUrl || null, 
-      contract_value: cVal, 
+    setProject((p) => p ? {
+      ...p, notes, status,
+      client_id: clientId || null,
+      live_url: liveUrl || null,
+      preview_url: previewUrl || null,
+      contract_value: cVal,
       amount_paid: aPaid,
       service_type: serviceType || null,
-      description: description || null
+      description: description || null,
+      start_date: startDate || null,
+      target_launch_date: targetLaunchDate || null,
     } : p)
+  }
+
+  const handleExtendLaunch = async () => {
+    if (!extensionDate || !extensionReason) {
+      showToast('Please select a new date and reason.', 'error')
+      return
+    }
+    setApplyingExtension(true)
+    const formattedDate = new Date(extensionDate).toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    })
+    const reasonMap: Record<string, string> = {
+      'client_delays': 'delays in the provision of required materials',
+      'scope_expansion': 'an agreed expansion of the project scope',
+      'awaiting_materials': 'outstanding client-side assets and information',
+      'technical_dependency': 'resolution of a third-party technical dependency',
+    }
+    const reasonText = reasonMap[extensionReason] || extensionReason
+    const noticeBody = `Following a strategic review of active project dependencies, your scheduled deployment date has been revised to ${formattedDate}.
+
+Reason: This extension has been applied due to ${reasonText}.
+
+GS Legacy Wealth remains fully committed to delivering a system that exceeds your expectations and is continuing to operate at maximum capacity.
+
+Important Notice: As stipulated in your service agreement, consistent delays in the provision of required materials, approvals, or client responses may result in contractual delay surcharges being applied to your account. Our team is available to ensure this does not apply to your engagement — please action any outstanding requests without delay.`
+
+    const [updateRes, requestRes, dateRes] = await Promise.all([
+      supabase.from('project_updates').insert({
+        project_id: id,
+        title: `Deployment Vector Revised — ${formattedDate}`,
+        description: noticeBody,
+        created_by: adminUserId,
+      }),
+      supabase.from('project_action_requests').insert({
+        project_id: id,
+        title: 'Timeline Extension Notice — Action Required',
+        description: noticeBody,
+        status: 'pending',
+      }),
+      supabase.from('projects').update({ target_launch_date: extensionDate }).eq('id', id),
+    ])
+
+    setApplyingExtension(false)
+    if (updateRes.error || requestRes.error || dateRes.error) {
+      showToast('Extension applied but some notifications failed.', 'error')
+    } else {
+      showToast('Extension applied. Client has been notified.')
+      setTargetLaunchDate(extensionDate)
+      setProject((p) => p ? { ...p, target_launch_date: extensionDate } : p)
+      setShowExtensionPanel(false)
+      setExtensionReason('')
+      setExtensionDate('')
+    }
   }
 
   const handleArchive = async () => {
@@ -297,6 +373,35 @@ export default function ProjectDetailPage() {
     }
     setMessages((prev) => prev.filter((m) => m.id !== messageId))
     showToast('Message deleted.')
+  }
+
+  const handlePostRequest = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newRequestTitle.trim() || postingRequest) return
+    setPostingRequest(true)
+    const { data, error } = await supabase
+      .from('project_action_requests')
+      .insert({ project_id: id, title: newRequestTitle.trim(), description: newRequestDesc.trim() || newRequestTitle.trim() })
+      .select()
+      .single()
+    setPostingRequest(false)
+    if (error) { showToast('Failed to create request.', 'error'); return }
+    setActionRequests((prev) => [data as ActionRequest, ...prev])
+    setNewRequestTitle('')
+    setNewRequestDesc('')
+    showToast('Action request sent to client.')
+  }
+
+  const handleCompleteRequest = async (requestId: string) => {
+    setCompletingRequest(requestId)
+    const { error } = await supabase
+      .from('project_action_requests')
+      .update({ status: 'completed', completed_at: new Date().toISOString() })
+      .eq('id', requestId)
+    setCompletingRequest(null)
+    if (error) { showToast('Failed to mark complete.', 'error'); return }
+    setActionRequests((prev) => prev.map((r) => r.id === requestId ? { ...r, status: 'completed', completed_at: new Date().toISOString() } : r))
+    showToast('Request marked as completed.')
   }
 
   const formatBytes = (b: number | null) => {
@@ -463,6 +568,86 @@ export default function ProjectDetailPage() {
                   className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
                 />
               </div>
+
+              {/* Start Date — Admin editable */}
+              <div>
+                <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Project Start Date</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
+                />
+              </div>
+
+              {/* Target Launch Date — Admin editable with Extension Override */}
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground">Target Launch Date</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowExtensionPanel(!showExtensionPanel)}
+                    className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 px-2 py-1 rounded-lg transition-all cursor-pointer"
+                  >
+                    <CalendarClock size={10} />
+                    Extension Override
+                    <ChevronDown size={9} className={`transition-transform ${showExtensionPanel ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+                <input
+                  type="date"
+                  value={targetLaunchDate}
+                  onChange={(e) => setTargetLaunchDate(e.target.value)}
+                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
+                />
+
+                {/* Extension Override Panel */}
+                {showExtensionPanel && (
+                  <div className="mt-3 p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.03] space-y-3 animate-in fade-in duration-200">
+                    <div className="flex items-center gap-2">
+                      <TriangleAlert size={13} className="text-amber-400 shrink-0" />
+                      <p className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Timeline Extension Override</p>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">
+                      This will update the target launch date, post a formal notice to the client&apos;s updates feed, and create a mandatory action request informing them of the extension and potential fee implications.
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Extension Reason</label>
+                        <select
+                          value={extensionReason}
+                          onChange={(e) => setExtensionReason(e.target.value)}
+                          className="w-full bg-background border border-amber-500/20 hover:border-amber-500/35 focus:border-amber-500/50 rounded-lg px-3 py-2 text-xs text-foreground outline-none"
+                        >
+                          <option value="">Select a reason…</option>
+                          <option value="client_delays">Client delays — late provision of materials</option>
+                          <option value="awaiting_materials">Awaiting outstanding client assets</option>
+                          <option value="scope_expansion">Agreed scope expansion</option>
+                          <option value="technical_dependency">Third-party technical dependency</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">New Target Date</label>
+                        <input
+                          type="date"
+                          value={extensionDate}
+                          onChange={(e) => setExtensionDate(e.target.value)}
+                          className="w-full bg-background border border-amber-500/20 hover:border-amber-500/35 focus:border-amber-500/50 rounded-lg px-3 py-2 text-xs text-foreground outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleExtendLaunch}
+                      disabled={applyingExtension || !extensionDate || !extensionReason}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 text-amber-400 text-xs font-bold transition-all cursor-pointer disabled:opacity-40"
+                    >
+                      {applyingExtension ? <Loader2 size={12} className="animate-spin" /> : <CalendarClock size={12} />}
+                      Apply Extension &amp; Notify Client
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="pt-2 border-t border-gold/10">
@@ -476,6 +661,7 @@ export default function ProjectDetailPage() {
               />
             </div>
           </div>
+
 
           {/* Timeline Updates publisher */}
           <div className="glass rounded-2xl border border-gold/10 p-6 space-y-4">
@@ -657,6 +843,103 @@ export default function ProjectDetailPage() {
             </form>
           </div>
         </div>
+      </div>
+
+      {/* ── Action Requests Desk ── */}
+      <div className="mt-8 p-6 glass rounded-2xl border border-gold/15 space-y-5">
+        <div className="flex items-center gap-3 pb-3 border-b border-gold/10">
+          <div className="w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
+            <Sparkles size={14} className="text-gold" />
+          </div>
+          <div>
+            <h3 className="text-sm font-serif font-bold text-foreground">Action Requests Desk</h3>
+            <p className="text-xxs text-muted-foreground">Request files, copy, or information from the client. They see it immediately on their dashboard.</p>
+          </div>
+        </div>
+
+        {/* Create new request */}
+        <form onSubmit={handlePostRequest} className="space-y-3">
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input
+              type="text"
+              placeholder="Request title (e.g. Google Analytics Access)"
+              value={newRequestTitle}
+              onChange={(e) => setNewRequestTitle(e.target.value)}
+              className="bg-background/40 border border-gold/10 hover:border-gold/25 focus:border-gold/45 rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 outline-none transition-all"
+            />
+            <input
+              type="text"
+              placeholder="Details / instructions (optional)"
+              value={newRequestDesc}
+              onChange={(e) => setNewRequestDesc(e.target.value)}
+              className="bg-background/40 border border-gold/10 hover:border-gold/25 focus:border-gold/45 rounded-lg px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/40 outline-none transition-all"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={!newRequestTitle.trim() || postingRequest}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 border border-gold/25 text-gold text-xs font-bold transition-all disabled:opacity-40 cursor-pointer"
+          >
+            {postingRequest ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
+            Send Request to Client
+          </button>
+        </form>
+
+        {/* Existing requests */}
+        {actionRequests.length > 0 ? (
+          <div className="space-y-3">
+            {actionRequests.map((req) => (
+              <div
+                key={req.id}
+                className={`p-4 rounded-xl border transition-all ${
+                  req.status === 'completed' ? 'border-green-500/20 bg-green-500/[0.03]'
+                  : req.status === 'submitted' ? 'border-gold/25 bg-gold/[0.03]'
+                  : 'border-gold/10 bg-white/[0.01]'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-bold text-foreground truncate">{req.title}</p>
+                      <span className={`text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                        req.status === 'completed' ? 'bg-green-500/15 text-green-400 border-green-500/25'
+                        : req.status === 'submitted' ? 'bg-gold/15 text-gold border-gold/25'
+                        : 'bg-white/5 text-muted-foreground border-white/10'
+                      }`}>{req.status}</span>
+                    </div>
+                    {req.description !== req.title && (
+                      <p className="text-xxs text-muted-foreground">{req.description}</p>
+                    )}
+                    {req.client_response && (
+                      <div className="mt-2 p-3 rounded-lg bg-gold/5 border border-gold/15">
+                        <p className="text-[9px] font-bold text-gold uppercase tracking-wider mb-1">Client Response:</p>
+                        <p className="text-xs text-foreground whitespace-pre-wrap">{req.client_response}</p>
+                        {req.submitted_at && (
+                          <p className="text-[8px] text-muted-foreground/50 mt-1 font-mono">{new Date(req.submitted_at).toLocaleString()}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {req.status === 'submitted' && (
+                    <button
+                      onClick={() => handleCompleteRequest(req.id)}
+                      disabled={completingRequest === req.id}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 text-green-400 text-xxs font-bold transition-all shrink-0 cursor-pointer disabled:opacity-50"
+                    >
+                      {completingRequest === req.id ? <Loader2 size={10} className="animate-spin" /> : <CheckCircle2 size={10} />}
+                      Mark Complete
+                    </button>
+                  )}
+                </div>
+                <p className="text-[8px] text-muted-foreground/40 mt-2 font-mono">{new Date(req.created_at).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-6 rounded-xl border border-gold/8 text-center">
+            <p className="text-xs text-muted-foreground/60">No active requests. Use the form above to request information from your client.</p>
+          </div>
+        )}
       </div>
     </div>
   )

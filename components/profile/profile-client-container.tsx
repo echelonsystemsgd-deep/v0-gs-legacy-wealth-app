@@ -37,15 +37,19 @@ type Profile = {
 interface ProfileClientContainerProps {
   initialProfile: Profile
   email: string
+  userRole: string
 }
 
 export default function ProfileClientContainer({
   initialProfile,
-  email
+  email,
+  userRole,
 }: ProfileClientContainerProps) {
   const router = useRouter()
   const supabase = createClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const dashboardLink = userRole === 'admin' ? '/admin' : userRole === 'client' ? '/client' : '/dashboard'
 
   // Form states
   const [firstName, setFirstName] = useState(initialProfile.first_name || '')
@@ -92,7 +96,7 @@ export default function ProfileClientContainer({
     resolveInitialAvatar()
   })
 
-  // Resizes and prepares file for upload
+  // Resizes and prepares file for upload — uploads immediately on selection
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -108,17 +112,48 @@ export default function ProfileClientContainer({
 
     try {
       const resizedBase64 = await resizeAvatar(file)
-      // Set local preview
       setDisplayAvatarUrl(resizedBase64)
-      
-      // Convert base64 preview back to blob for upload
+
+      // Convert base64 preview to blob for upload
       const response = await fetch(resizedBase64)
       const blob = await response.blob()
-      setPendingFile(blob)
-      setSuccessMsg('Avatar updated! Click Save Profile to apply changes.')
+
+      // Purge old avatars
+      const { data: existingFiles } = await supabase.storage
+        .from('avatars')
+        .list(initialProfile.id)
+      if (existingFiles && existingFiles.length > 0) {
+        const filesToRemove = existingFiles.map((f) => `${initialProfile.id}/${f.name}`)
+        await supabase.storage.from('avatars').remove(filesToRemove)
+      }
+
+      // Upload new file
+      const fileName = `avatar-${Date.now()}.jpg`
+      const filePath = `${initialProfile.id}/${fileName}`
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, blob, { contentType: 'image/jpeg', upsert: true })
+      if (uploadError) throw uploadError
+
+      // Update profile record immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: filePath, updated_at: new Date().toISOString() })
+        .eq('id', initialProfile.id)
+      if (updateError) throw updateError
+
+      // Get signed URL for display
+      const { data: signedData } = await supabase.storage
+        .from('avatars')
+        .createSignedUrl(filePath, 3600)
+      if (signedData) setDisplayAvatarUrl(signedData.signedUrl)
+
+      setAvatarUrl(filePath)
+      setPendingFile(null)
+      setSuccessMsg('Profile photo updated successfully!')
     } catch (err: any) {
       console.error(err)
-      setErrorMsg('Failed to process the profile image.')
+      setErrorMsg('Failed to upload the profile image.')
     } finally {
       setUploading(false)
     }
@@ -268,6 +303,15 @@ export default function ProfileClientContainer({
 
   return (
     <div className="grid md:grid-cols-3 gap-8 animate-fade-in relative z-10">
+      {/* Back to Dashboard button */}
+      <div className="md:col-span-3 flex">
+        <a
+          href={dashboardLink}
+          className="inline-flex items-center gap-2 text-xs font-bold text-gold hover:text-gold/80 border border-gold/15 hover:border-gold/30 hover:bg-gold/5 px-4 py-2 rounded-xl transition-all"
+        >
+          ← Back to Dashboard
+        </a>
+      </div>
       {/* Sidebar: Profile Summary Card */}
       <div className="md:col-span-1 space-y-6">
         <div className="p-8 rounded-2xl border border-gold/15 bg-background/50 backdrop-blur-md text-center flex flex-col items-center space-y-6 shadow-xl">

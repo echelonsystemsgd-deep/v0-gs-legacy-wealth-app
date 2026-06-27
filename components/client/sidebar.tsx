@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   LayoutDashboard,
   FolderKanban,
@@ -17,6 +17,10 @@ import {
   CalendarDays,
   Bell,
   UserRound,
+  Briefcase,
+  ShieldAlert,
+  Terminal,
+  ChevronDown,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -26,7 +30,7 @@ const navItems = [
   { href: '/client/website', label: 'My Website', icon: Globe },
   { href: '/client/updates', label: 'Updates', icon: Clock },
   { href: '/client/messages', label: 'Messages', icon: MessageSquare },
-  { href: '/dashboard/book', label: 'Book a Session', icon: CalendarDays },
+  { href: '/client/book', label: 'Book a Session', icon: CalendarDays },
   { href: '/client/notifications', label: 'Notifications', icon: Bell },
 ]
 
@@ -37,10 +41,27 @@ const accountItems = [
 export function ClientSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const supabase = createClient()
   const [isOpen, setIsOpen] = useState(false)
+  const [isSwitcherOpen, setIsSwitcherOpen] = useState(false)
+  const [role, setRole] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function getRole() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+        if (profile) setRole(profile.role)
+      }
+    }
+    getRole()
+  }, [supabase])
 
   const handleSignOut = async () => {
-    const supabase = createClient()
     await supabase.auth.signOut()
     window.location.href = '/login'
   }
@@ -69,9 +90,9 @@ export function ClientSidebar() {
         />
       )}
 
-      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:relative lg:left-0`}>
+      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:sticky lg:top-0 lg:h-screen lg:left-0`}>
         {/* Logo */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 shrink-0">
               <Image
@@ -94,6 +115,76 @@ export function ClientSidebar() {
           >
             <X size={16} />
           </button>
+        </div>
+
+        {/* Console Switcher */}
+        <div className="px-4 py-3.5 border-b border-gold/10 relative shrink-0 z-50">
+          <button
+            onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
+            className="w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl bg-white/[0.02] border border-gold/15 hover:border-gold/30 hover:bg-white/[0.04] transition-all duration-200 text-left cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center text-gold shrink-0">
+                <Briefcase size={14} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[9px] text-gold/60 font-bold uppercase tracking-wider leading-none">Console</p>
+                <p className="text-xs font-semibold text-foreground truncate mt-1">Sovereign Partner Console</p>
+              </div>
+            </div>
+            <ChevronDown size={12} className={`text-muted-foreground transition-transform duration-200 shrink-0 ${isSwitcherOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isSwitcherOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setIsSwitcherOpen(false)} />
+              <div className="absolute left-4 right-4 mt-1 bg-[#0F0F0F] border border-gold/20 rounded-xl shadow-2xl p-1.5 z-50 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                <p className="text-[8px] font-bold text-gold/40 px-2 py-1 uppercase tracking-widest leading-none mb-1">Available Terminals</p>
+                
+                {role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsSwitcherOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/5 text-xs font-medium transition-all"
+                  >
+                    <ShieldAlert size={14} className="shrink-0 text-gold/70" />
+                    <span>Operations Terminal</span>
+                  </Link>
+                )}
+
+                <Link
+                  href="/client"
+                  onClick={() => setIsSwitcherOpen(false)}
+                  className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg bg-gold/10 border border-gold/20 text-gold text-xs font-medium transition-all"
+                >
+                  <Briefcase size={14} className="shrink-0 text-gold" />
+                  <span>Sovereign Partner Console</span>
+                </Link>
+
+                {role === 'admin' && (
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setIsSwitcherOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/5 text-xs font-medium transition-all"
+                  >
+                    <Terminal size={14} className="shrink-0 text-gold/70" />
+                    <span>Vetting Terminal</span>
+                  </Link>
+                )}
+
+                <div className="h-px bg-gold/10 my-1" />
+
+                <Link
+                  href="/"
+                  onClick={() => setIsSwitcherOpen(false)}
+                  className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/5 text-xs font-medium transition-all"
+                >
+                  <Globe size={14} className="shrink-0 text-gold/70" />
+                  <span>View Public Site</span>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Navigation */}

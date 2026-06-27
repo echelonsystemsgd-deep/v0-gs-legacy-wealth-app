@@ -33,73 +33,80 @@ export function UserNotificationCenter({ userId }: { userId?: string }) {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
-
   // Fetch initial notifications and subscribe to real-time additions
   useEffect(() => {
     let active = true
-    let channel: any = null
+    let channel: ReturnType<typeof supabase.channel> | null = null
     let resolvedUserId: string | null = userId || null
 
     const initAndSubscribe = async (uid: string) => {
-      // Load recent notifications
-      const { data, error } = await supabase
-        .from('user_notifications')
-        .select('*')
-        .eq('user_id', uid)
-        .order('created_at', { ascending: false })
-        .limit(20)
+      try {
+        // Load recent notifications
+        const { data, error } = await supabase
+          .from('user_notifications')
+          .select('*')
+          .eq('user_id', uid)
+          .order('created_at', { ascending: false })
+          .limit(20)
 
-      if (active && data) {
-        setNotifications(
-          data.map((n) => ({
-            id: n.id,
-            title: n.title,
-            description: n.description,
-            timestamp: new Date(n.created_at),
-            isRead: n.is_read,
-            link: n.link || '#',
-          }))
-        )
+        if (active && data) {
+          setNotifications(
+            data.map((n) => ({
+              id: n.id,
+              title: n.title,
+              description: n.description,
+              timestamp: new Date(n.created_at),
+              isRead: n.is_read,
+              link: n.link || '#',
+            }))
+          )
+        }
+
+        if (!active) return
+
+        // Realtime channel filter by user_id — wrapped in try/catch and using unique name
+        try {
+          channel = supabase
+            .channel(`user_notifs_${uid}_${Date.now()}`)
+            .on(
+              'postgres_changes',
+              {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'user_notifications',
+                filter: `user_id=eq.${uid}`,
+              },
+              (payload) => {
+                if (!active) return
+                const newNotif = payload.new as any
+                const item: NotificationItem = {
+                  id: newNotif.id,
+                  title: newNotif.title,
+                  description: newNotif.description,
+                  timestamp: new Date(newNotif.created_at),
+                  isRead: newNotif.is_read,
+                  link: newNotif.link || '#',
+                }
+
+                setNotifications((prev) => [item, ...prev])
+                toast.info(newNotif.title, {
+                  description: newNotif.description,
+                  action: newNotif.link
+                    ? {
+                        label: 'View',
+                        onClick: () => router.push(newNotif.link),
+                      }
+                    : undefined,
+                })
+              }
+            )
+            .subscribe()
+        } catch (realtimeErr) {
+          console.warn('Realtime subscription skipped for UserNotificationCenter:', realtimeErr)
+        }
+      } catch (err) {
+        console.error('Failed to init notification center:', err)
       }
-
-      if (!active) return
-
-      // Realtime channel filter by user_id
-      channel = supabase
-        .channel(`user_notifs_${uid}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'user_notifications',
-            filter: `user_id=eq.${uid}`,
-          },
-          (payload) => {
-            if (!active) return
-            const newNotif = payload.new
-            const item: NotificationItem = {
-              id: newNotif.id,
-              title: newNotif.title,
-              description: newNotif.description,
-              timestamp: new Date(newNotif.created_at),
-              isRead: newNotif.is_read,
-              link: newNotif.link || '#',
-            }
-
-            setNotifications((prev) => [item, ...prev])
-            toast.info(newNotif.title, {
-              description: newNotif.description,
-              action: newNotif.link
-                ? {
-                    label: 'View',
-                    onClick: () => router.push(newNotif.link),
-                  }
-                : undefined,
-            })
-          }
-        )
-        .subscribe()
     }
 
     const start = async () => {
@@ -117,13 +124,9 @@ export function UserNotificationCenter({ userId }: { userId?: string }) {
       active = false
       if (channel) {
         supabase.removeChannel(channel)
-      } else if (resolvedUserId) {
-        const cachedChannel = supabase.channel(`user_notifs_${resolvedUserId}`)
-        supabase.removeChannel(cachedChannel)
       }
     }
   }, [supabase, router, userId])
-
   const unreadCount = notifications.filter((n) => !n.isRead).length
 
   const markAllAsRead = async () => {

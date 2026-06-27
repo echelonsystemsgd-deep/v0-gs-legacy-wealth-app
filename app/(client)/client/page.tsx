@@ -7,6 +7,10 @@ import { ProjectTelemetry } from '@/components/client/project-telemetry'
 import { QuickMessageReply } from '@/components/client/quick-message-reply'
 import { StageApprovalButton } from '@/components/client/stage-approval-button'
 import { StagingPreview } from '@/components/client/staging-preview'
+import { ActionRequestBanner } from '@/components/client/action-request-banner'
+import { LaunchDateRequest } from '@/components/client/launch-date-request'
+import { GrowthTelemetry } from '@/components/client/growth-telemetry'
+import { SecureVault } from '@/components/client/secure-vault'
 
 export default async function ClientDashboardPage() {
   const cookieStore = await cookies()
@@ -117,6 +121,18 @@ export default async function ClientDashboardPage() {
     projectUpdates = upLogs ?? []
   }
 
+  // Fetch action requests for the project
+  let pendingActionRequests: any[] = []
+  if (project) {
+    const { data: arData } = await supabase
+      .from('project_action_requests')
+      .select('*')
+      .eq('project_id', project.id)
+      .in('status', ['pending', 'submitted'])
+      .order('created_at', { ascending: false })
+    pendingActionRequests = arData ?? []
+  }
+
   const greetingName = profile.first_name || profile.full_name || 'Client'
 
   // Standard visual stages mapping
@@ -159,66 +175,85 @@ export default async function ClientDashboardPage() {
       ) : (
         /* Project Dashboard UI */
         <>
+          {/* Action Required Banner (if any pending requests) */}
+          {pendingActionRequests.length > 0 && (
+            <ActionRequestBanner requests={pendingActionRequests} />
+          )}
+
           {/* Scoped Summary Cards & Telemetry */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* Left Col - Summary Cards Grid */}
             <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Status Card */}
-              <div className="p-5 glass rounded-2xl border border-gold/10 flex items-center justify-between gap-4">
+              <Link 
+                href="/client/progress"
+                className="p-5 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-4 transition-all duration-300 transform hover:-translate-y-0.5"
+              >
                 <div className="space-y-1.5 min-w-0">
                   <span className="text-xs uppercase tracking-wider text-muted-foreground">Active Deployment Phase</span>
                   <p className="text-lg font-serif font-bold text-gradient-gold truncate">
                     {project.status}
                   </p>
                 </div>
-                <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 transition-colors group-hover:bg-gold/20">
                   <FolderKanban size={18} className="text-gold" />
                 </div>
-              </div>
+              </Link>
 
               {/* Target Launch Card */}
-              <div className="p-5 glass rounded-2xl border border-gold/10 flex items-center justify-between gap-4">
-                <div className="space-y-1.5 min-w-0">
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Target Launch</span>
-                  <p className="text-lg font-serif font-bold text-foreground truncate">
-                    {project.target_launch_date ? new Date(project.target_launch_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Determining Launch Vector...'}
-                  </p>
+              <div className="p-5 glass rounded-2xl border border-gold/10 flex flex-col gap-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1.5 min-w-0">
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">Projected Deployment Vector</span>
+                    <p className="text-lg font-serif font-bold text-foreground truncate">
+                      {project.target_launch_date
+                        ? new Date(project.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+                        : 'Under Strategic Review'}
+                    </p>
+                  </div>
+                  <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+                    <Calendar size={18} className="text-gold" />
+                  </div>
                 </div>
-                <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-                  <Calendar size={18} className="text-gold" />
-                </div>
+                <LaunchDateRequest projectId={project.id} currentDate={project.target_launch_date} />
               </div>
 
               {/* Last Update Card */}
-              <div className="p-5 glass rounded-2xl border border-gold/10 flex items-center justify-between gap-4">
+              <Link
+                href="/client/updates"
+                className="p-5 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-4 transition-all duration-300 transform hover:-translate-y-0.5"
+              >
                 <div className="space-y-1.5 min-w-0">
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Last Update</span>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Last Intelligence Transmission</span>
                   <p className="text-sm font-bold text-foreground truncate max-w-full">
-                    {latestUpdate ? latestUpdate.title : 'No updates posted'}
+                    {latestUpdate ? latestUpdate.title : 'Awaiting Transmission'}
                   </p>
                   {latestUpdate && (
                     <span className="text-[10px] text-muted-foreground block font-mono">
-                      {new Date(latestUpdate.created_at).toLocaleDateString()}
+                      {new Date(latestUpdate.created_at).toLocaleDateString('en-GB')}
                     </span>
                   )}
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
                   <Clock size={18} className="text-gold" />
                 </div>
-              </div>
+              </Link>
 
               {/* Support Messages Card */}
-              <div className="p-5 glass rounded-2xl border border-gold/10 flex items-center justify-between gap-4">
+              <Link
+                href="/client/messages"
+                className="p-5 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-4 transition-all duration-300 transform hover:-translate-y-0.5"
+              >
                 <div className="space-y-1.5 min-w-0">
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Unread Messages</span>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Command Comms</span>
                   <p className="text-lg font-serif font-bold text-foreground truncate">
-                    {unreadMessagesCount > 0 ? `${unreadMessagesCount} New` : 'All caught up'}
+                    {unreadMessagesCount > 0 ? `${unreadMessagesCount} Inbound` : 'Secure Channel — Clear'}
                   </p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
                   <MessageSquare size={18} className="text-gold" />
                 </div>
-              </div>
+              </Link>
             </div>
 
             {/* Right Col - Telemetry */}
@@ -324,12 +359,16 @@ export default async function ClientDashboardPage() {
                 </div>
               </div>
 
-              {/* Staging Preview Browser Frame */}
+              {/* Staging Preview or Growth Telemetry Browser Frame */}
               {project.preview_url && (
-                <StagingPreview
-                  previewUrl={project.preview_url}
-                  projectUpdates={projectUpdates}
-                />
+                project.status === 'Complete' ? (
+                  <GrowthTelemetry />
+                ) : (
+                  <StagingPreview
+                    previewUrl={project.preview_url}
+                    projectUpdates={projectUpdates}
+                  />
+                )
               )}
             </section>
 
@@ -354,7 +393,7 @@ export default async function ClientDashboardPage() {
                         })}
                       </p>
                       <Link
-                        href="/dashboard/book"
+                        href="/client/book"
                         className="text-xxs font-bold text-gold hover:underline flex items-center gap-1 mt-1 font-sans"
                       >
                         Reschedule sync →
@@ -366,7 +405,7 @@ export default async function ClientDashboardPage() {
                         Need a progress review or design sync call with our engineering lead? Book an inline check-in.
                       </p>
                       <Link
-                        href="/dashboard/book"
+                        href="/client/book"
                         className="w-full py-2.5 px-4 rounded-xl bg-gold/10 hover:bg-gold/15 border border-gold/25 text-xs font-semibold text-gold transition-all duration-300 flex items-center justify-between text-center cursor-pointer font-serif"
                       >
                         <span>Schedule Dev Sync</span> <ArrowRight size={12} />
@@ -391,6 +430,9 @@ export default async function ClientDashboardPage() {
                   </Link>
                 </div>
               </section>
+
+              {/* Secure Asset Vault */}
+              <SecureVault />
 
               {/* Client support center card */}
               <section className="p-6 glass rounded-2xl border border-gold/10 space-y-4">
