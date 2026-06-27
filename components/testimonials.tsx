@@ -57,8 +57,8 @@ export function Testimonials() {
           }))
           setItems(mapped)
         }
-      } catch (err) {
-        console.error('Failed to load testimonials, using defaults:', err)
+      } catch (err: any) {
+        console.error('Failed to load testimonials, using defaults:', err?.message || err)
       }
     }
     loadTestimonials()

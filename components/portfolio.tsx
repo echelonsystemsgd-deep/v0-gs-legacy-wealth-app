@@ -498,8 +498,8 @@ export function Portfolio({ limit }: { limit?: number }) {
           }))
           setItems(mapped)
         }
-      } catch (err) {
-        console.error('Failed to load portfolio items, using default assets:', err)
+      } catch (err: any) {
+        console.error('Failed to load portfolio items, using default assets:', err?.message || err)
       }
     }
     loadPortfolio()
