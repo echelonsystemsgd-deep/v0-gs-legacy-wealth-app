@@ -23,7 +23,8 @@ export default function SettingsPage() {
   // Profile Form States
   const [fullName, setFullName] = useState('')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  const [avatarUrl, setAvatarUrl] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState('') // raw storage path or public URL
+  const [displayAvatarUrl, setDisplayAvatarUrl] = useState('') // resolved URL for preview
 
   // System Config States
   const [calendlyUrl, setCalendlyUrl] = useState('')
@@ -45,7 +46,17 @@ export default function SettingsPage() {
     if (curr) {
       setCurrentUser(curr)
       setFullName(curr.full_name ?? '')
-      setAvatarUrl(curr.avatar_url ?? '')
+      const rawPath = curr.avatar_url ?? ''
+      setAvatarUrl(rawPath)
+      // Resolve to a displayable URL
+      if (rawPath) {
+        if (rawPath.startsWith('http://') || rawPath.startsWith('https://') || rawPath.startsWith('data:')) {
+          setDisplayAvatarUrl(rawPath)
+        } else {
+          const { data: signedData } = await supabase.storage.from('avatars').createSignedUrl(rawPath, 3600)
+          if (signedData) setDisplayAvatarUrl(signedData.signedUrl)
+        }
+      }
     }
 
     // Fetch system configs if available
@@ -70,16 +81,27 @@ export default function SettingsPage() {
     let finalAvatarUrl = avatarUrl
 
     if (avatarFile) {
-      const path = `avatars/${currentUser.id}-${Date.now()}-${avatarFile.name}`
-      const { error: uploadError } = await supabase.storage.from('branding').upload(path, avatarFile, { upsert: true })
+      const fileName = `avatar-${Date.now()}.jpg`
+      const filePath = `${currentUser.id}/${fileName}`
+
+      // Purge old avatars in the user's folder
+      const { data: existingFiles } = await supabase.storage.from('avatars').list(currentUser.id)
+      if (existingFiles && existingFiles.length > 0) {
+        const filesToRemove = existingFiles.map((f) => `${currentUser.id}/${f.name}`)
+        await supabase.storage.from('avatars').remove(filesToRemove)
+      }
+
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, avatarFile, { upsert: true })
       if (uploadError) {
         showToast(`Avatar upload failed: ${uploadError.message}`)
         setSaving(false)
         return
       }
-      const { data: { publicUrl } } = supabase.storage.from('branding').getPublicUrl(path)
-      finalAvatarUrl = publicUrl
-      setAvatarUrl(publicUrl)
+      // Get signed URL for display
+      const { data: signedData } = await supabase.storage.from('avatars').createSignedUrl(filePath, 3600)
+      if (signedData) setDisplayAvatarUrl(signedData.signedUrl)
+      finalAvatarUrl = filePath
+      setAvatarUrl(filePath)
     }
 
     const { error } = await supabase
@@ -217,9 +239,9 @@ export default function SettingsPage() {
               <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <div className="flex items-center gap-5 flex-wrap">
                   <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/25 overflow-hidden flex items-center justify-center relative shrink-0">
-                    {avatarUrl ? (
+                    {displayAvatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                      <img src={displayAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
                       <User size={28} className="text-gold" />
                     )}
@@ -229,7 +251,14 @@ export default function SettingsPage() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null
+                        setAvatarFile(file)
+                        if (file) {
+                          const localUrl = URL.createObjectURL(file)
+                          setDisplayAvatarUrl(localUrl)
+                        }
+                      }}
                       className="text-xs text-muted-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-gold/25 file:bg-gold/5 file:text-xxs file:font-semibold file:text-gold hover:file:bg-gold/10 transition-all cursor-pointer"
                     />
                   </div>

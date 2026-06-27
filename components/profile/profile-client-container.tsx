@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { 
@@ -70,7 +70,7 @@ export default function ProfileClientContainer({
   const [uploading, setUploading] = useState(false)
 
   // Resolve initial storage path to signed URL on load
-  useState(() => {
+  useEffect(() => {
     const resolveInitialAvatar = async () => {
       if (initialProfile.avatar_url) {
         if (
@@ -94,7 +94,8 @@ export default function ProfileClientContainer({
       }
     }
     resolveInitialAvatar()
-  })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Resizes and prepares file for upload — uploads immediately on selection
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
