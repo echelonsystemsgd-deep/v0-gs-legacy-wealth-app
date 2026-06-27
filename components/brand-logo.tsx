@@ -1,12 +1,13 @@
 "use client"
 
 import Image, { type ImageProps } from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   BRAND_LOGO,
   BRAND_LOGO_FALLBACK,
   BRAND_WATERMARK,
 } from "@/lib/brand-assets"
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 type BrandLogoProps = Omit<ImageProps, "src" | "alt"> & {
   variant?: "logo" | "watermark"
@@ -18,8 +19,18 @@ export function BrandLogo({
   alt = "GS Legacy Wealth",
   ...props
 }: BrandLogoProps) {
-  const primary = variant === "watermark" ? BRAND_WATERMARK : BRAND_LOGO
+  const { getSection } = useWebsiteContent()
+  const data = getSection('branding', {
+    logoUrl: BRAND_LOGO,
+    watermarkUrl: BRAND_WATERMARK,
+  })
+
+  const primary = variant === "watermark" ? data.watermarkUrl : data.logoUrl
   const [src, setSrc] = useState(primary)
+
+  useEffect(() => {
+    setSrc(primary)
+  }, [primary])
 
   return (
     <Image

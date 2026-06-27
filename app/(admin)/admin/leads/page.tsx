@@ -21,8 +21,11 @@ import {
   CheckCircle2,
   UserCheck,
   LayoutGrid,
-  List
+  List,
+  Info,
 } from 'lucide-react'
+import { useInspector } from '@/hooks/use-inspector'
+import { usePathname } from 'next/navigation'
 
 type Lead = {
   id: string
@@ -53,7 +56,18 @@ const ALL_STATUSES = ['New', 'Contacted', 'Call Booked', 'Proposal Sent', 'Won',
 export default function LeadsPage() {
   const supabase = createClient()
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { setIsOpen: setInspectorOpen } = useInspector()
+
+  const handleInspectLead = (leadId: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('leadId', leadId)
+    params.delete('projectId')
+    params.delete('clientId')
+    router.push(`${pathname}?${params.toString()}`)
+    setInspectorOpen(true)
+  }
   
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
@@ -611,16 +625,22 @@ export default function LeadsPage() {
                             <div className="flex items-center justify-between gap-1 pt-1.5" onClick={(e) => e.stopPropagation()}>
                               <Link
                                 href={`/admin/projects?create=true&client_name=${encodeURIComponent(lead.name)}&project_name=${encodeURIComponent(lead.business_name ? lead.business_name + ' Build' : lead.name + ' Project')}&service_type=${encodeURIComponent(lead.service_interested || '')}`}
-                                className="px-2 py-1 rounded bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-[9px] font-bold transition-all text-center flex-1"
+                                className="px-1.5 py-1 rounded bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-[8px] font-bold transition-all text-center flex-1"
                               >
                                 Convert
                               </Link>
                               <Link
                                 href={`/admin/bookings?schedule=true&lead_id=${lead.id}`}
-                                className="px-2 py-1 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[9px] font-bold transition-all text-center flex-1"
+                                className="px-1.5 py-1 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 text-[8px] font-bold transition-all text-center flex-1"
                               >
-                                Book Call
+                                Book
                               </Link>
+                              <button
+                                onClick={() => handleInspectLead(lead.id)}
+                                className={`px-1.5 py-1 rounded border text-[8px] font-bold transition-all text-center flex-1 cursor-pointer ${searchParams.get('leadId') === lead.id ? 'bg-gold/20 border-gold text-gold font-extrabold shadow-sm' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground'}`}
+                              >
+                                Inspect
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -693,11 +713,18 @@ export default function LeadsPage() {
                   <tbody className="divide-y divide-gold/5">
                     {leads.map((lead) => {
                       const isChecked = selectedIds.includes(lead.id)
+                      const isInspected = searchParams.get('leadId') === lead.id
                       return (
                         <tr 
                           key={lead.id} 
                           onClick={() => router.push(`/admin/leads/${lead.id}`)}
-                          className={`hover:bg-white/[0.01] transition-colors group cursor-pointer ${isChecked ? 'bg-gold/5' : ''}`}
+                          className={`hover:bg-white/[0.01] transition-all group cursor-pointer ${
+                            isInspected 
+                              ? 'bg-gold/[0.03] border-l-2 border-l-gold shadow-[inset_3px_0_0_rgba(212,175,55,1),0_0_15px_rgba(212,175,55,0.05)]' 
+                              : isChecked 
+                              ? 'bg-gold/5' 
+                              : ''
+                          }`}
                         >
                           {/* Checkbox */}
                           <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
@@ -757,6 +784,13 @@ export default function LeadsPage() {
                               >
                                 Book Call
                               </Link>
+                              <button
+                                onClick={() => handleInspectLead(lead.id)}
+                                className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all shrink-0 cursor-pointer ${isInspected ? 'bg-gold/25 border-gold text-gold shadow-md' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'}`}
+                                title="Inspect Telemetry"
+                              >
+                                <Info size={13} />
+                              </button>
                               <Link
                                 href={`/admin/leads/${lead.id}`}
                                 className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground transition-all shrink-0"

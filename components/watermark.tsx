@@ -2,6 +2,9 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
+import { BRAND_WATERMARK } from "@/lib/brand-assets"
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 interface WatermarkProps {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center" | "custom";
@@ -10,6 +13,17 @@ interface WatermarkProps {
 }
 
 export function Watermark({ position = "center", className = "", opacity = 0.03 }: WatermarkProps) {
+  const { getSection } = useWebsiteContent()
+  const data = getSection('branding', {
+    watermarkUrl: BRAND_WATERMARK,
+  })
+
+  const [src, setSrc] = useState(data.watermarkUrl)
+
+  useEffect(() => {
+    setSrc(data.watermarkUrl)
+  }, [data.watermarkUrl])
+
   const getPositionClasses = () => {
     switch (position) {
       case "top-left": return "top-0 left-0 -translate-x-1/4 -translate-y-1/4";
@@ -31,7 +45,7 @@ export function Watermark({ position = "center", className = "", opacity = 0.03 
         className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] mix-blend-screen"
       >
         <Image
-          src="/GS_Legacy_Wealth_Watermark-removebg-preview.png"
+          src={src}
           alt=""
           fill
           className="object-contain"

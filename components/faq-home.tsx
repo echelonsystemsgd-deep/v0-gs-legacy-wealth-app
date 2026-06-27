@@ -3,37 +3,44 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, HelpCircle } from "lucide-react"
-
-const faqs = [
-  {
-    question: "How do custom AI automations actually save my business time?",
-    answer:
-      "We replace manual repetitive workflows (like copying data from lead forms to CRMs, scheduling calls, drafting standard emails, or formatting customer reports) with fully automated pipelines. For example, when a prospect submits a form, an AI qualifies them, syncs their profile to your CRM, books the call, and alerts your team via Slack—all in under a second. This typically reclaims 20 to 40 hours of admin time per week."
-  },
-  {
-    question: "What is the timeline for a custom platform and system build?",
-    answer:
-      "A standard high-performance authority platform with core CRM integrations and automated lead routing is fully built, tested, and launched within 2 to 4 weeks. High-ticket custom multi-system architectures under the Elite tier may require up to 6 weeks, which includes extensive validation and custom API connectivity."
-  },
-  {
-    question: "Are your pricing tiers one-time setups or recurring contracts?",
-    answer:
-      "Our core builds (Vanguard, Sovereign, and Apex Suite) are structured as one-time setup investments. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers (Sentry Support, Velocity Optimization, and Fractional Ops Takeover) for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning."
-  },
-  {
-    question: "Will the custom website and dashboard run fast on mobile?",
-    answer:
-      "Yes, absolutely. We prioritize high-speed architecture, responsive fluid layouts, and server-side optimization to guarantee a Mobile Speed Score of 90+ on Google PageSpeed Insights. Your clients will experience instant loading times on any screen size."
-  },
-  {
-    question: "Do you build custom integrations for existing platforms?",
-    answer:
-      "Yes. We seamlessly connect your custom website and AI agents with existing CRM, calendar, and email software—including Salesforce, HubSpot, ActiveCampaign, Slack, Google Workspace, and Calendly. We construct custom webhooks to ensure flawless cross-platform data flow."
-  }
-]
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 export function FAQHome() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+  const { getSection } = useWebsiteContent()
+
+  const data = getSection('faq', {
+    eyebrow: "FAQ",
+    headline: "System FAQs",
+    description: "Everything you need to know about our custom build models, timelines, and integration pipeline.",
+    faqs: [
+      {
+        question: "How do custom AI automations actually save my business time?",
+        answer:
+          "We replace manual repetitive workflows (like copying data from lead forms to CRMs, scheduling calls, drafting standard emails, or formatting customer reports) with fully automated pipelines. For example, when a prospect submits a form, an AI qualifies them, syncs their profile to your CRM, books the call, and alerts your team via Slack—all in under a second. This typically reclaims 20 to 40 hours of admin time per week."
+      },
+      {
+        question: "What is the timeline for a custom platform and system build?",
+        answer:
+          "A standard high-performance authority platform with core CRM integrations and automated lead routing is fully built, tested, and launched within 2 to 4 weeks. High-ticket custom multi-system architectures under the Elite tier may require up to 6 weeks, which includes extensive validation and custom API connectivity."
+      },
+      {
+        question: "Are your pricing tiers one-time setups or recurring contracts?",
+        answer:
+          "Our core builds (Vanguard, Sovereign, and Apex Suite) are structured as one-time setup investments. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers (Sentry Support, Velocity Optimization, and Fractional Ops Takeover) for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning."
+      },
+      {
+        question: "Will the custom website and dashboard run fast on mobile?",
+        answer:
+          "Yes, absolutely. We prioritize high-speed architecture, responsive fluid layouts, and server-side optimization to guarantee a Mobile Speed Score of 90+ on Google PageSpeed Insights. Your clients will experience instant loading times on any screen size."
+      },
+      {
+        question: "Do you build custom integrations for existing platforms?",
+        answer:
+          "Yes. We seamlessly connect your custom website and AI agents with existing CRM, calendar, and email software—including Salesforce, HubSpot, ActiveCampaign, Slack, Google Workspace, and Calendly. We construct custom webhooks to ensure flawless cross-platform data flow."
+      }
+    ]
+  })
 
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary border-t border-white/5">
@@ -50,19 +57,19 @@ export function FAQHome() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            FAQ
+            {data.eyebrow}
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            System FAQs
+            {data.headline}
           </h2>
           <p className="font-sans text-sm text-text-primary opacity-70 mt-4 max-w-lg mx-auto">
-            Everything you need to know about our custom build models, timelines, and integration pipeline.
+            {data.description}
           </p>
         </div>
 
         {/* Custom Framer Motion Accordion Stack */}
         <div className="space-y-4 max-w-3xl mx-auto">
-          {faqs.map((faq, index) => {
+          {Array.isArray(data.faqs) && data.faqs.map((faq: any, index: number) => {
             const isOpen = index === expandedIndex
             return (
               <div 

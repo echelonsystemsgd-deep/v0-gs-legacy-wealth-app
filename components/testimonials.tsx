@@ -1,10 +1,19 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Star } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
 
-const testimonials = [
+type TestimonialItem = {
+  name: string
+  role: string
+  badge: string
+  content: string
+}
+
+const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
   {
     name: "James Carter",
     role: "Fitness Coach",
@@ -26,6 +35,35 @@ const testimonials = [
 ]
 
 export function Testimonials() {
+  const supabase = createClient()
+  const [items, setItems] = useState<TestimonialItem[]>(DEFAULT_TESTIMONIALS)
+
+  useEffect(() => {
+    async function loadTestimonials() {
+      try {
+        const { data, error } = await supabase
+          .from('testimonials')
+          .select('*')
+          .order('name', { ascending: true })
+
+        if (error) throw error
+
+        if (data && data.length > 0) {
+          const mapped = data.map((d: any) => ({
+            name: d.name,
+            role: d.role,
+            badge: d.badge,
+            content: d.content,
+          }))
+          setItems(mapped)
+        }
+      } catch (err) {
+        console.error('Failed to load testimonials, using defaults:', err)
+      }
+    }
+    loadTestimonials()
+  }, [supabase])
+
   return (
     <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
@@ -100,7 +138,7 @@ export function Testimonials() {
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {items.map((testimonial, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

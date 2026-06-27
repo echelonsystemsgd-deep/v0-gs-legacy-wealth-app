@@ -1,13 +1,24 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, X, ExternalLink, Loader2, Wrench } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { createClient } from "@/lib/supabase/client"
 
-const portfolioItems = [
+type PortfolioItem = {
+  title: string
+  category: string
+  gradient: string
+  href?: string | null
+  image?: string | null
+  underConstruction: boolean
+  metric?: string | null
+}
+
+const DEFAULT_PORTFOLIO: PortfolioItem[] = [
   {
     title: "Stamp Valuation App",
     category: "AI Web App · Collector",
@@ -39,8 +50,6 @@ const portfolioItems = [
     metric: "+238% Conversion Increase",
   },
 ]
-
-type PortfolioItem = typeof portfolioItems[number]
 
 function PremiumMockup({ item }: { item: PortfolioItem }) {
   if (item.title === "Elite Fitness Studio") {
@@ -462,9 +471,41 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
 }
 
 export function Portfolio({ limit }: { limit?: number }) {
+  const supabase = createClient()
   const [activeModal, setActiveModal] = useState<PortfolioItem | null>(null)
   const [constructionModal, setConstructionModal] = useState<PortfolioItem | null>(null)
-  const displayItems = limit ? portfolioItems.slice(0, limit) : portfolioItems
+  const [items, setItems] = useState<PortfolioItem[]>(DEFAULT_PORTFOLIO)
+
+  useEffect(() => {
+    async function loadPortfolio() {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_items')
+          .select('*')
+          .order('title', { ascending: true })
+
+        if (error) throw error
+
+        if (data && data.length > 0) {
+          const mapped = data.map((d: any) => ({
+            title: d.title,
+            category: d.category,
+            gradient: d.gradient || 'from-blue-500/20 to-indigo-500/20',
+            href: d.href,
+            image: d.image,
+            underConstruction: !!d.under_construction,
+            metric: d.metric,
+          }))
+          setItems(mapped)
+        }
+      } catch (err) {
+        console.error('Failed to load portfolio items, using default assets:', err)
+      }
+    }
+    loadPortfolio()
+  }, [supabase])
+
+  const displayItems = limit ? items.slice(0, limit) : items
 
   return (
     <>

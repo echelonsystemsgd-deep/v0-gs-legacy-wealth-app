@@ -51,6 +51,8 @@ export default function ProjectDetailPage() {
   const [previewUrl, setPreviewUrl] = useState('')
   const [contractValue, setContractValue] = useState('')
   const [amountPaid, setAmountPaid] = useState('')
+  const [serviceType, setServiceType] = useState('')
+  const [description, setDescription] = useState('')
   
   // Updates & Messages states
   const [newUpdateTitle, setNewUpdateTitle] = useState('')
@@ -112,6 +114,8 @@ export default function ProjectDetailPage() {
         setPreviewUrl(proj.preview_url ?? '')
         setContractValue(proj.contract_value?.toString() ?? '0')
         setAmountPaid(proj.amount_paid?.toString() ?? '0')
+        setServiceType(proj.service_type ?? '')
+        setDescription(proj.description ?? '')
       }
       setAssets(assetData ?? [])
       setClients(clientData ?? [])
@@ -129,25 +133,30 @@ export default function ProjectDetailPage() {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'messages',
           filter: `project_id=eq.${id}`,
         },
         (payload) => {
-          const newMsg = payload.new as any
-          setMessages((prev) => {
-            if (prev.some((m) => m.id === newMsg.id)) return prev
-            return [
-              ...prev,
-              {
-                id: newMsg.id,
-                content: newMsg.content,
-                created_at: newMsg.created_at,
-                sender_id: newMsg.sender_id,
-              },
-            ]
-          })
+          if (payload.eventType === 'INSERT') {
+            const newMsg = payload.new as any
+            setMessages((prev) => {
+              if (prev.some((m) => m.id === newMsg.id)) return prev
+              return [
+                ...prev,
+                {
+                  id: newMsg.id,
+                  content: newMsg.content,
+                  created_at: newMsg.created_at,
+                  sender_id: newMsg.sender_id,
+                },
+              ]
+            })
+          } else if (payload.eventType === 'DELETE') {
+            const oldMsg = payload.old as any
+            setMessages((prev) => prev.filter((m) => m.id !== oldMsg.id))
+          }
         }
       )
       .subscribe()
@@ -168,7 +177,9 @@ export default function ProjectDetailPage() {
       live_url: liveUrl || null,
       preview_url: previewUrl || null,
       contract_value: cVal,
-      amount_paid: aPaid
+      amount_paid: aPaid,
+      service_type: serviceType || null,
+      description: description || null
     }).eq('id', id)
     setSaving(false)
     
@@ -177,7 +188,18 @@ export default function ProjectDetailPage() {
       return
     }
     showToast('Project updated.')
-    setProject((p) => p ? { ...p, notes, status, client_id: clientId || null, live_url: liveUrl || null, preview_url: previewUrl || null, contract_value: cVal, amount_paid: aPaid } : p)
+    setProject((p) => p ? { 
+      ...p, 
+      notes, 
+      status, 
+      client_id: clientId || null, 
+      live_url: liveUrl || null, 
+      preview_url: previewUrl || null, 
+      contract_value: cVal, 
+      amount_paid: aPaid,
+      service_type: serviceType || null,
+      description: description || null
+    } : p)
   }
 
   const handleArchive = async () => {
@@ -261,6 +283,20 @@ export default function ProjectDetailPage() {
       setChatInput(text)
       showToast('Message send failed.', 'error')
     }
+  }
+
+  const handleDeleteMessage = async (messageId: string) => {
+    const { error } = await supabase
+      .from('messages')
+      .delete()
+      .eq('id', messageId)
+
+    if (error) {
+      showToast('Failed to delete message.', 'error')
+      return
+    }
+    setMessages((prev) => prev.filter((m) => m.id !== messageId))
+    showToast('Message deleted.')
   }
 
   const formatBytes = (b: number | null) => {
@@ -373,9 +409,10 @@ export default function ProjectDetailPage() {
                 <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Service Type</label>
                 <input
                   type="text"
-                  value={project.service_type ?? 'Full Website Build'}
-                  disabled
-                  className="w-full bg-background/40 border border-gold/10 rounded-xl px-3 py-2.5 text-xs text-muted-foreground outline-none"
+                  value={serviceType}
+                  onChange={(e) => setServiceType(e.target.value)}
+                  placeholder="e.g. Full Website Build"
+                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none"
                 />
               </div>
 
@@ -428,12 +465,16 @@ export default function ProjectDetailPage() {
               </div>
             </div>
             
-            {project.description && (
-              <div className="pt-2 border-t border-gold/10">
-                <p className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1">Description</p>
-                <p className="text-sm text-foreground leading-relaxed">{project.description}</p>
-              </div>
-            )}
+            <div className="pt-2 border-t border-gold/10">
+              <label className="text-xxs font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Description / Scope Overview</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Outline the detailed engineering scope of work, features, integrations..."
+                rows={3}
+                className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none resize-none leading-relaxed"
+              />
+            </div>
           </div>
 
           {/* Timeline Updates publisher */}
@@ -558,7 +599,16 @@ export default function ProjectDetailPage() {
                 messages.map((m) => {
                   const isMe = m.sender_id === adminUserId
                   return (
-                    <div key={m.id} className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'}`}>
+                    <div key={m.id} className={`flex w-full group/msg items-center gap-1.5 ${isMe ? 'justify-end' : 'justify-start'}`}>
+                      {!isMe && (
+                        <button
+                          onClick={() => handleDeleteMessage(m.id)}
+                          className="opacity-0 group-hover/msg:opacity-100 p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all cursor-pointer shrink-0"
+                          title="Delete Client Message"
+                        >
+                          <Trash2 size={10} />
+                        </button>
+                      )}
                       <div className={`max-w-[85%] rounded-xl px-3 py-2 text-xs leading-normal ${
                         isMe
                           ? 'bg-[#1A0A2E]/50 border border-purple-500/20 text-foreground rounded-tr-none'
@@ -572,6 +622,15 @@ export default function ProjectDetailPage() {
                           {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
+                      {isMe && (
+                        <button
+                          onClick={() => handleDeleteMessage(m.id)}
+                          className="opacity-0 group-hover/msg:opacity-100 p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all cursor-pointer shrink-0"
+                          title="Unsend Message"
+                        >
+                          <Trash2 size={10} />
+                        </button>
+                      )}
                     </div>
                   )
                 })

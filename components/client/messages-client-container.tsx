@@ -34,8 +34,10 @@ export function MessagesClientContainer({
   // Request notification permissions on mount
   useEffect(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission()
+      if (Notification.permission === 'default' && localStorage.getItem('gs-messages-alert-prompted') !== 'true') {
+        Notification.requestPermission().then(() => {
+          localStorage.setItem('gs-messages-alert-prompted', 'true')
+        })
       }
     }
   }, [])

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { useInspector } from '@/hooks/use-inspector'
 import { createClient } from '@/lib/supabase/client'
 import {
   Users as UsersIcon,
@@ -67,6 +69,20 @@ type StrategySession = {
 
 export default function ClientsPage() {
   const supabase = createClient()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const { setIsOpen: setInspectorOpen } = useInspector()
+
+  const handleInspectClient = (clientId: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('clientId', clientId)
+    params.delete('leadId')
+    params.delete('projectId')
+    router.push(`${pathname}?${params.toString()}`)
+    setInspectorOpen(true)
+  }
+
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
@@ -569,6 +585,7 @@ export default function ClientsPage() {
                     <tbody className="divide-y divide-gold/5 text-sm">
                       {filteredClients.map((client) => {
                         const isSelected = selectedClient?.id === client.id
+                        const isInspected = searchParams.get('clientId') === client.id
                         return (
                           <tr
                             key={client.id}
@@ -577,7 +594,11 @@ export default function ClientsPage() {
                               setShowViewModal(true)
                             }}
                             className={`cursor-pointer transition-all hover:bg-white/[0.02] ${
-                              isSelected ? 'bg-gold/5' : ''
+                              isInspected 
+                                ? 'bg-gold/[0.03] border-l-2 border-l-gold shadow-[inset_3px_0_0_rgba(212,175,55,1),0_0_15px_rgba(212,175,55,0.05)]' 
+                                : isSelected 
+                                ? 'bg-gold/5' 
+                                : ''
                             }`}
                           >
                             <td className="py-4 px-5">
@@ -621,6 +642,13 @@ export default function ClientsPage() {
                             </td>
                             <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-end gap-2">
+                                <button
+                                  onClick={() => handleInspectClient(client.id)}
+                                  className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${isInspected ? 'bg-gold/20 border-gold text-gold' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'}`}
+                                  title="Inspect Client Telemetry"
+                                >
+                                  <Info size={12} />
+                                </button>
                                 <button
                                   onClick={() => {
                                     setSelectedClient(client)
@@ -855,8 +883,8 @@ export default function ClientsPage() {
 
       {/* MODAL: DELETE SAFETY CONFIRMATION */}
       {showDeleteModal && clientToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md glass border border-red-500/20 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md glass border border-red-500/20 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 relative z-10">
             <div className="flex justify-between items-center border-b border-red-500/15 pb-3">
               <h2 className="font-serif text-lg font-bold text-red-400 flex items-center gap-2">
                 <ShieldAlert size={18} /> Permanent Account Deletion
@@ -880,10 +908,12 @@ export default function ClientsPage() {
                 To confirm this deletion, please type the company name or full name <strong className="text-foreground font-mono">"{clientToDelete.company_name || clientToDelete.full_name || 'Confirm'}"</strong> below:
               </p>
               <input
+                type="text"
+                autoFocus
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
                 placeholder="Type confirmation here..."
-                className="w-full bg-background/60 border border-red-500/25 hover:border-red-500/40 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-mono"
+                className="w-full bg-background/60 border border-red-500/25 hover:border-red-500/40 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-mono relative z-20 pointer-events-auto"
               />
             </div>
 

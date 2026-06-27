@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Fragment } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   FileText, Key, Eye, Clock, User, ShieldAlert, ChevronDown, Check, Loader2, RefreshCw, Search, CheckCircle2
@@ -26,47 +26,136 @@ export default function LogsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [toast, setToast] = useState<string | null>(null)
-  const [inspectLog, setInspectLog] = useState<ActivityLog | null>(null)
+  const [expandedLogIds, setExpandedLogIds] = useState<Record<string, boolean>>({})
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
 
+  const toggleExpandLog = (id: string) => {
+    setExpandedLogIds((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }))
+  }
+
   const fetchData = useCallback(async () => {
     setLoading(true)
-    if (activeTab === 'activity') {
-      let query = supabase
-        .from('activity_logs')
-        .select('id, action_type, target_table, target_id, details, created_at, profiles(full_name, avatar_url)')
+    try {
+      if (activeTab === 'activity') {
+        let query = supabase
+          .from('activity_logs')
+          .select('id, action_type, target_table, target_id, details, created_at, profiles(full_name, avatar_url)')
 
-      if (categoryFilter !== 'all') {
-        query = query.eq('target_table', categoryFilter)
+        if (categoryFilter !== 'all') {
+          query = query.eq('target_table', categoryFilter)
+        }
+
+        if (searchQuery) {
+          query = query.or(`action_type.ilike.%${searchQuery}%,target_table.ilike.%${searchQuery}%`)
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false }).limit(100)
+        if (error) throw error
+        setActivities((data as any) ?? [])
+      } else {
+        let query = supabase
+          .from('login_history')
+          .select('id, ip_address, user_agent, logged_at, profiles(full_name, avatar_url)')
+
+        if (searchQuery) {
+          query = query.or(`ip_address.ilike.%${searchQuery}%,user_agent.ilike.%${searchQuery}%`)
+        }
+
+        const { data, error } = await query.order('logged_at', { ascending: false }).limit(100)
+        if (error) throw error
+        setLogins((data as any) ?? [])
       }
-
-      if (searchQuery) {
-        query = query.or(`action_type.ilike.%${searchQuery}%,target_table.ilike.%${searchQuery}%`)
-      }
-
-      const { data, error } = await query.order('created_at', { ascending: false }).limit(100)
-      if (error) showToast(`Error fetching logs: ${error.message}`)
-      setActivities((data as any) ?? [])
-    } else {
-      let query = supabase
-        .from('login_history')
-        .select('id, ip_address, user_agent, logged_at, profiles(full_name, avatar_url)')
-
-      if (searchQuery) {
-        query = query.or(`ip_address.ilike.%${searchQuery}%,user_agent.ilike.%${searchQuery}%`)
-      }
-
-      const { data, error } = await query.order('logged_at', { ascending: false }).limit(100)
-      if (error) showToast(`Error fetching logins: ${error.message}`)
-      setLogins((data as any) ?? [])
+    } catch (err: any) {
+      showToast(`Error: ${err.message}`)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [activeTab, searchQuery, categoryFilter, supabase])
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  // Realtime subscription for activity logs
+  useEffect(() => {
+    if (activeTab !== 'activity') return
+
+    const channel = supabase
+      .channel('activity_logs_realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'activity_logs' },
+        async (payload) => {
+          // Fetch associated user profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name, avatar_url')
+            .eq('id', payload.new.user_id)
+            .single()
+
+          const newLog: ActivityLog = {
+            id: payload.new.id,
+            action_type: payload.new.action_type,
+            target_table: payload.new.target_table,
+            target_id: payload.new.target_id,
+            details: payload.new.details,
+            created_at: payload.new.created_at,
+            profiles: profile || null
+          }
+
+          setActivities((prev) => {
+            if (prev.some((p) => p.id === newLog.id)) return prev
+            return [newLog, ...prev].slice(0, 100)
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [activeTab, supabase])
+
+  // Realtime subscription for login history
+  useEffect(() => {
+    if (activeTab !== 'logins') return
+
+    const channel = supabase
+      .channel('login_history_realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'login_history' },
+        async (payload) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name, avatar_url')
+            .eq('id', payload.new.user_id)
+            .single()
+
+          const newLogin: LoginRecord = {
+            id: payload.new.id,
+            ip_address: payload.new.ip_address,
+            user_agent: payload.new.user_agent,
+            logged_at: payload.new.logged_at,
+            profiles: profile || null
+          }
+
+          setLogins((prev) => {
+            if (prev.some((p) => p.id === newLogin.id)) return prev
+            return [newLogin, ...prev].slice(0, 100)
+          })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [activeTab, supabase])
 
   const formatUserAgent = (ua: string | null) => {
     if (!ua) return 'Unknown Browser'
@@ -93,7 +182,7 @@ export default function LogsPage() {
             <ShieldAlert size={12} /> Audit logs registry
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Audit Logs</h1>
-          <p className="text-sm text-muted-foreground">Audit system modifications, database actions, and user login vectors.</p>
+          <p className="text-sm text-muted-foreground">Audit system modifications, database actions, and user login vectors in realtime.</p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
@@ -134,7 +223,7 @@ export default function LogsPage() {
       {/* Tabs */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">
         <button
-          onClick={() => { setActiveTab('activity'); setSearchQuery(''); setCategoryFilter('all') }}
+          onClick={() => { setActiveTab('activity'); setSearchQuery(''); setCategoryFilter('all'); setExpandedLogIds({}) }}
           className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
             activeTab === 'activity'
               ? 'border-gold text-gold bg-gold/5'
@@ -144,7 +233,7 @@ export default function LogsPage() {
           <FileText size={14} /> Activity Stream
         </button>
         <button
-          onClick={() => { setActiveTab('logins'); setSearchQuery(''); setCategoryFilter('all') }}
+          onClick={() => { setActiveTab('logins'); setSearchQuery(''); setCategoryFilter('all'); setExpandedLogIds({}) }}
           className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
             activeTab === 'logins'
               ? 'border-gold text-gold bg-gold/5'
@@ -182,43 +271,58 @@ export default function LogsPage() {
                   </tr>
                 ) : (
                   activities.map((act) => (
-                    <tr key={act.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3.5 px-4 flex items-center gap-2.5">
-                        <div className="w-6 h-6 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
-                          {act.profiles?.avatar_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={act.profiles.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                    <Fragment key={act.id}>
+                      <tr 
+                        className={`hover:bg-white/[0.02] cursor-pointer transition-colors ${expandedLogIds[act.id] ? 'bg-white/[0.03]' : ''}`}
+                        onClick={() => act.details && toggleExpandLog(act.id)}
+                      >
+                        <td className="py-3.5 px-4 flex items-center gap-2.5">
+                          <div className="w-6 h-6 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center shrink-0">
+                            {act.profiles?.avatar_url ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={act.profiles.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                            ) : (
+                              <User size={12} className="text-gold" />
+                            )}
+                          </div>
+                          <span className="font-semibold text-foreground text-xs">{act.profiles?.full_name || 'System Auto'}</span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="px-2 py-0.5 rounded bg-gold/5 border border-gold/15 text-xxs font-bold text-gold">{act.action_type}</span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="text-muted-foreground text-xs">{act.target_table || '—'} {act.target_id ? `(${act.target_id.slice(0, 8)})` : ''}</span>
+                        </td>
+                        <td className="py-3.5 px-4 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-1.5">
+                            <Clock size={11} />
+                            <span>{new Date(act.created_at).toLocaleString()}</span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          {act.details ? (
+                            <div className="flex items-center justify-end gap-1.5 text-xxs font-semibold text-gold">
+                              <span>{expandedLogIds[act.id] ? 'Hide' : 'View'} Details</span>
+                              <ChevronDown size={12} className={`transition-transform duration-200 ${expandedLogIds[act.id] ? 'rotate-180' : ''}`} />
+                            </div>
                           ) : (
-                            <User size={12} className="text-gold" />
+                            <span className="text-xxs text-muted-foreground">No meta</span>
                           )}
-                        </div>
-                        <span className="font-semibold text-foreground text-xs">{act.profiles?.full_name || 'System Auto'}</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="px-2 py-0.5 rounded bg-gold/5 border border-gold/15 text-xxs font-bold text-gold">{act.action_type}</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="text-muted-foreground text-xs">{act.target_table || '—'} {act.target_id ? `(${act.target_id.slice(0, 8)})` : ''}</span>
-                      </td>
-                      <td className="py-3.5 px-4 text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1.5">
-                          <Clock size={11} />
-                          <span>{new Date(act.created_at).toLocaleString()}</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        {act.details ? (
-                          <button
-                            onClick={() => setInspectLog(act)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white/5 border border-gold/15 hover:border-gold/30 text-xxs font-semibold text-gold transition-all cursor-pointer"
-                          >
-                            <Eye size={10} /> Inspect
-                          </button>
-                        ) : (
-                          <span className="text-xxs text-muted-foreground">No meta</span>
-                        )}
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                      {expandedLogIds[act.id] && act.details && (
+                        <tr className="bg-background/40">
+                          <td colSpan={5} className="p-4 border-t border-b border-gold/5">
+                            <div className="space-y-2">
+                              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Log Payload Metadata</div>
+                              <pre className="p-4 bg-background/90 border border-gold/10 rounded-xl font-mono text-[11px] text-[#F0EDE6] overflow-auto max-h-72 scrollbar-none leading-relaxed text-left">
+                                {JSON.stringify(act.details, null, 2)}
+                              </pre>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   ))
                 )}
               </tbody>
@@ -235,7 +339,10 @@ export default function LogsPage() {
               activities.map((act) => (
                 <div
                   key={act.id}
-                  className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all space-y-3"
+                  onClick={() => act.details && toggleExpandLog(act.id)}
+                  className={`p-4 glass rounded-xl border transition-all space-y-3 cursor-pointer ${
+                    expandedLogIds[act.id] ? 'border-gold/30 bg-white/[0.02]' : 'border-gold/10 hover:border-gold/25'
+                  }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -263,14 +370,21 @@ export default function LogsPage() {
                     </div>
 
                     {act.details && (
-                      <button
-                        onClick={() => setInspectLog(act)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white/5 border border-gold/15 hover:border-gold/30 text-xxs font-semibold text-gold transition-all cursor-pointer"
-                      >
-                        <Eye size={10} /> Inspect
-                      </button>
+                      <div className="flex items-center gap-1 text-gold text-xxs font-semibold">
+                        <span>Details</span>
+                        <ChevronDown size={11} className={`transition-transform duration-200 ${expandedLogIds[act.id] ? 'rotate-180' : ''}`} />
+                      </div>
                     )}
                   </div>
+
+                  {expandedLogIds[act.id] && act.details && (
+                    <div className="pt-3 border-t border-gold/5 space-y-1.5" onClick={(e) => e.stopPropagation()}>
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Log Payload Metadata</div>
+                      <pre className="p-3 bg-background/90 border border-gold/10 rounded-xl font-mono text-[10px] text-[#F0EDE6] overflow-auto max-h-48 scrollbar-none leading-relaxed text-left">
+                        {JSON.stringify(act.details, null, 2)}
+                      </pre>
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -366,48 +480,6 @@ export default function LogsPage() {
                 </div>
               ))
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Inspect Modal */}
-      {inspectLog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg glass border border-gold/15 rounded-2xl shadow-2xl p-6 space-y-4 animate-scale-up max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-gold/10 pb-3">
-              <h3 className="font-serif text-lg font-bold text-foreground">Inspect Event Metadata</h3>
-              <button onClick={() => setInspectLog(null)} className="text-muted-foreground hover:text-foreground text-sm cursor-pointer">&times;</button>
-            </div>
-            <div className="space-y-3.5">
-              <div className="flex justify-between text-xs border-b border-gold/5 pb-2">
-                <span className="text-muted-foreground uppercase">Action Type</span>
-                <span className="text-gold font-semibold">{inspectLog.action_type}</span>
-              </div>
-              <div className="flex justify-between text-xs border-b border-gold/5 pb-2">
-                <span className="text-muted-foreground uppercase">Target Table</span>
-                <span className="text-foreground">{inspectLog.target_table || 'None'}</span>
-              </div>
-              {inspectLog.target_id && (
-                <div className="flex justify-between text-xs border-b border-gold/5 pb-2">
-                  <span className="text-muted-foreground uppercase">Target ID</span>
-                  <span className="text-foreground font-mono text-[10px]">{inspectLog.target_id}</span>
-                </div>
-              )}
-              <div className="space-y-1.5">
-                <span className="text-xs text-muted-foreground uppercase block">Raw JSON Details</span>
-                <pre className="p-4 bg-background/80 border border-gold/10 rounded-xl font-mono text-[10px] text-muted-foreground overflow-auto max-h-48 scrollbar-none">
-                  {JSON.stringify(inspectLog.details, null, 2)}
-                </pre>
-              </div>
-            </div>
-            <div className="flex justify-end pt-2">
-              <button
-                onClick={() => setInspectLog(null)}
-                className="px-4 py-2 rounded-xl border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all"
-              >
-                Close Inspector
-              </button>
-            </div>
           </div>
         </div>
       )}

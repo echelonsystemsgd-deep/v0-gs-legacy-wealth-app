@@ -8,7 +8,7 @@ import {
 
 type Profile = {
   id: string; full_name: string | null; avatar_url: string | null
-  role: 'admin' | 'user'; is_suspended: boolean; created_at: string
+  role: 'admin' | 'client' | 'user'; is_suspended: boolean; created_at: string
 }
 
 export default function SettingsPage() {

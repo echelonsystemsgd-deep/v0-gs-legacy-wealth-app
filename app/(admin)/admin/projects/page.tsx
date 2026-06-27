@@ -14,7 +14,10 @@ import {
   LayoutList,
   LayoutGrid,
   CheckCircle2,
+  Info,
 } from 'lucide-react'
+import { useInspector } from '@/hooks/use-inspector'
+import { usePathname } from 'next/navigation'
 
 type Project = {
   id: string
@@ -41,7 +44,19 @@ const STATUS_COLORS: Record<string, string> = {
 export default function ProjectsPage() {
   const supabase = createClient()
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { setIsOpen: setInspectorOpen } = useInspector()
+
+  const handleInspectProject = (projectId: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('projectId', projectId)
+    params.delete('leadId')
+    params.delete('clientId')
+    router.push(`${pathname}?${params.toString()}`)
+    setInspectorOpen(true)
+  }
+
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<'kanban' | 'list'>('kanban')
@@ -228,18 +243,45 @@ export default function ProjectsPage() {
                       <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground/50">
                         No projects
                       </div>
-                    ) : cols.map((p) => (
-                      <Link key={p.id} href={`/admin/projects/${p.id}`} className="block p-4 glass rounded-xl border border-gold/10 hover:border-gold/25 transition-all group space-y-2">
-                        <p className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors line-clamp-1">{p.project_name}</p>
-                        <p className="text-xs text-muted-foreground">{p.client_name}</p>
-                        {p.target_launch_date && (
-                          <div className="flex items-center gap-1 text-xxs text-muted-foreground/70">
-                            <Calendar size={10} />
-                            {new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    ) : cols.map((p) => {
+                      const isInspected = searchParams.get('projectId') === p.id
+                      return (
+                        <div
+                          key={p.id}
+                          onClick={() => router.push(`/admin/projects/${p.id}`)}
+                          className={`block p-4 glass rounded-xl border transition-all group space-y-2 cursor-pointer ${
+                            isInspected 
+                              ? 'border-gold bg-gold/[0.02] shadow-[0_0_15px_rgba(212,175,55,0.06)]' 
+                              : 'border-gold/10 hover:border-gold/25'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start gap-2">
+                            <p className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors line-clamp-1">{p.project_name}</p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleInspectProject(p.id)
+                              }}
+                              className={`p-1 rounded border shrink-0 transition-all cursor-pointer ${
+                                isInspected 
+                                  ? 'bg-gold/20 border-gold text-gold' 
+                                  : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'
+                              }`}
+                              title="Inspect Project Telemetry"
+                            >
+                              <Info size={11} />
+                            </button>
                           </div>
-                        )}
-                      </Link>
-                    ))}
+                          <p className="text-xs text-muted-foreground">{p.client_name}</p>
+                          {p.target_launch_date && (
+                            <div className="flex items-center gap-1 text-xxs text-muted-foreground/70">
+                              <Calendar size={10} />
+                              {new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               )
@@ -264,36 +306,52 @@ export default function ProjectsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gold/5">
-                  {projects.map((p) => (
-                    <tr 
-                      key={p.id} 
-                      onClick={() => router.push(`/admin/projects/${p.id}`)}
-                      className="hover:bg-white/2 transition-colors group cursor-pointer"
-                    >
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
-                        <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
-                      </td>
-                      <td className="px-4 py-4 hidden md:table-cell">
-                        <p className="text-sm text-foreground">{p.client_name}</p>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`inline-block px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[p.status]}`}>
-                          {p.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 hidden lg:table-cell">
-                        <p className="text-sm text-muted-foreground">
-                          {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                        </p>
-                      </td>
-                      <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
-                        <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
-                          <ChevronRight size={15} />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+                  {projects.map((p) => {
+                    const isInspected = searchParams.get('projectId') === p.id
+                    return (
+                      <tr 
+                        key={p.id} 
+                        onClick={() => router.push(`/admin/projects/${p.id}`)}
+                        className={`hover:bg-white/2 transition-colors group cursor-pointer ${
+                          isInspected 
+                            ? 'bg-gold/[0.03] border-l-2 border-l-gold shadow-[inset_3px_0_0_rgba(212,175,55,1)]' 
+                            : ''
+                        }`}
+                      >
+                        <td className="px-6 py-4">
+                          <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
+                          <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
+                        </td>
+                        <td className="px-4 py-4 hidden md:table-cell">
+                          <p className="text-sm text-foreground">{p.client_name}</p>
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`inline-block px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[p.status]}`}>
+                            {p.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 hidden lg:table-cell">
+                          <p className="text-sm text-muted-foreground">
+                            {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                          </p>
+                        </td>
+                        <td className="px-4 py-4 border-l border-transparent" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center gap-2 justify-end">
+                            <button
+                              onClick={() => handleInspectProject(p.id)}
+                              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all shrink-0 cursor-pointer ${isInspected ? 'bg-gold/25 border-gold text-gold shadow-md' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'}`}
+                              title="Inspect Project Telemetry"
+                            >
+                              <Info size={13} />
+                            </button>
+                            <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
+                              <ChevronRight size={15} />
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

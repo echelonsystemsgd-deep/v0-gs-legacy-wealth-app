@@ -3,8 +3,16 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 export function CTA() {
+  const { getSection } = useWebsiteContent()
+  const data = getSection('cta', {
+    headline: "Ready to Assert Market Control?",
+    subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting only 2 new integration partnerships this month (Cohort capacity at 80%).",
+    buttonText: "Initiate Clinical Audit"
+  })
+
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">
       {/* Background Radial Glow */}
@@ -24,7 +32,7 @@ export function CTA() {
           transition={{ duration: 0.5 }}
           className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance max-w-3xl"
         >
-          Ready to Assert Market Control?
+          {data.headline}
         </motion.h2>
 
         {/* Subheadline */}
@@ -35,7 +43,7 @@ export function CTA() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="font-sans text-base sm:text-lg text-text-primary opacity-90 max-w-xl leading-relaxed"
         >
-          We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting only 2 new integration partnerships this month (Cohort capacity at 80%).
+          {data.subheadline}
         </motion.p>
 
         {/* Single CTA Button */}
@@ -52,7 +60,7 @@ export function CTA() {
             className="w-full sm:w-auto px-10 py-7"
           >
             <Link href="/book">
-              Initiate Clinical Audit
+              {data.buttonText}
             </Link>
           </Button>
         </motion.div>

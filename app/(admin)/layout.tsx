@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/server'
 import { NotificationCenter } from '@/components/admin/notification-center'
 import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdown'
 import { InspectorProvider } from '@/hooks/use-inspector'
-import { PortalHub } from '@/components/dashboard/portal-hub'
 import { InspectorPanel } from '@/components/dashboard/inspector-panel'
 import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
 
@@ -37,9 +36,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="absolute top-0 left-64 w-[500px] h-[500px] rounded-full bg-gold/3 blur-[160px]" />
           <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-gold/2 blur-[120px]" />
         </div>
-
-        {/* Zone 1: Switcher */}
-        <PortalHub />
 
         {/* Zone 2: Navigation */}
         <AdminSidebar />

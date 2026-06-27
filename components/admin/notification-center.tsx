@@ -35,150 +35,141 @@ export function NotificationCenter() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Subscribe to real-time events on leads, strategy_sessions, and messages tables
+  // Subscribe to real-time events on user_notifications table and load existing history
   useEffect(() => {
     let currentAdminId: string | null = null
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) currentAdminId = data.user.id
-    })
 
-    // 1. Subscribe to new leads
-    const leadsChannel = supabase
-      .channel('realtime_leads')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'leads' },
-        (payload) => {
-          const newLead = payload.new
-          const item: NotificationItem = {
-            id: newLead.id || `lead-${Date.now()}`,
-            type: 'lead',
-            title: 'New Lead Submission',
-            description: `${newLead.name} from ${newLead.business_name || 'N/A'}`,
-            timestamp: new Date(),
-            isRead: false,
-            link: `/admin/leads/${newLead.id}`
-          }
-          setNotifications((prev) => [item, ...prev])
-          toast.success('New Lead Submission', {
-            description: `${newLead.name} from ${newLead.business_name || 'N/A'}`,
-            action: {
-              label: 'View',
-              onClick: () => router.push(`/admin/leads/${newLead.id}`)
-            }
-          })
+    async function loadNotifications() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      currentAdminId = user.id
+
+      // Fetch user_notifications
+      const { data, error } = await supabase
+        .from('user_notifications')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+      if (error) {
+        console.error('Error fetching notifications:', error.message)
+        return
+      }
+
+      const mapped: NotificationItem[] = (data ?? []).map((n) => {
+        let type: 'lead' | 'booking' | 'message' = 'message'
+        if (n.link?.includes('/leads/')) type = 'lead'
+        else if (n.link?.includes('/bookings')) type = 'booking'
+        return {
+          id: n.id,
+          type,
+          title: n.title,
+          description: n.description,
+          timestamp: new Date(n.created_at),
+          isRead: n.is_read,
+          link: n.link || '#'
         }
-      )
-      .subscribe()
+      })
+      setNotifications(mapped)
+    }
 
-    // 2. Subscribe to new bookings
-    const bookingsChannel = supabase
-      .channel('realtime_bookings')
+    loadNotifications()
+
+    // Subscribe to realtime changes in user_notifications table
+    const channel = supabase
+      .channel('realtime_user_notifications')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'strategy_sessions' },
+        { event: '*', schema: 'public', table: 'user_notifications' },
         async (payload) => {
-          const newBooking = payload.new
-          // Query details of lead/client name if possible, or fallback to general label
-          let attendeeName = 'Client/Lead'
-          if (newBooking.lead_id) {
-            const { data } = await supabase
-              .from('leads')
-              .select('name')
-              .eq('id', newBooking.lead_id)
-              .maybeSingle()
-            if (data?.name) attendeeName = data.name
-          } else if (newBooking.client_id) {
-            const { data } = await supabase
-              .from('profiles')
-              .select('full_name')
-              .eq('id', newBooking.client_id)
-              .maybeSingle()
-            if (data?.full_name) attendeeName = data.full_name
-          }
+          const { data: { user } } = await supabase.auth.getUser()
+          if (!user) return
 
-          const item: NotificationItem = {
-            id: newBooking.id || `booking-${Date.now()}`,
-            type: 'booking',
-            title: 'New Strategy Session',
-            description: `Session booked by ${attendeeName}`,
-            timestamp: new Date(newBooking.scheduled_at),
-            isRead: false,
-            link: '/admin/bookings'
-          }
-          setNotifications((prev) => [item, ...prev])
-          toast.info('New Strategy Session', {
-            description: `Booked by ${attendeeName}`,
-            action: {
-              label: 'View',
-              onClick: () => router.push('/admin/bookings')
+          if (payload.eventType === 'INSERT') {
+            const newNotif = payload.new as any
+            if (newNotif.user_id !== user.id) return
+
+            let type: 'lead' | 'booking' | 'message' = 'message'
+            if (newNotif.link?.includes('/leads/')) type = 'lead'
+            else if (newNotif.link?.includes('/bookings')) type = 'booking'
+
+            const item: NotificationItem = {
+              id: newNotif.id,
+              type,
+              title: newNotif.title,
+              description: newNotif.description,
+              timestamp: new Date(newNotif.created_at),
+              isRead: newNotif.is_read,
+              link: newNotif.link || '#'
             }
-          })
-        }
-      )
-      .subscribe()
 
-    // 3. Subscribe to new messages
-    const messagesChannel = supabase
-      .channel('realtime_admin_messages')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        async (payload) => {
-          const newMsg = payload.new as any
-          if (currentAdminId && newMsg.sender_id === currentAdminId) return
+            setNotifications((prev) => [item, ...prev])
 
-          // Query sender profile and project details
-          const [senderRes, projectRes] = await Promise.all([
-            supabase.from('profiles').select('full_name').eq('id', newMsg.sender_id).maybeSingle(),
-            supabase.from('projects').select('project_name').eq('id', newMsg.project_id).maybeSingle(),
-          ])
-
-          const senderName = senderRes.data?.full_name || 'Client'
-          const projectName = projectRes.data?.project_name || 'Project'
-
-          const item: NotificationItem = {
-            id: newMsg.id || `msg-${Date.now()}`,
-            type: 'message',
-            title: `New Message from ${senderName}`,
-            description: `[${projectName}]: ${newMsg.content}`,
-            timestamp: new Date(),
-            isRead: false,
-            link: '/admin/messages'
-          }
-          setNotifications((prev) => [item, ...prev])
-          toast.info(`Message from ${senderName}`, {
-            description: `[${projectName}]: ${newMsg.content}`,
-            action: {
-              label: 'Reply',
-              onClick: () => router.push('/admin/messages')
+            // Trigger sonner toast
+            if (type === 'lead') {
+              toast.success(newNotif.title, {
+                description: newNotif.description,
+                action: {
+                  label: 'View',
+                  onClick: () => router.push(newNotif.link || '/admin/leads')
+                }
+              })
+            } else {
+              toast.info(newNotif.title, {
+                description: newNotif.description,
+                action: {
+                  label: 'View',
+                  onClick: () => router.push(newNotif.link || '/admin')
+                }
+              })
             }
-          })
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedNotif = payload.new as any
+            if (updatedNotif.user_id !== user.id) return
+
+            setNotifications((prev) =>
+              prev.map((n) =>
+                n.id === updatedNotif.id ? { ...n, isRead: updatedNotif.is_read } : n
+              )
+            )
+          } else if (payload.eventType === 'DELETE') {
+            const deletedNotif = payload.old as any
+            setNotifications((prev) => prev.filter((n) => n.id !== deletedNotif.id))
+          }
         }
       )
       .subscribe()
 
     return () => {
-      supabase.removeChannel(leadsChannel)
-      supabase.removeChannel(bookingsChannel)
-      supabase.removeChannel(messagesChannel)
+      supabase.removeChannel(channel)
     }
-  }, [supabase])
+  }, [supabase, router])
 
   const unreadCount = notifications.filter((n) => !n.isRead).length
 
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
+  const markAllAsRead = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase
+      .from('user_notifications')
+      .update({ is_read: true })
+      .eq('user_id', user.id)
   }
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    )
+  const markAsRead = async (id: string) => {
+    await supabase
+      .from('user_notifications')
+      .update({ is_read: true })
+      .eq('id', id)
   }
 
-  const clearAll = () => {
-    setNotifications([])
+  const clearAll = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase
+      .from('user_notifications')
+      .delete()
+      .eq('user_id', user.id)
   }
 
   return (

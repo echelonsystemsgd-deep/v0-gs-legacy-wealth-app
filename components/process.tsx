@@ -3,40 +3,46 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown, Sparkles } from "lucide-react"
-
-const steps = [
-  {
-    number: "01",
-    title: "Forensic Operational Audit",
-    sub: "Identifying system leakage and administrative drag.",
-    details: "We dissect your operations to isolate where human friction costs you margins. We do not do casual chats; we execute a forensic analysis of your current systems.",
-    deliverable: "Automation Opportunity Report"
-  },
-  {
-    number: "02",
-    title: "Architecture & Blueprint",
-    sub: "Designing custom pipelines built for leverage.",
-    details: "We map out the system architecture, CRM pipeline routes, and design blueprints. You receive an absolute layout showing exactly where manual labor is permanently replaced.",
-    deliverable: "Bespoke System Architecture Blueprint"
-  },
-  {
-    number: "03",
-    title: "Bespoke Integration & Build",
-    sub: "Developing customized assets with zero templates.",
-    details: "We code your custom high-converting web presence and build automated pipelines. Zero template boilerplate. We build for maximum throughput and test for absolute resilience.",
-    deliverable: "Verified Production Platform & AI Hub Sync"
-  },
-  {
-    number: "04",
-    title: "Telemetric Handover",
-    sub: "Transitioning control with full telemetry setups.",
-    details: "We deploy the systems live under full validation. You receive complete telemetry dashboards and operational training. We don't hand over a draft; we deliver a high-yield asset.",
-    deliverable: "Scalable Infrastructure & 30-Day Launch Care"
-  },
-]
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 export function Process() {
   const [expandedIndex, setExpandedIndex] = useState<number>(0)
+  const { getSection } = useWebsiteContent()
+
+  const data = getSection('process', {
+    eyebrow: "Our Process",
+    headline: "The Execution Protocol",
+    steps: [
+      {
+        number: "01",
+        title: "Forensic Operational Audit",
+        sub: "Identifying system leakage and administrative drag.",
+        details: "We dissect your operations to isolate where human friction costs you margins. We do not do casual chats; we execute a forensic analysis of your current systems.",
+        deliverable: "Automation Opportunity Report"
+      },
+      {
+        number: "02",
+        title: "Architecture & Blueprint",
+        sub: "Designing custom pipelines built for leverage.",
+        details: "We map out the system architecture, CRM pipeline routes, and design blueprints. You receive an absolute layout showing exactly where manual labor is permanently replaced.",
+        deliverable: "Bespoke System Architecture Blueprint"
+      },
+      {
+        number: "03",
+        title: "Bespoke Integration & Build",
+        sub: "Developing customized assets with zero templates.",
+        details: "We code your custom high-converting web presence and build automated pipelines. Zero template boilerplate. We build for maximum throughput and test for absolute resilience.",
+        deliverable: "Verified Production Platform & AI Hub Sync"
+      },
+      {
+        number: "04",
+        title: "Telemetric Handover",
+        sub: "Transitioning control with full telemetry setups.",
+        details: "We deploy the systems live under full validation. You receive complete telemetry dashboards and operational training. We don't hand over a draft; we deliver a high-yield asset.",
+        deliverable: "Scalable Infrastructure & 30-Day Launch Care"
+      }
+    ]
+  })
 
   return (
     <section id="process" className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">
@@ -48,16 +54,16 @@ export function Process() {
         {/* Section Header */}
         <div className="text-center mb-20">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            Our Process
+            {data.eyebrow}
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            The Execution Protocol
+            {data.headline}
           </h2>
         </div>
 
         {/* Vertical Accordion Stack */}
         <div className="space-y-4">
-          {steps.map((step, index) => {
+          {Array.isArray(data.steps) && data.steps.map((step: any, index: number) => {
             const isOpen = index === expandedIndex
             return (
               <div 

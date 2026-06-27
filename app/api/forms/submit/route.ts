@@ -113,14 +113,17 @@ export async function POST(request: Request) {
 
         if (dbError) {
           console.error('Database write failed:', dbError.message)
+          return NextResponse.json({ error: `Database write failed: ${dbError.message}` }, { status: 500 })
         } else {
           dbSaved = true
         }
       } catch (err: any) {
         console.error('Unhandled database error during lead submission:', err.message || err)
+        return NextResponse.json({ error: `Database error: ${err.message || err}` }, { status: 500 })
       }
     } else {
       console.warn('Supabase admin client not initialized. Missing environment variables. Skipping database persistence.')
+      return NextResponse.json({ error: 'Database client not initialized. Verify SUPABASE_SERVICE_ROLE_KEY and URL in environment configuration.' }, { status: 500 })
     }
 
     // 2. Email Notifications (Transactional via Resend)

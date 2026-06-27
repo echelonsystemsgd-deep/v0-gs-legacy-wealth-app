@@ -1,11 +1,27 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useWebsiteContent } from "@/hooks/use-website-content"
 
 export function Hero() {
+  const { getSection } = useWebsiteContent()
+  const data = getSection('hero', {
+    eyebrow: "Bespoke Digital Infrastructure & Autonomic Systems",
+    headline: "We Build Digital Systems for Category Leaders. The Rest Chase Them.",
+    subheadline: "We do not build generic templates. We engineer high-performance visual platforms and automated pipelines for enterprises that require absolute leverage. Selectively aligned. Flawlessly executed.",
+    primaryCtaText: "Apply for System Audit",
+    secondaryCtaText: "See Our Work",
+    trustItems: [
+      "10+ Bespoke Deployments",
+      "Autonomic Orchestrations",
+      "Fluid Mobile Architecture",
+      "Guaranteed Throughput"
+    ]
+  })
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-bg-primary">
       {/* Background Radial Glow */}
@@ -25,7 +41,7 @@ export function Hero() {
           className="inline-flex items-center gap-2 mb-6"
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            Bespoke Digital Infrastructure & Autonomic Systems
+            {data.eyebrow}
           </span>
         </motion.div>
 
@@ -36,7 +52,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary leading-[1.15] text-balance mb-8 max-w-4xl"
         >
-          We Build Digital Systems for Category Leaders. The Rest Chase Them.
+          {data.headline}
         </motion.h1>
 
         {/* Subheadline */}
@@ -46,7 +62,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="font-sans text-base sm:text-lg text-text-primary opacity-90 max-w-[580px] leading-relaxed mb-10"
         >
-          We do not build generic templates. We engineer high-performance visual platforms and automated pipelines for enterprises that require absolute leverage. Selectively aligned. Flawlessly executed.
+          {data.subheadline}
         </motion.p>
 
         {/* Two CTA Buttons Side by Side */}
@@ -63,7 +79,7 @@ export function Hero() {
               className="w-full sm:w-auto px-8 py-7"
             >
               <Link href="/book" className="flex items-center justify-center gap-2">
-                Apply for System Audit
+                {data.primaryCtaText}
                 <ArrowRight size={16} />
               </Link>
             </Button>
@@ -74,7 +90,7 @@ export function Hero() {
               variant="outline"
               className="w-full sm:w-auto px-8 py-7"
             >
-              <Link href="/portfolio">See Our Work</Link>
+              <Link href="/portfolio">{data.secondaryCtaText}</Link>
             </Button>
           </div>
           <Link href="/process" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-2">
@@ -89,21 +105,11 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-text-secondary border-t border-border-brand/20 pt-8 w-full max-w-3xl"
         >
-          <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> 10+ Bespoke Deployments
-          </span>
-          <span className="hidden sm:inline text-white/20">|</span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> Autonomic Orchestrations
-          </span>
-          <span className="hidden sm:inline text-white/20">|</span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> Fluid Mobile Architecture
-          </span>
-          <span className="hidden sm:inline text-white/20">|</span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-accent-gold">✦</span> Guaranteed Throughput
-          </span>
+          {Array.isArray(data.trustItems) && data.trustItems.map((item: string, idx: number) => (
+            <span key={idx} className="flex items-center gap-1.5">
+              <span className="text-accent-gold">✦</span> {item}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
