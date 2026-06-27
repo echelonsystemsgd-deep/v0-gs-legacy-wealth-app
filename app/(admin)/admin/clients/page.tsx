@@ -32,7 +32,10 @@ import {
   X,
   ShieldAlert,
   Eye,
+  Activity,
+  LayoutGrid,
 } from 'lucide-react'
+import { ClientHealthGrid, type ProjectWithHealth, getHealthLabel } from '@/components/admin/client-health-grid'
 
 // Define Types
 type ClientProfile = {
@@ -103,6 +106,19 @@ export default function ClientsPage() {
   const [clientSessions, setClientSessions] = useState<StrategySession[]>([])
   const [showViewModal, setShowViewModal] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+
+  // View state: directory or health board
+  const [activeView, setActiveView] = useState<'directory' | 'health'>('directory')
+
+  // Health board filter
+  const [healthSearch, setHealthSearch] = useState('')
+  const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Needs Attention' | 'On Track'>('All')
+
+  // Messages (for health board unread counts)
+  const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string }[]>([])
+
+  // Action requests (for health board detail modals)
+  const [dbActionRequests, setDbActionRequests] = useState<any[]>([])
 
   // Edit / Add client form
   const [showAddModal, setShowAddModal] = useState(false)
@@ -175,6 +191,18 @@ export default function ClientsPage() {
       if (lErr) throw lErr
       setDbLeads((leads as any) ?? [])
 
+      // 5. Fetch messages for health board unread counts
+      const { data: msgs } = await supabase
+        .from('messages')
+        .select('id, project_id, sender_id')
+      setAllMessages((msgs as any) ?? [])
+
+      // 6. Fetch action requests
+      const { data: actionReqs } = await supabase
+        .from('project_action_requests')
+        .select('id, project_id, title, description, status, client_response, submitted_at, created_at')
+      setDbActionRequests((actionReqs as any) ?? [])
+
     } catch (err: any) {
       triggerToast(`Database fetch error: ${err.message}`)
     } finally {
@@ -185,6 +213,16 @@ export default function ClientsPage() {
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  // Sync tab switcher view parameter
+  const viewParam = searchParams.get('view')
+  useEffect(() => {
+    if (viewParam === 'health') {
+      setActiveView('health')
+    } else {
+      setActiveView('directory')
+    }
+  }, [viewParam])
 
   // Map sub-relations when a client is selected
   useEffect(() => {
@@ -454,6 +492,53 @@ export default function ClientsPage() {
     }
   }
 
+  // ── Health board data (computed from directory data) ──────────────────────
+  const healthClients: ProjectWithHealth[] = useMemo(() => {
+    const clientProfiles = dbClients.filter(c => c.role === 'client')
+    const activeProjects = dbProjects.filter(p => !(p as any).is_archived)
+
+    // Unread = messages whose sender is not the current admin
+    const unreadByProject: Record<string, number> = {}
+    for (const msg of allMessages) {
+      if (msg.sender_id !== currentUserId) {
+        unreadByProject[msg.project_id] = (unreadByProject[msg.project_id] || 0) + 1
+      }
+    }
+
+    return activeProjects.map(project => {
+      const clientProfile = clientProfiles.find(c => c.id === project.client_id)
+      const projRequests = dbActionRequests.filter(req => req.project_id === project.id)
+
+      return {
+        id: project.id,
+        project_name: project.project_name,
+        client_name: project.client_name,
+        status: project.status,
+        client_id: project.client_id,
+        updated_at: (project as any).updated_at || new Date().toISOString(),
+        unreadMessageCount: unreadByProject[project.id] || 0,
+        daysSinceLastMessage: null,
+        clientAvatarUrl: clientProfile?.avatar_url || null,
+        actionRequests: projRequests,
+      } as ProjectWithHealth
+    })
+  }, [dbClients, dbProjects, allMessages, dbActionRequests, currentUserId])
+
+  const filteredHealthClients = useMemo(() => {
+    return healthClients.filter(c => {
+      const matchSearch =
+        !healthSearch ||
+        c.client_name.toLowerCase().includes(healthSearch.toLowerCase()) ||
+        c.project_name.toLowerCase().includes(healthSearch.toLowerCase()) ||
+        c.status.toLowerCase().includes(healthSearch.toLowerCase())
+
+      const label = getHealthLabel(c)
+      const matchFilter = healthFilter === 'All' || label === healthFilter
+
+      return matchSearch && matchFilter
+    })
+  }, [healthClients, healthSearch, healthFilter])
+
   return (
     <div className="space-y-6 sm:space-y-10 relative">
       {/* Toast Alert */}
@@ -486,10 +571,80 @@ export default function ClientsPage() {
         </div>
       </div>
 
+      {/* ── View Tab Switcher ──────────────────────────────────────────────── */}
+      <div className="flex items-center gap-1 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 w-fit">
+        <button
+          onClick={() => setActiveView('directory')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+            activeView === 'directory'
+              ? 'bg-gold/10 text-gold border border-gold/25'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <LayoutGrid size={12} />
+          Directory
+        </button>
+        <button
+          onClick={() => setActiveView('health')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+            activeView === 'health'
+              ? 'bg-gold/10 text-gold border border-gold/25'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <Activity size={12} />
+          Health Board
+          {healthClients.filter(c => getHealthLabel(c) !== 'On Track').length > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[9px] font-bold">
+              {healthClients.filter(c => getHealthLabel(c) !== 'On Track').length}
+            </span>
+          )}
+        </button>
+      </div>
+
       {loading ? (
         <div className="glass rounded-2xl border border-gold/10 p-16 flex flex-col items-center justify-center space-y-4">
           <RefreshCw size={36} className="text-gold animate-spin" />
           <p className="text-sm text-muted-foreground animate-pulse">Syncing directory profiles...</p>
+        </div>
+      ) : activeView === 'health' ? (
+        /* ── Health Board View ─────────────────────────────────────────────── */
+        <div className="space-y-4">
+          {/* Health board filters */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search size={14} className="absolute left-3.5 top-3 text-muted-foreground" />
+              <input
+                value={healthSearch}
+                onChange={(e) => setHealthSearch(e.target.value)}
+                placeholder="Search client name, project, or stage..."
+                className="w-full bg-card/60 border border-gold/10 hover:border-gold/20 rounded-xl pl-9 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-gold/10 transition-all"
+              />
+            </div>
+            <div className="flex items-center gap-1.5 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 flex-wrap">
+              {(['All', 'Blocked', 'Needs Attention', 'On Track'] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setHealthFilter(f)}
+                  className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    healthFilter === f
+                      ? f === 'Blocked'
+                        ? 'bg-red-500/15 text-red-400 border border-red-500/30'
+                        : f === 'Needs Attention'
+                        ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                        : f === 'On Track'
+                        ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+                        : 'bg-gold/10 text-gold border border-gold/25'
+                      : 'text-muted-foreground hover:text-foreground border border-transparent'
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <ClientHealthGrid clients={filteredHealthClients} />
         </div>
       ) : (
         <div className="space-y-4">

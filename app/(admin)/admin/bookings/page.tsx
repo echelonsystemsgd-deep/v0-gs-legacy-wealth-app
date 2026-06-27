@@ -360,7 +360,12 @@ export default function BookingsPage() {
     setShowBookingModal(false)
     setBookingForm({ id: '', targetType: 'lead', targetId: '', categoryId: '', date: '', time: '', notes: '' })
     if (searchParams.get('schedule') === 'true') {
-      router.replace('/admin/bookings')
+      const redirectTo = searchParams.get('redirect')
+      if (redirectTo) {
+        router.replace(redirectTo)
+      } else {
+        router.replace('/admin/bookings')
+      }
     }
   }
 

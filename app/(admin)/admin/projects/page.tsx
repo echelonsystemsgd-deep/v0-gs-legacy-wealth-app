@@ -114,7 +114,12 @@ export default function ProjectsPage() {
     const today = new Date().toISOString().split('T')[0]
     setForm({ client_name: '', project_name: '', service_type: '', description: '', notes: '', start_date: today, target_launch_date: '', contract_value: '', amount_paid: '', client_id: '' })
     if (searchParams.get('create') === 'true') {
-      router.replace('/admin/projects')
+      const redirectTo = searchParams.get('redirect')
+      if (redirectTo) {
+        router.replace(redirectTo)
+      } else {
+        router.replace('/admin/projects')
+      }
     }
   }
 
