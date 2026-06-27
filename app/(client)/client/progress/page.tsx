@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { FolderKanban, CheckCircle2, Circle, Sparkles, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { StageApprovalButton } from '@/components/client/stage-approval-button'
 
 type ProjectStage = {
   name: string
@@ -71,6 +72,16 @@ export default async function ClientProgressPage() {
     redirect('/login')
   }
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile) {
+    redirect('/login')
+  }
+
   const { data: project } = await supabase
     .from('projects')
     .select('*')
@@ -81,6 +92,17 @@ export default async function ClientProgressPage() {
     redirect('/client')
   }
 
+  // Fetch approvals for the project
+  let approvals: any[] = []
+  if (project) {
+    const { data: appData } = await supabase
+      .from('project_approvals')
+      .select('*, approved_by_profile:profiles(first_name, last_name, full_name)')
+      .eq('project_id', project.id)
+    approvals = appData ?? []
+  }
+
+  const greetingName = profile.first_name || profile.full_name || 'Client'
   const statusList = STAGES.map(s => s.key)
   const currentStageIndex = statusList.indexOf(project.status)
 
@@ -102,11 +124,13 @@ export default async function ClientProgressPage() {
       {/* Checklist Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
         {/* Timeline checklist */}
-        <section className="lg:col-span-2 space-y-6">
+        <section data-tour="progress-timeline" className="lg:col-span-2 space-y-6">
           {STAGES.map((stage, idx) => {
             const isCompleted = idx < currentStageIndex
             const isActive = idx === currentStageIndex
             const isPending = idx > currentStageIndex
+            const isApproved = approvals.some((a) => a.stage === stage.key)
+            const stageApproval = approvals.find((a) => a.stage === stage.key)
 
             return (
               <div
@@ -119,7 +143,7 @@ export default async function ClientProgressPage() {
                       : 'border-transparent bg-transparent opacity-40'
                 }`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <h2 className="text-lg font-serif font-bold text-foreground">
                       {stage.name}
@@ -128,19 +152,35 @@ export default async function ClientProgressPage() {
                       {stage.subtitle}
                     </p>
                   </div>
-                  {isCompleted ? (
-                    <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-gold shrink-0">
-                      <CheckCircle2 size={16} />
-                    </div>
-                  ) : isActive ? (
-                    <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/50 flex items-center justify-center text-gold shrink-0 animate-pulse">
-                      <CheckCircle2 size={16} />
-                    </div>
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground/30 shrink-0">
-                      <Circle size={16} />
-                    </div>
-                  )}
+                  
+                  <div className="flex items-center gap-3">
+                    {/* Status Circle */}
+                    {isCompleted ? (
+                      <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-gold shrink-0">
+                        <CheckCircle2 size={16} />
+                      </div>
+                    ) : isActive ? (
+                      <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/50 flex items-center justify-center text-gold shrink-0 animate-pulse">
+                        <CheckCircle2 size={16} />
+                      </div>
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground/30 shrink-0">
+                        <Circle size={16} />
+                      </div>
+                    )}
+
+                    {/* Phase Sign-Off Node */}
+                    {(isCompleted || isActive) && (
+                      <StageApprovalButton
+                        projectId={project.id}
+                        clientId={user.id}
+                        stage={stage.key}
+                        isApproved={isApproved}
+                        approval={stageApproval}
+                        clientName={greetingName}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <p className="text-sm text-muted-foreground leading-relaxed mt-3">

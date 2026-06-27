@@ -26,6 +26,7 @@ import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
   { href: '/client', label: 'Overview', icon: LayoutDashboard },
+  { href: '/client/actions', label: 'Action Required', icon: ShieldAlert },
   { href: '/client/progress', label: 'Project Progress', icon: FolderKanban },
   { href: '/client/website', label: 'My Website', icon: Globe },
   { href: '/client/updates', label: 'Updates', icon: Clock },
@@ -244,6 +245,15 @@ export function ClientSidebar() {
 
         {/* Footer / Sign Out */}
         <div className="px-3 py-4 border-t border-gold/10">
+          <button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('trigger-portal-tour'))
+              handleLinkClick()
+            }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all mb-1.5 cursor-pointer font-sans"
+          >
+            <span>(?) Replay Console Tour</span>
+          </button>
           <Link
             href="/"
             onClick={handleLinkClick}

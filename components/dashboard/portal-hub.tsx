@@ -56,13 +56,16 @@ export function PortalHub() {
       icon: Terminal,
       active: pathname.startsWith('/dashboard'),
     },
-    {
+  ]
+
+  if (role === 'client' || role === 'admin') {
+    navItems.push({
       href: '/client',
       label: 'Sovereign Partner Console',
       icon: Briefcase,
       active: pathname.startsWith('/client'),
-    },
-  ]
+    })
+  }
 
   if (role === 'admin') {
     navItems.push({

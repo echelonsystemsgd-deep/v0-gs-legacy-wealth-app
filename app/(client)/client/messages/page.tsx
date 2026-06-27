@@ -69,7 +69,7 @@ export default async function ClientMessagesPage() {
         </p>
       </div>
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0" data-tour="messages-chat">
         <MessagesClientContainer
           projectId={project.id}
           clientId={user.id}

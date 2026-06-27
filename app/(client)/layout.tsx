@@ -8,6 +8,8 @@ import { UserProfileDropdown } from '@/components/dashboard/user-profile-dropdow
 import { InspectorProvider } from '@/hooks/use-inspector'
 import { InspectorPanel } from '@/components/dashboard/inspector-panel'
 import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
+import { PortalTour } from '@/components/client/portal-tour'
+import { TourTrigger } from '@/components/client/tour-trigger'
 
 export const metadata: Metadata = {
   title: 'Client Dashboard',
@@ -31,7 +33,8 @@ export default async function ClientLayout({ children }: { children: React.React
 
   return (
     <InspectorProvider>
-      <div className="min-h-screen bg-[#050505] text-foreground flex relative overflow-hidden">
+      <PortalTour />
+      <div className="h-screen bg-[#050505] text-foreground flex relative overflow-hidden">
         {/* Ambient background glows */}
         <div className="fixed inset-0 pointer-events-none z-0">
           {/* Royal Purple Glow */}
@@ -46,13 +49,15 @@ export default async function ClientLayout({ children }: { children: React.React
         <ClientSidebar />
 
         {/* Zone 3 & 4 Container */}
-        <div className="flex-1 flex flex-col min-w-0 relative z-10 min-h-screen">
+        <div className="flex-1 flex flex-col min-w-0 relative z-10 h-screen overflow-hidden">
           {/* Top bar */}
           <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/85 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
             <div className="w-10 lg:hidden shrink-0" />
             <div className="flex-1" />
             <div className="flex items-center gap-3.5">
               <InspectorToggle />
+              <div className="h-5 w-px bg-gold/10" />
+              <TourTrigger />
               <div className="h-5 w-px bg-gold/10" />
               <UserNotificationCenter userId={user.id} />
               <div className="h-5 w-px bg-gold/10" />
