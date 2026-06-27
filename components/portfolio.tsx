@@ -235,7 +235,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
             </div>
 
             <a
-              href={item.href}
+              href={item.href ?? undefined}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-[11px] text-accent/60 hover:text-accent transition-colors shrink-0 px-2 py-1 rounded-md hover:bg-white/5"
@@ -261,7 +261,7 @@ function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () 
               </div>
             )}
             <iframe
-              src={item.href}
+              src={item.href ?? undefined}
               title={item.title}
               className="w-full h-full border-0"
               onLoad={() => setIsLoading(false)}
