@@ -31,10 +31,19 @@ export default async function ClientLayout({ children }: { children: React.React
     redirect('/login')
   }
 
+  // Fetch project theme accent
+  const { data: project } = await supabase
+    .from('projects')
+    .select('theme_accent')
+    .eq('client_id', user.id)
+    .maybeSingle()
+
+  const themeClass = project?.theme_accent ? `theme-${project.theme_accent}` : 'theme-gold'
+
   return (
     <InspectorProvider>
       <PortalTour />
-      <div className="h-screen bg-[#050505] text-foreground flex relative overflow-hidden">
+      <div className={`h-screen bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass}`}>
         {/* Ambient background glows */}
         <div className="fixed inset-0 pointer-events-none z-0">
           {/* Royal Purple Glow */}

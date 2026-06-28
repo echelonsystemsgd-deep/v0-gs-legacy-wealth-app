@@ -28,8 +28,8 @@ export function AdminAlertBanner({
     alertLink = '/admin/messages'
     alertIcon = <MessageSquare size={14} className="text-gold shrink-0" />
   } else if (pendingApprovalsCount > 0) {
-    alertMessage = `${pendingApprovalsCount} stage approval${pendingApprovalsCount > 1 ? 's' : ''} pending client sign-off`
-    alertLink = '/admin/clients?view=health'
+    alertMessage = `${pendingApprovalsCount} client submission${pendingApprovalsCount > 1 ? 's' : ''} awaiting your review`
+    alertLink = '/admin/projects'
     alertIcon = <CheckSquare size={14} className="text-gold shrink-0" />
   } else if (coldLeadsCount > 0) {
     alertMessage = `${coldLeadsCount} new lead${coldLeadsCount > 1 ? 's' : ''} cold for 48+ hours — action required`

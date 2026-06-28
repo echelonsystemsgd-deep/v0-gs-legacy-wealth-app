@@ -411,4 +411,41 @@ input[type="range"]::-moz-range-thumb:active {
   background: linear-gradient(to right, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.05) 50%, transparent 100%);
 }
 
+/* Micro-Theming Accent Classes */
+.theme-gold, :root:has(.theme-gold) {
+  --color-accent-gold: #C9A227;
+  --color-accent-gold-muted: #B8952A;
+  --color-text-gold: #d4b86a;
+  --color-border: #8B6914;
+  --color-gold: #C9A227;
+}
+
+.theme-emerald, :root:has(.theme-emerald) {
+  --color-accent-gold: #10B981;
+  --color-accent-gold-muted: #059669;
+  --color-text-gold: #34D399;
+  --color-border: #064E3B;
+  --color-gold: #10B981;
+  --color-border-brand: #064E3B;
+}
+
+.theme-sapphire, :root:has(.theme-sapphire) {
+  --color-accent-gold: #3B82F6;
+  --color-accent-gold-muted: #2563EB;
+  --color-text-gold: #60A5FA;
+  --color-border: #1E3A8A;
+  --color-gold: #3B82F6;
+  --color-border-brand: #1E3A8A;
+}
+
+.theme-obsidian, :root:has(.theme-obsidian) {
+  --color-accent-gold: #E2E8F0;
+  --color-accent-gold-muted: #94A3B8;
+  --color-text-gold: #CBD5E1;
+  --color-border: #334155;
+  --color-gold: #E2E8F0;
+  --color-border-brand: #334155;
+}
+
+
 

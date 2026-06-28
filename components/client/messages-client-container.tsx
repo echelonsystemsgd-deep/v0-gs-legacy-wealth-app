@@ -246,49 +246,70 @@ export function MessagesClientContainer({
             </div>
           </div>
         ) : (
-          messages.map((msg) => {
-            const isMe = msg.sender_id === clientId
-            const isWithin15Min = new Date().getTime() - new Date(msg.created_at).getTime() < 15 * 60 * 1000
-            return (
-              <div
-                key={msg.id}
-                className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    isMe
-                      ? 'bg-gold/10 border border-gold/25 text-foreground rounded-tr-none'
-                      : 'bg-[#1A0A2E]/50 border border-purple-500/25 text-foreground rounded-tl-none'
-                  }`}
-                >
-                  {/* Sender title */}
-                  <span className="text-[9px] font-bold text-gold/80 block uppercase tracking-widest mb-1">
-                    {isMe ? 'You' : 'Agency Support'}
+          (() => {
+            let lastDateStr = ''
+            return messages.map((msg) => {
+              const isMe = msg.sender_id === clientId
+              const isWithin15Min = new Date().getTime() - new Date(msg.created_at).getTime() < 15 * 60 * 1000
+              const msgDateObj = new Date(msg.created_at)
+              const messageDateStr = msgDateObj.toDateString()
+              const showDateHeader = lastDateStr !== messageDateStr
+              lastDateStr = messageDateStr
+
+              const isToday = messageDateStr === new Date().toDateString()
+              const formattedTime = isToday 
+                ? msgDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : `${msgDateObj.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}, ${msgDateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+
+              const displayDateHeader = showDateHeader ? (
+                <div className="flex items-center justify-center py-2 animate-in fade-in select-none w-full">
+                  <span className="px-3 py-1 rounded-full bg-black/60 border border-gold/10 text-[8px] font-bold text-gold uppercase tracking-widest font-mono">
+                    {isToday ? 'Today' : msgDateObj.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>
-                  
-                  {/* Content */}
-                  <p className="whitespace-pre-wrap">{msg.content}</p>
-                  
-                  {/* Time & Unsend */}
-                  <div className="flex justify-between items-center mt-1.5 gap-4">
-                    {isMe && isWithin15Min && (
-                      <button
-                        type="button"
-                        onClick={() => handleUnsendMessage(msg.id)}
-                        className="text-[8px] text-red-400/70 hover:text-red-400 transition-colors uppercase font-bold tracking-wider cursor-pointer"
-                        title="Unsend message"
-                      >
-                        Unsend
-                      </button>
-                    )}
-                    <span className="text-[8px] text-muted-foreground/50 block ml-auto font-mono">
-                      {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+                </div>
+              ) : null
+
+              return (
+                <div key={msg.id} className="space-y-3 w-full">
+                  {displayDateHeader}
+                  <div className={`flex w-full ${isMe ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                        isMe
+                          ? 'bg-gold/10 border border-gold/25 text-foreground rounded-tr-none'
+                          : 'bg-[#1A0A2E]/50 border border-purple-500/25 text-foreground rounded-tl-none'
+                      }`}
+                    >
+                      {/* Sender title */}
+                      <span className="text-[9px] font-bold text-gold/80 block uppercase tracking-widest mb-1">
+                        {isMe ? 'You' : 'Agency Support'}
+                      </span>
+                      
+                      {/* Content */}
+                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                      
+                      {/* Time & Unsend */}
+                      <div className="flex justify-between items-center mt-1.5 gap-4">
+                        {isMe && isWithin15Min && (
+                          <button
+                            type="button"
+                            onClick={() => handleUnsendMessage(msg.id)}
+                            className="text-[8px] text-red-400/70 hover:text-red-400 transition-colors uppercase font-bold tracking-wider cursor-pointer"
+                            title="Unsend message"
+                          >
+                            Unsend
+                          </button>
+                        )}
+                        <span className="text-[8px] text-muted-foreground/50 block ml-auto font-mono">
+                          {formattedTime}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })
+              )
+            })
+          })()
         )}
       </div>
 

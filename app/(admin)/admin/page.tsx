@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
   }
 
   // Group action requests by project
-  const requestsByProject: Record<string, typeof activeActionRequests> = {}
+  const requestsByProject: Record<string, any[]> = {}
   for (const req of activeActionRequests || []) {
     if (!requestsByProject[req.project_id]) {
       requestsByProject[req.project_id] = []
@@ -155,10 +155,10 @@ export default async function AdminDashboardPage() {
   })
 
   // Totals for alert banner + attention panel
-  // We count pending actions (waiting for client) and submitted actions (admin needs to review)
+  // We count only submitted actions (admin needs to review) for admin alerts
   const totalUnreadMessages = Object.values(unreadByProject).reduce((a, b) => a + b, 0)
-  const totalPendingActionRequests = (activeActionRequests || []).length
-  const hasAlerts = totalUnreadMessages > 0 || totalPendingActionRequests > 0 || (coldLeadsCount ?? 0) > 0 || (imminentSessionCount ?? 0) > 0
+  const totalSubmittedActionRequests = (activeActionRequests || []).filter((req) => req.status === 'submitted').length
+  const hasAlerts = totalUnreadMessages > 0 || totalSubmittedActionRequests > 0 || (coldLeadsCount ?? 0) > 0 || (imminentSessionCount ?? 0) > 0
 
   // Normalise today sessions type (Supabase may return leads as array)
   type TodaySession = { id: string; scheduled_at: string; leads: { name: string } | null }
@@ -171,6 +171,18 @@ export default async function AdminDashboardPage() {
   // KPI row financials need the original shape (without new fields)
   const kpiFinancials = (projectsFinancials || []).map(({ id, project_name, client_name, status, amount_paid, contract_value }) => ({
     id, project_name, client_name, status, amount_paid, contract_value,
+  }))
+
+  // Normalise recent payments type (projects relation might return array)
+  const safePayments = (recentPayments || []).map((p) => ({
+    id: p.id,
+    amount: p.amount,
+    notes: p.notes,
+    status: p.status,
+    created_at: p.created_at,
+    projects: Array.isArray(p.projects) 
+      ? (p.projects[0] || null) 
+      : (p.projects as { project_name: string } | null),
   }))
 
   return (
@@ -202,7 +214,7 @@ export default async function AdminDashboardPage() {
       {hasAlerts && (
         <AdminAlertBanner
           unreadMessagesCount={totalUnreadMessages}
-          pendingApprovalsCount={totalPendingActionRequests}
+          pendingApprovalsCount={totalSubmittedActionRequests}
           coldLeadsCount={coldLeadsCount ?? 0}
           imminentSessionCount={imminentSessionCount ?? 0}
         />
@@ -216,7 +228,7 @@ export default async function AdminDashboardPage() {
         projectsCount={projectsCount}
         sessionsCount={sessionsCount}
         projectsFinancials={kpiFinancials}
-        recentPayments={recentPayments}
+        recentPayments={safePayments}
       />
 
       {/* ── Today's Schedule Strip ───────────────────────────────────────────── */}
@@ -230,12 +242,12 @@ export default async function AdminDashboardPage() {
         <div className="space-y-6">
           <AttentionPanel
             unreadMessagesCount={totalUnreadMessages}
-            pendingApprovalsCount={totalPendingActionRequests}
+            pendingApprovalsCount={totalSubmittedActionRequests}
             coldLeadsCount={coldLeadsCount ?? 0}
             todaySessionCount={safeTodaySessions.length}
           />
           <TransactionsFeed
-            payments={recentPayments || []}
+            payments={safePayments}
             totalCollected={totalSales}
             totalContractValue={totalContractValue}
           />

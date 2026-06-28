@@ -36,6 +36,7 @@ import {
   LayoutGrid,
 } from 'lucide-react'
 import { ClientHealthGrid, type ProjectWithHealth, getHealthLabel } from '@/components/admin/client-health-grid'
+import { toast } from 'sonner'
 
 // Define Types
 type ClientProfile = {
@@ -87,7 +88,7 @@ export default function ClientsPage() {
   }
 
   const [loading, setLoading] = useState(false)
-  const [toast, setToast] = useState<string | null>(null)
+  const [modalTab, setModalTab] = useState<'activity' | 'profile' | 'security'>('activity')
 
   // Real Database States
   const [dbClients, setDbClients] = useState<ClientProfile[]>([])
@@ -112,7 +113,7 @@ export default function ClientsPage() {
 
   // Health board filter
   const [healthSearch, setHealthSearch] = useState('')
-  const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Needs Attention' | 'On Track'>('All')
+  const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Awaiting Client' | 'On Track'>('All')
 
   // Messages (for health board unread counts)
   const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string }[]>([])
@@ -138,8 +139,11 @@ export default function ClientsPage() {
   const [clientToDelete, setClientToDelete] = useState<ClientProfile | null>(null)
 
   const triggerToast = (msg: string) => {
-    setToast(msg)
-    setTimeout(() => setToast(null), 3000)
+    if (msg.toLowerCase().includes('failed') || msg.toLowerCase().includes('error')) {
+      toast.error(msg)
+    } else {
+      toast.success(msg)
+    }
   }
 
   // Fetch Database Data
@@ -340,9 +344,9 @@ export default function ClientsPage() {
       triggerToast('You cannot delete your own admin account.')
       return
     }
-    const expectedText = clientToDelete.company_name || clientToDelete.full_name || 'Confirm'
-    if (deleteConfirmText !== expectedText) {
-      triggerToast('Confirmation name does not match.')
+    const expectedText = (clientToDelete.email || '').trim().toLowerCase()
+    if (deleteConfirmText.trim().toLowerCase() !== expectedText) {
+      triggerToast('Confirmation email does not match.')
       return
     }
 
@@ -541,12 +545,6 @@ export default function ClientsPage() {
 
   return (
     <div className="space-y-6 sm:space-y-10 relative">
-      {/* Toast Alert */}
-      {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2">
-          <CheckCircle2 size={14} /> {toast}
-        </div>
-      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -622,7 +620,7 @@ export default function ClientsPage() {
               />
             </div>
             <div className="flex items-center gap-1.5 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 flex-wrap">
-              {(['All', 'Blocked', 'Needs Attention', 'On Track'] as const).map((f) => (
+              {(['All', 'Blocked', 'Awaiting Client', 'On Track'] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setHealthFilter(f)}
@@ -630,7 +628,7 @@ export default function ClientsPage() {
                     healthFilter === f
                       ? f === 'Blocked'
                         ? 'bg-red-500/15 text-red-400 border border-red-500/30'
-                        : f === 'Needs Attention'
+                        : f === 'Awaiting Client'
                         ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
                         : f === 'On Track'
                         ? 'bg-green-500/15 text-green-400 border border-green-500/30'
@@ -1038,56 +1036,56 @@ export default function ClientsPage() {
 
       {/* MODAL: DELETE SAFETY CONFIRMATION */}
       {showDeleteModal && clientToDelete && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md glass border border-red-500/20 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 relative z-10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-md glass border border-red-500/20 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 relative">
             <div className="flex justify-between items-center border-b border-red-500/15 pb-3">
-              <h2 className="font-serif text-lg font-bold text-red-400 flex items-center gap-2">
-                <ShieldAlert size={18} /> Permanent Account Deletion
+              <h2 className="font-serif text-base font-bold text-red-400 flex items-center gap-2">
+                <ShieldAlert size={16} /> Permanent Account Deletion
               </h2>
               <button
                 onClick={() => {
                   setShowDeleteModal(false)
                   setDeleteConfirmText('')
                 }}
-                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
+                className="text-muted-foreground hover:text-foreground text-xs cursor-pointer p-1 rounded-lg hover:bg-white/5 bg-transparent border-none"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3">
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Warning: Hard-deleting the profile for <strong className="text-foreground">{clientToDelete.full_name}</strong> will revoke all auth portal credentials, erase their profile record, and cascade-remove all associated projects, files, and CRM data.
+            <div className="space-y-3.5">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Warning: Hard-deleting the profile for <strong className="text-foreground">{clientToDelete.full_name || 'this client'}</strong> will permanently revoke all portal credentials and remove related project directories, files, and logs.
               </p>
-              <p className="text-xs text-muted-foreground">
-                To confirm this deletion, please type the company name or full name <strong className="text-foreground font-mono">"{clientToDelete.company_name || clientToDelete.full_name || 'Confirm'}"</strong> below:
+              <p className="text-[11px] text-muted-foreground">
+                To confirm this deletion, please type the client's email <strong className="text-foreground font-mono bg-white/5 px-1.5 py-0.5 rounded border border-white/5">"{clientToDelete.email}"</strong> below:
               </p>
               <input
                 type="text"
                 autoFocus
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
-                placeholder="Type confirmation here..."
-                className="w-full bg-background/60 border border-red-500/25 hover:border-red-500/40 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-mono relative z-20 pointer-events-auto"
+                placeholder="Type client's email here..."
+                className="w-full bg-background/60 border border-red-500/25 hover:border-red-500/40 rounded-xl px-4 py-2 text-xs text-foreground outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-mono"
               />
             </div>
 
-            <div className="pt-3 flex justify-end gap-3 border-t border-red-500/15">
+            <div className="pt-3 flex justify-end gap-2.5 border-t border-red-500/15">
               <button
                 type="button"
                 onClick={() => {
                   setShowDeleteModal(false)
                   setDeleteConfirmText('')
                 }}
-                className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                className="px-4 py-2 text-xxs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground bg-transparent border-none transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleDeleteClient}
-                disabled={loading || deleteConfirmText !== (clientToDelete.company_name || clientToDelete.full_name || 'Confirm')}
-                className="px-5 py-2 text-xs font-bold bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-background rounded-lg border border-red-500/30 hover:border-red-500 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                disabled={loading || deleteConfirmText.trim().toLowerCase() !== (clientToDelete.email || '').trim().toLowerCase()}
+                className="px-5 py-2 text-xxs font-bold bg-red-500/25 hover:bg-red-500 text-red-400 hover:text-background rounded-lg border border-red-500/30 hover:border-red-500 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {loading ? 'Deleting...' : 'Permanently Delete'}
               </button>
@@ -1098,343 +1096,386 @@ export default function ClientsPage() {
 
       {/* MODAL: VIEW CLIENT DETAILS */}
       {showViewModal && selectedClient && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-6 max-h-[90vh] overflow-y-auto relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-2xl glass border border-gold/25 rounded-2xl overflow-hidden shadow-2xl p-6 space-y-5 max-h-[90vh] overflow-y-auto relative">
             
             {/* Header */}
             <div className="flex justify-between items-start border-b border-gold/10 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
-                  <span className="text-lg font-bold text-gold">
+                <div className="w-11 h-11 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+                  <span className="text-base font-bold text-gold">
                     {selectedClient.full_name?.[0] || 'C'}
                   </span>
                 </div>
                 <div>
-                  <h2 className="font-serif text-xl font-bold text-foreground flex items-center gap-2">
+                  <h2 className="font-serif text-lg font-bold text-foreground flex items-center gap-2">
                     {selectedClient.full_name || 'Anonymous User'}
                   </h2>
-                  <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest mt-0.5">
+                  <p className="text-[9px] text-gold/70 font-semibold uppercase tracking-widest mt-0.5">
                     {selectedClient.company_name || 'Direct Business'}
                   </p>
                 </div>
               </div>
               <button
-                onClick={() => setShowViewModal(false)}
-                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5"
+                onClick={() => {
+                  setShowViewModal(false)
+                  setModalTab('activity')
+                }}
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5 bg-transparent border-none"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Profile Metrics Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-2.5">
-                <h3 className="font-semibold text-gold tracking-wider uppercase text-[10px] flex items-center gap-1.5">
-                  <UsersIcon size={11} /> Profile Details
-                </h3>
-                <div className="divide-y divide-gold/5 space-y-2">
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Access Role:</span>
-                    {renderRoleBadge(selectedClient.role)}
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Status:</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
-                      selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'
-                    }`}>
-                      {selectedClient.is_suspended ? 'Suspended' : 'Active'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Registered:</span>
-                    <span className="text-foreground font-medium">
-                      {new Date(selectedClient.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 bg-white/[0.02] border border-gold/10 rounded-xl space-y-2.5">
-                <h3 className="font-semibold text-gold tracking-wider uppercase text-[10px] flex items-center gap-1.5">
-                  <Mail size={11} /> Contact Information
-                </h3>
-                <div className="divide-y divide-gold/5 space-y-2">
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Email:</span>
-                    <span className="text-foreground font-medium truncate max-w-[160px]" title={selectedClient.email || ''}>
-                      {selectedClient.email || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Phone:</span>
-                    <span className="text-foreground font-medium">
-                      {selectedClient.phone_number || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-muted-foreground">Company:</span>
-                    <span className="text-foreground font-medium truncate max-w-[160px]">
-                      {selectedClient.company_name || 'N/A'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Role-Specific Content */}
-            <div className="space-y-4">
-              {selectedClient.role === 'client' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Associated Projects Section */}
-                  <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <FolderKanban size={12} /> Active Projects ({clientProjects.length})
-                    </h3>
-                    {clientProjects.length > 0 ? (
-                      <div className="space-y-2">
-                        {clientProjects.map((p) => (
-                          <div key={p.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">
-                                  {p.status}
-                                </span>
-                                <span className="text-[9px] text-muted-foreground">
-                                  Paid: £{p.amount_paid.toLocaleString()} / £{p.contract_value.toLocaleString()}
-                                </span>
-                              </div>
-                            </div>
-                            <Link
-                              href={`/admin/projects/${p.id}`}
-                              className="px-2.5 py-1 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 text-[9px] font-bold transition-all shrink-0 hover:shadow-sm"
-                            >
-                              View Project
-                            </Link>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                        No active build projects registered.
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Associated Bookings Section */}
-                  <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <Calendar size={12} /> Strategy Calls ({clientSessions.length})
-                    </h3>
-                    {clientSessions.length > 0 ? (
-                      <div className="space-y-2">
-                        {clientSessions.map((s) => (
-                          <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-foreground truncate">
-                                {s.session_categories?.name || 'Consultation Call'}
-                              </h4>
-                              <p className="text-[10px] text-muted-foreground mt-1 font-mono">
-                                {new Date(s.scheduled_at).toLocaleString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            </div>
-                            <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
-                              s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
-                              s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
-                            }`}>
-                              {s.status}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                        No strategy bookings logged.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {selectedClient.role === 'user' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Synced CRM Lead Details */}
-                  <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <Building size={12} /> Synced CRM Lead Details
-                    </h3>
-                    {(() => {
-                      const lead = dbLeads.find(l => l.email === selectedClient.email)
-                      if (lead) {
-                        return (
-                          <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5 text-xs font-sans">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Lead Status:</span>
-                              <span className="text-gold font-semibold">{lead.status}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Business:</span>
-                              <span className="text-foreground font-semibold">{lead.business_name || 'N/A'}</span>
-                            </div>
-                            {lead.website && (
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Website:</span>
-                                <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline flex items-center gap-1">
-                                  {lead.website.replace(/^https?:\/\//, '')} <ExternalLink size={10} />
-                                </a>
-                              </div>
-                            )}
-                            {lead.service_interested && (
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Interest:</span>
-                                <span className="text-foreground">{lead.service_interested}</span>
-                              </div>
-                            )}
-                            {lead.phone && (
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Lead Phone:</span>
-                                <span className="text-foreground">{lead.phone}</span>
-                              </div>
-                            )}
-                            {lead.notes && (
-                              <div className="pt-2 border-t border-gold/5 space-y-1">
-                                <span className="text-muted-foreground block font-semibold">CRM Notes:</span>
-                                <p className="text-muted-foreground leading-relaxed italic text-[11px]">{lead.notes}</p>
-                              </div>
-                            )}
-                          </div>
-                        )
-                      }
-                      return (
-                        <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                          No synced CRM lead found for this user.
-                        </div>
-                      )
-                    })()}
-                  </div>
-
-                  {/* Associated Bookings Section */}
-                  <div className="space-y-3">
-                    <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                      <Calendar size={12} /> Strategy Calls ({clientSessions.length})
-                    </h3>
-                    {clientSessions.length > 0 ? (
-                      <div className="space-y-2">
-                        {clientSessions.map((s) => (
-                          <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2">
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-foreground truncate">
-                                {s.session_categories?.name || 'Consultation Call'}
-                              </h4>
-                              <p className="text-[10px] text-muted-foreground mt-1 font-mono">
-                                {new Date(s.scheduled_at).toLocaleString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            </div>
-                            <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
-                              s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
-                              s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
-                            }`}>
-                              {s.status}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground">
-                        No strategy bookings logged.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {selectedClient.role === 'admin' && (
-                <div className="space-y-3">
-                  <h3 className="text-xs uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
-                    <UserCheck size={12} /> Administrator Capabilities
-                  </h3>
-                  <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2 text-xs text-muted-foreground leading-relaxed font-sans">
-                    <p>This administrator account enjoys comprehensive control across CRM pipelines, website content nodes, activity audits, and server resources.</p>
-                    <ul className="list-disc pl-4 space-y-1 mt-1 text-[11px]">
-                      <li>Full audit logs control</li>
-                      <li>Global CMS variables override</li>
-                      <li>Client portal revocation privileges</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Footer / Quick Actions */}
-            <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center border-t border-gold/10">
-              <div>
-                {selectedClient.id !== currentUserId && (
-                  <button
-                    onClick={() => handleToggleSuspension(selectedClient)}
-                    className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border transition-all cursor-pointer text-xs font-semibold w-full sm:w-auto ${
-                      selectedClient.is_suspended
-                        ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
-                        : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
-                    }`}
-                  >
-                    {selectedClient.is_suspended ? (
-                      <>
-                        <Unlock size={13} /> Activate Account
-                      </>
-                    ) : (
-                      <>
-                        <Lock size={13} /> Suspend Account
-                      </>
-                    )}
-                  </button>
-                )}
-              </div>
-
-              <div className="flex items-center gap-3">
+            {/* Tabs Selector Control */}
+            <div className="flex border-b border-gold/10 p-0.5 bg-card/40 rounded-xl border max-w-sm">
+              <button
+                onClick={() => setModalTab('activity')}
+                className={`flex-1 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-all border-none cursor-pointer ${
+                  modalTab === 'activity' ? 'bg-gold/15 text-gold font-extrabold' : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                📁 Activity
+              </button>
+              <button
+                onClick={() => setModalTab('profile')}
+                className={`flex-1 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-all border-none cursor-pointer ${
+                  modalTab === 'profile' ? 'bg-gold/15 text-gold font-extrabold' : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                👤 Profile
+              </button>
+              {selectedClient.id !== currentUserId && (
                 <button
-                  type="button"
-                  onClick={() => {
-                    setClientForm({
-                      id: selectedClient.id,
-                      fullName: selectedClient.full_name || '',
-                      email: selectedClient.email || '',
-                      phone: selectedClient.phone_number || '',
-                      company: selectedClient.company_name || '',
-                      isSuspended: selectedClient.is_suspended,
-                      role: selectedClient.role
-                    })
-                    setShowViewModal(false)
-                    setShowAddModal(true)
-                  }}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial"
+                  onClick={() => setModalTab('security')}
+                  className={`flex-1 py-1.5 text-[9px] font-bold uppercase tracking-wider rounded-lg transition-all border-none cursor-pointer ${
+                    modalTab === 'security' ? 'bg-gold/15 text-gold font-extrabold' : 'bg-transparent text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  <Edit2 size={13} /> Edit Profile
+                  🛡️ Security
                 </button>
-                
-                {selectedClient.id !== currentUserId && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setClientToDelete(selectedClient)
-                      setShowViewModal(false)
-                      setShowDeleteModal(true)
-                    }}
-                    className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold transition-all cursor-pointer flex-1 sm:flex-initial"
-                  >
-                    <Trash2 size={13} /> Delete Account
-                  </button>
-                )}
-              </div>
+              )}
+            </div>
+
+            {/* TAB PANELS */}
+            <div className="space-y-4">
+              
+              {/* TAB 1: ACTIVITY HUB */}
+              {modalTab === 'activity' && (
+                <div className="animate-in fade-in duration-200">
+                  {selectedClient.role === 'client' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Associated Projects Section */}
+                      <div className="space-y-2.5">
+                        <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                          <FolderKanban size={11} /> Active Projects ({clientProjects.length})
+                        </h3>
+                        {clientProjects.length > 0 ? (
+                          <div className="space-y-2 max-h-[220px] overflow-y-auto scrollbar-none">
+                            {clientProjects.map((p) => (
+                              <div key={p.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-3 animate-in fade-in">
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-bold text-foreground truncate">{p.project_name}</h4>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="px-1.5 py-0.5 rounded bg-gold/15 text-[8px] font-bold text-gold uppercase">
+                                      {p.status}
+                                    </span>
+                                    <span className="text-[8px] text-muted-foreground">
+                                      Paid: £{p.amount_paid.toLocaleString()} / £{p.contract_value.toLocaleString()}
+                                    </span>
+                                  </div>
+                                </div>
+                                <Link
+                                  href={`/admin/projects?openId=${p.id}`}
+                                  className="px-2.5 py-1 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 text-[8px] font-bold transition-all shrink-0 hover:shadow-sm"
+                                >
+                                  View
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xxs text-muted-foreground">
+                            No active build projects registered.
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Associated Bookings Section */}
+                      <div className="space-y-2.5">
+                        <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                          <Calendar size={11} /> Strategy Calls ({clientSessions.length})
+                        </h3>
+                        {clientSessions.length > 0 ? (
+                          <div className="space-y-2 max-h-[220px] overflow-y-auto scrollbar-none">
+                            {clientSessions.map((s) => (
+                              <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2 animate-in fade-in">
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-bold text-foreground truncate">
+                                    {s.session_categories?.name || 'Consultation Call'}
+                                  </h4>
+                                  <p className="text-[9px] text-muted-foreground mt-1 font-mono">
+                                    {new Date(s.scheduled_at).toLocaleString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                                  s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                                  s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
+                                }`}>
+                                  {s.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xxs text-muted-foreground">
+                            No strategy bookings logged.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedClient.role === 'user' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Synced CRM Lead Details */}
+                      <div className="space-y-2.5">
+                        <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                          <Building size={11} /> Synced CRM Lead Details
+                        </h3>
+                        {(() => {
+                          const lead = dbLeads.find(l => l.email === selectedClient.email)
+                          if (lead) {
+                            return (
+                              <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5 text-xxs font-sans animate-in fade-in">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Lead Status:</span>
+                                  <span className="text-gold font-semibold">{lead.status}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Business:</span>
+                                  <span className="text-foreground font-semibold">{lead.business_name || 'N/A'}</span>
+                                </div>
+                                {lead.website && (
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Website:</span>
+                                    <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline flex items-center gap-1">
+                                      {lead.website.replace(/^https?:\/\//, '')} <ExternalLink size={10} />
+                                    </a>
+                                  </div>
+                                )}
+                                {lead.service_interested && (
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Interest:</span>
+                                    <span className="text-foreground">{lead.service_interested}</span>
+                                  </div>
+                                )}
+                                {lead.phone && (
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Lead Phone:</span>
+                                    <span className="text-foreground">{lead.phone}</span>
+                                  </div>
+                                )}
+                                {lead.notes && (
+                                  <div className="pt-2 border-t border-gold/5 space-y-1">
+                                    <span className="text-muted-foreground block font-semibold">CRM Notes:</span>
+                                    <p className="text-muted-foreground leading-relaxed italic text-[10px]">{lead.notes}</p>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          }
+                          return (
+                            <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xxs text-muted-foreground">
+                              No synced CRM lead found for this user.
+                            </div>
+                          )
+                        })()}
+                      </div>
+
+                      {/* Associated Bookings Section */}
+                      <div className="space-y-2.5">
+                        <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                          <Calendar size={11} /> Strategy Calls ({clientSessions.length})
+                        </h3>
+                        {clientSessions.length > 0 ? (
+                          <div className="space-y-2 max-h-[220px] overflow-y-auto scrollbar-none">
+                            {clientSessions.map((s) => (
+                              <div key={s.id} className="p-3 bg-white/[0.01] border border-gold/10 rounded-xl flex items-center justify-between gap-2 animate-in fade-in">
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-bold text-foreground truncate">
+                                    {s.session_categories?.name || 'Consultation Call'}
+                                  </h4>
+                                  <p className="text-[9px] text-muted-foreground mt-1 font-mono">
+                                    {new Date(s.scheduled_at).toLocaleString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider shrink-0 ${
+                                  s.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                                  s.status === 'Canceled' ? 'bg-red-500/10 text-red-400' : 'bg-gold/10 text-gold'
+                                }`}>
+                                  {s.status}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xxs text-muted-foreground">
+                            No strategy bookings logged.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedClient.role === 'admin' && (
+                    <div className="space-y-2.5">
+                      <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-1.5">
+                        <UserCheck size={11} /> Administrator Capabilities
+                      </h3>
+                      <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2 text-xxs text-muted-foreground leading-relaxed font-sans animate-in fade-in">
+                        <p>This administrator account enjoys comprehensive control across CRM pipelines, website content nodes, activity audits, and server resources.</p>
+                        <ul className="list-disc pl-4 space-y-1 mt-1 text-[10px]">
+                          <li>Full audit logs control</li>
+                          <li>Global CMS variables override</li>
+                          <li>Client portal revocation privileges</li>
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 2: PROFILE DETAILS */}
+              {modalTab === 'profile' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xxs animate-in fade-in duration-200">
+                  <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5">
+                    <h3 className="font-semibold text-gold tracking-wider uppercase text-[9px] flex items-center gap-1.5">
+                      <UsersIcon size={10} /> Profile Details
+                    </h3>
+                    <div className="divide-y divide-gold/5 space-y-2">
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Access Role:</span>
+                        {renderRoleBadge(selectedClient.role)}
+                      </div>
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Status:</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[8px] font-bold ${
+                          selectedClient.is_suspended ? 'bg-red-500/10 border border-red-500/30 text-red-400' : 'bg-green-500/10 border border-green-500/30 text-green-400'
+                        }`}>
+                          {selectedClient.is_suspended ? 'Suspended' : 'Active'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Registered:</span>
+                        <span className="text-foreground font-semibold">
+                          {new Date(selectedClient.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-white/[0.01] border border-gold/10 rounded-xl space-y-2.5">
+                    <h3 className="font-semibold text-gold tracking-wider uppercase text-[9px] flex items-center gap-1.5">
+                      <Mail size={10} /> Contact Information
+                    </h3>
+                    <div className="divide-y divide-gold/5 space-y-2">
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Email:</span>
+                        <span className="text-foreground font-semibold truncate max-w-[150px]" title={selectedClient.email || ''}>
+                          {selectedClient.email || 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Phone:</span>
+                        <span className="text-foreground font-semibold">
+                          {selectedClient.phone_number || 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center pt-2">
+                        <span className="text-muted-foreground">Company:</span>
+                        <span className="text-foreground font-semibold truncate max-w-[150px]">
+                          {selectedClient.company_name || 'N/A'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: SECURITY & DANGER ZONE */}
+              {modalTab === 'security' && selectedClient.id !== currentUserId && (
+                <div className="p-4 rounded-xl border border-red-500/10 bg-red-500/[0.01] space-y-4 animate-in fade-in duration-200">
+                  <div>
+                    <h3 className="text-xs font-bold text-red-400 uppercase tracking-wider">Danger &amp; Access Control Desk</h3>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Admin-only controls to suspend portal access or permanently erase identity records.</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => handleToggleSuspension(selectedClient)}
+                      className={`flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border transition-all cursor-pointer text-xxs font-bold uppercase tracking-wider ${
+                        selectedClient.is_suspended
+                          ? 'text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20'
+                          : 'text-red-400 bg-red-500/10 border-red-500/30 hover:bg-red-500/20'
+                      }`}
+                    >
+                      {selectedClient.is_suspended ? (
+                        <>
+                          <Unlock size={12} /> Activate Account
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={12} /> Suspend Account
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setClientForm({
+                          id: selectedClient.id,
+                          fullName: selectedClient.full_name || '',
+                          email: selectedClient.email || '',
+                          phone: selectedClient.phone_number || '',
+                          company: selectedClient.company_name || '',
+                          isSuspended: selectedClient.is_suspended,
+                          role: selectedClient.role
+                        })
+                        setShowViewModal(false)
+                        setShowAddModal(true)
+                      }}
+                      className="flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-xxs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                    >
+                      <Edit2 size={12} /> Edit Profile
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setClientToDelete(selectedClient)
+                        setShowViewModal(false)
+                        setShowDeleteModal(true)
+                      }}
+                      className="flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500 hover:text-background text-red-400 border border-red-500/30 text-xxs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                    >
+                      <Trash2 size={12} /> Delete Account
+                    </button>
+                  </div>
+                </div>
+              )}
+
             </div>
             
           </div>

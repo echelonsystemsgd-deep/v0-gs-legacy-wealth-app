@@ -64,39 +64,30 @@ function getStageBadge(status: string) {
 function getHealthBorder(project: ProjectWithHealth): string {
   const label = getHealthLabel(project)
   if (label === 'Blocked') return 'border-l-red-500'
-  if (label === 'Needs Attention') return 'border-l-amber-400'
+  if (label === 'Awaiting Client') return 'border-l-amber-400'
   return 'border-l-green-500'
 }
 
 /**
  * Health Logic:
- * - Blocked (Red): Any pending action request (waiting on client) older than 3 days.
- * - Needs Attention (Amber):
- *   - Unread client messages exists.
- *   - Any action request is 'submitted' (client provided info) and submitted_at is older than 2 days (48 hours).
+ * - Blocked / Stale (Red): Unread client messages older than 24 hours (daysSinceLastMessage >= 1)
+ *   OR client has been completely inactive (no messages, no updates) for over 7 days (daysSinceLastMessage >= 7).
+ * - Awaiting Client (Amber): Project has active pending action requests waiting on client input.
  * - On Track (Green): Otherwise.
  */
-export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Needs Attention' | 'On Track' {
-  const now = Date.now()
+export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaiting Client' | 'On Track' {
+  // 1. Red Check (Blocked / Stale)
+  const isMessageUnreadAndOver24h = project.unreadMessageCount > 0 && project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 1
+  const isInactiveOver7Days = project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 7
 
-  // 1. Blocked check: status = pending and created_at older than 3 days
-  const hasBlockedAction = project.actionRequests.some(
-    (req) =>
-      req.status === 'pending' &&
-      now - new Date(req.created_at).getTime() > 3 * 24 * 60 * 60 * 1000
-  )
-  if (hasBlockedAction) return 'Blocked'
+  if (isMessageUnreadAndOver24h || isInactiveOver7Days) {
+    return 'Blocked'
+  }
 
-  // 2. Needs Attention check: unread messages OR submitted request older than 2 days
-  const hasDelayedSubmission = project.actionRequests.some(
-    (req) =>
-      req.status === 'submitted' &&
-      req.submitted_at &&
-      now - new Date(req.submitted_at).getTime() > 2 * 24 * 60 * 60 * 1000
-  )
-
-  if (project.unreadMessageCount > 0 || hasDelayedSubmission) {
-    return 'Needs Attention'
+  // 2. Amber Check (Awaiting Client)
+  const hasPendingAction = project.actionRequests.some((req) => req.status === 'pending')
+  if (hasPendingAction) {
+    return 'Awaiting Client'
   }
 
   return 'On Track'
@@ -105,7 +96,7 @@ export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Needs A
 function getUrgencyScore(project: ProjectWithHealth): number {
   const label = getHealthLabel(project)
   if (label === 'Blocked') return 100
-  if (label === 'Needs Attention') return 50 + project.unreadMessageCount
+  if (label === 'Awaiting Client') return 50 + project.unreadMessageCount
   return 0
 }
 
@@ -136,7 +127,7 @@ export function ClientHealthGrid({
   const hiddenCount = maxItems ? Math.max(0, sorted.length - maxItems) : 0
 
   const blockedCount = clients.filter((c) => getHealthLabel(c) === 'Blocked').length
-  const attentionCount = clients.filter((c) => getHealthLabel(c) === 'Needs Attention').length
+  const attentionCount = clients.filter((c) => getHealthLabel(c) === 'Awaiting Client').length
 
   const handleMarkRequestComplete = async (requestId: string) => {
     setUpdatingId(requestId)
@@ -210,7 +201,7 @@ export function ClientHealthGrid({
             )}
             {attentionCount > 0 && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[9px] font-bold text-amber-400 uppercase tracking-wide">
-                {attentionCount} needs attention
+                {attentionCount} awaiting client
               </span>
             )}
             {blockedCount === 0 && attentionCount === 0 && (
@@ -238,12 +229,13 @@ export function ClientHealthGrid({
           const healthBorder = getHealthBorder(project)
           const initials = getInitials(project.client_name)
           const health = getHealthLabel(project)
+          const tabParam = health === 'Blocked' ? 'chat' : health === 'Awaiting Client' ? 'actions' : 'config'
 
           return (
-            <button
+            <Link
               key={project.id}
-              onClick={() => setSelectedProject(project)}
-              className={`relative p-4 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full cursor-pointer`}
+              href={`/admin/projects?openId=${project.id}&tab=${tabParam}`}
+              className={`relative p-4 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full`}
             >
               {/* Avatar + Name */}
               <div className="flex items-center gap-3">
@@ -276,7 +268,7 @@ export function ClientHealthGrid({
                   className={`shrink-0 w-2 h-2 rounded-full ${
                     health === 'Blocked'
                       ? 'bg-red-500'
-                      : health === 'Needs Attention'
+                      : health === 'Awaiting Client'
                       ? 'bg-amber-400'
                       : 'bg-green-500'
                   }`}
@@ -311,7 +303,7 @@ export function ClientHealthGrid({
                   )}
                 </div>
               </div>
-            </button>
+            </Link>
           )
         })}
 

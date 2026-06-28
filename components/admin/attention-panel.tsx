@@ -73,7 +73,7 @@ export function AttentionPanel({
 
             {pendingApprovalsCount > 0 && (
               <Link
-                href="/admin/clients?view=health"
+                href="/admin/projects"
                 className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-orange-500/5 border border-orange-500/20 hover:border-orange-400/40 hover:bg-orange-500/10 transition-all duration-200 group"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -82,9 +82,9 @@ export function AttentionPanel({
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-foreground truncate">
-                      {pendingApprovalsCount} stage approval{pendingApprovalsCount > 1 ? 's' : ''} pending
+                      {pendingApprovalsCount} client submission{pendingApprovalsCount > 1 ? 's' : ''} pending
                     </p>
-                    <p className="text-[10px] text-muted-foreground">Client sign-off required</p>
+                    <p className="text-[10px] text-muted-foreground">Admin review required</p>
                   </div>
                 </div>
                 <ArrowUpRight size={12} className="text-orange-400/60 group-hover:text-orange-400 shrink-0 transition-colors" />

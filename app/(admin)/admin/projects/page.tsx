@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
   Plus,
@@ -15,9 +14,14 @@ import {
   LayoutGrid,
   CheckCircle2,
   Info,
+  ChevronUp,
+  ChevronDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react'
 import { useInspector } from '@/hooks/use-inspector'
-import { usePathname } from 'next/navigation'
+import { ProjectWorkspace } from '@/components/admin/project-workspace'
+import { toast } from 'sonner'
 
 type Project = {
   id: string
@@ -29,6 +33,7 @@ type Project = {
   target_launch_date: string | null
   is_archived: boolean
   created_at: string
+  importance_rank: number
 }
 
 const STATUS_STEPS = ['Discovery', 'Design', 'Development', 'Revision', 'Complete']
@@ -65,7 +70,9 @@ export default function ProjectsPage() {
   const [showArchived, setShowArchived] = useState(false)
   const [showNewModal, setShowNewModal] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [toast, setToast] = useState<string | null>(null)
+  
+  // Modal State for Workspace Details
+  const [openWorkspaceId, setOpenWorkspaceId] = useState<string | null>(null)
 
   const today = new Date().toISOString().split('T')[0]
   const [form, setForm] = useState({
@@ -74,8 +81,15 @@ export default function ProjectsPage() {
     contract_value: '', amount_paid: '', client_id: '',
   })
 
-  // Initialize form and open modal from query parameters
+  // Read URL query parameters
   useEffect(() => {
+    const openId = searchParams.get('openId')
+    if (openId) {
+      setOpenWorkspaceId(openId)
+    } else {
+      setOpenWorkspaceId(null)
+    }
+
     const create = searchParams.get('create')
     if (create === 'true') {
       const clientName = searchParams.get('client_name') || ''
@@ -91,21 +105,20 @@ export default function ProjectsPage() {
     }
   }, [searchParams])
 
-  const showToast = (msg: string) => {
-    setToast(msg)
-    setTimeout(() => setToast(null), 3000)
-  }
-
   const fetchProjects = useCallback(async () => {
     setLoading(true)
     const [{ data: projectData }, { data: clientData }] = await Promise.all([
-      supabase.from('projects').select('*').eq('is_archived', showArchived).order('created_at', { ascending: false }),
+      supabase.from('projects')
+        .select('*')
+        .eq('is_archived', showArchived)
+        .order('importance_rank', { ascending: false })
+        .order('created_at', { ascending: false }),
       supabase.from('profiles').select('id, full_name, email').eq('role', 'client'),
     ])
     setProjects(projectData ?? [])
     setClients(clientData ?? [])
     setLoading(false)
-  }, [showArchived])
+  }, [showArchived, supabase])
 
   useEffect(() => { fetchProjects() }, [fetchProjects])
 
@@ -139,39 +152,65 @@ export default function ProjectsPage() {
       client_id: form.client_id || null,
       status: 'Discovery',
     }).select().single()
+    
     setSaving(false)
-    if (error) { showToast('Failed to create project.'); return }
+    if (error) { toast.error('Failed to initialize project.'); return }
     handleCloseNewModal()
     if (newProject) {
-      router.push(`/admin/projects/${newProject.id}`)
+      router.push(`/admin/projects?openId=${newProject.id}`)
     } else {
       fetchProjects()
     }
-    showToast('Project created!')
+    toast.success('Project initialized successfully!')
+  }
+
+  const handleUpdateRank = async (projectId: string, currentRank: number, increment: boolean) => {
+    const newRank = increment ? currentRank + 1 : Math.max(0, currentRank - 1)
+    const { error } = await supabase
+      .from('projects')
+      .update({ importance_rank: newRank })
+      .eq('id', projectId)
+
+    if (error) {
+      toast.error('Failed to adjust project rank.')
+    } else {
+      setProjects((prev) =>
+        prev
+          .map((p) => (p.id === projectId ? { ...p, importance_rank: newRank } : p))
+          .sort((a, b) => b.importance_rank - a.importance_rank || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      )
+      toast.success('Project priority rank adjusted.')
+    }
+  }
+
+  const handleOpenWorkspace = (projectId: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('openId', projectId)
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  const handleCloseWorkspace = () => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete('openId')
+    router.push(`${pathname}?${params.toString()}`)
+    fetchProjects()
   }
 
   const byStatus = (status: string) => projects.filter((p) => p.status === status)
 
   return (
-    <div className="space-y-6 sm:space-y-10 relative">
-      {/* Toast */}
-      {toast && (
-        <div className="fixed top-4 left-4 z-50 px-4 py-3 rounded-xl bg-green-500/15 border border-green-500/30 text-sm font-medium text-green-400 shadow-xl flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 size={14} className="text-green-400" /> {toast}
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 sm:space-y-8 relative">
+      
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gold/10 pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-gold uppercase">
-            <FolderKanban size={12} /> Production Pipeline
+            <FolderKanban size={12} /> Bespoke Project Pipelines
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Projects</h1>
-          <p className="text-sm text-muted-foreground">Track client builds from discovery to launch.</p>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1 font-serif">Command Telemetry</h1>
+          <p className="text-sm text-muted-foreground">Set mandate priority order and configure client environments.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
-          {/* View toggle */}
           <div className="flex items-center bg-card border border-gold/15 rounded-xl p-1 gap-1">
             <button onClick={() => setView('kanban')} className={`p-2 rounded-lg transition-all cursor-pointer ${view === 'kanban' ? 'bg-gold/15 text-gold' : 'text-muted-foreground hover:text-foreground'}`}>
               <LayoutGrid size={15} />
@@ -182,391 +221,386 @@ export default function ProjectsPage() {
           </div>
           <button
             onClick={() => setShowArchived((v) => !v)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all cursor-pointer ${showArchived ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-card border-gold/15 text-muted-foreground hover:text-foreground'}`}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${showArchived ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-card border-gold/15 text-muted-foreground hover:text-foreground'}`}
           >
             <Archive size={14} /> {showArchived ? 'Archived' : 'Show Archived'}
           </button>
           <button
             onClick={() => setShowNewModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold hover:shadow-[0_0_16px_rgba(212,175,55,0.35)] transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_16px_rgba(212,175,55,0.35)] transition-all cursor-pointer"
           >
-            <Plus size={15} /> New Project
+            <Plus size={15} /> Initialize Project
           </button>
         </div>
       </div>
 
-      {/* Content */}
-      {loading ? (
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Loader2 size={28} className="animate-spin text-gold/40" />
-        </div>
-      ) : projects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center px-6 glass rounded-2xl border border-gold/10 max-w-md mx-auto space-y-4">
-          <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/15 flex items-center justify-center text-gold/40">
-            <FolderKanban size={20} />
-          </div>
-          <div>
-            <h3 className="font-serif text-sm font-bold text-foreground">
-              {showArchived ? 'Archived Ledger Empty' : 'Production Pipeline Empty'}
-            </h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              {showArchived
-                ? 'No archived project records exist in the historical archives.'
-                : 'No client projects are currently active in the engineering queue. Initialize a new project container to begin tracking progress.'}
-            </p>
-          </div>
-          {!showArchived && (
-            <button
-              onClick={() => setShowNewModal(true)}
-              className="px-4 py-2 text-xxs font-bold uppercase tracking-wider rounded-lg bg-gold text-background hover:bg-gold-light transition-all cursor-pointer font-bold"
-            >
-              Initialize Project
-            </button>
-          )}
-        </div>
-      ) : view === 'kanban' ? (
-        <div className="space-y-4">
-          {/* Mobile Kanban Switcher */}
-          <div className="flex md:hidden border-b border-gold/10 overflow-x-auto scrollbar-none gap-2 pb-2 mb-2">
-            {STATUS_STEPS.map((status) => {
-              const count = byStatus(status).length
-              const isActive = activeKanbanColumn === status
-              return (
-                <button
-                  key={status}
-                  onClick={() => setActiveKanbanColumn(status)}
-                  className={`px-3.5 py-2 border-b-2 text-xxs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
-                    isActive
-                      ? 'border-gold text-gold bg-gold/5 font-extrabold'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {status} ({count})
-                </button>
-              )
-            })}
+      {/* Split screen content layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Left Side: Priority Client List (1/3 Width) */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between pb-1 border-b border-gold/10">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Priority Rankings</h2>
+            <span className="text-[10px] text-gold font-mono">{projects.length} Total</span>
           </div>
 
-          <div className="overflow-x-auto pb-4 -mx-2 px-2">
-            <div className="flex gap-4 min-w-max xl:min-w-0 xl:grid xl:grid-cols-5">
-            {STATUS_STEPS.map((status) => {
-              const cols = byStatus(status)
-              const isVisible = status === activeKanbanColumn
-              return (
-                <div key={status} className={`w-56 xl:w-auto space-y-3 shrink-0 xl:shrink ${isVisible ? 'block' : 'hidden md:block'}`}>
-                  <div className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold ${STATUS_COLORS[status]}`}>
-                    <span>{status}</span>
-                    <span className="opacity-70">{cols.length}</span>
-                  </div>
-                  <div className="space-y-2">
-                    {cols.length === 0 ? (
-                      <div className="p-4 rounded-xl border border-dashed border-gold/10 text-center text-xs text-muted-foreground/50">
-                        No projects
+          {loading ? (
+            <div className="py-12 flex justify-center"><Loader2 className="animate-spin text-gold/30" /></div>
+          ) : projects.length === 0 ? (
+            <p className="text-xs text-muted-foreground/60 italic py-6 text-center border border-dashed border-gold/10 rounded-xl">No active clients found.</p>
+          ) : (
+            <div className="space-y-2.5">
+              {projects.map((p) => {
+                const isSelected = openWorkspaceId === p.id
+                return (
+                  <div
+                    key={p.id}
+                    className={`p-3.5 glass rounded-xl border flex items-center justify-between gap-3 transition-all duration-300 ${
+                      isSelected ? 'border-gold bg-gold/[0.03] shadow-[0_0_12px_rgba(212,175,55,0.06)]' : 'border-gold/10 hover:border-gold/25'
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${STATUS_COLORS[p.status]}`}>
+                          {p.status}
+                        </span>
+                        <span className="text-[9px] font-mono text-gold/60 font-bold bg-gold/5 px-1.5 py-0.5 rounded border border-gold/10">Rank: {p.importance_rank}</span>
                       </div>
-                    ) : cols.map((p) => {
-                      const isInspected = searchParams.get('projectId') === p.id
+                      <h3 className="text-xs font-bold text-foreground truncate">{p.client_name}</h3>
+                      <p className="text-[10px] text-muted-foreground truncate">{p.project_name}</p>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      {/* Priority Ranking Up / Down Controls */}
+                      <div className="flex flex-col gap-0.5">
+                        <button
+                          onClick={() => handleUpdateRank(p.id, p.importance_rank, true)}
+                          className="p-1 hover:bg-gold/15 text-muted-foreground hover:text-gold rounded border border-transparent hover:border-gold/15 transition-all"
+                          title="Increase Priority Rank"
+                        >
+                          <ChevronUp size={11} />
+                        </button>
+                        <button
+                          onClick={() => handleUpdateRank(p.id, p.importance_rank, false)}
+                          className="p-1 hover:bg-gold/15 text-muted-foreground hover:text-gold rounded border border-transparent hover:border-gold/15 transition-all"
+                          title="Decrease Priority Rank"
+                        >
+                          <ChevronDown size={11} />
+                        </button>
+                      </div>
+
+                      {/* Open Workspace CTA */}
+                      <button
+                        onClick={() => handleOpenWorkspace(p.id)}
+                        className={`px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider rounded-lg transition-all border ${
+                          isSelected ? 'bg-gold text-background border-gold' : 'border-gold/20 text-gold hover:bg-gold/10'
+                        }`}
+                      >
+                        Workspace
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Right Side: Kanban Board or List (2/3 Width) */}
+        <section className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between pb-1 border-b border-gold/10">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Operations View</h2>
+            <span className="text-[10px] text-muted-foreground/60">{view === 'kanban' ? 'Pipeline Kanban Columns' : 'Bespoke Registry'}</span>
+          </div>
+
+          {loading ? (
+            <div className="py-20 flex justify-center"><Loader2 size={24} className="animate-spin text-gold/30" /></div>
+          ) : projects.length === 0 ? (
+            <div className="p-8 border border-dashed border-gold/15 rounded-2xl text-center max-w-sm mx-auto space-y-4">
+              <FolderKanban size={28} className="text-gold/20 mx-auto" />
+              <p className="text-xs text-muted-foreground">Deploy a client project mandrel to unlock operational grids.</p>
+            </div>
+          ) : view === 'kanban' ? (
+            /* Kanban Board */
+            <div className="space-y-4">
+              {/* Mobile Kanban Column selector */}
+              <div className="flex md:hidden border-b border-gold/10 overflow-x-auto scrollbar-none gap-2 pb-2">
+                {STATUS_STEPS.map((status) => {
+                  const count = byStatus(status).length
+                  const isActive = activeKanbanColumn === status
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => setActiveKanbanColumn(status)}
+                      className={`px-3 py-1.5 border-b-2 text-xxs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
+                        isActive ? 'border-gold text-gold bg-gold/5 font-extrabold' : 'border-transparent text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {status} ({count})
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5 overflow-x-auto pb-4">
+                {STATUS_STEPS.map((status) => {
+                  const cols = byStatus(status)
+                  const isVisible = status === activeKanbanColumn
+                  return (
+                    <div key={status} className={`space-y-2.5 min-w-[160px] ${isVisible ? 'block' : 'hidden md:block'}`}>
+                      <div className={`flex items-center justify-between px-3 py-1.5 rounded-xl border text-[10px] font-black uppercase tracking-wider ${STATUS_COLORS[status]}`}>
+                        <span>{status}</span>
+                        <span>{cols.length}</span>
+                      </div>
+                      <div className="space-y-2">
+                        {cols.length === 0 ? (
+                          <div className="p-4 rounded-xl border border-dashed border-gold/5 text-center text-[10px] text-muted-foreground/30">
+                            Empty
+                          </div>
+                        ) : cols.map((p) => {
+                          const isSelected = openWorkspaceId === p.id
+                          return (
+                            <div
+                              key={p.id}
+                              onClick={() => handleOpenWorkspace(p.id)}
+                              className={`p-3.5 glass rounded-xl border transition-all cursor-pointer space-y-2 group ${
+                                isSelected ? 'border-gold bg-gold/[0.02]' : 'border-gold/10 hover:border-gold/25'
+                              }`}
+                            >
+                              <div className="flex justify-between items-start gap-1">
+                                <h4 className="text-xs font-bold text-foreground line-clamp-1 group-hover:text-gold transition-colors">{p.project_name}</h4>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleInspectProject(p.id)
+                                  }}
+                                  className="p-1 rounded bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground"
+                                  title="Quick Telemetry Inspector"
+                                >
+                                  <Info size={9} />
+                                </button>
+                              </div>
+                              <p className="text-[10px] text-muted-foreground/80 truncate">{p.client_name}</p>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Registry list */
+            <div className="glass rounded-xl border border-gold/10 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-gold/10 bg-white/[0.01]">
+                      <th className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Mandate</th>
+                      <th className="text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Client</th>
+                      <th className="text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Telemetry Phase</th>
+                      <th className="text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Launch Vector</th>
+                      <th className="w-8" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gold/5">
+                    {projects.map((p) => {
+                      const isSelected = openWorkspaceId === p.id
                       return (
-                        <div
+                        <tr
                           key={p.id}
-                          onClick={() => router.push(`/admin/projects/${p.id}`)}
-                          className={`block p-4 glass rounded-xl border transition-all group space-y-2 cursor-pointer ${
-                            isInspected 
-                              ? 'border-gold bg-gold/[0.02] shadow-[0_0_15px_rgba(212,175,55,0.06)]' 
-                              : 'border-gold/10 hover:border-gold/25'
+                          onClick={() => handleOpenWorkspace(p.id)}
+                          className={`hover:bg-white/[0.01] transition-colors cursor-pointer ${
+                            isSelected ? 'bg-gold/[0.03] shadow-[inset_3px_0_0_rgba(201,162,39,1)]' : ''
                           }`}
                         >
-                          <div className="flex justify-between items-start gap-2">
-                            <p className="text-sm font-semibold text-foreground group-hover:text-gold transition-colors line-clamp-1">{p.project_name}</p>
+                          <td className="px-5 py-3.5">
+                            <p className="font-bold text-foreground">{p.project_name}</p>
+                            <p className="text-[10px] text-muted-foreground">{p.service_type ?? '—'}</p>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="text-foreground font-medium">{p.client_name}</span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${STATUS_COLORS[p.status]}`}>
+                              {p.status}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="text-muted-foreground font-mono text-[10px]">
+                              {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB') : '—'}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleInspectProject(p.id)
-                              }}
-                              className={`p-1 rounded border shrink-0 transition-all cursor-pointer ${
-                                isInspected 
-                                  ? 'bg-gold/20 border-gold text-gold' 
-                                  : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'
-                              }`}
-                              title="Inspect Project Telemetry"
+                              onClick={() => handleInspectProject(p.id)}
+                              className="p-1.5 rounded bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground"
                             >
                               <Info size={11} />
                             </button>
-                          </div>
-                          <p className="text-xs text-muted-foreground">{p.client_name}</p>
-                          {p.target_launch_date && (
-                            <div className="flex items-center gap-1 text-xxs text-muted-foreground/70">
-                              <Calendar size={10} />
-                              {new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                            </div>
-                          )}
-                        </div>
+                          </td>
+                        </tr>
                       )
                     })}
-                  </div>
-                </div>
-              )
-            })}
-            </div>
-          </div>
-        </div>
-      ) : (
-        /* List View */
-        <div className="glass rounded-2xl border border-gold/10 overflow-hidden">
-          <>
-            {/* Desktop Table View */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gold/10">
-                    <th className="text-left px-6 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Project</th>
-                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden md:table-cell">Client</th>
-                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground">Status</th>
-                    <th className="text-left px-4 py-3 text-xxs font-bold uppercase tracking-widest text-muted-foreground hidden lg:table-cell">Launch Date</th>
-                    <th className="w-10 px-4 py-3" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gold/5">
-                  {projects.map((p) => {
-                    const isInspected = searchParams.get('projectId') === p.id
-                    return (
-                      <tr 
-                        key={p.id} 
-                        onClick={() => router.push(`/admin/projects/${p.id}`)}
-                        className={`hover:bg-white/2 transition-colors group cursor-pointer ${
-                          isInspected 
-                            ? 'bg-gold/[0.03] border-l-2 border-l-gold shadow-[inset_3px_0_0_rgba(212,175,55,1)]' 
-                            : ''
-                        }`}
-                      >
-                        <td className="px-6 py-4">
-                          <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
-                          <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
-                        </td>
-                        <td className="px-4 py-4 hidden md:table-cell">
-                          <p className="text-sm text-foreground">{p.client_name}</p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-xxs font-bold border ${STATUS_COLORS[p.status]}`}>
-                            {p.status}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 hidden lg:table-cell">
-                          <p className="text-sm text-muted-foreground">
-                            {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                          </p>
-                        </td>
-                        <td className="px-4 py-4 border-l border-transparent" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center gap-2 justify-end">
-                            <button
-                              onClick={() => handleInspectProject(p.id)}
-                              className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all shrink-0 cursor-pointer ${isInspected ? 'bg-gold/25 border-gold text-gold shadow-md' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'}`}
-                              title="Inspect Project Telemetry"
-                            >
-                              <Info size={13} />
-                            </button>
-                            <Link href={`/admin/projects/${p.id}`} className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-lg bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 transition-all">
-                              <ChevronRight size={15} />
-                            </Link>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile Card List View */}
-            <div className="block md:hidden divide-y divide-gold/5">
-              {projects.map((p) => (
-                <div 
-                  key={p.id} 
-                  onClick={() => router.push(`/admin/projects/${p.id}`)}
-                  className="p-4 space-y-3 cursor-pointer hover:bg-white/5 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">{p.project_name}</p>
-                      <p className="text-xs text-muted-foreground">{p.service_type ?? '—'}</p>
-                    </div>
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${STATUS_COLORS[p.status]}`}>
-                      {p.status}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xxs text-muted-foreground pt-1">
-                    <div>
-                      <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Client</span>
-                      <span className="text-foreground">{p.client_name}</span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gold/70 block uppercase tracking-wider mb-0.5">Launch Target</span>
-                      <span className="text-foreground">
-                        {p.target_launch_date ? new Date(p.target_launch_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-end pt-2 border-t border-gold/5" onClick={(e) => e.stopPropagation()}>
-                    <Link
-                      href={`/admin/projects/${p.id}`}
-                      className="flex items-center gap-1 text-[10px] text-gold font-bold hover:underline"
-                    >
-                      Open Project Workspace <ChevronRight size={12} />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        </div>
-      )}
-
-      {/* New Project Modal */}
-      {showNewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="glass rounded-2xl border border-gold/15 p-6 w-full max-w-xl space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="font-serif text-xl font-bold text-foreground">Initialise New Project</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Auto-provisions client portal, welcome update &amp; onboarding action request.</p>
+                  </tbody>
+                </table>
               </div>
-              <button onClick={handleCloseNewModal} className="text-muted-foreground hover:text-foreground transition-colors text-xl leading-none cursor-pointer">×</button>
             </div>
+          )}
+        </section>
+
+      </div>
+
+      {/* New Project Initializer Modal */}
+      {showNewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-250">
+          <div className="glass border border-gold/20 rounded-2xl p-6 w-full max-w-xl shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto scrollbar-thin">
+            <div className="flex items-center justify-between border-b border-gold/10 pb-3">
+              <div>
+                <h3 className="font-serif text-base font-bold text-foreground">Initialize Client Mandate</h3>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Creates client directory containers and hooks telemetry streams.</p>
+              </div>
+              <button onClick={handleCloseNewModal} className="text-muted-foreground hover:text-foreground transition-all cursor-pointer bg-transparent border-none text-lg">×</button>
+            </div>
+
             <form onSubmit={handleCreate} className="space-y-4">
-              {/* Project + Client Name */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
-                  <label htmlFor="project_name" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Project Name *</label>
+                  <label htmlFor="project_name" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Project Name *</label>
                   <input
                     id="project_name"
                     required
                     value={form.project_name}
                     onChange={(e) => setForm((prev) => ({ ...prev, project_name: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="client_name" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Client Name *</label>
+                  <label htmlFor="client_name" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Client Full Name *</label>
                   <input
                     id="client_name"
                     required
                     value={form.client_name}
                     onChange={(e) => setForm((prev) => ({ ...prev, client_name: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
                   />
                 </div>
               </div>
 
-              {/* Portal Account + Service Type */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
-                  <label htmlFor="client_id" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Link Portal Account</label>
+                  <label htmlFor="client_id" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Link Portal Account</label>
                   <select
                     id="client_id"
                     value={form.client_id}
                     onChange={(e) => setForm((prev) => ({ ...prev, client_id: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
                   >
-                    <option value="">No portal link yet</option>
+                    <option value="">Unlinked (Awaiting Client Setup)</option>
                     {clients.map((c) => (
                       <option key={c.id} value={c.id}>{c.full_name || 'Client'} ({c.email})</option>
                     ))}
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="service_type" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Service Type</label>
+                  <label htmlFor="service_type" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Service Specifications</label>
                   <input
                     id="service_type"
                     value={form.service_type}
                     onChange={(e) => setForm((prev) => ({ ...prev, service_type: e.target.value }))}
-                    placeholder="e.g. Full Website Build"
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    placeholder="e.g. Bespoke CRM Platform"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
                   />
                 </div>
               </div>
 
-              {/* Contract Value + Amount Paid */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
-                  <label htmlFor="contract_value" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Contract Value (£)</label>
+                  <label htmlFor="contract_value" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Project Valuation (£)</label>
                   <input
                     id="contract_value"
                     type="number"
-                    min="0"
                     value={form.contract_value}
                     onChange={(e) => setForm((prev) => ({ ...prev, contract_value: e.target.value }))}
-                    placeholder="0"
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="amount_paid" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Amount Paid (£)</label>
+                  <label htmlFor="amount_paid" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Initial Capital Settled (£)</label>
                   <input
                     id="amount_paid"
                     type="number"
-                    min="0"
                     value={form.amount_paid}
                     onChange={(e) => setForm((prev) => ({ ...prev, amount_paid: e.target.value }))}
-                    placeholder="0"
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none font-mono"
                   />
                 </div>
               </div>
 
-              {/* Dates */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
-                  <label htmlFor="start_date" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Start Date</label>
+                  <label htmlFor="start_date" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Initialize Date</label>
                   <input
                     id="start_date"
                     type="date"
                     value={form.start_date}
                     onChange={(e) => setForm((prev) => ({ ...prev, start_date: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="target_launch_date" className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Target Launch</label>
+                  <label htmlFor="target_launch_date" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Target Launch Vector</label>
                   <input
                     id="target_launch_date"
                     type="date"
                     value={form.target_launch_date}
                     onChange={(e) => setForm((prev) => ({ ...prev, target_launch_date: e.target.value }))}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/45 rounded-xl px-3 py-2 text-xs text-foreground outline-none"
                   />
                 </div>
               </div>
 
               <textarea
-                placeholder="Description / scope overview (optional)"
+                placeholder="Brief project details/specifications summary..."
                 rows={2}
                 value={form.description}
                 onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
-                className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                className="w-full bg-background border border-gold/15 focus:border-gold/45 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none resize-none leading-relaxed"
               />
 
-              <div className="p-3 rounded-xl bg-gold/[0.03] border border-gold/10 text-[10px] text-muted-foreground leading-relaxed">
-                <span className="text-gold font-bold">Auto-provisioned on creation:</span> Welcome update in client feed · Brand &amp; assets onboarding action request · Client portal access (if linked)
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={handleCloseNewModal} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all cursor-pointer">
+              <div className="flex justify-end gap-2.5 pt-2 border-t border-gold/10">
+                <button type="button" onClick={handleCloseNewModal} className="px-4 py-2 rounded-xl border border-gold/15 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground bg-transparent transition-all cursor-pointer">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-60 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold uppercase tracking-wider disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
                 >
-                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-                  Initialise Project
+                  {saving ? <Loader2 size={13} className="animate-spin" /> : <Plus size={13} />}
+                  Provision Project
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      {/* Premium Full-Viewport Modal for Selected Client Workspace */}
+      {openWorkspaceId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-5xl glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[90vh] overflow-y-auto scrollbar-thin">
+            <ProjectWorkspace
+              id={openWorkspaceId}
+              isModal={true}
+              onClose={handleCloseWorkspace}
+              initialTab={searchParams.get('tab') as any || 'config'}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
