@@ -107,6 +107,20 @@ export async function POST(request: Request) {
 
           dbError = error
           insertedLead = data
+        } else if (source === 'fast_track_audit') {
+          // Insert for fast-track Loom audit
+          const { data, error } = await supabaseAdmin.from('leads').insert({
+            name: name || 'Anonymous Fast-Track',
+            email: email,
+            business_name: business_name || 'N/A (Fast-Track Loom Audit)',
+            website: website || null, // Stores the target website URL to audit
+            notes: notes || 'Request for a 5-minute Loom video audit of existing site.',
+            status: 'New',
+            source: 'fast_track_audit',
+          }).select().single()
+
+          dbError = error
+          insertedLead = data
         } else {
           return NextResponse.json({ error: `Unsupported form source: ${source}` }, { status: 400 })
         }
@@ -214,6 +228,12 @@ export async function POST(request: Request) {
       customerBodyText = "We have recorded your email request for early access. You will receive an immediate notification as soon as the platform goes live."
       actionButtonText = "Explore Our Services"
       actionButtonUrl = "https://gslegacywealth.com/portfolio"
+    } else if (source === 'fast_track_audit') {
+      customerSubject = "Fast-Track Audit Request Secured — GS Legacy Wealth"
+      customerBodyHeader = "Your Loom audit request is scheduled."
+      customerBodyText = `Thank you for requesting a 5-minute speed, SEO, and operational leverage review of your site: ${website || 'your brand'}. An engineering lead will record and transmit your video audit link within 12 hours.`
+      actionButtonText = "Book Full Systems Consultation"
+      actionButtonUrl = "https://gslegacywealth.com/book"
     }
 
     const customerEmailHtml = `

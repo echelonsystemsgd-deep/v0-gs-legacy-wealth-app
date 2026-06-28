@@ -19,11 +19,11 @@ export default function Home() {
       <Navbar />
       <Hero />
       <SocialProofStrip />
-      <Bottleneck />
       <Services limit={3} />
+      <Portfolio limit={4} />
+      <Bottleneck />
       <Process />
       <Results />
-      <Portfolio limit={4} />
       <WhyGSLegacy />
       <Testimonials />
       <Pricing isHomepage={true} />

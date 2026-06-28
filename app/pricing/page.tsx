@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/page-header"
 
 export const metadata = {
   title: "Pricing & Investment",
-  description: "Transparent capital requirements for high-yield digital assets. Choose Vanguard, Sovereign, or Apex alignment.",
+  description: "Transparent capital requirements for high-yield digital assets. Choose Authority Suite, Operations Machine, or Revenue Engine alignment.",
 }
 
 export default function PricingPage() {

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useWebsiteContent } from "@/hooks/use-website-content"
+import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 
 export function Hero() {
   const { getSection } = useWebsiteContent()
@@ -12,8 +13,8 @@ export function Hero() {
     eyebrow: "Bespoke Digital Infrastructure & Autonomic Systems",
     headline: "We Build Digital Systems for Category Leaders. The Rest Chase Them.",
     subheadline: "We do not build generic templates. We engineer high-performance visual platforms and automated pipelines for enterprises that require absolute leverage. Selectively aligned. Flawlessly executed.",
-    primaryCtaText: "Apply for System Audit",
-    secondaryCtaText: "See Our Work",
+    primaryCtaText: "Request System Integration Audit",
+    secondaryCtaText: "Deployed System Registry",
     trustItems: [
       "10+ Bespoke Deployments",
       "Autonomic Orchestrations",
@@ -93,9 +94,13 @@ export function Hero() {
               <Link href="/portfolio">{data.secondaryCtaText}</Link>
             </Button>
           </div>
-          <Link href="/process" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-2">
+          <Link href="/process" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-2 mb-6">
             Unsure of your requirements? Review our Execution Protocol →
           </Link>
+
+          <div className="w-full max-w-md pt-4">
+            <SpeedGapVisualizer />
+          </div>
         </motion.div>
 
         {/* Trust Bar */}

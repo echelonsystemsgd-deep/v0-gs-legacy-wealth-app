@@ -4,11 +4,8 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { AlertCircle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ROICalculatorModal } from "@/components/roi-calculator-modal"
-
 export function Bottleneck() {
   const [isOrdered, setIsOrdered] = useState(false)
-  const [isROICalcOpen, setIsROICalcOpen] = useState(false)
 
   // SVG Coordinates for Chaos vs Order state
   const nodes = [
@@ -43,13 +40,13 @@ export function Bottleneck() {
             Operational Friction
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
-            Manual friction is a direct tax on your margins.
+            Your operations are leaking margin. Stop paying the manual tax.
           </h2>
           <p className="font-sans text-base text-text-primary opacity-75 leading-relaxed mt-6 max-w-2xl mx-auto">
-            Relying on manual labor for lead qualification, data transfer, and pipeline routing is an operational leak. We replace structural friction with autonomous hubs, freeing your key players to focus entirely on conversion.
+            Relying on manual lead routing, manual database updates, and delayed booking sequences is operational negligence. For every day your system remains disconnected, your customer acquisition cost compounds.
           </p>
           <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">
-            Every week operations remain manual is a compounding tax on your conversion margins. Waiting to automate doesn't save capital; it leaks it.
+            Speed is the ultimate unfair advantage. While you wait to automate, your competitors are buying speed. They aren't smarter; they simply have more leverage.
           </p>
         </motion.div>
 
@@ -139,10 +136,15 @@ export function Bottleneck() {
                     {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
                   </span>
                   <button
-                    onClick={() => setIsROICalcOpen(true)}
+                    onClick={() => {
+                      const el = document.getElementById("roi-calculator")
+                      if (el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "start" })
+                      }
+                    }}
                     className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block bg-transparent border-none p-0 cursor-pointer text-left focus:outline-none"
                   >
-                    Calculate Uptime Value & ROI →
+                    Quantify Your System Deficit →
                   </button>
                 </div>
                 <Button
@@ -227,7 +229,6 @@ export function Bottleneck() {
         </div>
       </div>
 
-      <ROICalculatorModal isOpen={isROICalcOpen} onClose={() => setIsROICalcOpen(false)} />
     </section>
   )
 }

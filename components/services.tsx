@@ -124,6 +124,7 @@ export function Services({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}
               >
                 <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-xl group">
                   <CardContent className="p-8 flex flex-col justify-between h-full space-y-6">

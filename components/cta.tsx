@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useWebsiteContent } from "@/hooks/use-website-content"
+import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 
 export function CTA() {
   const { getSection } = useWebsiteContent()
   const data = getSection('cta', {
     headline: "Ready to Assert Market Control?",
     subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting only 2 new integration partnerships this month (Cohort capacity at 80%).",
-    buttonText: "Initiate Clinical Audit"
+    buttonText: "Initiate Operational Audit"
   })
 
   return (
@@ -52,7 +53,7 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full sm:w-auto pt-4"
+          className="w-full flex flex-col items-center gap-6 pt-4"
         >
           <Button
             asChild
@@ -63,6 +64,10 @@ export function CTA() {
               {data.buttonText}
             </Link>
           </Button>
+
+          <div className="w-full max-w-md border-t border-white/5 pt-6 mt-2">
+            <SpeedGapVisualizer />
+          </div>
         </motion.div>
       </div>
     </section>

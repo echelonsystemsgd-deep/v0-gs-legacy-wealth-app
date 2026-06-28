@@ -42,69 +42,69 @@ function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; pre
 
 const setupTiers = [
   {
-    name: "Vanguard",
-    price: "1,500",
-    interval: "£375 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£375) linked to build progress",
-    description: "For emerging brands establishing absolute category presence.",
+    name: "Authority Suite",
+    price: "2,750",
+    interval: "£687.50 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£687.50) linked to build progress",
+    description: "A luxury digital front-office that projects absolute authority. Engineered without templates to secure and convert elite clients.",
     features: [
-      "Custom Luxury Website (3 Pages)",
-      "Premium Mobile Optimisation",
-      "Core SEO Blueprint Setup",
-      "Speed Optimisation (90+ Mobile Score)",
+      "Bespoke Next.js Authority Platform (5 Pages)",
+      "Calendly Scheduling Integration",
+      "Stripe Payment Gateway Integration",
+      "Core SEO Blueprint & Schema Setup",
+      "Supercharged Speed Profile (95+ Mobile)",
       "30 Days Dedicated Post-Launch Support",
-      "Elite UI Styling & Smooth Animations",
     ],
     cta: "Request Alignment",
     featured: false,
-    tag: "Vanguard"
+    tag: "Authority Suite"
   },
   {
-    name: "Sovereign",
-    price: "3,500",
-    interval: "£875 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£875) linked to build progress",
-    description: "Full-scale autonomous web and AI integration. The benchmark for market dominance.",
+    name: "Operations Machine",
+    price: "5,500",
+    interval: "£1,375 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£1,375) linked to build progress",
+    description: "Your complete digital systems layer. We replace manual administrative overhead with custom software leverage so your business runs on autopilot.",
     features: [
-      "Custom Authority Website (Up to 8 Pages)",
-      "Custom AI Chat Concierge Integration",
-      "Automated Lead Capture & Delivery Funnel",
-      "CRM & Calendar Booking Sync",
-      "Advanced Premium SEO Strategy & Copywriting",
+      "Everything in Authority Suite (up to 10 Pages)",
+      "Custom Backend Admin Dashboard",
+      "Custom Secure Client Portal Integration",
+      "Autonomic Lead & CRM Automations",
+      "Automated Stripe Billing & Invoices",
       "90 Days Dedicated Post-Launch Support",
     ],
     cta: "Initiate Audit",
     featured: true,
-    tag: "Sovereign"
+    tag: "Operations Machine"
   },
   {
-    name: "Apex Suite",
-    price: "7,000",
-    interval: "£1,750 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£1,750) linked to build progress",
-    description: "Total brand takeover and multi-agent system execution. For leaders requiring complete operational leverage.",
+    name: "Revenue Engine",
+    price: "9,800",
+    interval: "£2,450 deposit to initiate",
+    milestoneBreakdown: "4 milestone stages of 25% (£2,450) linked to build progress",
+    description: "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and program your AI lead triage.",
     features: [
-      "Complete Brand Identity Suite (Logos, Guidelines)",
-      "Multi-System Bespoke AI Workflows",
-      "Interactive Digital Sales & Pitch Assets",
-      "Monthly Growth & Scaling Strategy",
-      "Priority VIP Developer Access & Support",
-      "Unlimited Fine-Tuning Revisions",
+      "Everything in Operations Machine (Unlimited Pages)",
+      "Bespoke Cold Email Outreach System",
+      "Custom-Trained AI Agent Concierge",
+      "Full Brand Identity Suite (Logos, Guidelines)",
+      "Priority VIP Developer Slack Support",
+      "Weekly Growth & Scaling Roadmaps",
     ],
     cta: "Initiate Audit",
     featured: false,
-    tag: "Apex Suite"
+    tag: "Revenue Engine"
   },
 ]
 
 const retainerTiers = [
   {
-    name: "Sentry Support",
+    name: "Pilot Support",
     price: "499",
     interval: "billed monthly",
     description: "Continuous hosting, top-tier performance audits, and priority developer hours.",
     features: [
-      "Premium Dedicated Ultra-Fast Hosting",
+      "Premium Dedicated Ultra-Fast CDN Hosting",
       "Weekly Security & Speed Audits",
       "3 Hours Design & Copywriting Updates/mo",
       "Monthly Traffic & SEO Analytics Report",
@@ -113,16 +113,16 @@ const retainerTiers = [
     ],
     cta: "Request Alignment",
     featured: false,
-    tag: "Vanguard"
+    tag: "Authority Suite"
   },
   {
-    name: "Velocity Optimization",
-    price: "1,299",
+    name: "Co-Pilot Growth",
+    price: "1,290",
     interval: "billed monthly",
     description: "Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.",
     features: [
-      "Everything in Sentry Support",
-      "Continuous AI Chatbot Re-training & Updates",
+      "Everything in Pilot Support",
+      "Continuous AI Agent Re-training & Updates",
       "1 Custom High-Converting Landing Page/mo",
       "Advanced SEO Content & Competitor Strategy",
       "Weekly Lead Funnel Optimization",
@@ -130,24 +130,24 @@ const retainerTiers = [
     ],
     cta: "Initiate Audit",
     featured: true,
-    tag: "Sovereign"
+    tag: "Operations Machine"
   },
   {
-    name: "Fractional Ops Takeover",
-    price: "2,999",
+    name: "Enterprise Autonomic Partner",
+    price: "2,850",
     interval: "billed monthly",
     description: "Your complete external fractional Chief Technology & Marketing Team.",
     features: [
-      "Everything in Velocity Optimization",
+      "Everything in Co-Pilot Growth",
       "Weekly High-Level Growth Consulting Call",
-      "Unlimited System & UI Adjustments",
+      "Unlimited Minor System & UI Adjustments",
       "New AI Workflow Builds & Automations",
       "Bespoke Cold Email/Marketing System setups",
       "Direct Slack Hotline to Core Founders",
     ],
     cta: "Initiate Audit",
     featured: false,
-    tag: "Apex Suite"
+    tag: "Revenue Engine"
   },
 ]
 
@@ -208,10 +208,10 @@ export function Pricing({ isHomepage = false }: PricingProps) {
 
   const recommendedTier = 
     revenue < 15000 
-      ? "Vanguard" 
+      ? "Authority Suite" 
       : revenue >= 15000 && revenue < 50000 
-      ? "Sovereign" 
-      : "Apex Suite"
+      ? "Operations Machine" 
+      : "Revenue Engine"
 
   if (isHomepage) {
     return (
@@ -224,12 +224,190 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               Investment
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-              Bespoke Capital Investments. Measurable Yields.
+              Bespoke Systems Architecture. Automated Pipeline Leverage.
             </h2>
             <p className="font-sans text-sm text-text-primary opacity-80 mt-4 max-w-xl mx-auto leading-relaxed">
-              We do not build administrative overhead. We deploy capital assets designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
+              We don't build websites. We build automated client acquisition machines designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
             </p>
+          </div>
 
+          {/* ROI Estimator */}
+          <motion.div
+            id="roi-calculator"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-20 glass rounded-xl p-6 sm:p-10 bg-bg-tertiary/10 border border-white/5"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
+                <Calculator size={20} className="text-accent-gold animate-pulse" />
+              </div>
+              <div className="text-left">
+                <span className="text-xs uppercase tracking-widest text-accent-gold font-bold block">Deficit Diagnostics</span>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">Quantify Your System Deficit</h3>
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-12 gap-8 items-center text-left">
+
+              {/* Output Panel — appears FIRST on mobile, right column on desktop */}
+              <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-xl p-6 border border-white/5 space-y-6 order-first lg:order-last">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                      <Clock size={12} className="text-accent-gold" />
+                      <span>Annual Time Reclaimed</span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-bold font-serif text-white">
+                      <RollingNumber value={annualHoursSaved} suffix=" Hrs" />
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                      <Zap size={12} className="text-accent-gold" />
+                      <span>Est. Growth Lift (15%)</span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-bold font-serif text-white">
+                      <RollingNumber value={projectedRevenueGrowth} prefix="£" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-lg border border-accent-purple/20">
+                  <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-accent-gold">Total Est. Annual Value Unlocked</div>
+                  <div className="text-3xl font-bold font-serif text-accent-gold">
+                    <RollingNumber value={totalValueUnlocked} prefix="£" />
+                  </div>
+                  <p className="text-xxs text-muted-foreground mt-2 leading-tight">
+                    Value computed by applying 15% website conversion lift and valuation of manual hours saved at £75/hr.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-lg text-xs">
+                  <span className="text-muted-foreground">Recommended Alignment:</span>
+                  <span className="flex items-center gap-1.5 font-bold text-accent text-accent-gold">
+                    <Crown size={12} />
+                    {recommendedTier} System Tier
+                  </span>
+                </div>
+
+                <Button
+                  asChild
+                  size="lg"
+                  variant="default"
+                  className="w-full py-4 text-xs font-bold"
+                >
+                  <Link href={`/book?tier=${recommendedTier}`}>
+                    <span>Apply for Vetted Integration</span>
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Inputs — appears SECOND on mobile, left column on desktop */}
+              <div className="lg:col-span-7 space-y-8 order-last lg:order-first">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Plug in your monthly revenue and weekly manual admin hours. The math is simple: manual operations cost your business £75/hour in lost productivity and leak up to 15% of your potential pipeline conversion. Adjust the sliders to see what is currently slipping through the cracks.
+                </p>
+
+                {/* Revenue Input */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-sm font-medium">
+                    <span className="text-foreground">Current Monthly Revenue</span>
+                    <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
+                      £{revenue.toLocaleString()}
+                    </span>
+                  </div>
+
+                  {/* Mobile Stepper */}
+                  <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                    <button
+                      onClick={() => setRevenue(Math.max(5000, revenue - 5000))}
+                      aria-label="Decrease revenue"
+                      className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    >
+                      −
+                    </button>
+                    <span className="font-bold font-serif text-xl text-white tracking-tight">
+                      £{revenue.toLocaleString()}
+                    </span>
+                    <button
+                      onClick={() => setRevenue(Math.min(100000, revenue + 5000))}
+                      aria-label="Increase revenue"
+                      className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Desktop Slider */}
+                  <input
+                    type="range"
+                    min="5000"
+                    max="100000"
+                    step="5000"
+                    value={revenue}
+                    onChange={(e) => setRevenue(Number(e.target.value))}
+                    className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+                    style={{
+                      background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) 100%)`
+                    }}
+                  />
+                </div>
+
+                {/* Manual Hours Input */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-sm font-medium">
+                    <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
+                    <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
+                      {manualHours} Hours
+                    </span>
+                  </div>
+
+                  {/* Mobile Stepper */}
+                  <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                    <button
+                      onClick={() => setManualHours(Math.max(2, manualHours - 1))}
+                      aria-label="Decrease hours"
+                      className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    >
+                      −
+                    </button>
+                    <span className="font-bold font-serif text-xl text-white tracking-tight">
+                      {manualHours} hrs/wk
+                    </span>
+                    <button
+                      onClick={() => setManualHours(Math.min(40, manualHours + 1))}
+                      aria-label="Increase hours"
+                      className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Desktop Slider */}
+                  <input
+                    type="range"
+                    min="2"
+                    max="40"
+                    step="1"
+                    value={manualHours}
+                    onChange={(e) => setManualHours(Number(e.target.value))}
+                    className="hidden md:block w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+                    style={{
+                      background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) 100%)`
+                    }}
+                  />
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+
+          {/* Billing Switcher Header */}
+          <div className="text-center mb-12">
             {/* Billing Toggle */}
             <div className="inline-flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative mt-2">
               <button
@@ -275,7 +453,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""}`}
+                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <div
                     className={`relative h-full bg-bg-tertiary border rounded-xl transition-all duration-300 ${
@@ -381,6 +559,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
         
         {/* ROI Estimator */}
         <motion.div
+          id="roi-calculator"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -392,8 +571,8 @@ export function Pricing({ isHomepage = false }: PricingProps) {
               <Calculator size={20} />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest text-accent-gold font-bold">Interactive Estimator</span>
-              <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Bespoke System Return Calculator</h3>
+              <span className="text-xs uppercase tracking-widest text-accent-gold font-bold">Deficit Diagnostics</span>
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Quantify Your System Deficit</h3>
             </div>
           </div>
 
@@ -445,7 +624,7 @@ export function Pricing({ isHomepage = false }: PricingProps) {
             {/* Inputs — appears SECOND on mobile, left column on desktop */}
             <div className="lg:col-span-7 space-y-8 order-last lg:order-first">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Luxury platforms are digital investments. Adjust the inputs below to calculate how much time and potential revenue our custom design and AI automations can unlock for your brand.
+                Plug in your monthly revenue and weekly manual admin hours. The math is simple: manual operations cost your business £75/hour in lost productivity and leak up to 15% of your potential pipeline conversion. Adjust the sliders to see what is currently slipping through the cracks.
               </p>
 
               {/* Revenue Input */}
@@ -547,10 +726,10 @@ export function Pricing({ isHomepage = false }: PricingProps) {
           <p className="text-xs uppercase tracking-widest text-accent-gold font-bold mb-3">Tailored Options</p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-white">Strategic </span>
-            <span className="text-gradient-gold">Investment Models</span>
+            <span className="text-gradient-gold">Systems Leverage</span>
           </h2>
           <p className="font-sans text-sm text-muted-foreground mt-4 max-w-xl mx-auto leading-relaxed">
-            We do not build administrative overhead. We deploy capital assets designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
+            We don't build websites. We build automated client acquisition machines designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
           </p>
           
           <div className="inline-flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
@@ -716,9 +895,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                       <thead>
                         <tr className="border-b border-border">
                           <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-bg-primary z-20 border-r border-border">Feature Category</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Vanguard Setup</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Sovereign System</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Apex Suite</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Authority Suite</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Operations Machine</th>
+                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Revenue Engine</th>
                         </tr>
                       </thead>
                       <tbody>

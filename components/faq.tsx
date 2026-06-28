@@ -12,12 +12,12 @@ const faqs = [
   {
     question: "Are the prices one-time fees or monthly subscriptions?",
     answer:
-      "Our main packages (Vanguard, Sovereign, and Apex Suite) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Sentry Support, Velocity Optimization, and Fractional Ops Takeover) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
+      "Our core builds (Authority Suite, Operations Machine, and Revenue Engine) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Pilot Support, Co-Pilot Growth, and Enterprise Autonomic Partner) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
   },
   {
     question: "What is your standard payment structure?",
     answer:
-      "For setup projects, we operate on a premium 50/50 milestone basis: a 50% initial commitment fee to reserve your scheduling slot and begin interactive wireframing, and the remaining 50% upon final client sign-off, testing clearance, and full handover.",
+      "For setup projects, we operate on a highly structured milestone workflow: a 25% initial commitment deposit to secure your scheduling slot and begin system design, with the remaining 75% divided into 3 equal milestone payments of 25% linked directly to transparent build progress checkpoints.",
   },
   {
     question: "How long does the system build take?",
@@ -27,7 +27,7 @@ const faqs = [
   {
     question: "Do you build custom AI automations beyond chatbots?",
     answer:
-      "Yes, absolutely. Under our Sovereign and Apex Suite tiers (as well as Velocity Optimization and Fractional Ops Takeover retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
+      "Yes, absolutely. Under our Operations Machine and Revenue Engine tiers (as well as Co-Pilot Growth and Enterprise Autonomic Partner retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
   },
   {
     question: "Will the website work flawlessly on mobile?",

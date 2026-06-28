@@ -358,10 +358,10 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           </div>
 
           <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
-            Currently Under Construction
+            Request Sanitized System Schema
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            This system is under strict operational lock to preserve private client data integrations. Request an invite to view our sanitised architectural blueprints.
+            Due to NDAs, we cannot expose this active client dashboard to public traffic. Enter your email to instantly receive a sanitized architectural blueprint, database schema, and Loom walkthrough of this build.
           </p>
 
           {errorMsg ? (
@@ -410,8 +410,8 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
               animate={{ opacity: 1, scale: 1 }}
               className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-accent-gold"
             >
-              <p className="font-bold mb-1">Thank you for your interest!</p>
-              <p className="text-xs text-muted-foreground">We will notify you as soon as this site is live.</p>
+              <p className="font-bold mb-1">Access Request Confirmed!</p>
+              <p className="text-xs text-muted-foreground">Check your inbox. The sanitized blueprints and Loom video walkthrough are on their way.</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -448,7 +448,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                     <span>Notify Me When Live</span>
+                     <span>Request System Schema</span>
                      <ArrowRight size={16} />
                   </>
                 )}
