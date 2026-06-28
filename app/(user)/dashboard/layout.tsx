@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -7,6 +8,10 @@ import { Watermark } from '@/components/watermark'
 import { InspectorProvider } from '@/hooks/use-inspector'
 import { PortalHub } from '@/components/dashboard/portal-hub'
 import { InspectorPanel } from '@/components/dashboard/inspector-panel'
+
+export const metadata: Metadata = {
+  title: 'User Dashboard',
+}
 
 export default async function UserDashboardLayout({
   children,
