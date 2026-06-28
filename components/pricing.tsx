@@ -155,35 +155,36 @@ const comparisonCategories = [
   {
     category: "Core Design & Strategy",
     items: [
-      { name: "Custom Elite Design", launch: "Luxury Template", legacy: "Bespoke Art-Direction", elite: "Masterful Masterpiece" },
-      { name: "Page Limit", launch: "Up to 3", legacy: "Up to 8", elite: "Custom Tailored (Unlimited)" },
-      { name: "Custom Copywriting", launch: "Basic Polish", legacy: "Persuasive Copy Included", elite: "Premium Authority Tone" },
-      { name: "Mobile Optimisation", launch: "✓ Full", legacy: "✓ Full + Dynamic Features", elite: "✓ Elite Fluid Design" },
+      { name: "Custom Design", authoritySuite: "Bespoke Next.js Art-Direction", operationsMachine: "Bespoke Art-Direction + Custom UI", revenueEngine: "Elite Art-Direction + Product Branding" },
+      { name: "Page Limit", authoritySuite: "Up to 5 Custom Pages", operationsMachine: "Up to 10 Custom Pages", revenueEngine: "Unlimited Custom Pages" },
+      { name: "Custom Copywriting", authoritySuite: "Conversion-Focused Copywriting", operationsMachine: "Persuasive Copywriting & Micro-copy", revenueEngine: "Complete Authority Brand Copywriting" },
+      { name: "Mobile Optimisation", authoritySuite: "✓ Full (95+ Mobile PageSpeed)", operationsMachine: "✓ Full + Dynamic Web App UI", revenueEngine: "✓ Elite Fluid Design" },
     ]
   },
   {
     category: "AI & Smart Systems",
     items: [
-      { name: "AI Chat Concierge", launch: "—", legacy: "✓ Single Knowledge Base", elite: "✓ Complex Multi-agent Logic" },
-      { name: "CRM Integration", launch: "—", legacy: "✓ Automatic Lead Routing", elite: "✓ Tailored API Integration" },
-      { name: "Calendar & Booking Sync", launch: "—", legacy: "✓ Fully Automated", elite: "✓ VIP Priority Flow Setup" },
-      { name: "Custom Automation Workflows", launch: "—", legacy: "—", elite: "✓ Up to 3 Core System Integrations" },
+      { name: "AI Chat Concierge", authoritySuite: "—", operationsMachine: "—", revenueEngine: "✓ Custom-Trained AI Agent Concierge" },
+      { name: "CRM Integration", authoritySuite: "Calendly intake routing", operationsMachine: "✓ Autonomic Lead & CRM Automations", revenueEngine: "✓ Enterprise Custom Pipeline Automations" },
+      { name: "Calendar & Booking Sync", authoritySuite: "✓ Calendly integration", operationsMachine: "✓ Automated intake routing & syncing", revenueEngine: "✓ VIP scheduling with custom routing" },
+      { name: "Client & Admin Portals", authoritySuite: "—", operationsMachine: "✓ Secure Client & Admin Dashboards", revenueEngine: "✓ White-labeled multi-portal dashboards" },
+      { name: "Custom Automation Workflows", authoritySuite: "—", operationsMachine: "✓ Automated Billing & Invoices (Stripe)", revenueEngine: "✓ Custom CRM + Outbound Cold Outreach" },
     ]
   },
   {
     category: "SEO & Growth",
     items: [
-      { name: "SEO Optimization", launch: "Structural Setup", legacy: "Advanced Strategy & Schema", elite: "Comprehensive Dominance Plan" },
-      { name: "Speed & Performance", launch: "90+ Guaranteed", legacy: "95+ Guaranteed", elite: "98+ Max Speed Guarantee" },
-      { name: "Brand Identity Suite", launch: "—", legacy: "—", elite: "✓ Premium (Logos & Typography)" },
+      { name: "SEO Optimization", authoritySuite: "Core SEO Blueprint & Schema Setup", operationsMachine: "Advanced Strategy, Local & Global Schema", revenueEngine: "Comprehensive Search Engine Dominance Plan" },
+      { name: "Speed & Performance", authoritySuite: "95+ Guaranteed", operationsMachine: "95+ Guaranteed + Caching System", revenueEngine: "98+ Max Speed Guarantee" },
+      { name: "Brand Identity Suite", authoritySuite: "Logo placement & layout palette", operationsMachine: "Cohesive brand UI kit", revenueEngine: "✓ Full Identity Suite (Logos, Slide Decks)" },
     ]
   },
   {
     category: "Support & Iterations",
     items: [
-      { name: "Post-Launch Support", launch: "30 Days", legacy: "90 Days", elite: "VIP Support (Always Active)" },
-      { name: "Revision Policy", launch: "3 Rounds", legacy: "Unlimited (Prior to Build)", elite: "Bespoke Ongoing Adjustments" },
-      { name: "Turnaround / Support Channel", launch: "Email (48 Hours)", legacy: "Dedicated Portal (24 Hours)", elite: "Founder Slack (Instant Access)" },
+      { name: "Post-Launch Support", authoritySuite: "30 Days Support", operationsMachine: "90 Days Support", revenueEngine: "90 Days + Dedicated Support Channel" },
+      { name: "Revision Policy", authoritySuite: "3 Rounds (Design Phase)", operationsMachine: "Unlimited (Prior to Build)", revenueEngine: "Bespoke Ongoing Adjustments" },
+      { name: "Turnaround / Support Channel", authoritySuite: "Email Support (24h)", operationsMachine: "Dedicated Portal Support (24h)", revenueEngine: "Priority VIP Developer Slack (4h response)" },
     ]
   }
 ]
@@ -911,9 +912,9 @@ export function Pricing({ isHomepage = false }: PricingProps) {
                             {cat.items.map((item, itemIdx) => (
                               <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
                                 <td className="py-4 px-4 text-sm font-medium text-white sticky left-0 bg-bg-primary z-10 border-r border-border">{item.name}</td>
-                                <td className="py-4 text-sm text-muted-foreground text-center">{item.launch}</td>
-                                <td className="py-4 text-sm text-accent-gold font-semibold text-center">{item.legacy}</td>
-                                <td className="py-4 text-sm text-muted-foreground text-center">{item.elite}</td>
+                                <td className="py-4 text-sm text-muted-foreground text-center">{item.authoritySuite}</td>
+                                <td className="py-4 text-sm text-accent-gold font-semibold text-center">{item.operationsMachine}</td>
+                                <td className="py-4 text-sm text-muted-foreground text-center">{item.revenueEngine}</td>
                               </tr>
                             ))}
                           </React.Fragment>

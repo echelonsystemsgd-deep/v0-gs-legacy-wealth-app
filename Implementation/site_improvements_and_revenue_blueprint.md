@@ -84,9 +84,31 @@ To build a valuation multiplier for the agency, recurring revenue is essential.
 | **Developer/Designer Support** | 3 Hours/mo | 10 Hours/mo | Unlimited Minor Modifications |
 | **AI Agent Re-training** | — | Monthly knowledge base updates | Weekly fine-tuning & prompt audits |
 | **Growth Assets** | — | 1 High-converting landing page/mo | Custom workflow automation builds |
-| **Slack Concierge** | Email/Portal (24h) | Slack (4h response) | Instant Direct Founder Slack Hotline |
+
+### 3. Detailed Feature Comparison Matrix
+
+The "Compare Features in Detail" comparison matrix on the standalone pricing page (/pricing) will be overhauled to map exactly to the new tiers (Authority Suite, Operations Machine, and Revenue Engine), replacing all outdated placeholders (such as templates and incorrect limits).
+
+| Feature / System | **Authority Suite** (£2,750) | **Operations Machine** (£5,500) | **Revenue Engine** (£9,800) |
+| :--- | :--- | :--- | :--- |
+| **Custom Design** | Bespoke Next.js Art-Direction | Bespoke Art-Direction + Custom UI | Elite Art-Direction + Product Branding |
+| **Page Limit** | Up to 5 Custom Pages | Up to 10 Custom Pages | Unlimited Custom Pages |
+| **Custom Copywriting** | Conversion-Focused Copywriting | Persuasive Copywriting & Micro-copy | Complete Authority Brand Copywriting |
+| **Mobile Optimisation** | ✓ Full (95+ Mobile PageSpeed) | ✓ Full + Dynamic Web App UI | ✓ Elite Fluid Design |
+| **AI Chat Concierge** | — | — | ✓ Custom-Trained AI Agent Concierge |
+| **CRM Integration** | Calendly intake routing | ✓ Autonomic Lead & CRM Automations | ✓ Enterprise Custom Pipeline Automations |
+| **Calendar & Booking Sync** | ✓ Calendly integration | ✓ Automated intake routing & syncing | ✓ VIP scheduling with custom routing |
+| **Client & Admin Portals** | — | ✓ Secure Client & Admin Dashboards | ✓ White-labeled multi-portal dashboards |
+| **Custom Automation Workflows** | — | ✓ Automated Billing & Invoices (Stripe) | ✓ Custom CRM + Outbound Cold Outreach |
+| **SEO Optimization** | Core SEO Blueprint & Schema Setup | Advanced Strategy, Local & Global Schema | Comprehensive Search Engine Dominance Plan |
+| **Speed & Performance** | 95+ Guaranteed | 95+ Guaranteed + Caching System | 98+ Max Speed Guarantee |
+| **Brand Identity Suite** | Logo placement & layout palette | Cohesive brand UI kit | ✓ Full Identity Suite (Logos, Slide Decks) |
+| **Post-Launch Support** | 30 Days Support | 90 Days Support | 90 Days + Dedicated Support Channel |
+| **Revision Policy** | 3 Rounds (Design Phase) | Unlimited (Prior to Build) | Bespoke Ongoing Adjustments |
+| **Turnaround / Channel** | Email Support (24h) | Dedicated Portal Support (24h) | Priority VIP Developer Slack (4h response) |
 
 ---
+
 
 ## Part 3: Modal & Button Navigation Audit
 

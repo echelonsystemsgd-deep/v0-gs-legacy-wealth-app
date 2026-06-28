@@ -17,6 +17,7 @@ type ProjectProps = {
     retainer_amount: number
     one_time_fee: number
     rev_share_percentage: number
+    service_type: string | null
   }
 }
 
@@ -87,6 +88,75 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   }
 
   // Render Contract Selection Screen if not enrolled
+  const serviceTypeLower = (project.service_type || '').toLowerCase()
+  const isAuthority = serviceTypeLower.includes('authority') || project.one_time_fee === 2750 || project.retainer_amount === 499
+  const isOperations = serviceTypeLower.includes('operations') || project.one_time_fee === 5500 || project.retainer_amount === 1290
+  const isRevenue = serviceTypeLower.includes('revenue') || project.one_time_fee === 9800 || project.retainer_amount === 2850
+
+  const retainerPerks = isRevenue
+    ? [
+        "Premium Enterprise Isolated Server",
+        "Real-Time Telemetry & Failover Protection",
+        "Unlimited Minor Modifications",
+        "Weekly AI Agent Fine-Tuning & Prompt Audits",
+        "Custom Workflow Automation Builds",
+        "Instant Direct Founder Slack Hotline"
+      ]
+    : isOperations
+    ? [
+        "Premium CDN Hosting + Cache Optimization",
+        "Weekly Audits + API Health Checks",
+        "10 Dedicated Developer/Designer Hours/mo",
+        "Monthly AI Agent Knowledge Base Updates",
+        "1 Custom High-Converting Landing Page/mo",
+        "Slack Support (4h Response Time)"
+      ]
+    : isAuthority
+    ? [
+        "Premium Dedicated CDN Hosting",
+        "Weekly Security & Speed Audits",
+        "3 Dedicated Developer/Designer Hours/mo",
+        "24/7 Critical System Monitoring",
+        "Same-Day Urgent Edits Turnaround",
+        "Email/Portal Support (24h Response Time)"
+      ]
+    : [];
+
+  const setupPerks = isRevenue
+    ? [
+        "Everything in Operations Machine (Unlimited Pages)",
+        "Bespoke Cold Email Outreach System (Warm-up, sequencing, rotation)",
+        "Custom-Trained AI Agent Concierge (24/7 qualification & scheduling)",
+        "Full Brand Identity Suite (Logos, premium typography, slide decks)",
+        "Priority VIP Developer Slack Support (Instant response)",
+        "Weekly Growth & Scaling Roadmaps"
+      ]
+    : isOperations
+    ? [
+        "Everything in Authority Suite (up to 10 Pages)",
+        "Custom Backend Admin Dashboard & Secure Client Portal",
+        "Autonomic Lead & CRM Automations (Under 5s response routing)",
+        "Automated Stripe Billing & Invoice Generation",
+        "90 Days Dedicated Post-Launch Support"
+      ]
+    : isAuthority
+    ? [
+        "Bespoke Next.js Authority Platform (5 Custom Pages)",
+        "Calendly Scheduling Integration with Intake Routing",
+        "Stripe Gateway Integration (deposits, retainers)",
+        "Core SEO Blueprint & Schema Markup Setup",
+        "Supercharged Speed Profile (95+ Mobile PageSpeed)",
+        "30 Days Dedicated Post-Launch Support"
+      ]
+    : [];
+
+  const pryPerks = [
+    "Unlimited System builds & updates at zero upfront cost",
+    "Active CRM & Lead Capture maintenance for life",
+    "Continuous AI Agent updates & workflows optimization",
+    "Shared risk: we only succeed when your system generates revenue"
+  ];
+
   if (!hasContract) {
     return (
       <div data-tour="telemetry-deck" className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 flex flex-col space-y-5 h-full shadow-lg">
@@ -102,12 +172,27 @@ export function ProjectTelemetry({ project }: ProjectProps) {
           <div className="p-3.5 rounded-xl border border-gold/15 bg-white/[0.01] hover:border-gold/30 transition-all flex flex-col justify-between gap-3">
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-foreground">Monthly Retainer</span>
+                <span className="text-xs font-bold text-foreground">
+                  Monthly Retainer {isRevenue ? "(Enterprise)" : isOperations ? "(Co-Pilot)" : isAuthority ? "(Pilot)" : ""}
+                </span>
                 <span className="text-xs font-mono font-bold text-gold">{project.retainer_amount > 0 ? `${formatCurrency(project.retainer_amount)}/mo` : 'TBD'}</span>
               </div>
               <p className="text-[9px] text-muted-foreground leading-normal">
                 Continuous operational strategy, updates, and maintenance support billed monthly.
               </p>
+              {retainerPerks.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
+                  <span className="text-[8px] font-bold text-accent-gold uppercase tracking-wider">Perks Included:</span>
+                  <div className="space-y-1">
+                    {retainerPerks.map((p, idx) => (
+                      <div key={idx} className="flex items-start gap-1.5 text-[8px] text-muted-foreground">
+                        <span className="text-accent-gold text-[10px] leading-none shrink-0">•</span>
+                        <span className="leading-tight">{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             <button
               onClick={() => handleEnroll('retainer')}
@@ -122,12 +207,27 @@ export function ProjectTelemetry({ project }: ProjectProps) {
           <div className="p-3.5 rounded-xl border border-gold/15 bg-white/[0.01] hover:border-gold/30 transition-all flex flex-col justify-between gap-3">
             <div className="space-y-1">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-foreground">One-Time Setup Fee</span>
+                <span className="text-xs font-bold text-foreground">
+                  One-Time Setup {isRevenue ? "(Revenue Engine)" : isOperations ? "(Operations Machine)" : isAuthority ? "(Authority Suite)" : ""}
+                </span>
                 <span className="text-xs font-mono font-bold text-gold">{project.one_time_fee > 0 ? formatCurrency(project.one_time_fee) : 'TBD'}</span>
               </div>
               <p className="text-[9px] text-muted-foreground leading-normal">
                 Complete asset deployment, configuration, and structural handover at a flat rate.
               </p>
+              {setupPerks.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
+                  <span className="text-[8px] font-bold text-accent-gold uppercase tracking-wider">Deliverables:</span>
+                  <div className="space-y-1">
+                    {setupPerks.map((p, idx) => (
+                      <div key={idx} className="flex items-start gap-1.5 text-[8px] text-muted-foreground">
+                        <span className="text-accent-gold text-[10px] leading-none shrink-0">•</span>
+                        <span className="leading-tight">{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             <button
               onClick={() => handleEnroll('one_time')}
@@ -148,6 +248,17 @@ export function ProjectTelemetry({ project }: ProjectProps) {
               <p className="text-[9px] text-muted-foreground leading-normal">
                 Strategic co-investment scheme. We provision your system for life in exchange for a performance-based royalty yield.
               </p>
+              <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
+                <span className="text-[8px] font-bold text-accent-gold uppercase tracking-wider">Royalty Agreement Perks:</span>
+                <div className="space-y-1">
+                  {pryPerks.map((p, idx) => (
+                    <div key={idx} className="flex items-start gap-1.5 text-[8px] text-muted-foreground">
+                      <span className="text-accent-gold text-[10px] leading-none shrink-0">•</span>
+                      <span className="leading-tight">{p}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <button
               onClick={() => handleEnroll('rev_share')}
