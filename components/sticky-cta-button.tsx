@@ -70,7 +70,7 @@ export function StickyCTAButton() {
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-50 md:bottom-10 md:right-10"
+          className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] right-6 z-50 md:bottom-10 md:right-10"
         >
           {/*
             Routes to /book — the full 5-step vetting flow.

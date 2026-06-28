@@ -30,7 +30,7 @@ export default function PrivacyPage() {
         subtitle="Last updated: May 23, 2026. This policy explains how we collect, use, and safeguard your data."
       />
       <section className="relative pb-24 lg:pb-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto glass border border-accent-gold/15 rounded-3xl p-8 sm:p-12 space-y-10 relative overflow-hidden">
+        <div className="max-w-3xl mx-auto glass border border-accent-gold/15 rounded-3xl p-6 sm:p-12 space-y-10 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
           
           {/* Trust Highlights Hero Block */}
