@@ -589,8 +589,8 @@ export default function ProjectsPage() {
 
       {/* Premium Full-Viewport Modal for Selected Client Workspace */}
       {openWorkspaceId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="w-full max-w-5xl glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[90vh] overflow-y-auto scrollbar-thin">
+        <div className="fixed inset-0 z-[100] overflow-y-auto p-4 sm:p-6 md:p-10 bg-black/80 backdrop-blur-xs flex justify-center items-start animate-in fade-in duration-200">
+          <div className="w-full max-w-5xl glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative my-8">
             <ProjectWorkspace
               id={openWorkspaceId}
               isModal={true}

@@ -33,6 +33,12 @@ type UpdateItem = { id: string; title: string; description: string | null; creat
 type MessageItem = { id: string; content: string; created_at: string; sender_id: string }
 type ActionRequest = { id: string; title: string; description: string; status: 'pending' | 'submitted' | 'completed'; client_response: string | null; submitted_at: string | null; completed_at: string | null; created_at: string; due_date: string | null }
 
+const getValidUrl = (url: string) => {
+  if (!url) return ''
+  if (/^https?:\/\//i.test(url)) return url
+  return `https://${url}`
+}
+
 interface ProjectWorkspaceProps {
   id: string
   isModal?: boolean
@@ -59,6 +65,10 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
       setActiveTab(initialTab)
     }
   }, [initialTab])
+
+  useEffect(() => {
+    setIsSandboxInteractive(false)
+  }, [activeTab])
 
   // Forms states
   const [notes, setNotes] = useState('')
@@ -90,6 +100,7 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
   const [themeAccent, setThemeAccent] = useState('gold')
   const [newRequestDueDate, setNewRequestDueDate] = useState('')
   const [nudgingRequest, setNudgingRequest] = useState<string | null>(null)
+  const [isSandboxInteractive, setIsSandboxInteractive] = useState(false)
 
   // Updates & Messages states
   const [newUpdateTitle, setNewUpdateTitle] = useState('')
@@ -691,7 +702,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl pl-3 pr-8 py-2 text-xs text-foreground outline-none transition-all"
                       />
                       {previewUrl && (
-                        <a href={previewUrl} target="_blank" rel="noopener noreferrer" className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-gold transition-colors">
+                        <a href={getValidUrl(previewUrl)} target="_blank" rel="noopener noreferrer" className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-gold transition-colors">
                           <ExternalLink size={12} />
                         </a>
                       )}
@@ -708,7 +719,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl pl-3 pr-8 py-2 text-xs text-foreground outline-none transition-all"
                       />
                       {liveUrl && (
-                        <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-gold transition-colors">
+                        <a href={getValidUrl(liveUrl)} target="_blank" rel="noopener noreferrer" className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-gold transition-colors">
                           <ExternalLink size={12} />
                         </a>
                       )}
@@ -752,18 +763,39 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
                       </div>
                       <div 
-                        className="transition-all duration-300 border border-gold/15 rounded-lg overflow-hidden bg-background shadow-inner max-w-full"
+                        className="transition-all duration-300 border border-gold/15 rounded-lg overflow-hidden bg-background shadow-inner max-w-full relative"
                         style={{
                           width: viewportSize === 'mobile' ? '320px' : viewportSize === 'tablet' ? '640px' : '100%',
                           height: '350px'
                         }}
                       >
                         <iframe 
-                          src={previewUrl} 
+                          src={getValidUrl(previewUrl)} 
                           title="Staging Viewport Preview" 
-                          className="w-full h-full border-0"
+                          className={`w-full h-full border-0 ${isSandboxInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}
                           sandbox="allow-scripts allow-same-origin"
                         />
+
+                        {!isSandboxInteractive && (
+                          <div 
+                            onClick={() => setIsSandboxInteractive(true)}
+                            className="absolute inset-0 bg-black/40 backdrop-blur-[1px] hover:bg-black/25 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300 select-none group z-10"
+                          >
+                            <span className="px-3.5 py-1.5 rounded-xl border border-gold/30 bg-black/85 text-gold text-[10px] font-bold uppercase tracking-wider group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(201,162,39,0.2)]">
+                              Click to Interact
+                            </span>
+                          </div>
+                        )}
+
+                        {isSandboxInteractive && (
+                          <button
+                            type="button"
+                            onClick={() => setIsSandboxInteractive(false)}
+                            className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/90 hover:bg-black border border-gold/35 text-gold text-[8px] font-bold uppercase tracking-wider shadow-lg transition-all z-20 cursor-pointer"
+                          >
+                            Lock Viewport
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -775,7 +807,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gold/70 flex items-center gap-1.5">
                   <DollarSign size={13} className="text-gold" /> Financial Strategy &amp; Contract Schemes
                 </p>
-                <div className={`grid gap-4 ${contractType ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-3 border-b border-gold/10">
                   <div>
                     <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Contract Valuation Model</label>
                     <select
@@ -790,7 +822,21 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                     </select>
                   </div>
 
-                  {contractType === 'retainer' && (
+                  <div>
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Amount Settled (£)</label>
+                    <input
+                      type="number"
+                      value={amountPaid}
+                      onChange={(e) => setAmountPaid(e.target.value)}
+                      placeholder="0"
+                      className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-gold/70">Client Pricing Options (Pre-set)</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Monthly Retainer Rate (£/mo)</label>
                       <input
@@ -801,9 +847,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
                       />
                     </div>
-                  )}
 
-                  {contractType === 'one_time' && (
                     <div>
                       <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Fixed Setup Fee (£)</label>
                       <input
@@ -814,9 +858,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
                       />
                     </div>
-                  )}
 
-                  {contractType === 'rev_share' && (
                     <div>
                       <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Performance Royalty Yield (%)</label>
                       <input
@@ -828,17 +870,6 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
                       />
                     </div>
-                  )}
-
-                  <div>
-                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Amount Settled (£)</label>
-                    <input
-                      type="number"
-                      value={amountPaid}
-                      onChange={(e) => setAmountPaid(e.target.value)}
-                      placeholder="0"
-                      className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
-                    />
                   </div>
                 </div>
               </div>
