@@ -12,6 +12,8 @@ import { LaunchDateRequest } from '@/components/client/launch-date-request'
 import { GrowthTelemetry } from '@/components/client/growth-telemetry'
 import { SecureVault } from '@/components/client/secure-vault'
 import { ProvisioningLogs } from '@/components/client/provisioning-logs'
+import { BriefingPlayer } from '@/components/client/briefing-player'
+
 
 
 
@@ -212,6 +214,9 @@ export default async function ClientDashboardPage() {
             </div>
           )}
 
+          {/* Welcome Briefing Media Player */}
+          <BriefingPlayer />
+
           {/* Scoped Summary Cards & Telemetry */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             {/* Left Col - Summary Cards Grid */}
@@ -347,6 +352,15 @@ export default async function ClientDashboardPage() {
                 )}
               </div>
 
+              {/* Staging Preview / Growth Telemetry container */}
+              {project.status === 'Complete' ? (
+                <GrowthTelemetry />
+              ) : (project.status === 'Development' || project.status === 'Revision') ? (
+                <StagingPreview 
+                  previewUrl={project.preview_url || project.live_url || 'https://gslegacywealth.com'} 
+                  projectUpdates={projectUpdates} 
+                />
+              ) : null}
             </section>
 
             {/* Right Col - Quick Links / Support details */}

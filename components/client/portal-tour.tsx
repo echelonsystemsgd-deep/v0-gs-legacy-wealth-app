@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -96,6 +96,16 @@ export function PortalTour() {
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
   
   const tooltipRef = useRef<HTMLDivElement>(null)
+
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    opacity: 0,
+  })
+  const [computedPosition, setComputedPosition] = useState<'top' | 'bottom' | 'center'>('center')
+  const [arrowStyle, setArrowStyle] = useState<React.CSSProperties>({})
 
   // Sync state on mount and register trigger event listener
   useEffect(() => {
@@ -254,62 +264,129 @@ export function PortalTour() {
     router.push('/client')
   }
 
+  // Dynamic layout and tooltip calculations
+  const updatePosition = useCallback(() => {
+    if (!active) return
+
+    const step = TOUR_STEPS[stepIndex]
+    const tooltipEl = tooltipRef.current
+
+    if (!targetRect || step.position === 'center') {
+      setTooltipStyle({
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        opacity: 1,
+      })
+      setComputedPosition('center')
+      return
+    }
+
+    const gap = 16
+    const tooltipWidth = 360
+    const tooltipHeight = tooltipEl ? tooltipEl.offsetHeight : 180
+
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+
+    let bestPosition: 'top' | 'bottom' = step.position === 'top' || step.position === 'bottom' ? step.position : 'bottom'
+
+    // Smart flip check
+    if (step.position === 'top') {
+      const spaceAbove = targetRect.top - gap
+      if (spaceAbove < tooltipHeight) {
+        const spaceBelow = viewportHeight - targetRect.bottom - gap
+        if (spaceBelow > spaceAbove) {
+          bestPosition = 'bottom'
+        }
+      }
+    } else if (step.position === 'bottom') {
+      const spaceBelow = viewportHeight - targetRect.bottom - gap
+      if (spaceBelow < tooltipHeight) {
+        const spaceAbove = targetRect.top - gap
+        if (spaceAbove > spaceBelow) {
+          bestPosition = 'top'
+        }
+      }
+    }
+
+    let top = 0
+    if (bestPosition === 'bottom') {
+      top = targetRect.bottom + gap
+      if (top + tooltipHeight > viewportHeight - 16) {
+        top = Math.max(16, viewportHeight - tooltipHeight - 16)
+      }
+    } else { // top
+      top = targetRect.top - gap - tooltipHeight
+      if (top < 16) {
+        top = 16
+      }
+    }
+
+    let left = targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2)
+    const maxLeft = Math.max(16, viewportWidth - tooltipWidth - 16)
+    left = Math.max(16, Math.min(left, maxLeft))
+
+    // Position arrow dynamically matching target alignment
+    const targetCenter = targetRect.left + (targetRect.width / 2)
+    const relativeLeft = targetCenter - left
+    const clampedRelativeLeft = Math.max(24, Math.min(relativeLeft, tooltipWidth - 24))
+
+    setArrowStyle({
+      left: `${clampedRelativeLeft}px`,
+      transform: 'translateX(-50%)',
+    })
+
+    setTooltipStyle({
+      position: 'fixed',
+      top,
+      left,
+      opacity: 1,
+    })
+    setComputedPosition(bestPosition)
+  }, [active, stepIndex, targetRect])
+
+  // ResizeObserver to watch size changes dynamically
+  useEffect(() => {
+    if (!active) {
+      setTooltipStyle({
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        opacity: 0,
+      })
+      setComputedPosition('center')
+      return
+    }
+
+    updatePosition()
+
+    const tooltipEl = tooltipRef.current
+    if (!tooltipEl) return
+
+    const observer = new ResizeObserver(() => {
+      updatePosition()
+    })
+    observer.observe(tooltipEl)
+
+    window.addEventListener('resize', updatePosition)
+    window.addEventListener('scroll', updatePosition, true)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', updatePosition)
+      window.removeEventListener('scroll', updatePosition, true)
+    }
+  }, [active, updatePosition])
+
   if (!active) return null
 
   const currentStep = TOUR_STEPS[stepIndex]
 
   // Only hide during page transitions — NOT while waiting for element on correct page
-  // This prevents the tour from hanging after navigating
   if (pathname !== currentStep.path) return null
-
-  // Compute fixed coordinate position relative to target or center screen
-  const getTooltipStyle = () => {
-    if (!targetRect || currentStep.position === 'center') {
-      return {
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        position: 'fixed' as const
-      }
-    }
-
-    const gap = 16
-    const tooltipWidth = 360
-
-    switch (currentStep.position) {
-      case 'bottom':
-        return {
-          top: targetRect.bottom + gap,
-          left: Math.max(16, targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2)),
-          position: 'fixed' as const
-        }
-      case 'top':
-        return {
-          top: targetRect.top - gap,
-          left: Math.max(16, targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2)),
-          transform: 'translateY(-100%)',
-          position: 'fixed' as const
-        }
-      case 'right':
-        return {
-          top: targetRect.top,
-          left: targetRect.right + gap,
-          position: 'fixed' as const
-        }
-      case 'left':
-        return {
-          top: targetRect.top,
-          left: targetRect.left - gap - tooltipWidth,
-          position: 'fixed' as const
-        }
-      default:
-        return {
-          top: targetRect.bottom + gap,
-          left: targetRect.left,
-          position: 'fixed' as const
-        }
-    }
-  }
 
   return (
     <div className="fixed inset-0 z-[9999] pointer-events-none select-none">
@@ -337,21 +414,29 @@ export function PortalTour() {
 
       {/* Viewport Locked Floating Tooltip Card */}
       <div
-        style={getTooltipStyle()}
+        ref={tooltipRef}
+        style={tooltipStyle}
         className="w-[360px] max-w-[calc(100vw-32px)] bg-[#0B0B0C] border border-gold/20 rounded-2xl p-5 shadow-[0_12px_50px_rgba(0,0,0,0.9)] pointer-events-auto select-text animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-4 text-sm relative z-[9999]"
       >
         {/* Custom Pointing Arrow Indicators */}
-        {targetRect && currentStep.position === 'bottom' && (
-          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-gold/20 filter drop-shadow-[0_-2px_5px_rgba(212,175,55,0.05)]">
+        {targetRect && computedPosition === 'bottom' && (
+          <div 
+            style={arrowStyle}
+            className="absolute -top-2.5 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-gold/20 filter drop-shadow-[0_-2px_5px_rgba(212,175,55,0.05)]"
+          >
             <div className="absolute top-[1.5px] -left-[9px] w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-b-[9px] border-b-[#0B0B0C]" />
           </div>
         )}
 
-        {targetRect && currentStep.position === 'top' && (
-          <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-gold/20 filter drop-shadow-[0_2px_5px_rgba(212,175,55,0.05)]">
+        {targetRect && computedPosition === 'top' && (
+          <div 
+            style={arrowStyle}
+            className="absolute -bottom-2.5 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-gold/20 filter drop-shadow-[0_2px_5px_rgba(212,175,55,0.05)]"
+          >
             <div className="absolute bottom-[1.5px] -left-[9px] w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[9px] border-t-[#0B0B0C]" />
           </div>
         )}
+        
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-gold uppercase tracking-wider">
