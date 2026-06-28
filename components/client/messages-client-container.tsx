@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Send, User, Sparkles, MessageSquare } from 'lucide-react'
+import { Send, User, Sparkles, MessageSquare, ShieldAlert, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+
 
 type MessageItem = {
   id: string
@@ -30,6 +32,41 @@ export function MessagesClientContainer({
   const [inputText, setInputText] = useState('')
   const [sending, setSending] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
+
+  const [showPriorityModal, setShowPriorityModal] = useState(false)
+  const [overrideReason, setOverrideReason] = useState('')
+  const [requestingOverride, setRequestingOverride] = useState(false)
+
+  const handleRequestOverride = async () => {
+    if (!overrideReason.trim()) {
+      toast.error('Please specify a reason for the priority override request.')
+      return
+    }
+    setRequestingOverride(true)
+    try {
+      const { error } = await supabase
+        .from('project_action_requests')
+        .insert({
+          project_id: projectId,
+          title: '[PRIORITY OVERRIDE] Build Stack Redirection',
+          description: `Priority Override Authorized by Client. Reason: ${overrideReason}`,
+          status: 'submitted',
+          client_response: 'Authorized',
+          submitted_at: new Date().toISOString()
+        })
+      
+      if (error) throw error
+      toast.success('Priority pipeline override requested successfully.')
+      setOverrideReason('')
+      setShowPriorityModal(false)
+    } catch (err: any) {
+      console.error(err)
+      toast.error('Failed to request priority override: ' + err.message)
+    } finally {
+      setRequestingOverride(false)
+    }
+  }
+
 
   // Request notification permissions on mount
   useEffect(() => {
@@ -229,7 +266,15 @@ export function MessagesClientContainer({
             </p>
           </div>
         </div>
+        <button
+          onClick={() => setShowPriorityModal(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-purple-500/30 bg-purple-500/5 hover:bg-purple-500/10 text-purple-400 text-xxs font-bold uppercase tracking-wider transition-all cursor-pointer shrink-0"
+        >
+          <Sparkles size={11} className="animate-pulse shrink-0" />
+          <span>Priority Override</span>
+        </button>
       </div>
+
 
       {/* Messages Panel */}
       <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-4 bg-black/20">
@@ -331,6 +376,63 @@ export function MessagesClientContainer({
           <Send size={15} />
         </Button>
       </form>
+      {showPriorityModal && (
+        <div className="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[#0D0D0E] border border-purple-500/30 rounded-2xl overflow-hidden shadow-2xl p-6 relative flex flex-col gap-5 select-text">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-purple-500/10">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 shrink-0">
+                  <ShieldAlert size={16} />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[8px] font-bold text-purple-400 uppercase tracking-widest leading-none">Priority Directive</span>
+                  <h4 className="text-sm font-serif font-bold text-foreground truncate mt-0.5 font-bold">Priority Pipeline Override</h4>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowPriorityModal(false)}
+                className="p-1 rounded-lg hover:bg-white/5 border border-transparent hover:border-purple-500/10 text-muted-foreground hover:text-purple-400 transition-all cursor-pointer shrink-0"
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            <p className="text-xs text-muted-foreground leading-relaxed text-left">
+              Authorizing a Priority Override directs our engineering team to immediately swap their active build stack to prioritize your task deliverables. Please specify the engineering focus below.
+            </p>
+
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-semibold text-foreground">Override Rationale / Build Focus</label>
+              <textarea
+                value={overrideReason}
+                onChange={(e) => setOverrideReason(e.target.value)}
+                placeholder="Specify which wireframes, designs, code updates or issues require immediate engineering resolution..."
+                rows={3}
+                className="w-full bg-background/50 border border-purple-500/20 hover:border-purple-500/45 focus:border-purple-500/60 rounded-xl p-3 text-xs text-foreground placeholder-muted-foreground/45 outline-none transition-all resize-none"
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                onClick={handleRequestOverride}
+                disabled={requestingOverride || !overrideReason.trim()}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-[0_0_15px_rgba(147,51,234,0.3)] transition-all text-center cursor-pointer font-serif disabled:opacity-50"
+              >
+                {requestingOverride ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+                Authorize Override Command
+              </button>
+              <button
+                onClick={() => setShowPriorityModal(false)}
+                className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer text-center"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -162,7 +162,7 @@ export function ClientSidebar() {
                   <span>Sovereign Partner Console</span>
                 </Link>
 
-                {role === 'admin' && (
+                {(role === 'admin' || role === 'client') && (
                   <Link
                     href="/dashboard"
                     onClick={() => setIsSwitcherOpen(false)}
@@ -172,6 +172,7 @@ export function ClientSidebar() {
                     <span>Vetting Terminal</span>
                   </Link>
                 )}
+
 
                 <div className="h-px bg-gold/10 my-1" />
 

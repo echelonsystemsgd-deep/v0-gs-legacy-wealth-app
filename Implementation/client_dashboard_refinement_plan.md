@@ -128,6 +128,18 @@ We will replace all generic placeholders with precise, high-prestige copywriting
 
 ---
 
+### 9. Client Contract Enrollment Desk
+- **Finding:** A mechanism was needed for clients to choose and enroll in a contract schema directly from their dashboard interface before project milestones and financial indicators are active.
+- **Proposal:**
+  - Introduce an elegant **Contract Enrollment Desk** view inside [project-telemetry.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/client/project-telemetry.tsx) when `!project.contract_type`.
+  - Present three tailored contract options configured by the admin:
+    - **Monthly Retainer**: Continuous support billed monthly.
+    - **One-Time Setup Fee**: Flat-rate deployment and handover fee.
+    - **Performance Royalty Yield (PRY)**: Tailored performance/revenue share co-investment scheme.
+  - Selecting a model calls `handleEnroll(type)` which triggers a secure Supabase query to set `contract_type` and set the initial `contract_value` to the corresponding rate, resolving the setup state and unlocking the milestones pipeline.
+
+---
+
 ## Verification Plan
 
 ### Automated Verification
@@ -144,10 +156,11 @@ We will replace all generic placeholders with precise, high-prestige copywriting
    - Submit text details in the modal on the client side.
    - Verify the admin can read the response, mark it as completed, and the client status updates instantly in real time.
 5. **Sidebar Scroll Test**: Scroll down on mobile and desktop viewports, verifying the sidebar does not cut off or slide out of view.
+6. **Contract Enrollment Desk**: Log in as a client without an enrolled contract. Verify that the three options are rendered correctly with their respective values, choose an option, click enroll, and verify that the dashboard transitions instantly to the active progress/milestones telemetry view.
 
 ---
 
-## Phase 3: Ultimate Premium Elevators
+## Phase 3: Ultimate Premium Elevators & Visual Polish
 
 To reach an absolute 10/10 level of luxury agency reassurance and Machiavellian persuasion, we will implement the following high-prestige features:
 
@@ -162,12 +175,39 @@ To reach an absolute 10/10 level of luxury agency reassurance and Machiavellian 
 - **Change:** Add a high-prestige button inside the Client messages sidebar or quick composer: **"Request Priority Override"**.
 - **Interactivity:** Triggers a modal detailing that *"Priority override triggers immediate engineering redirection to your build stack, subject to premium contract margins."* Submitting it creates a high-priority action request in the database.
 
-### 3. Secure File Vault Widget
-- **Change:** Add a **Secure Vault** card under the Site Access widget.
+### 3. Secure File Vault Widget & Cryptographic Verification
+- **Change:** Upgrade the **Secure Vault** card under the Site Access widget.
 - **Visuals:** Displays a list of core client branding assets uploaded (e.g. logos, guidelines) marked as `[SECURE VAULT] — AES-256 ENCRYPTED`.
-- **Copy:** *"Cryptographic asset container active. Integrity verified."*
+- **Copy:** Include cryptographic verification logs next to each asset (e.g., `brand_assets.zip — [SHA-256 VERIFIED]`) and a green pulsing lock status reading: *"Cryptographic asset container active. Integrity verified."*
 
 ### 4. Welcome Briefing Media Player
-- **Change:** Add a premium, collapsible briefing video/audio player at the top of the Overview: **"Tactical Briefing: Engineering Director"**.
+- **Change:** Add a premium, collapsible briefing video/audio player at the top of the Overview: **"Tactical Briefing: Operations Director"**.
 - **Visuals:** Dark purple glass border, glowing play controls, visualizer bar.
 - **Copy:** *"Operations Directive: Play to initialize strategic overview."*
+
+### 5. Luxury Micro-Interactions & Styling
+- **Mouse-Tracking Radial Glows**: Integrate a javascript mouse-move listener on `.glass` cards to project a subtle, glowing radial background vector following the cursor, making cards feel physical and premium.
+- **Micro-Theme Accent Sync**: Map the admin-configured `theme_accent` from the database to dynamically sync the colors of key UI indicators, such as the circular progress telemetry arc, bullet highlight nodes in the timeline updates feed, and CTA hover states.
+- **Provisioning Console Logs**: Add a simulated terminal-like widget when the project is in Discovery or Design, showing chronological logs (e.g., `[SYS] Container provisioned`, `[CDN] Edge routing verified`) to display continuous backend momentum.
+
+---
+
+## Button Validation & Action Audit
+
+To guarantee a flawless user experience, a comprehensive audit is specified to verify that every button, CTA, form submission, and route link across the client dashboard is fully functional:
+
+### 1. Zero Dead Links/Buttons
+- **Client Sidebar**:
+  - `Overview` links to `/client`.
+  - `Updates` links to `/client/updates`.
+  - `Book Session` links to `/client/book` (dedicated in-portal route).
+  - `Messages` links to `/client/messages`.
+  - `Vetting Dashboard` links to `/dashboard`.
+- **Action Banners**: 
+  - The "Open Action Console" button on the Action Banner must link directly to `/client/actions`.
+  - The "Provide Details" CTA must open the interactive submission modal.
+
+### 2. State & Event Handlers
+- **Form Submissions**: Every submit button (like the launch override request or the action request details form) must have a loading state (`saving` or `loading` state with a spinner) and trigger a clear, visual `toast` indicator on success or failure.
+- **Contract Enrollment Desk**: The "Enroll" buttons under the plans must call `handleEnroll(type)` which triggers a loading state (`enrolling === type`), successfully writes the chosen model parameters to Supabase, and re-renders the dashboard workspace in real time.
+- **Interactive Tour**: The "Take Tour" triggers must properly initialize the user guide overlay step-by-step without lockups.

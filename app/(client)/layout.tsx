@@ -11,6 +11,8 @@ import { InspectorToggle } from '@/components/dashboard/inspector-toggle'
 import { PortalTour } from '@/components/client/portal-tour'
 import { TourTrigger } from '@/components/client/tour-trigger'
 
+import { GlowEffect } from '@/components/client/glow-effect'
+
 export const metadata: Metadata = {
   title: 'Client Dashboard',
 }
@@ -43,7 +45,9 @@ export default async function ClientLayout({ children }: { children: React.React
   return (
     <InspectorProvider>
       <PortalTour />
+      <GlowEffect />
       <div className={`h-screen bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass}`}>
+
         {/* Ambient background glows */}
         <div className="fixed inset-0 pointer-events-none z-0">
           {/* Royal Purple Glow */}

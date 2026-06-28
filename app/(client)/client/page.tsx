@@ -11,6 +11,9 @@ import { ActionRequestBanner } from '@/components/client/action-request-banner'
 import { LaunchDateRequest } from '@/components/client/launch-date-request'
 import { GrowthTelemetry } from '@/components/client/growth-telemetry'
 import { SecureVault } from '@/components/client/secure-vault'
+import { ProvisioningLogs } from '@/components/client/provisioning-logs'
+
+
 
 export default async function ClientDashboardPage() {
   const cookieStore = await cookies()
@@ -176,6 +179,8 @@ export default async function ClientDashboardPage() {
         /* Project Dashboard UI */
         <>
           {/* Sleek Alert Banner linking to Actions page */}
+
+
           {pendingActionRequests.length > 0 && (
             <div 
               data-tour="action-banner"
@@ -190,6 +195,20 @@ export default async function ClientDashboardPage() {
               <Link href="/client/actions" className="text-xs font-bold text-gold hover:underline">
                 Open Action Console →
               </Link>
+            </div>
+          )}
+
+          {/* Contract Enrollment Desk Notice Banner */}
+          {!project.contract_type && (
+            <div 
+              className="flex items-center justify-between p-4 rounded-xl border border-gold/30 bg-gold/[0.02] shadow-[0_0_15px_rgba(212,175,55,0.03)] animate-in fade-in duration-300 pointer-events-auto"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-gold animate-pulse animate-duration-1000" />
+                <span className="text-xs font-semibold text-foreground">
+                  Mandate Contract Pending: Please enroll in your preferred support model in the sidebar configuration desk to initialize build pipeline telemetry.
+                </span>
+              </div>
             </div>
           )}
 
@@ -319,7 +338,15 @@ export default async function ClientDashboardPage() {
                     Track Progress &amp; Sign-off →
                   </Link>
                 </div>
+
+                {/* Provisioning terminal logs */}
+                {(project.status === 'Discovery' || project.status === 'Design') && (
+                  <div className="mt-4 pt-4 border-t border-white/5">
+                    <ProvisioningLogs />
+                  </div>
+                )}
               </div>
+
             </section>
 
             {/* Right Col - Quick Links / Support details */}

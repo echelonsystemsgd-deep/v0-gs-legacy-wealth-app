@@ -89,7 +89,7 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   // Render Contract Selection Screen if not enrolled
   if (!hasContract) {
     return (
-      <div className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 flex flex-col space-y-5 h-full shadow-lg">
+      <div data-tour="telemetry-deck" className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 flex flex-col space-y-5 h-full shadow-lg">
         <div className="space-y-1">
           <h3 className="text-sm font-bold text-gold uppercase tracking-wider">Contract Enrollment Desk</h3>
           <p className="text-[10px] text-muted-foreground leading-relaxed">
@@ -163,7 +163,7 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   }
 
   return (
-    <div className="p-6 glass rounded-2xl border border-gold/10 flex flex-col items-center space-y-6 relative overflow-hidden h-full shadow-lg">
+    <div data-tour="telemetry-deck" className="p-6 glass rounded-2xl border border-gold/10 flex flex-col items-center space-y-6 relative overflow-hidden h-full shadow-lg">
       <div className="w-full flex items-center justify-between border-b border-white/5 pb-3">
         <div className="space-y-0.5">
           <h3 className="text-xs font-bold text-gold uppercase tracking-wider">Financial Telemetry</h3>

@@ -155,13 +155,42 @@
   background-clip: text;
 }
 
-/* Glassmorphism with purple tint */
+/* Glassmorphism with purple tint and mouse radial hover glow */
 .glass {
   background: rgba(15, 11, 26, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(109, 40, 217, 0.15);
+  position: relative;
+  overflow: hidden;
 }
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(212, 175, 55, 0.15),
+    transparent 40%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glass:hover::before {
+  opacity: 1;
+}
+
 
 /* Animations */
 @keyframes fadeIn {
@@ -446,6 +475,38 @@ input[type="range"]::-moz-range-thumb:active {
   --color-gold: #E2E8F0;
   --color-border-brand: #334155;
 }
+
+/* Audio Wave Animations */
+@keyframes wave-pulse-1 {
+  0%, 100% { height: 8px; }
+  50% { height: 18px; }
+}
+@keyframes wave-pulse-2 {
+  0%, 100% { height: 12px; }
+  50% { height: 24px; }
+}
+@keyframes wave-pulse-3 {
+  0%, 100% { height: 6px; }
+  50% { height: 14px; }
+}
+@keyframes wave-pulse-4 {
+  0%, 100% { height: 14px; }
+  50% { height: 28px; }
+}
+
+.animate-wave-1 {
+  animation: wave-pulse-1 1s ease-in-out infinite;
+}
+.animate-wave-2 {
+  animation: wave-pulse-2 0.8s ease-in-out infinite;
+}
+.animate-wave-3 {
+  animation: wave-pulse-3 1.2s ease-in-out infinite;
+}
+.animate-wave-4 {
+  animation: wave-pulse-4 0.7s ease-in-out infinite;
+}
+
 
 
 

@@ -27,11 +27,26 @@ const TOUR_STEPS: TourStep[] = [
     description: 'This is your main command deck. It displays your active build stage and target launch date at a glance.',
     position: 'bottom'
   },
+
+  {
+    path: '/client',
+    target: '[data-tour="provisioning-logs"]',
+    title: 'System Build Logs',
+    description: 'For early phase builds, this terminal outputs live engineering trajectory logs so you can monitor server allocation and database initialization milestones in real-time.',
+    position: 'top'
+  },
+  {
+    path: '/client',
+    target: '[data-tour="telemetry-deck"]',
+    title: 'Financial Telemetry & Contract Desk',
+    description: 'Select your preferred billing model (Monthly Retainer, Flat Setup, or PRY Agreement) to initialize your operational build and unlock live milestone metrics.',
+    position: 'top'
+  },
   {
     path: '/client',
     target: '[data-tour="asset-vault"]',
     title: 'Encrypted Asset Vault',
-    description: 'Your secure document vault. Final assets, style guides, and tech deliverables are stored here safely with cryptographic integrity checks.',
+    description: 'Your secure document vault. Final assets, style guides, and tech deliverables are stored here safely with cryptographic integrity and security checks.',
     position: 'top'
   },
   {
@@ -70,6 +85,7 @@ const TOUR_STEPS: TourStep[] = [
     position: 'center'
   }
 ]
+
 
 export function PortalTour() {
   const pathname = usePathname()
