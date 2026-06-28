@@ -30,7 +30,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <InspectorProvider>
-      <div className="min-h-screen bg-[#050505] text-foreground flex relative overflow-hidden">
+      <div className="h-dvh bg-[#050505] text-foreground flex relative overflow-hidden">
         {/* Ambient background glow */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute top-0 left-64 w-[500px] h-[500px] rounded-full bg-gold/3 blur-[160px]" />
@@ -41,7 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <AdminSidebar />
 
         {/* Zone 3 & 4 Container */}
-        <div className="flex-1 flex flex-col min-w-0 relative z-10 min-h-screen">
+        <div className="flex-1 flex flex-col min-w-0 relative z-10 h-dvh">
           {/* Top bar */}
           <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/80 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
             <div className="w-10 lg:hidden shrink-0" />

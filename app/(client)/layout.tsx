@@ -46,7 +46,7 @@ export default async function ClientLayout({ children }: { children: React.React
     <InspectorProvider>
       <PortalTour />
       <GlowEffect />
-      <div className={`h-screen bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass}`}>
+      <div className={`h-dvh bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass}`}>
 
         {/* Ambient background glows */}
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -62,7 +62,7 @@ export default async function ClientLayout({ children }: { children: React.React
         <ClientSidebar />
 
         {/* Zone 3 & 4 Container */}
-        <div className="flex-1 flex flex-col min-w-0 relative z-10 h-screen overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 relative z-10 h-dvh overflow-hidden">
           {/* Top bar */}
           <header className="sticky top-0 z-20 h-14 border-b border-gold/10 bg-[#050505]/85 backdrop-blur-md flex items-center px-4 sm:px-8 gap-4">
             <div className="w-10 lg:hidden shrink-0" />

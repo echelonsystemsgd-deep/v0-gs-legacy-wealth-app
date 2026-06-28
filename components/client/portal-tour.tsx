@@ -445,7 +445,7 @@ export function PortalTour() {
           </div>
           <button 
             onClick={handleComplete}
-            className="p-1 rounded-lg hover:bg-white/5 border border-transparent hover:border-gold/10 text-muted-foreground hover:text-gold transition-all cursor-pointer"
+            className="p-2.5 w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 border border-transparent hover:border-gold/10 text-muted-foreground hover:text-gold transition-all cursor-pointer"
             aria-label="Skip Guide"
           >
             <X size={14} />
@@ -467,14 +467,14 @@ export function PortalTour() {
           <button
             onClick={handleBack}
             disabled={stepIndex === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold/10 hover:bg-gold/5 text-xs text-gold transition-all disabled:opacity-30 cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2.5 sm:px-3 sm:py-1.5 rounded-lg border border-gold/10 hover:bg-gold/5 text-xs text-gold transition-all disabled:opacity-30 cursor-pointer"
           >
             <ArrowLeft size={12} /> Back
           </button>
 
           <button
             onClick={handleNext}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gold hover:bg-gold/90 text-[#050505] font-bold text-xs shadow-[0_0_12px_rgba(212,175,55,0.2)] transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-5 py-2.5 sm:px-4 sm:py-1.5 rounded-lg bg-gold hover:bg-gold/90 text-[#050505] font-bold text-xs shadow-[0_0_12px_rgba(212,175,55,0.2)] transition-all cursor-pointer"
           >
             {stepIndex === TOUR_STEPS.length - 1 ? (
               <>Finish <Check size={12} /></>

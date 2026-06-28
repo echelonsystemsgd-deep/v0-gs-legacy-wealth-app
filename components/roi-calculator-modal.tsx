@@ -155,14 +155,14 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
                       step="5000"
                       value={revenue}
                       onChange={(e) => setRevenue(Number(e.target.value))}
-                      className="w-full h-1 bg-bg-primary rounded-lg appearance-none cursor-pointer accent-accent-purple focus:outline-none"
+                      className="hidden md:block w-full h-1 bg-bg-primary rounded-lg appearance-none cursor-pointer accent-accent-purple focus:outline-none"
                       style={{
                         background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) ${((revenue - 5000) / 95000) * 100}%, var(--color-bg-primary) 100%)`
                       }}
                     />
 
                     {/* Mobile Stepper Buttons */}
-                    <div className="flex items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-lg p-0.5">
+                    <div className="flex md:hidden items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-lg p-0.5">
                       <button
                         onClick={() => setRevenue(Math.max(5000, revenue - 5000))}
                         aria-label="Decrease revenue"
@@ -200,14 +200,14 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
                       step="1"
                       value={manualHours}
                       onChange={(e) => setManualHours(Number(e.target.value))}
-                      className="w-full h-1 bg-bg-primary rounded-lg appearance-none cursor-pointer accent-accent-purple focus:outline-none"
+                      className="hidden md:block w-full h-1 bg-bg-primary rounded-lg appearance-none cursor-pointer accent-accent-purple focus:outline-none"
                       style={{
                         background: `linear-gradient(to right, var(--color-accent-purple) 0%, var(--color-accent-purple) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) ${((manualHours - 2) / 38) * 100}%, var(--color-bg-primary) 100%)`
                       }}
                     />
 
                     {/* Mobile Stepper Buttons */}
-                    <div className="flex items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-lg p-0.5">
+                    <div className="flex md:hidden items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-lg p-0.5">
                       <button
                         onClick={() => setManualHours(Math.max(2, manualHours - 1))}
                         aria-label="Decrease hours"

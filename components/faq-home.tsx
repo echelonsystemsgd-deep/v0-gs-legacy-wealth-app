@@ -74,7 +74,7 @@ export function FAQHome() {
             return (
               <div 
                 key={index} 
-                className={`border transition-all duration-300 ${
+                className={`border rounded-xl transition-all duration-300 ${
                   isOpen ? "border-accent-gold bg-bg-tertiary/30" : "border-border-brand/20 bg-bg-tertiary/10 hover:border-border-brand/40"
                 }`}
               >

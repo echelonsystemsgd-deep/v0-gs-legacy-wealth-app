@@ -77,7 +77,7 @@ export function ClientSidebar() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="lg:hidden fixed top-2.5 left-4 z-50 p-2 rounded-xl bg-card border border-gold/15 text-gold hover:bg-gold/5 transition-all cursor-pointer flex items-center justify-center shadow-lg"
+          className="lg:hidden fixed top-2.5 left-4 z-50 p-3 w-11 h-11 rounded-xl bg-card border border-gold/15 text-gold hover:bg-gold/5 transition-all cursor-pointer flex items-center justify-center shadow-lg"
         >
           <Menu size={18} />
         </button>
@@ -91,7 +91,7 @@ export function ClientSidebar() {
         />
       )}
 
-      <aside className={`flex flex-col h-screen w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:sticky lg:top-0 lg:h-screen lg:left-0`}>
+      <aside className={`flex flex-col h-dvh w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:sticky lg:top-0 lg:h-dvh lg:left-0`}>
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10 shrink-0">
           <div className="flex items-center gap-3">
@@ -112,7 +112,7 @@ export function ClientSidebar() {
           {/* Close button for mobile */}
           <button
             onClick={() => setIsOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
+            className="lg:hidden p-2.5 w-10 h-10 flex items-center justify-center rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
           >
             <X size={16} />
           </button>
