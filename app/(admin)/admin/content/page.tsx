@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -273,20 +273,32 @@ export default function ContentPage() {
 
       {/* Tabs */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">
-        {(['hero', 'cta', 'process', 'faq', 'footer', 'pricing_setup', 'pricing_retainer'] as SectionKey[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-3 border-b-2 text-sm font-semibold capitalize whitespace-nowrap transition-all ${
-              activeTab === tab
-                ? 'border-gold text-gold bg-gold/5'
-                : 'border-transparent text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {tab === 'pricing_setup' ? 'ðŸ’° Setup Tiers' : tab === 'pricing_retainer' ? 'ðŸ”„ Retainer Tiers' : tab}
-          </button>
-        ))}
+        {(['hero', 'cta', 'process', 'faq', 'footer', 'pricing_setup', 'pricing_retainer'] as SectionKey[]).map((tab) => {
+          const labels: Record<SectionKey, string> = {
+            hero: 'Hero',
+            cta: 'CTA',
+            process: 'Process',
+            faq: 'FAQ',
+            footer: 'Footer',
+            pricing_setup: 'Setup Tiers',
+            pricing_retainer: 'Retainer Tiers'
+          }
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-3 border-b-2 text-sm font-semibold whitespace-nowrap transition-all ${
+                activeTab === tab
+                  ? 'border-gold text-gold bg-gold/5'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {labels[tab]}
+            </button>
+          )
+        })}
       </div>
+
 
       {loading ? (
         <div className="glass rounded-2xl border border-gold/10 p-12 flex flex-col items-center justify-center space-y-4">
