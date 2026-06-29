@@ -17,7 +17,8 @@ import {
   ChevronUp,
   ChevronDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  X
 } from 'lucide-react'
 import { useInspector } from '@/hooks/use-inspector'
 import { ProjectWorkspace } from '@/components/admin/project-workspace'
@@ -34,6 +35,8 @@ type Project = {
   is_archived: boolean
   created_at: string
   importance_rank: number
+  contract_type?: string | null
+  retainer_amount?: number | null
 }
 
 const STATUS_STEPS = ['Discovery', 'Design', 'Development', 'Revision', 'Complete']
@@ -196,7 +199,24 @@ export default function ProjectsPage() {
     fetchProjects()
   }
 
-  const byStatus = (status: string) => projects.filter((p) => p.status === status)
+  const byStatus = (status: string) => filteredProjects.filter((p) => p.status === status)
+
+  const filterParam = searchParams.get('filter')
+  const filteredProjects = projects.filter((p) => {
+    if (filterParam === 'retainer') {
+      return p.contract_type === 'retainer'
+    }
+    if (filterParam === 'one_time') {
+      return p.contract_type === 'one_time'
+    }
+    if (filterParam === 'rev_share') {
+      return p.contract_type === 'rev_share'
+    }
+    if (filterParam === 'active') {
+      return p.status !== 'Complete'
+    }
+    return true
+  })
 
   return (
     <div className="space-y-6 sm:space-y-8 relative">
@@ -204,8 +224,28 @@ export default function ProjectsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gold/10 pb-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-gold uppercase">
-            <FolderKanban size={12} /> Bespoke Project Pipelines
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-widest text-gold uppercase">
+              <FolderKanban size={12} /> Bespoke Project Pipelines
+            </span>
+            {filterParam && (
+              <button
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.delete('filter')
+                  router.push(`${pathname}?${params.toString()}`)
+                }}
+                className="px-2 py-0.5 rounded bg-gold/10 hover:bg-gold/20 border border-gold/25 text-[8px] font-black uppercase tracking-widest text-gold flex items-center gap-1 cursor-pointer transition-all"
+                title="Clear active filter"
+              >
+                Filtered: {
+                  filterParam === 'retainer' ? 'Retainers Only' : 
+                  filterParam === 'one_time' ? 'One-Time Setup Only' : 
+                  filterParam === 'rev_share' ? 'Royalty Yield % Only' : 
+                  'Active Only'
+                } <X size={8} className="text-gold/70" />
+              </button>
+            )}
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1 font-serif">Command Telemetry</h1>
           <p className="text-sm text-muted-foreground">Set mandate priority order and configure client environments.</p>
@@ -241,16 +281,46 @@ export default function ProjectsPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between pb-1 border-b border-gold/10">
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Priority Rankings</h2>
-            <span className="text-[10px] text-gold font-mono">{projects.length} Total</span>
+            <span className="text-[10px] text-gold font-mono">{filteredProjects.length} Total</span>
           </div>
 
           {loading ? (
             <div className="py-12 flex justify-center"><Loader2 className="animate-spin text-gold/30" /></div>
-          ) : projects.length === 0 ? (
-            <p className="text-xs text-muted-foreground/60 italic py-6 text-center border border-dashed border-gold/10 rounded-xl">No active clients found.</p>
+          ) : filteredProjects.length === 0 ? (
+            (filterParam === 'retainer' || filterParam === 'one_time' || filterParam === 'rev_share') &&
+            projects.filter((p) => p.contract_type !== filterParam).length > 0 ? (
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gold/70 text-center animate-pulse">
+                  Awaiting {
+                    filterParam === 'retainer' ? 'Retainer' : 
+                    filterParam === 'one_time' ? 'One-Time Setup' : 
+                    'Royalty Yield %'
+                  } Config
+                </p>
+                {projects.filter((p) => p.contract_type !== filterParam).map((p) => (
+                  <div
+                    key={p.id}
+                    className="p-3.5 glass rounded-xl border border-dashed border-gold/20 hover:border-gold/45 flex items-center justify-between gap-3 transition-all duration-300"
+                  >
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <h3 className="text-xs font-bold text-foreground truncate">{p.client_name}</h3>
+                      <p className="text-[10px] text-muted-foreground truncate">{p.project_name}</p>
+                    </div>
+                    <button
+                      onClick={() => handleOpenWorkspace(p.id)}
+                      className="px-2.5 py-1.5 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 text-[10px] font-bold shrink-0 transition-all cursor-pointer"
+                    >
+                      Setup Billing
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground/60 italic py-6 text-center border border-dashed border-gold/10 rounded-xl">No matching clients found.</p>
+            )
           ) : (
             <div className="space-y-2.5">
-              {projects.map((p) => {
+              {filteredProjects.map((p) => {
                 const isSelected = openWorkspaceId === p.id
                 return (
                   <div
@@ -315,11 +385,26 @@ export default function ProjectsPage() {
 
           {loading ? (
             <div className="py-20 flex justify-center"><Loader2 size={24} className="animate-spin text-gold/30" /></div>
-          ) : projects.length === 0 ? (
-            <div className="p-8 border border-dashed border-gold/15 rounded-2xl text-center max-w-sm mx-auto space-y-4">
-              <FolderKanban size={28} className="text-gold/20 mx-auto" />
-              <p className="text-xs text-muted-foreground">Deploy a client project mandrel to unlock operational grids.</p>
-            </div>
+          ) : filteredProjects.length === 0 ? (
+            (filterParam === 'retainer' || filterParam === 'one_time' || filterParam === 'rev_share') &&
+            projects.filter((p) => p.contract_type !== filterParam).length > 0 ? (
+              <div className="p-8 border border-dashed border-gold/15 rounded-2xl text-center max-w-sm mx-auto space-y-3.5">
+                <FolderKanban size={28} className="text-gold/20 mx-auto animate-pulse" />
+                <p className="text-xs text-muted-foreground font-semibold">
+                  Active projects need {
+                    filterParam === 'retainer' ? 'retainer' : 
+                    filterParam === 'one_time' ? 'one-time setup' : 
+                    'royalty yield'
+                  } parameters to show on this tracker.
+                </p>
+                <p className="text-[10px] text-muted-foreground">Select a project on the left to set up its billing plan.</p>
+              </div>
+            ) : (
+              <div className="p-8 border border-dashed border-gold/15 rounded-2xl text-center max-w-sm mx-auto space-y-4">
+                <FolderKanban size={28} className="text-gold/20 mx-auto" />
+                <p className="text-xs text-muted-foreground">Deploy a client project mandrel to unlock operational grids.</p>
+              </div>
+            )
           ) : view === 'kanban' ? (
             /* Kanban Board */
             <div className="space-y-4">
@@ -405,7 +490,7 @@ export default function ProjectsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gold/5">
-                    {projects.map((p) => {
+                    {filteredProjects.map((p) => {
                       const isSelected = openWorkspaceId === p.id
                       return (
                         <tr

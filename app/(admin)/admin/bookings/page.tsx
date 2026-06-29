@@ -104,7 +104,7 @@ export default function BookingsPage() {
     notes: ''
   })
 
-  // Initialize booking form from query parameters
+  // Initialize booking form and status filters from query parameters
   useEffect(() => {
     const schedule = searchParams.get('schedule')
     if (schedule === 'true') {
@@ -115,6 +115,10 @@ export default function BookingsPage() {
         targetId: leadId,
       }))
       setShowBookingModal(true)
+    }
+    const statusParam = searchParams.get('status')
+    if (statusParam) {
+      setStatusFilter(statusParam)
     }
   }, [searchParams])
 

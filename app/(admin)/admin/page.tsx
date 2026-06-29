@@ -29,7 +29,7 @@ export default async function AdminDashboardPage() {
   // Projects: one query covers financials + active projects list
   const { data: projectsFinancials } = await supabase
     .from('projects')
-    .select('id, project_name, client_name, client_id, status, updated_at, amount_paid, contract_value')
+    .select('id, project_name, client_name, client_id, status, updated_at, amount_paid, contract_value, contract_type, retainer_amount')
     .eq('is_archived', false)
     .order('updated_at', { ascending: false })
 
@@ -37,6 +37,7 @@ export default async function AdminDashboardPage() {
   const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
   const totalPipeline = projectsFinancials?.reduce((sum, p) => sum + ((Number(p.contract_value) - Number(p.amount_paid)) || 0), 0) || 0
   const totalContractValue = projectsFinancials?.reduce((sum, p) => sum + (Number(p.contract_value) || 0), 0) || 0
+  const projectedMRR = projectsFinancials?.reduce((sum, p) => sum + (p.contract_type === 'retainer' ? (Number(p.retainer_amount) || 0) : 0), 0) || 0
   // Project count derived — no separate query needed
   const projectsCount = projectsFinancials?.length ?? 0
 
@@ -224,6 +225,7 @@ export default async function AdminDashboardPage() {
       <AdminKpiRow
         totalSales={totalSales}
         totalPipeline={totalPipeline}
+        projectedMRR={projectedMRR}
         leadsCount={leadsCount}
         projectsCount={projectsCount}
         sessionsCount={sessionsCount}

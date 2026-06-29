@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar, CheckCircle2
+  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar, CheckCircle2, ScrollText
 } from 'lucide-react'
 
 type Profile = {
@@ -13,12 +13,14 @@ type Profile = {
 
 export default function SettingsPage() {
   const supabase = createClient()
-  const [activeTab, setActiveTab] = useState<'profile' | 'team' | 'system'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'team' | 'system' | 'logs'>('profile')
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const [logs, setLogs] = useState<any[]>([])
+  const [logsLoading, setLogsLoading] = useState(false)
 
   // Profile Form States
   const [fullName, setFullName] = useState('')
@@ -72,6 +74,23 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchProfilesAndUser()
   }, [fetchProfilesAndUser])
+
+  const fetchLogs = useCallback(async () => {
+    setLogsLoading(true)
+    const { data } = await supabase
+      .from('activity_logs')
+      .select('id, action_type, target_table, created_at, profiles(full_name, role)')
+      .order('created_at', { ascending: false })
+      .limit(50)
+    setLogs(data ?? [])
+    setLogsLoading(false)
+  }, [supabase])
+
+  useEffect(() => {
+    if (activeTab === 'logs') {
+      fetchLogs()
+    }
+  }, [activeTab, fetchLogs])
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -223,6 +242,16 @@ export default function SettingsPage() {
           }`}
         >
           <Settings size={14} /> Integrations & Systems
+        </button>
+        <button
+          onClick={() => setActiveTab('logs')}
+          className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
+            activeTab === 'logs'
+              ? 'border-gold text-gold bg-gold/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <ScrollText size={14} /> Audit Trail Logs
         </button>
       </div>
 
@@ -476,6 +505,58 @@ export default function SettingsPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          )}
+          {activeTab === 'logs' && (
+            <div className="glass rounded-2xl border border-gold/10 p-6 space-y-6">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-foreground">Operational Audit Trail</h2>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Real-time system telemetry and transaction records</p>
+              </div>
+
+              {logsLoading ? (
+                <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                  <Loader2 size={24} className="text-gold animate-spin" />
+                  <p className="text-xs text-muted-foreground font-mono">Syncing log records...</p>
+                </div>
+              ) : logs.length === 0 ? (
+                <div className="py-12 text-center text-xs text-muted-foreground italic border border-dashed border-gold/10 rounded-xl">
+                  No activity records logged in this segment.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-gold/10 text-[9px] font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
+                        <th className="py-2.5 px-3">Date</th>
+                        <th className="py-2.5 px-3">User</th>
+                        <th className="py-2.5 px-3">Action</th>
+                        <th className="py-2.5 px-3">Target Table</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gold/5 font-mono text-[11px]">
+                      {logs.map((log) => (
+                        <tr key={log.id} className="hover:bg-white/[0.01] transition-colors">
+                          <td className="py-2.5 px-3 text-muted-foreground">
+                            {new Date(log.created_at).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                          </td>
+                          <td className="py-2.5 px-3 text-foreground font-sans font-semibold">
+                            {log.profiles?.full_name || 'System Operator'}
+                          </td>
+                          <td className="py-2.5 px-3">
+                            <span className="px-1.5 py-0.5 rounded bg-gold/5 text-gold border border-gold/20 text-[9px] font-bold">
+                              {log.action_type}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-3 text-muted-foreground">
+                            {log.target_table}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </div>

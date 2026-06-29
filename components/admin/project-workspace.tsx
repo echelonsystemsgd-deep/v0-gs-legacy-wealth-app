@@ -98,9 +98,30 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
   // Viewport, custom accents, & nudge states
   const [viewportSize, setViewportSize] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
   const [themeAccent, setThemeAccent] = useState('gold')
+  const [themeFont, setThemeFont] = useState('sans')
   const [newRequestDueDate, setNewRequestDueDate] = useState('')
   const [nudgingRequest, setNudgingRequest] = useState<string | null>(null)
   const [isSandboxInteractive, setIsSandboxInteractive] = useState(false)
+  
+  // Mobile Staging Preview scale states & refs
+  const [containerWidth, setContainerWidth] = useState<number>(0)
+  const previewContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const updateWidth = () => {
+      if (previewContainerRef.current) {
+        setContainerWidth(previewContainerRef.current.getBoundingClientRect().width)
+      }
+    }
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    const timer = setTimeout(updateWidth, 300)
+    return () => {
+      window.removeEventListener('resize', updateWidth)
+      clearTimeout(timer)
+    }
+  }, [activeTab, viewportSize])
 
   // Updates & Messages states
   const [newUpdateTitle, setNewUpdateTitle] = useState('')
@@ -173,7 +194,11 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
         setRetainerAmount(proj.retainer_amount?.toString() ?? '0')
         setOneTimeFee(proj.one_time_fee?.toString() ?? '0')
         setRevSharePercentage(proj.rev_share_percentage?.toString() ?? '0')
-        setThemeAccent(proj.theme_accent ?? 'gold')
+        
+        const dbAccent = proj.theme_accent ?? 'gold|sans'
+        const parts = dbAccent.split('|')
+        setThemeAccent(parts[0] ?? 'gold')
+        setThemeFont(parts[1] ?? 'sans')
       }
       setAssets(assetData ?? [])
       setClients(clientData ?? [])
@@ -264,6 +289,56 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(val)
 
+  const extractDominantColor = (url: string) => {
+    const img = new Image()
+    img.crossOrigin = "Anonymous"
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      canvas.width = img.width
+      canvas.height = img.height
+      ctx.drawImage(img, 0, 0)
+      try {
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+        let r = 0, g = 0, b = 0, count = 0
+        for (let i = 0; i < data.length; i += 40) {
+          const currR = data[i]
+          const currG = data[i+1]
+          const currB = data[i+2]
+          const currA = data[i+3]
+          if (currA > 200) {
+            const max = Math.max(currR, currG, currB)
+            const min = Math.min(currR, currG, currB)
+            if (max - min > 30 && max < 240 && min > 15) {
+              r += currR
+              g += currG
+              b += currB
+              count++
+            }
+          }
+        }
+        
+        if (count > 0) {
+          const hex = "#" + [Math.round(r/count), Math.round(g/count), Math.round(b/count)].map(x => {
+            const s = x.toString(16)
+            return s.length === 1 ? '0' + s : s
+          }).join('')
+          setThemeAccent(hex)
+          toast.success(`Extracted brand accent: ${hex}`)
+        } else {
+          toast.error("Could not find a distinct dominant color. Try a different image.")
+        }
+      } catch (e) {
+        toast.error("Security policy blocked direct image reading. Ensure image is served with CORS.")
+      }
+    }
+    img.onerror = () => {
+      toast.error("Failed to load image for color extraction.")
+    }
+    img.src = url
+  }
+
   const handleSave = async () => {
     setSaving(true)
     const retAmt = parseFloat(retainerAmount) || 0
@@ -288,7 +363,7 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
       retainer_amount: retAmt,
       one_time_fee: otFee,
       rev_share_percentage: revPct,
-      theme_accent: themeAccent,
+      theme_accent: `${themeAccent}|${themeFont}`,
     }).eq('id', id)
 
     setSaving(false)
@@ -756,48 +831,65 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                       </div>
                     </div>
                     
-                    <div className="flex justify-center bg-black/60 rounded-xl p-4 border border-gold/5 relative overflow-hidden">
-                      <div className="absolute top-2 left-2 flex gap-1 z-10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
-                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
-                      </div>
-                      <div 
-                        className="transition-all duration-300 border border-gold/15 rounded-lg overflow-hidden bg-background shadow-inner max-w-full relative"
-                        style={{
-                          width: viewportSize === 'mobile' ? '320px' : viewportSize === 'tablet' ? '640px' : '100%',
-                          height: '350px'
-                        }}
-                      >
-                        <iframe 
-                          src={getValidUrl(previewUrl)} 
-                          title="Staging Viewport Preview" 
-                          className={`w-full h-full border-0 ${isSandboxInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}
-                          sandbox="allow-scripts allow-same-origin"
-                        />
+                    {(() => {
+                      const targetWidth = viewportSize === 'mobile' ? 320 : viewportSize === 'tablet' ? 640 : 1024;
+                      const paddingOffset = 32;
+                      const availableWidth = containerWidth ? containerWidth - paddingOffset : 0;
+                      const scale = availableWidth && availableWidth < targetWidth ? availableWidth / targetWidth : 1;
 
-                        {!isSandboxInteractive && (
-                          <div 
-                            onClick={() => setIsSandboxInteractive(true)}
-                            className="absolute inset-0 bg-black/40 backdrop-blur-[1px] hover:bg-black/25 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300 select-none group z-10"
-                          >
-                            <span className="px-3.5 py-1.5 rounded-xl border border-gold/30 bg-black/85 text-gold text-[10px] font-bold uppercase tracking-wider group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(201,162,39,0.2)]">
-                              Click to Interact
-                            </span>
+                      return (
+                        <div ref={previewContainerRef} className="flex justify-center bg-black/60 rounded-xl p-4 border border-gold/5 relative overflow-hidden w-full">
+                          <div className="absolute top-2 left-2 flex gap-1 z-10">
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
                           </div>
-                        )}
-
-                        {isSandboxInteractive && (
-                          <button
-                            type="button"
-                            onClick={() => setIsSandboxInteractive(false)}
-                            className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/90 hover:bg-black border border-gold/35 text-gold text-[8px] font-bold uppercase tracking-wider shadow-lg transition-all z-20 cursor-pointer"
+                          
+                          <div 
+                            className="flex items-center justify-center overflow-hidden w-full animate-in fade-in duration-200"
+                            style={{ height: '350px' }}
                           >
-                            Lock Viewport
-                          </button>
-                        )}
-                      </div>
-                    </div>
+                            <div 
+                              className="transition-all duration-300 border border-gold/15 rounded-lg overflow-hidden bg-background shadow-inner relative flex-shrink-0"
+                              style={{
+                                width: `${targetWidth}px`,
+                                height: `${350 / scale}px`,
+                                transform: `scale(${scale})`,
+                                transformOrigin: 'top center',
+                              }}
+                            >
+                              <iframe 
+                                src={getValidUrl(previewUrl)} 
+                                title="Staging Viewport Preview" 
+                                className={`w-full h-full border-0 ${isSandboxInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}
+                                sandbox="allow-scripts allow-same-origin"
+                              />
+
+                              {!isSandboxInteractive && (
+                                <div 
+                                  onClick={() => setIsSandboxInteractive(true)}
+                                  className="absolute inset-0 bg-black/40 backdrop-blur-[1px] hover:bg-black/25 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300 select-none group z-10"
+                                >
+                                  <span className="px-3.5 py-1.5 rounded-xl border border-gold/30 bg-black/85 text-gold text-[10px] font-bold uppercase tracking-wider group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(201,162,39,0.2)]">
+                                    Click to Interact
+                                  </span>
+                                </div>
+                              )}
+
+                              {isSandboxInteractive && (
+                                <button
+                                  type="button"
+                                  onClick={() => setIsSandboxInteractive(false)}
+                                  className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/90 hover:bg-black border border-gold/35 text-gold text-[8px] font-bold uppercase tracking-wider shadow-lg transition-all z-20 cursor-pointer"
+                                >
+                                  Lock Viewport
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
@@ -968,18 +1060,136 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
             <div className="space-y-5">
               
               {/* Bespoke Portal Accent Theme */}
-              <div className="glass rounded-2xl border border-gold/10 p-5 space-y-3">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gold/70 block">Bespoke Portal Accent</label>
-                <select
-                  value={themeAccent}
-                  onChange={(e) => setThemeAccent(e.target.value)}
-                  className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2.5 text-xs text-foreground outline-none transition-all"
-                >
-                  <option value="gold">✨ Aurum Gold</option>
-                  <option value="emerald">💚 Emerald Forest</option>
-                  <option value="sapphire">💙 Sapphire Ocean</option>
-                  <option value="obsidian">🖤 Obsidian Velvet</option>
-                </select>
+              <div className="glass rounded-2xl border border-gold/10 p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-gold/70 block">Bespoke Portal Visuals</label>
+                  <span className="text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-gold/10 text-gold tracking-widest">Branding Engine</span>
+                </div>
+                
+                {/* Preset Select */}
+                <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-wider text-muted-foreground block font-medium">Portal Accent Preset</label>
+                  <select
+                    value={['gold', 'emerald', 'sapphire', 'obsidian'].includes(themeAccent) ? themeAccent : 'custom'}
+                    onChange={(e) => {
+                      if (e.target.value === 'custom') {
+                        setThemeAccent('#C9A227')
+                      } else {
+                        setThemeAccent(e.target.value)
+                      }
+                    }}
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
+                  >
+                    <option value="gold">✨ Aurum Gold (Preset)</option>
+                    <option value="emerald">💚 Emerald Forest (Preset)</option>
+                    <option value="sapphire">💙 Sapphire Ocean (Preset)</option>
+                    <option value="obsidian">🖤 Obsidian Velvet (Preset)</option>
+                    <option value="custom">🎨 Custom Brand Accent</option>
+                  </select>
+                </div>
+
+                {/* Custom Color Input */}
+                {!['gold', 'emerald', 'sapphire', 'obsidian'].includes(themeAccent) && (
+                  <div className="space-y-1.5 animate-in fade-in duration-200">
+                    <label className="text-[9px] uppercase tracking-wider text-muted-foreground block font-medium">Custom Brand Color</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={themeAccent.startsWith('#') ? themeAccent : '#C9A227'}
+                        onChange={(e) => setThemeAccent(e.target.value)}
+                        className="w-8 h-8 rounded-lg overflow-hidden border border-gold/15 bg-transparent cursor-pointer p-0 shrink-0"
+                      />
+                      <input
+                        type="text"
+                        value={themeAccent}
+                        onChange={(e) => setThemeAccent(e.target.value)}
+                        placeholder="#HEXCODE"
+                        className="flex-1 bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none font-mono transition-all"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Typography Accent */}
+                <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-wider text-muted-foreground block font-medium">Bespoke Font Pairing</label>
+                  <select
+                    value={themeFont}
+                    onChange={(e) => setThemeFont(e.target.value)}
+                    className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
+                  >
+                    <option value="sans">🏢 Modernist Sans (Inter / Outfit)</option>
+                    <option value="serif">🏛️ Luxurious Serif (Lora / Playfair)</option>
+                    <option value="mono">💻 High-Tech Mono (Fira / JetBrains)</option>
+                  </select>
+                </div>
+
+                {/* Logo color extraction helper */}
+                {(() => {
+                  const imageAssets = assets.filter(a => a.file_name?.match(/\.(png|jpg|jpeg|webp)$/i))
+                  if (imageAssets.length === 0) return null
+                  return (
+                    <div className="space-y-1.5 pt-1">
+                      <label className="text-[9px] font-black uppercase tracking-wider text-muted-foreground block">Extract brand color from repository images:</label>
+                      <div className="max-h-[90px] overflow-y-auto divide-y divide-gold/5 border border-gold/10 rounded-lg p-1.5 bg-background">
+                        {imageAssets.map((asset) => (
+                          <button
+                            key={asset.id}
+                            type="button"
+                            onClick={() => extractDominantColor(asset.file_url)}
+                            className="w-full text-[10px] text-left py-1.5 hover:text-gold hover:bg-white/[0.02] px-1 truncate font-mono text-muted-foreground transition-all cursor-pointer flex items-center justify-between"
+                          >
+                            <span className="truncate max-w-[80%]">{asset.file_name}</span>
+                            <span className="text-[8px] uppercase font-bold text-gold/60 shrink-0">Extract</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Symmetrical Live Preview Widget */}
+                <div className="pt-2 border-t border-gold/10 space-y-2">
+                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground block font-bold">Portal Preview (Real-time)</span>
+                  {(() => {
+                    const getAccentColorHex = (accent: string) => {
+                      if (accent === 'gold') return '#C9A227'
+                      if (accent === 'emerald') return '#10B981'
+                      if (accent === 'sapphire') return '#3B82F6'
+                      if (accent === 'obsidian') return '#E2E8F0'
+                      return accent
+                    }
+                    const currentHex = getAccentColorHex(themeAccent)
+                    const fontClass = themeFont === 'serif' ? 'font-serif' : themeFont === 'mono' ? 'font-mono' : 'font-sans'
+                    return (
+                      <div 
+                        className={`p-3.5 rounded-xl border bg-black/40 space-y-3 transition-all duration-300 ${fontClass}`}
+                        style={{ borderColor: `${currentHex}20` }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-muted-foreground">Mock Portal Badge</span>
+                          <span 
+                            className="px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider border"
+                            style={{ 
+                              backgroundColor: `${currentHex}10`, 
+                              color: currentHex, 
+                              borderColor: `${currentHex}30` 
+                            }}
+                          >
+                            ACTIVE MANDATE
+                          </span>
+                        </div>
+                        <button 
+                          type="button"
+                          className="w-full py-1.5 px-3 rounded-lg text-[9px] font-black uppercase tracking-widest text-black transition-all hover:opacity-90"
+                          style={{ backgroundColor: currentHex }}
+                        >
+                          Launch Site Staging
+                        </button>
+                      </div>
+                    )
+                  })()}
+                </div>
               </div>
 
               {/* Linked Client Panel */}
@@ -997,6 +1207,30 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                     </option>
                   ))}
                 </select>
+                {clientId && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const client = clients.find(c => c.id === clientId)
+                      if (!client) return
+                      const nextSusp = !client.is_suspended
+                      const { error } = await supabase.from('profiles').update({ is_suspended: nextSusp }).eq('id', clientId)
+                      if (error) {
+                        toast.error(error.message)
+                        return
+                      }
+                      setClients(clients.map(c => c.id === clientId ? { ...c, is_suspended: nextSusp } : c))
+                      toast.success(nextSusp ? 'Client portal access suspended.' : 'Client portal access activated.')
+                    }}
+                    className={`w-full py-1.5 px-3 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer border text-center ${
+                      clients.find(c => c.id === clientId)?.is_suspended
+                        ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                        : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30'
+                    }`}
+                  >
+                    {clients.find(c => c.id === clientId)?.is_suspended ? 'Reactivate Client Portal' : 'Freeze Portal / Lock Milestone'}
+                  </button>
+                )}
               </div>
 
               {/* Service Type Panel */}
@@ -1344,7 +1578,9 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                       <a href={a.file_url} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-foreground hover:text-gold transition-colors truncate block">
                         {a.file_name}
                       </a>
-                      <p className="text-[9px] text-muted-foreground">{formatBytes(a.file_size)} · {a.file_type ?? 'unknown'}</p>
+                      <p className="text-[9px] text-muted-foreground">
+                        {formatBytes(a.file_size)} · {a.file_type ?? 'unknown'} · {a.created_at ? new Date(a.created_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+                      </p>
                     </div>
                     {deleteConfirm === a.id ? (
                       <div className="flex items-center gap-1.5 shrink-0">

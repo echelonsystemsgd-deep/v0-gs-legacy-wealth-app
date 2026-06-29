@@ -232,10 +232,10 @@ export function ClientHealthGrid({
           const tabParam = health === 'Blocked' ? 'chat' : health === 'Awaiting Client' ? 'actions' : 'config'
 
           return (
-            <Link
+            <button
               key={project.id}
-              href={`/admin/projects?openId=${project.id}&tab=${tabParam}`}
-              className={`relative p-4 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full`}
+              onClick={() => setSelectedProject(project)}
+              className={`relative p-4 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full cursor-pointer`}
             >
               {/* Avatar + Name */}
               <div className="flex items-center gap-3">
@@ -303,7 +303,7 @@ export function ClientHealthGrid({
                   )}
                 </div>
               </div>
-            </Link>
+            </button>
           )
         })}
 
@@ -482,19 +482,29 @@ export function ClientHealthGrid({
             </div>
 
             {/* Modal Footer */}
-            <div className="border-t border-gold/10 pt-4 flex gap-2 justify-end">
-              <Link
-                href="/admin/projects"
-                className="px-4 py-2.5 rounded-xl border border-gold/15 hover:bg-white/5 text-xs text-muted-foreground hover:text-foreground transition-all flex items-center gap-1.5"
-              >
-                Go to Workspace <ExternalLink size={12} />
-              </Link>
+            <div className="border-t border-gold/10 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
               <button
                 onClick={() => setSelectedProject(null)}
-                className="px-4 py-2.5 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                className="px-4 py-2.5 rounded-xl border border-gold/15 hover:bg-white/5 text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer order-last sm:order-first"
               >
                 Close
               </button>
+              <div className="flex flex-col sm:flex-row gap-2 flex-1 sm:justify-end">
+                <Link
+                  href={`/admin/projects?openId=${selectedProject.id}&tab=config`}
+                  className="px-4 py-2.5 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 hover:border-gold/45 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                >
+                  Launch Console (Config) <ExternalLink size={11} />
+                </Link>
+                {getHealthLabel(selectedProject) !== 'On Track' && (
+                  <Link
+                    href={`/admin/projects?openId=${selectedProject.id}&tab=${getHealthLabel(selectedProject) === 'Blocked' ? 'chat' : 'actions'}`}
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                  >
+                    Resolve Active Tasks ({getHealthLabel(selectedProject) === 'Blocked' ? 'Chat' : 'Actions'}) <ExternalLink size={11} />
+                  </Link>
+                )}
+              </div>
             </div>
 
           </div>

@@ -40,13 +40,32 @@ export default async function ClientLayout({ children }: { children: React.React
     .eq('client_id', user.id)
     .maybeSingle()
 
-  const themeClass = project?.theme_accent ? `theme-${project.theme_accent}` : 'theme-gold'
+  const dbAccent = project?.theme_accent ?? 'gold|sans'
+  const parts = dbAccent.split('|')
+  const accent = parts[0] ?? 'gold'
+  const font = parts[1] ?? 'sans'
+
+  const isPreset = ['gold', 'emerald', 'sapphire', 'obsidian'].includes(accent)
+  const themeClass = isPreset ? `theme-${accent}` : 'theme-custom'
+  const fontClass = font === 'serif' ? 'font-serif' : font === 'mono' ? 'font-mono' : 'font-sans'
 
   return (
     <InspectorProvider>
       <PortalTour />
       <GlowEffect />
-      <div className={`h-dvh bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass}`}>
+      {!isPreset && (
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root, .theme-custom {
+            --color-accent-gold: ${accent} !important;
+            --color-accent-gold-muted: ${accent}cc !important;
+            --color-text-gold: ${accent} !important;
+            --color-border: ${accent}40 !important;
+            --color-gold: ${accent} !important;
+            --color-border-brand: ${accent}30 !important;
+          }
+        `}} />
+      )}
+      <div className={`h-dvh bg-[#050505] text-foreground flex relative overflow-hidden ${themeClass} ${fontClass}`}>
 
         {/* Ambient background glows */}
         <div className="fixed inset-0 pointer-events-none z-0">

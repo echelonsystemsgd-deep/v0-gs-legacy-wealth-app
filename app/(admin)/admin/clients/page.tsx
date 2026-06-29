@@ -116,7 +116,7 @@ export default function ClientsPage() {
   const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Awaiting Client' | 'On Track'>('All')
 
   // Messages (for health board unread counts)
-  const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string }[]>([])
+  const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string; created_at: string }[]>([])
 
   // Action requests (for health board detail modals)
   const [dbActionRequests, setDbActionRequests] = useState<any[]>([])
@@ -198,7 +198,7 @@ export default function ClientsPage() {
       // 5. Fetch messages for health board unread counts
       const { data: msgs } = await supabase
         .from('messages')
-        .select('id, project_id, sender_id')
+        .select('id, project_id, sender_id, created_at')
       setAllMessages((msgs as any) ?? [])
 
       // 6. Fetch action requests
@@ -503,15 +503,24 @@ export default function ClientsPage() {
 
     // Unread = messages whose sender is not the current admin
     const unreadByProject: Record<string, number> = {}
+    const lastMessageByProject: Record<string, string> = {}
+    
     for (const msg of allMessages) {
       if (msg.sender_id !== currentUserId) {
         unreadByProject[msg.project_id] = (unreadByProject[msg.project_id] || 0) + 1
+      }
+      if (!lastMessageByProject[msg.project_id] || msg.created_at > lastMessageByProject[msg.project_id]) {
+        lastMessageByProject[msg.project_id] = msg.created_at
       }
     }
 
     return activeProjects.map(project => {
       const clientProfile = clientProfiles.find(c => c.id === project.client_id)
       const projRequests = dbActionRequests.filter(req => req.project_id === project.id)
+      const lastMsgDate = lastMessageByProject[project.id]
+      const daysSinceLastMessage = lastMsgDate
+        ? Math.floor((Date.now() - new Date(lastMsgDate).getTime()) / (1000 * 60 * 60 * 24))
+        : null
 
       return {
         id: project.id,
@@ -521,7 +530,7 @@ export default function ClientsPage() {
         client_id: project.client_id,
         updated_at: (project as any).updated_at || new Date().toISOString(),
         unreadMessageCount: unreadByProject[project.id] || 0,
-        daysSinceLastMessage: null,
+        daysSinceLastMessage,
         clientAvatarUrl: clientProfile?.avatar_url || null,
         actionRequests: projRequests,
       } as ProjectWithHealth
