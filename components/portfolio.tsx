@@ -482,17 +482,17 @@ export function Portfolio({ limit }: { limit?: number }) {
         const { data, error } = await supabase
           .from('portfolio_items')
           .select('*')
-          .order('title', { ascending: true })
+          .order('project_name', { ascending: true })
 
         if (error) throw error
 
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
-            title: d.title,
-            category: d.category,
+            title: d.project_name,
+            category: d.industry,
             gradient: d.gradient || 'from-blue-500/20 to-indigo-500/20',
-            href: d.href,
-            image: d.image,
+            href: d.website_link,
+            image: d.cover_image,
             underConstruction: !!d.under_construction,
             metric: d.metric,
           }))

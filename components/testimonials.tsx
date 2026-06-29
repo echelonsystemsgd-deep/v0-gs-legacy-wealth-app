@@ -44,16 +44,16 @@ export function Testimonials() {
         const { data, error } = await supabase
           .from('testimonials')
           .select('*')
-          .order('name', { ascending: true })
+          .order('client_name', { ascending: true })
 
         if (error) throw error
 
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
-            name: d.name,
-            role: d.role,
+            name: d.client_name,
+            role: d.company,
             badge: d.badge,
-            content: d.content,
+            content: d.testimonial,
           }))
           setItems(mapped)
         }
