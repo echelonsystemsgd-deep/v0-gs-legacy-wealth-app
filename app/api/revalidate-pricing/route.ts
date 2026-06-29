@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    revalidateTag('pricing')
+    ;(revalidateTag as Function)('pricing')
     return NextResponse.json({
       revalidated: true,
       tag: 'pricing',
