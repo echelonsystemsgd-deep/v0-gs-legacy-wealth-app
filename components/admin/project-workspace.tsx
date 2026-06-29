@@ -28,7 +28,7 @@ type Project = {
   contract_type: string | null; retainer_amount: number; one_time_fee: number; rev_share_percentage: number
 }
 type Asset = { id: string; file_name: string; file_url: string; file_size: number | null; file_type: string | null; created_at: string }
-type ClientProfile = { id: string; full_name: string | null; email: string | null }
+type ClientProfile = { id: string; full_name: string | null; email: string | null; is_suspended?: boolean }
 type UpdateItem = { id: string; title: string; description: string | null; created_at: string }
 type MessageItem = { id: string; content: string; created_at: string; sender_id: string }
 type ActionRequest = { id: string; title: string; description: string; status: 'pending' | 'submitted' | 'completed'; client_response: string | null; submitted_at: string | null; completed_at: string | null; created_at: string; due_date: string | null }
@@ -179,7 +179,7 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
       ] = await Promise.all([
         supabase.from('projects').select('*').eq('id', id).single(),
         supabase.from('project_assets').select('*').eq('project_id', id).order('created_at', { ascending: false }),
-        supabase.from('profiles').select('id, full_name, email').eq('role', 'client'),
+        supabase.from('profiles').select('id, full_name, email, is_suspended').eq('role', 'client'),
         supabase.from('project_updates').select('*').eq('project_id', id).order('created_at', { ascending: false }),
         supabase.from('messages').select('*').eq('project_id', id).order('created_at', { ascending: true }),
         supabase.from('project_action_requests').select('*').eq('project_id', id).order('created_at', { ascending: false }),

@@ -63,11 +63,11 @@ export function AdminKpiRow({
   recentPayments,
 }: AdminKpiRowProps) {
   const [expandedPanel, setExpandedPanel] = useState<'sales' | 'pipeline' | null>(null)
-  const [activeModal, setActiveModal] = useState<'leads' | 'projects' | 'bookings' | null>(null)
+  const [activeModal, setActiveModal] = useState<'leads' | 'projects' | 'bookings' | 'mrr' | null>(null)
   const [modalData, setModalData] = useState<any[]>([])
   const [modalLoading, setModalLoading] = useState(false)
 
-  const handleOpenPreviewModal = async (type: 'leads' | 'projects' | 'bookings') => {
+  const handleOpenPreviewModal = async (type: 'leads' | 'projects' | 'bookings' | 'mrr') => {
     setActiveModal(type)
     setModalLoading(true)
     setModalData([])
@@ -242,7 +242,7 @@ export function AdminKpiRow({
 
         {/* Standard: MRR Run Rate */}
         <button
-          onClick={() => handleOpenPreviewModal('mrr' as any)}
+          onClick={() => handleOpenPreviewModal('mrr')}
           className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
