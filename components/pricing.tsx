@@ -83,7 +83,7 @@ const setupTiers = [
     price: "9,800",
     interval: "£2,450 deposit to initiate",
     milestoneBreakdown: "4 milestone stages of 25% (£2,450) linked to build progress",
-    description: "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and program your AI lead triage.",
+    description: "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.",
     features: [
       "Everything in Operations Machine (Unlimited Pages)",
       "Bespoke Cold Email Outreach System",
@@ -126,7 +126,7 @@ const retainerTiers = [
       "Continuous AI Agent Re-training & Updates",
       "1 Custom High-Converting Landing Page/mo",
       "Advanced SEO Content & Competitor Strategy",
-      "Weekly Lead Funnel Optimization",
+      "Weekly Lead Funnel Optimisation",
       "10 Dedicated Developer/Designer Hours/mo",
     ],
     cta: "Initiate Audit",
@@ -175,7 +175,7 @@ const comparisonCategories = [
   {
     category: "SEO & Growth",
     items: [
-      { name: "SEO Optimization", authoritySuite: "Core SEO Blueprint & Schema Setup", operationsMachine: "Advanced Strategy, Local & Global Schema", revenueEngine: "Comprehensive Search Engine Dominance Plan" },
+      { name: "SEO Optimisation", authoritySuite: "Core SEO Blueprint & Schema Setup", operationsMachine: "Advanced Strategy, Local & Global Schema", revenueEngine: "Comprehensive Search Engine Dominance Plan" },
       { name: "Speed & Performance", authoritySuite: "95+ Guaranteed", operationsMachine: "95+ Guaranteed + Caching System", revenueEngine: "98+ Max Speed Guarantee" },
       { name: "Brand Identity Suite", authoritySuite: "Logo placement & layout palette", operationsMachine: "Cohesive brand UI kit", revenueEngine: "✓ Full Identity Suite (Logos, Slide Decks)" },
     ]

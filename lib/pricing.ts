@@ -80,7 +80,7 @@ const FALLBACK_SETUP_TIERS: PricingTier[] = [
     interval: '£2,450 deposit to initiate',
     milestoneBreakdown: '4 milestone stages of 25% (£2,450) linked to build progress',
     description:
-      'The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and program your AI lead triage.',
+      'The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.',
     features: [
       'Everything in Operations Machine (Unlimited Pages)',
       'Bespoke Cold Email Outreach System',
@@ -129,7 +129,7 @@ const FALLBACK_RETAINER_TIERS: PricingTier[] = [
       'Continuous AI Agent Re-training & Updates',
       '1 Custom High-Converting Landing Page/mo',
       'Advanced SEO Content & Competitor Strategy',
-      'Weekly Lead Funnel Optimization',
+      'Weekly Lead Funnel Optimisation',
       '10 Dedicated Developer/Designer Hours/mo',
     ],
     cta: 'Initiate Audit',
