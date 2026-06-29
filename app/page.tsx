@@ -12,8 +12,12 @@ import { Pricing } from "@/components/pricing"
 import { FAQHome } from "@/components/faq-home"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
+import { getPricingTiers } from "@/lib/pricing"
 
-export default function Home() {
+export const revalidate = 60
+
+export default async function Home() {
+  const { setupTiers, retainerTiers } = await getPricingTiers()
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary overflow-x-hidden font-sans">
       <script
@@ -78,7 +82,7 @@ export default function Home() {
       <Results />
       <WhyGSLegacy />
       <Testimonials />
-      <Pricing isHomepage={true} />
+      <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
       <FAQHome />
       <CTA />
       <Footer />

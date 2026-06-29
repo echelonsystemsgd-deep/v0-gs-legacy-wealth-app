@@ -4,13 +4,18 @@ import { FAQ } from "@/components/faq"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
+import { getPricingTiers } from "@/lib/pricing"
+
+export const revalidate = 60
 
 export const metadata = {
   title: "Pricing & Investment",
   description: "Transparent capital requirements for high-yield digital assets. Choose Authority Suite, Operations Machine, or Revenue Engine alignment.",
 }
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const { setupTiers, retainerTiers } = await getPricingTiers()
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -19,7 +24,7 @@ export default function PricingPage() {
         highlight="Tiers"
         subtitle="Transparent pricing models for elite digital solutions. Choose the level of impact that matches your ambition."
       />
-      <Pricing />
+      <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} />
       
       {/* SLA & Throughput Guarantees Section */}
       <section className="relative py-16 bg-bg-secondary border-y border-white/5">
@@ -42,3 +47,4 @@ export default function PricingPage() {
     </main>
   )
 }
+

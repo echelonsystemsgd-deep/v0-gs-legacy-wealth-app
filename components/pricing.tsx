@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
 import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
+import type { PricingTier } from "@/lib/pricing"
 
 // Helper component to smoothly animate output values when dragging sliders
 function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
@@ -191,15 +192,21 @@ const comparisonCategories = [
 
 interface PricingProps {
   isHomepage?: boolean
+  /** Optional: live tiers fetched server-side from Supabase. Falls back to hardcoded arrays if omitted. */
+  setupTiers?: PricingTier[]
+  retainerTiers?: PricingTier[]
 }
 
-export function Pricing({ isHomepage = false }: PricingProps) {
+export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
   const [billingCycle, setBillingCycle] = useState<"setup" | "retainer">("setup")
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
   const [isMatrixOpen, setIsMatrixOpen] = useState(false)
 
-  const activeTiers = billingCycle === "setup" ? setupTiers : retainerTiers
+  // Use props from server fetch when available; fall back to hardcoded module-level arrays
+  const resolvedSetupTiers = propSetupTiers && propSetupTiers.length > 0 ? propSetupTiers : setupTiers
+  const resolvedRetainerTiers = propRetainerTiers && propRetainerTiers.length > 0 ? propRetainerTiers : retainerTiers
+  const activeTiers = billingCycle === "setup" ? resolvedSetupTiers : resolvedRetainerTiers
 
   // Calculators
   const annualHoursSaved = Math.round(manualHours * 0.75 * 52)
