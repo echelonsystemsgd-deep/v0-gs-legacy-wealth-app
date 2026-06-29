@@ -95,8 +95,17 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
   const [extensionDate, setExtensionDate] = useState('')
   const [applyingExtension, setApplyingExtension] = useState(false)
 
+  // Detect current device for viewport default
+  const getDeviceViewport = (): 'desktop' | 'tablet' | 'mobile' => {
+    if (typeof window === 'undefined') return 'desktop'
+    const w = window.innerWidth
+    if (w < 768) return 'mobile'
+    if (w < 1024) return 'tablet'
+    return 'desktop'
+  }
+
   // Viewport, custom accents, & nudge states
-  const [viewportSize, setViewportSize] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
+  const [viewportSize, setViewportSize] = useState<'desktop' | 'tablet' | 'mobile'>(() => getDeviceViewport())
   const [themeAccent, setThemeAccent] = useState('gold')
   const [themeFont, setThemeFont] = useState('sans')
   const [newRequestDueDate, setNewRequestDueDate] = useState('')
@@ -210,7 +219,13 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
     load()
   }, [id])
 
-  // Real-time messages listener
+  // Re-detect device viewport on every client open
+  useEffect(() => {
+    setViewportSize(getDeviceViewport())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
+
+
   useEffect(() => {
     const channel = supabase
       .channel(`admin_workspace_messages_${id}`)
@@ -926,11 +941,24 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                   </div>
                 </div>
 
-                <div className="space-y-3.5">
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-gold/70">Client Pricing Options (Pre-set)</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Monthly Retainer Rate (£/mo)</label>
+                <div className="space-y-3">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-gold/70">Client Pricing Options (Pre-Set)</p>
+                  <p className="text-[9px] text-muted-foreground/60 leading-relaxed -mt-1">Set the rate for each pricing model below. The active model is determined by the Contract Valuation selection above.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                    {/* Model 1 — Monthly Retainer */}
+                    <div className={`rounded-xl border p-3.5 space-y-2.5 transition-all ${
+                      contractType === 'retainer'
+                        ? 'border-gold/35 bg-gold/[0.04]'
+                        : 'border-gold/10 bg-white/[0.01] opacity-70'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] font-extrabold uppercase tracking-widest text-gold/80">Monthly Retainer</p>
+                        {contractType === 'retainer' && (
+                          <span className="text-[8px] font-bold uppercase tracking-wider text-gold bg-gold/10 border border-gold/25 px-1.5 py-0.5 rounded-full">Active</span>
+                        )}
+                      </div>
+                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Rate (£/mo)</label>
                       <input
                         type="number"
                         value={retainerAmount}
@@ -940,8 +968,19 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                       />
                     </div>
 
-                    <div>
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Fixed Setup Fee (£)</label>
+                    {/* Model 2 — One-Time Setup Fee */}
+                    <div className={`rounded-xl border p-3.5 space-y-2.5 transition-all ${
+                      contractType === 'one_time'
+                        ? 'border-gold/35 bg-gold/[0.04]'
+                        : 'border-gold/10 bg-white/[0.01] opacity-70'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] font-extrabold uppercase tracking-widest text-gold/80">One-Time Setup Fee</p>
+                        {contractType === 'one_time' && (
+                          <span className="text-[8px] font-bold uppercase tracking-wider text-gold bg-gold/10 border border-gold/25 px-1.5 py-0.5 rounded-full">Active</span>
+                        )}
+                      </div>
+                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">Fee Amount (£)</label>
                       <input
                         type="number"
                         value={oneTimeFee}
@@ -951,8 +990,19 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                       />
                     </div>
 
-                    <div>
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 block">Performance Royalty Yield (%)</label>
+                    {/* Model 3 — Performance Royalty Yield (PRY) */}
+                    <div className={`rounded-xl border p-3.5 space-y-2.5 transition-all ${
+                      contractType === 'rev_share'
+                        ? 'border-gold/35 bg-gold/[0.04]'
+                        : 'border-gold/10 bg-white/[0.01] opacity-70'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] font-extrabold uppercase tracking-widest text-gold/80">Performance Royalty Yield</p>
+                        {contractType === 'rev_share' && (
+                          <span className="text-[8px] font-bold uppercase tracking-wider text-gold bg-gold/10 border border-gold/25 px-1.5 py-0.5 rounded-full">Active</span>
+                        )}
+                      </div>
+                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block">PRY Rate (%)</label>
                       <input
                         type="number"
                         step="0.1"
@@ -962,6 +1012,7 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                         className="w-full bg-background border border-gold/15 hover:border-gold/25 focus:border-gold/40 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all font-mono"
                       />
                     </div>
+
                   </div>
                 </div>
               </div>
