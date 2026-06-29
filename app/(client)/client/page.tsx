@@ -224,7 +224,7 @@ export default async function ClientDashboardPage() {
               {/* Status Card */}
               <Link 
                 href="/client/progress"
-                className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
                 data-tour="build-stage"
               >
                 <div className="space-y-1 min-w-0">
@@ -241,7 +241,7 @@ export default async function ClientDashboardPage() {
 
               {/* Target Launch Card */}
               <div 
-                className="p-4 glass rounded-xl border border-gold/10 flex flex-col gap-2"
+                className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 flex flex-col gap-3"
                 data-tour="target-launch"
               >
                 <div className="flex items-center justify-between gap-3.5">
@@ -263,7 +263,7 @@ export default async function ClientDashboardPage() {
               {/* Last Update Card */}
               <Link
                 href="/client/updates"
-                className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
                 data-tour="latest-update"
               >
                 <div className="space-y-1 min-w-0">
@@ -287,7 +287,7 @@ export default async function ClientDashboardPage() {
               {/* Support Messages Card */}
               <Link
                 href="/client/messages"
-                className="p-4 glass rounded-xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="p-5 sm:p-6 glass rounded-2xl border border-gold/10 hover:border-gold/30 hover:bg-gold/[0.02] flex items-center justify-between gap-3.5 transition-all duration-300 transform hover:-translate-y-0.5"
                 data-tour="messages-inbox"
               >
                 <div className="space-y-1 min-w-0">
@@ -310,7 +310,7 @@ export default async function ClientDashboardPage() {
           </div>
 
           {/* Project Details & Status Preview */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Col - Brief overview & Stage summary */}
             <section className="lg:col-span-2 space-y-6">
               {/* Overview & Checklist Container */}

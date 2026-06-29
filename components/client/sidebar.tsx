@@ -24,19 +24,40 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const navItems = [
-  { href: '/client', label: 'Overview', icon: LayoutDashboard },
-  { href: '/client/actions', label: 'Action Required', icon: ShieldAlert },
-  { href: '/client/progress', label: 'Project Progress', icon: FolderKanban },
-  { href: '/client/website', label: 'My Website', icon: Globe },
-  { href: '/client/updates', label: 'Updates', icon: Clock },
-  { href: '/client/messages', label: 'Messages', icon: MessageSquare },
-  { href: '/client/book', label: 'Book a Session', icon: CalendarDays },
-  { href: '/client/notifications', label: 'Notifications', icon: Bell },
-]
-
-const accountItems = [
-  { href: '/profile', label: 'Profile Settings', icon: UserRound },
+const clientSidebarGroups = [
+  {
+    title: 'Command Deck',
+    key: 'command',
+    items: [
+      { href: '/client', label: 'Overview', icon: LayoutDashboard },
+      { href: '/client/actions', label: 'Action Required', icon: ShieldAlert },
+      { href: '/client/notifications', label: 'Notifications', icon: Bell },
+    ]
+  },
+  {
+    title: 'Build Telemetry',
+    key: 'telemetry',
+    items: [
+      { href: '/client/progress', label: 'Project Progress', icon: FolderKanban },
+      { href: '/client/website', label: 'My Website', icon: Globe },
+      { href: '/client/updates', label: 'Updates', icon: Clock },
+    ]
+  },
+  {
+    title: 'Communication Hub',
+    key: 'comms',
+    items: [
+      { href: '/client/messages', label: 'Messages', icon: MessageSquare },
+      { href: '/client/book', label: 'Book a Session', icon: CalendarDays },
+    ]
+  },
+  {
+    title: 'Settings',
+    key: 'settings',
+    items: [
+      { href: '/profile', label: 'Profile Settings', icon: UserRound },
+    ]
+  }
 ]
 
 export function ClientSidebar() {
@@ -46,20 +67,49 @@ export function ClientSidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false)
   const [role, setRole] = useState<string | null>(null)
+  const [clientProfile, setClientProfile] = useState<any>(null)
+  
+  // Track open state of groupings
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
+    command: true,
+    telemetry: true,
+    comms: true,
+    settings: true,
+  })
+
+  const toggleGroup = (group: string) => {
+    setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))
+  }
 
   useEffect(() => {
-    async function getRole() {
+    async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data: profile } = await supabase
+        const { data } = await supabase
           .from('profiles')
-          .select('role')
+          .select('role, full_name, avatar_url')
           .eq('id', user.id)
-          .single()
-        if (profile) setRole(profile.role)
+          .maybeSingle()
+        
+        let resolvedAvatar = null
+        if (data?.avatar_url) {
+          if (data.avatar_url.startsWith('http') || data.avatar_url.startsWith('data:')) {
+            resolvedAvatar = data.avatar_url
+          } else {
+            const { data: signedData } = await supabase.storage.from('avatars').createSignedUrl(data.avatar_url, 3600)
+            if (signedData) resolvedAvatar = signedData.signedUrl
+          }
+        }
+        
+        setRole(data?.role || null)
+        setClientProfile({
+          full_name: data?.full_name || 'Client Partner',
+          avatar_url: resolvedAvatar,
+          email: user.email
+        })
       }
     }
-    getRole()
+    loadProfile()
   }, [supabase])
 
   const handleSignOut = async () => {
@@ -74,20 +124,21 @@ export function ClientSidebar() {
   return (
     <>
       {/* Floating Toggle Button for Mobile */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="lg:hidden fixed top-2.5 left-4 z-50 p-3 w-11 h-11 rounded-xl bg-card border border-gold/15 text-gold hover:bg-gold/5 transition-all cursor-pointer flex items-center justify-center shadow-lg"
-        >
-          <Menu size={18} />
-        </button>
-      )}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-2.5 z-50 p-3 w-11 h-11 rounded-xl bg-[#0A0A0A] border border-gold/35 text-gold hover:bg-gold/10 hover:text-gold-light transition-all duration-300 cursor-pointer flex items-center justify-center shadow-lg"
+        style={{
+          left: isOpen ? '268px' : '16px'
+        }}
+      >
+        {isOpen ? <X size={16} /> : <Menu size={16} />}
+      </button>
 
       {/* Backdrop for Mobile */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-30 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-30 transition-opacity duration-300"
         />
       )}
 
@@ -108,14 +159,6 @@ export function ClientSidebar() {
               <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest font-sans">Client Portal</p>
             </div>
           </div>
-
-          {/* Close button for mobile */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="lg:hidden p-2.5 w-10 h-10 flex items-center justify-center rounded-lg border border-gold/15 text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all cursor-pointer"
-          >
-            <X size={16} />
-          </button>
         </div>
 
         {/* Console Switcher */}
@@ -173,7 +216,6 @@ export function ClientSidebar() {
                   </Link>
                 )}
 
-
                 <div className="h-px bg-gold/10 my-1" />
 
                 <Link
@@ -190,86 +232,104 @@ export function ClientSidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive = href === '/client' ? pathname === '/client' : pathname.startsWith(href)
+        <nav className="flex-1 px-3 py-4 space-y-3.5 overflow-y-auto">
+          {clientSidebarGroups.map((group) => {
+            const isGroupOpen = openGroups[group.key]
             return (
-              <Link
-                key={href}
-                href={href}
-                onClick={handleLinkClick}
-                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-gold/10 text-gold border border-gold/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent'
-                }`}
-              >
-                <Icon
-                  size={16}
-                  className={`shrink-0 transition-colors ${isActive ? 'text-gold' : 'text-muted-foreground group-hover:text-foreground'}`}
-                />
-                <span className="flex-1">{label}</span>
-                {isActive && <ChevronRight size={14} className="text-gold/50" />}
-              </Link>
-            )
-          })}
+              <div key={group.key} className="space-y-1">
+                {/* Group Title Toggle */}
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(group.key)}
+                  className="w-full flex items-center justify-between px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-gold/50 hover:text-gold transition-colors cursor-pointer text-left"
+                >
+                  <span>{group.title}</span>
+                  <ChevronDown
+                    size={10}
+                    className={`text-muted-foreground/40 transition-transform duration-200 ${isGroupOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
 
-          <div className="pt-4 pb-1.5 px-3">
-            <p className="text-[10px] font-bold tracking-wider text-muted-foreground/60 uppercase select-none">
-              Account
-            </p>
-          </div>
-
-          {accountItems.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname.startsWith(href)
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={handleLinkClick}
-                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-gold/10 text-gold border border-gold/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent'
-                }`}
-              >
-                <Icon
-                  size={16}
-                  className={`shrink-0 transition-colors ${isActive ? 'text-gold' : 'text-muted-foreground group-hover:text-foreground'}`}
-                />
-                <span className="flex-1">{label}</span>
-                {isActive && <ChevronRight size={14} className="text-gold/50" />}
-              </Link>
+                {/* Group Items */}
+                {isGroupOpen && (
+                  <div className="space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                    {group.items.map(({ href, label, icon: Icon }) => {
+                      const isActive = href === '/client' ? pathname === '/client' : pathname.startsWith(href)
+                      return (
+                        <Link
+                          key={href}
+                          href={href}
+                          onClick={handleLinkClick}
+                          className={`group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
+                            isActive
+                              ? 'bg-gold/10 text-gold border border-gold/20'
+                              : 'text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent'
+                          }`}
+                        >
+                          <Icon
+                            size={14}
+                            className={`shrink-0 transition-colors ${isActive ? 'text-gold' : 'text-muted-foreground group-hover:text-foreground'}`}
+                          />
+                          <span className="flex-1 truncate">{label}</span>
+                          {isActive && <ChevronRight size={12} className="text-gold/50" />}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
             )
           })}
         </nav>
 
-        {/* Footer / Sign Out */}
-        <div className="px-3 py-4 border-t border-gold/10">
-          <button
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('trigger-portal-tour'))
-              handleLinkClick()
-            }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all mb-1.5 cursor-pointer font-sans"
-          >
-            <span>(?) Replay Console Tour</span>
-          </button>
-          <Link
-            href="/"
-            onClick={handleLinkClick}
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all mb-1 font-sans"
-          >
-            View Public Site →
-          </Link>
-          <button
-            onClick={handleSignOut}
-            id="client-signout"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-gold hover:bg-gold/5 transition-all duration-200 cursor-pointer"
-          >
-            <LogOut size={16} className="shrink-0" />
-            Sign Out
-          </button>
+        {/* Footer / Sign Out Profile Card */}
+        <div className="border-t border-gold/10 bg-white/[0.01]">
+          <div className="px-3 pt-2.5 pb-1.5 flex flex-col gap-1 shrink-0">
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('trigger-portal-tour'))
+                handleLinkClick()
+              }}
+              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] text-muted-foreground/60 hover:text-gold hover:bg-gold/5 transition-all cursor-pointer font-sans text-left"
+            >
+              <span>(?) Replay Console Tour</span>
+            </button>
+            <Link
+              href="/"
+              onClick={handleLinkClick}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] text-muted-foreground/60 hover:text-foreground hover:bg-white/5 transition-all font-sans"
+            >
+              View Public Site →
+            </Link>
+          </div>
+
+          <div className="px-4 py-3.5 border-t border-gold/10 flex items-center justify-between gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center relative shrink-0">
+                {clientProfile?.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={clientProfile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <UserRound size={14} className="text-gold" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold text-foreground truncate leading-none">
+                  {clientProfile?.full_name || 'Client Partner'}
+                </p>
+                <p className="text-[9px] text-muted-foreground/60 truncate mt-1 leading-none font-mono">
+                  {clientProfile?.email || 'client@wealthapp.com'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleSignOut}
+              className="p-2 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-400 transition-all cursor-pointer shrink-0"
+              title="Sign Out"
+            >
+              <LogOut size={14} />
+            </button>
+          </div>
         </div>
       </aside>
     </>
