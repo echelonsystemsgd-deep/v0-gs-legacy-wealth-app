@@ -5,10 +5,8 @@ import Image from "next/image"
 import { Mail, Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useWebsiteContent } from "@/hooks/use-website-content"
-import { useAuditModal } from "@/components/audit-modal-context"
 
 export function Footer() {
-  const { openModal } = useAuditModal()
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
     tagline: "Building Wealth. Creating Legacy. Giving Back.",
@@ -140,16 +138,16 @@ export function Footer() {
             <p className="font-sans text-xs text-text-primary opacity-60 leading-relaxed">
               {data.ctaDescription}
             </p>
-            <div className="pt-2">
               <Button 
+                asChild
                 variant="outline"
-                className="px-4 py-2 text-xs inline-flex items-center gap-2"
-                onClick={() => openModal()}
+                className="px-4 py-2 text-xs"
               >
-                <span>{data.ctaButtonText}</span>
-                <ArrowRight size={12} />
+                <Link href="/book" className="inline-flex items-center gap-2">
+                  <span>{data.ctaButtonText}</span>
+                  <ArrowRight size={12} />
+                </Link>
               </Button>
-            </div>
           </div>
 
         </div>

@@ -7,7 +7,6 @@ import { CardContent } from "@/components/ui/card"
 import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import type { PricingTier } from "@/lib/pricing"
-import { useAuditModal } from "@/components/audit-modal-context"
 
 // Helper component to smoothly animate output values when dragging sliders
 function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
@@ -199,7 +198,6 @@ interface PricingProps {
 }
 
 export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
-  const { openModal } = useAuditModal()
   const [billingCycle, setBillingCycle] = useState<"setup" | "retainer">("setup")
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
@@ -305,12 +303,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 </div>
 
                 <Button
+                  asChild
                   size="lg"
                   variant="default"
                   className="w-full py-4 text-xs font-bold"
-                  onClick={() => openModal(recommendedTier)}
                 >
-                  <span>Apply for Vetted Integration</span>
+                  <Link href={`/book?tier=${encodeURIComponent(recommendedTier)}`}>
+                    <span>Apply for Vetted Integration</span>
+                  </Link>
                 </Button>
               </div>
 
@@ -853,12 +853,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       </div>
 
                       <Button
+                        asChild
                         size="lg"
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full group font-bold"
-                        onClick={() => openModal(tier.tag)}
                       >
-                        <span>{tier.cta}</span>
+                        <Link href={`/book?tier=${encodeURIComponent(tier.tag)}`}>
+                          <span>{tier.cta}</span>
+                        </Link>
                       </Button>
                     </CardContent>
                   </div>
@@ -933,12 +935,12 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
         <p className="text-center text-sm text-muted-foreground relative z-10">
           Looking for a custom enterprise integration?{' '}
-          <button
-            onClick={() => openModal('Revenue Engine')}
-            className="text-accent-gold hover:underline font-semibold bg-transparent border-none p-0 inline cursor-pointer outline-none"
+          <Link
+            href="/book?tier=Revenue%20Engine"
+            className="text-accent-gold hover:underline font-semibold"
           >
             Start the conversation.
-          </button>
+          </Link>
         </p>
       </div>
     </section>

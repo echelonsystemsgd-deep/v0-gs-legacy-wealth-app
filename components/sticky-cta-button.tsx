@@ -4,10 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useAuditModal } from "@/components/audit-modal-context"
-
 export function StickyCTAButton() {
-  const { openModal } = useAuditModal()
   const pathname = usePathname()
   const [scrolledPastHero, setScrolledPastHero] = useState(false)
   const [footerVisible, setFooterVisible] = useState(false)
@@ -78,7 +75,7 @@ export function StickyCTAButton() {
             Routes to /book — the full 5-step vetting flow.
             Never open Calendly directly from here; visitors must qualify first.
           */}
-          <button onClick={() => openModal()} className="group flex items-center border-none bg-transparent outline-none cursor-pointer">
+          <Link href="/book" className="group flex items-center border-none bg-transparent outline-none cursor-pointer">
             <div className="flex items-center gap-3 bg-foreground border border-accent/40 hover:border-primary/40 p-2 md:p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden relative">
               <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
                 <span className="font-serif font-bold text-lg">GS</span>
@@ -87,7 +84,7 @@ export function StickyCTAButton() {
                 Apply for Audit
               </span>
             </div>
-          </button>
+          </Link>
         </motion.div>
       )}
     </AnimatePresence>

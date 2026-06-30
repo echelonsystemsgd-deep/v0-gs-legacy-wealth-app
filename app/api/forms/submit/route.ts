@@ -287,7 +287,8 @@ export async function POST(request: Request) {
 
     // 3. Dispatch to n8n Webhook
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
-    if (n8nWebhookUrl) {
+    const shouldDispatchN8n = source === 'contact_form' || source === 'portfolio_waitlist'
+    if (n8nWebhookUrl && shouldDispatchN8n) {
       try {
         const { utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, user_agent } = payload
         const webhookPayload = {
