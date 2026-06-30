@@ -46,6 +46,7 @@ type ClientProfile = {
   avatar_url: string | null
   role: 'admin' | 'user' | 'client'
   is_suspended: boolean
+  has_completed_tour: boolean
   phone_number: string | null
   company_name?: string | null // Virtual / metadata field
   created_at: string
@@ -333,6 +334,28 @@ export default function ClientsPage() {
       }
     } catch (err: any) {
       triggerToast(`Update failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Reset onboarding tour
+  const handleResetTour = async (client: ClientProfile) => {
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ has_completed_tour: false })
+        .eq('id', client.id)
+
+      if (error) throw error
+      triggerToast('Client onboarding tour reset successfully.')
+      fetchData()
+      if (selectedClient?.id === client.id) {
+        setSelectedClient({ ...selectedClient, has_completed_tour: false })
+      }
+    } catch (err: any) {
+      triggerToast(`Reset failed: ${err.message}`)
     } finally {
       setLoading(false)
     }
@@ -1449,6 +1472,16 @@ export default function ClientsPage() {
                         </>
                       )}
                     </button>
+
+                    {selectedClient.role === 'client' && (
+                      <button
+                        type="button"
+                        onClick={() => handleResetTour(selectedClient)}
+                        className="flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-xxs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                      >
+                        <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Reset Onboarding Tour
+                      </button>
+                    )}
 
                     <button
                       type="button"

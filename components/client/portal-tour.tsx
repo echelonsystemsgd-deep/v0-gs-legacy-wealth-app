@@ -164,6 +164,8 @@ export function PortalTour() {
   const [stepIndex, setStepIndex] = useState(0)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
   const [project, setProject] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
+  const [isOnboarding, setIsOnboarding] = useState(false)
   
   const tooltipRef = useRef<HTMLDivElement>(null)
 
@@ -180,39 +182,43 @@ export function PortalTour() {
   // Memoize steps dynamically based on project info
   const steps = useMemo(() => getSteps(project), [project])
 
-  // Fetch project details for client
+  // Fetch project details, profile, and check onboarding
   useEffect(() => {
     const supabase = createClient()
-    async function loadProject() {
+    async function loadData() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data } = await supabase
+        // Fetch project
+        const { data: projData } = await supabase
           .from('projects')
           .select('*')
           .eq('client_id', user.id)
           .maybeSingle()
-        setProject(data)
+        setProject(projData)
+
+        // Fetch profile
+        const { data: profData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        setProfile(profData)
+
+        // Check if onboarding needs to be auto-triggered or resumed
+        if (profData && profData.role === 'client' && !profData.has_completed_tour) {
+          setIsOnboarding(true)
+          const tourActive = localStorage.getItem('gs_portal_tour_active') === 'true'
+          if (!tourActive) {
+            localStorage.setItem('gs_portal_tour_active', 'true')
+            localStorage.setItem('gs_portal_tour_step', '0')
+            setStepIndex(0)
+            setActive(true)
+            router.push('/client')
+          }
+        }
       }
     }
-    loadProject()
-  }, [])
-
-  // Auto-trigger tour on first login from now
-  useEffect(() => {
-    const autoTriggered = localStorage.getItem('gs_portal_tour_v2_auto_triggered') === 'true'
-    const tourActive = localStorage.getItem('gs_portal_tour_active') === 'true'
-
-    if (!autoTriggered) {
-      localStorage.setItem('gs_portal_tour_v2_auto_triggered', 'true')
-      
-      if (!tourActive) {
-        localStorage.setItem('gs_portal_tour_active', 'true')
-        localStorage.setItem('gs_portal_tour_step', '0')
-        setStepIndex(0)
-        setActive(true)
-        router.push('/client')
-      }
-    }
+    loadData()
   }, [router])
 
   // Sync state on mount and register trigger event listener
@@ -228,6 +234,7 @@ export function PortalTour() {
     }
 
     const handleTriggerTour = () => {
+      setIsOnboarding(false) // Manual replay is not forced onboarding
       localStorage.setItem('gs_portal_tour_active', 'true')
       localStorage.setItem('gs_portal_tour_step', '0')
       setStepIndex(0)
@@ -382,7 +389,18 @@ export function PortalTour() {
     }
   }
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (isOnboarding) {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase
+          .from('profiles')
+          .update({ has_completed_tour: true })
+          .eq('id', user.id)
+      }
+      setIsOnboarding(false)
+    }
     localStorage.setItem('gs_portal_tour_completed', 'true')
     localStorage.removeItem('gs_portal_tour_active')
     localStorage.removeItem('gs_portal_tour_step')
@@ -523,9 +541,15 @@ export function PortalTour() {
       {/* Only show a dismissable backdrop on center modal steps — spotlight steps must NOT have a click-to-dismiss layer */}
       {!targetRect && (
         <div
-          className="fixed inset-0 bg-black/75 pointer-events-auto backdrop-blur-xs transition-opacity duration-300 cursor-pointer"
-          onClick={handleComplete}
+          className="fixed inset-0 bg-black/75 pointer-events-auto backdrop-blur-xs transition-opacity duration-300"
+          style={isOnboarding ? {} : { cursor: 'pointer' }}
+          onClick={isOnboarding ? undefined : handleComplete}
         />
+      )}
+
+      {/* Transparent pointer blocker when spotlight is active to prevent page clicks during forced onboarding */}
+      {targetRect && isOnboarding && (
+        <div className="fixed inset-0 bg-transparent pointer-events-auto z-[9997]" />
       )}
 
       {/* Viewport Locked Spotlight Outline with massive box-shadow mask */}
@@ -573,13 +597,15 @@ export function PortalTour() {
             <Sparkles size={13} className="animate-pulse" />
             <span>Guide ({stepIndex + 1}/{steps.length})</span>
           </div>
-          <button 
-            onClick={handleComplete}
-            className="p-2.5 w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 border border-transparent hover:border-gold/10 text-muted-foreground hover:text-gold transition-all cursor-pointer"
-            aria-label="Skip Guide"
-          >
-            <X size={14} />
-          </button>
+          {!isOnboarding && (
+            <button 
+              onClick={handleComplete}
+              className="p-2.5 w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 border border-transparent hover:border-gold/10 text-muted-foreground hover:text-gold transition-all cursor-pointer"
+              aria-label="Skip Guide"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
 
         {/* Content */}
