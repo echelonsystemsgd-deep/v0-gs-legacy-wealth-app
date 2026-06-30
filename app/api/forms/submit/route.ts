@@ -285,6 +285,43 @@ export async function POST(request: Request) {
       console.error('Failed to send Resend emails:', emailError.message || emailError)
     }
 
+    // 3. Dispatch to n8n Webhook
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
+    if (n8nWebhookUrl) {
+      try {
+        const { utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, user_agent } = payload
+        const webhookPayload = {
+          lead_id: insertedLead?.id || null,
+          source,
+          name,
+          email,
+          business_name,
+          phone: phone || null,
+          website: website || null,
+          notes,
+          utm_source: utm_source || null,
+          utm_medium: utm_medium || null,
+          utm_campaign: utm_campaign || null,
+          utm_term: utm_term || null,
+          utm_content: utm_content || null,
+          referrer: referrer || null,
+          user_agent: user_agent || null,
+          timestamp: new Date().toISOString(),
+        }
+
+        console.log('[API/Submit] Dispatching payload to n8n:', n8nWebhookUrl)
+        await fetch(n8nWebhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookPayload),
+        })
+      } catch (err: any) {
+        console.error('[API/Submit] Error dispatching to n8n webhook:', err.message || err)
+      }
+    }
+
     return NextResponse.json({ success: true, lead: insertedLead })
   } catch (err: any) {
     console.error('Form submission handler error:', err)

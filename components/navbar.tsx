@@ -8,6 +8,7 @@ import Link from "next/link"
 import { BrandLogo } from "@/components/brand-logo"
 import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
+import { useAuditModal } from "@/components/audit-modal-context"
 import { createClient } from "@/lib/supabase/client"
 import {
   DropdownMenu,
@@ -31,6 +32,7 @@ const navLinks = [
 ]
 
 export function Navbar() {
+  const { openModal } = useAuditModal()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -323,11 +325,11 @@ export function Navbar() {
                   Login
                 </Link>
                 <Button
-                  asChild
                   variant="outline"
                   className="px-6 py-2"
+                  onClick={() => openModal()}
                 >
-                  <Link href="/book">Apply for System Audit</Link>
+                  Apply for System Audit
                 </Button>
               </>
             )}
@@ -452,13 +454,14 @@ export function Navbar() {
 
               <div className="pt-6">
                 <Button
-                  asChild
                   variant="outline"
                   className="w-full py-6 text-lg"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    openModal()
+                  }}
                 >
-                  <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
-                    Apply for System Audit
-                  </Link>
+                  Apply for System Audit
                 </Button>
               </div>
               <div className="flex justify-center pt-8 border-t border-white/5">

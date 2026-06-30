@@ -932,7 +932,13 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
         </div>
 
         <p className="text-center text-sm text-muted-foreground relative z-10">
-          Looking for a custom enterprise integration? <Link href="/book" className="text-accent-gold hover:underline font-semibold">Start the conversation.</Link>
+          Looking for a custom enterprise integration?{' '}
+          <button
+            onClick={() => openModal('Revenue Engine')}
+            className="text-accent-gold hover:underline font-semibold bg-transparent border-none p-0 inline cursor-pointer outline-none"
+          >
+            Start the conversation.
+          </button>
         </p>
       </div>
     </section>

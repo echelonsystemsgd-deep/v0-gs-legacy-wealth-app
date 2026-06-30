@@ -297,6 +297,18 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
     if (!email) return
     setIsSubmitting(true)
     setErrorMsg(null)
+
+    // Capture UTM tracking parameters from current page URL
+    let utmParams: Record<string, string> = {}
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search)
+      const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']
+      utmKeys.forEach((key) => {
+        const val = searchParams.get(key)
+        if (val) utmParams[key] = val
+      })
+    }
+
     try {
       const res = await fetch('/api/forms/submit', {
         method: 'POST',
@@ -307,6 +319,9 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           email: email,
           website: item.href || null,
           notes: `Waitlist registration for under-construction site: ${item.title}`,
+          referrer: typeof document !== 'undefined' ? document.referrer : 'none',
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'none',
+          ...utmParams,
         }),
       })
 
