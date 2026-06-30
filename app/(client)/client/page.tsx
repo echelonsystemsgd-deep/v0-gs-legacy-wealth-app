@@ -12,7 +12,6 @@ import { LaunchDateRequest } from '@/components/client/launch-date-request'
 import { GrowthTelemetry } from '@/components/client/growth-telemetry'
 import { SecureVault } from '@/components/client/secure-vault'
 import { ProvisioningLogs } from '@/components/client/provisioning-logs'
-import { BriefingPlayer } from '@/components/client/briefing-player'
 
 
 
@@ -213,9 +212,6 @@ export default async function ClientDashboardPage() {
               </div>
             </div>
           )}
-
-          {/* Welcome Briefing Media Player */}
-          <BriefingPlayer />
 
           {/* Scoped Summary Cards & Telemetry */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">

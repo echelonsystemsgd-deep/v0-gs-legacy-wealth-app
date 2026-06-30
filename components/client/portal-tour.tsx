@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { X, ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 type TourStep = {
   path: string
@@ -12,79 +13,147 @@ type TourStep = {
   position: 'bottom' | 'top' | 'left' | 'right' | 'center'
 }
 
-const TOUR_STEPS: TourStep[] = [
-  {
-    path: '/client',
-    target: '', // Center modal
-    title: 'Welcome to Your Client Portal',
-    description: 'Welcome, partner. We have built this dashboard to give you complete transparency over your project build, roadmap, and direct communication with our team. Let\'s take a quick interactive tour.',
-    position: 'center'
-  },
-  {
-    path: '/client',
-    target: '[data-tour="welcome"]',
-    title: 'Command Deck Overview',
-    description: 'This is your main command deck. It displays your active build stage and target launch date at a glance.',
-    position: 'bottom'
-  },
+function getSteps(project: any): TourStep[] {
+  const steps: TourStep[] = [
+    {
+      path: '/client',
+      target: '', // Center modal
+      title: 'Welcome to Your Client Portal',
+      description: 'Welcome, partner. We have built this dashboard to give you complete transparency over your project build, roadmap, and direct communication with our team. Let\'s take a quick interactive tour.',
+      position: 'center'
+    },
+    {
+      path: '/client',
+      target: '[data-tour="welcome"]',
+      title: 'Command Deck Overview',
+      description: 'This is your main command deck. It displays your active build stage and target launch date at a glance.',
+      position: 'bottom'
+    }
+  ]
 
-  {
-    path: '/client',
-    target: '[data-tour="provisioning-logs"]',
-    title: 'System Build Logs',
-    description: 'For early phase builds, this terminal outputs live engineering trajectory logs so you can monitor server allocation and database initialization milestones in real-time.',
-    position: 'top'
-  },
-  {
-    path: '/client',
-    target: '[data-tour="telemetry-deck"]',
-    title: 'Financial Telemetry & Contract Desk',
-    description: 'Select your preferred billing model (Monthly Retainer, Flat Setup, or PRY Agreement) to initialize your operational build and unlock live milestone metrics.',
-    position: 'top'
-  },
-  {
-    path: '/client',
-    target: '[data-tour="asset-vault"]',
-    title: 'Encrypted Asset Vault',
-    description: 'Your secure document vault. Final assets, style guides, and tech deliverables are stored here safely with cryptographic integrity and security checks.',
-    position: 'top'
-  },
-  {
-    path: '/client',
-    target: '[data-tour="sync-call"]',
-    title: 'Milestone Dev Syncs',
-    description: 'Schedule check-in sessions or strategy reviews with our lead engineer whenever you reach key build checkpoints.',
-    position: 'top'
-  },
-  {
-    path: '/client/actions',
-    target: '', // Center modal — avoids Server Component redirect race
-    title: 'Action Required Console',
-    description: 'Whenever we need your brand assets, logo files, copy details, or preferences — it appears here. Respond directly to keep your build timeline on schedule. Items are sorted oldest-first so the most overdue tasks are always at the top.',
-    position: 'center'
-  },
-  {
-    path: '/client/progress',
-    target: '', // Center modal — avoids Server Component redirect race
-    title: 'Project Progress Tracker',
-    description: 'Track the live 5-phase roadmap here. Once we complete a stage (like Discovery or Design), you can review the deliverables and sign off on that phase to advance the build.',
-    position: 'center'
-  },
-  {
-    path: '/client/messages',
-    target: '', // Center modal — avoids Server Component redirect race
-    title: 'Secure Communication Hub',
-    description: 'Chat directly with our engineering team here. Upload reference files, request priority reviews, or ask any questions about your build. Messages are responded to within 2 hours.',
-    position: 'center'
-  },
-  {
-    path: '/client',
-    target: '',
-    title: 'Tour Complete',
-    description: 'You are now fully briefed on your Sovereign Console. Replay this guide any time by clicking the Portal Tour button in the top bar. Let\'s build something legendary.',
-    position: 'center'
+  // Only include provisioning logs if status is Discovery or Design
+  const status = project?.status || 'Discovery'
+  const isEarlyStage = status === 'Discovery' || status === 'Design'
+  if (isEarlyStage) {
+    steps.push({
+      path: '/client',
+      target: '[data-tour="provisioning-logs"]',
+      title: 'System Build Logs',
+      description: 'For early phase builds, this terminal outputs live engineering trajectory logs so you can monitor server allocation and database initialization milestones in real-time.',
+      position: 'top'
+    })
   }
-]
+
+  // Contract & Pricing Step
+  if (project) {
+    if (!project.contract_type) {
+      // Contract pending enrollment
+      steps.push({
+        path: '/client',
+        target: '[data-tour="telemetry-deck"]',
+        title: 'Contract Enrollment Desk',
+        description: `Your custom support options are ready. Choose between the Monthly Retainer (£${Number(project.retainer_amount || 0).toLocaleString()}/mo), One-Time Setup (£${Number(project.one_time_fee || 0).toLocaleString()}), or Performance Royalty Yield (${project.rev_share_percentage || 0}% Rev Share) to activate project telemetry.`,
+        position: 'top'
+      })
+    } else {
+      // Contract enrolled
+      const contractTypeLabel = 
+        project.contract_type === 'retainer' ? 'Monthly Retainer' : 
+        project.contract_type === 'one_time' ? 'One-Time Setup Fee' : 
+        project.contract_type === 'rev_share' ? 'Performance Royalty Yield (PRY)' : 'Contract Scheme';
+
+      const contractVal = Number(project.contract_value) || 0
+      const amtPaid = Number(project.amount_paid) || 0
+
+      steps.push({
+        path: '/client',
+        target: '[data-tour="telemetry-deck"]',
+        title: `Financial Telemetry: ${contractTypeLabel}`,
+        description: project.contract_type === 'rev_share'
+          ? `Your Performance Royalty Yield (${project.rev_share_percentage}%) agreement is active. Your milestone unlocks are determined by project phase completions.`
+          : `Track your total contract value (£${contractVal.toLocaleString()}) and amount settled (£${amtPaid.toLocaleString()}). Phase unlock milestones below show the exact payment thresholds needed to advance the build stages.`,
+        position: 'top'
+      })
+    }
+  } else {
+    // Fallback if no project loaded yet
+    steps.push({
+      path: '/client',
+      target: '[data-tour="telemetry-deck"]',
+      title: 'Financial Telemetry & Contract Desk',
+      description: 'Select your preferred billing model (Monthly Retainer, Flat Setup, or PRY Agreement) to initialize your operational build and unlock live milestone metrics.',
+      position: 'top'
+    })
+  }
+
+  steps.push(
+    {
+      path: '/client',
+      target: '[data-tour="asset-vault"]',
+      title: 'Encrypted Asset Vault',
+      description: 'Your secure document vault. Final assets, style guides, and tech deliverables are stored here safely with cryptographic integrity and security checks.',
+      position: 'top'
+    },
+    {
+      path: '/client',
+      target: '[data-tour="sync-call"]',
+      title: 'Milestone Dev Syncs',
+      description: 'Schedule check-in sessions or strategy reviews with our lead engineer whenever you reach key build checkpoints.',
+      position: 'top'
+    },
+    {
+      path: '/client',
+      target: '[data-tour="sidebar-actions"]',
+      title: 'Action Console Navigation',
+      description: 'Clicking here (or clicking Next) will navigate to your Action Required Console, where we collect files and copy parameters from you.',
+      position: 'right'
+    },
+    {
+      path: '/client/actions',
+      target: '[data-tour="actions-title"]',
+      title: 'Action Required Console',
+      description: 'Whenever we need your brand assets, logo files, copy details, or preferences — it appears here. Respond directly to keep your build timeline on schedule. Items are sorted oldest-first so the most overdue tasks are always at the top.',
+      position: 'bottom'
+    },
+    {
+      path: '/client/actions',
+      target: '[data-tour="sidebar-progress"]',
+      title: 'Project Progress Navigation',
+      description: 'Clicking here (or clicking Next) will take you to your Project Progress page to track the timeline.',
+      position: 'right'
+    },
+    {
+      path: '/client/progress',
+      target: '[data-tour="progress-timeline"]',
+      title: 'Project Progress Tracker',
+      description: 'Track the live 5-phase roadmap here. Once we complete a stage (like Discovery or Design), you can review the deliverables and sign off on that phase to advance the build.',
+      position: 'top'
+    },
+    {
+      path: '/client/progress',
+      target: '[data-tour="sidebar-messages"]',
+      title: 'Secure Messages Navigation',
+      description: 'Clicking here (or clicking Next) will take you to your Secure Communication Hub to chat with the engineering team.',
+      position: 'right'
+    },
+    {
+      path: '/client/messages',
+      target: '[data-tour="messages-chat"]',
+      title: 'Secure Communication Hub',
+      description: 'Chat directly with our engineering team here. Upload reference files, request priority reviews, or ask any questions about your build. Messages are responded to within 2 hours.',
+      position: 'top'
+    },
+    {
+      path: '/client',
+      target: '',
+      title: 'Tour Complete',
+      description: 'You are now fully briefed on your Sovereign Console. Replay this guide any time by clicking the Portal Tour button in the top bar. Let\'s build something legendary.',
+      position: 'center'
+    }
+  )
+
+  return steps
+}
 
 
 export function PortalTour() {
@@ -94,6 +163,7 @@ export function PortalTour() {
   const [active, setActive] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
+  const [project, setProject] = useState<any>(null)
   
   const tooltipRef = useRef<HTMLDivElement>(null)
 
@@ -106,6 +176,44 @@ export function PortalTour() {
   })
   const [computedPosition, setComputedPosition] = useState<'top' | 'bottom' | 'center'>('center')
   const [arrowStyle, setArrowStyle] = useState<React.CSSProperties>({})
+
+  // Memoize steps dynamically based on project info
+  const steps = useMemo(() => getSteps(project), [project])
+
+  // Fetch project details for client
+  useEffect(() => {
+    const supabase = createClient()
+    async function loadProject() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('client_id', user.id)
+          .maybeSingle()
+        setProject(data)
+      }
+    }
+    loadProject()
+  }, [])
+
+  // Auto-trigger tour on first login from now
+  useEffect(() => {
+    const autoTriggered = localStorage.getItem('gs_portal_tour_v2_auto_triggered') === 'true'
+    const tourActive = localStorage.getItem('gs_portal_tour_active') === 'true'
+
+    if (!autoTriggered) {
+      localStorage.setItem('gs_portal_tour_v2_auto_triggered', 'true')
+      
+      if (!tourActive) {
+        localStorage.setItem('gs_portal_tour_active', 'true')
+        localStorage.setItem('gs_portal_tour_step', '0')
+        setStepIndex(0)
+        setActive(true)
+        router.push('/client')
+      }
+    }
+  }, [router])
 
   // Sync state on mount and register trigger event listener
   useEffect(() => {
@@ -131,6 +239,23 @@ export function PortalTour() {
     return () => window.removeEventListener('trigger-portal-tour', handleTriggerTour)
   }, [router])
 
+  // Handle mobile sidebar open/close triggers when highlighting sidebar items
+  useEffect(() => {
+    if (!active) return
+
+    const step = steps[stepIndex]
+    if (!step) return
+
+    const isSidebarTarget = step.target && step.target.includes('sidebar-')
+    const isMobile = window.innerWidth < 1024
+
+    if (isSidebarTarget && isMobile) {
+      window.dispatchEvent(new CustomEvent('gs-set-sidebar-open', { detail: true }))
+    } else {
+      window.dispatchEvent(new CustomEvent('gs-set-sidebar-open', { detail: false }))
+    }
+  }, [stepIndex, active, steps])
+
   // Track target bounding client rect with polling & scroll listeners
   useEffect(() => {
     if (!active) {
@@ -138,7 +263,8 @@ export function PortalTour() {
       return
     }
 
-    const step = TOUR_STEPS[stepIndex]
+    const step = steps[stepIndex]
+    if (!step) return
 
     // If it's a center modal or path mismatch, clear immediately
     if (pathname !== step.path || !step.target) {
@@ -197,9 +323,9 @@ export function PortalTour() {
         }
         setStepIndex((prev) => {
           const next = prev + 1
-          if (next < TOUR_STEPS.length) {
+          if (next < steps.length) {
             localStorage.setItem('gs_portal_tour_step', String(next))
-            const nextStep = TOUR_STEPS[next]
+            const nextStep = steps[next]
             if (nextStep.path !== pathname) {
               router.push(nextStep.path)
             }
@@ -210,6 +336,7 @@ export function PortalTour() {
           localStorage.removeItem('gs_portal_tour_active')
           localStorage.removeItem('gs_portal_tour_step')
           setActive(false)
+          window.dispatchEvent(new CustomEvent('gs-set-sidebar-open', { detail: false }))
           return prev
         })
       }
@@ -225,12 +352,12 @@ export function PortalTour() {
       if (intervalId) clearInterval(intervalId)
       if (detachListeners) detachListeners()
     }
-  }, [stepIndex, active, pathname, router])
+  }, [stepIndex, active, pathname, router, steps])
 
   const handleNext = () => {
     const nextIndex = stepIndex + 1
-    if (nextIndex < TOUR_STEPS.length) {
-      const nextStep = TOUR_STEPS[nextIndex]
+    if (nextIndex < steps.length) {
+      const nextStep = steps[nextIndex]
       setStepIndex(nextIndex)
       localStorage.setItem('gs_portal_tour_step', String(nextIndex))
 
@@ -245,7 +372,7 @@ export function PortalTour() {
   const handleBack = () => {
     const prevIndex = stepIndex - 1
     if (prevIndex >= 0) {
-      const prevStep = TOUR_STEPS[prevIndex]
+      const prevStep = steps[prevIndex]
       setStepIndex(prevIndex)
       localStorage.setItem('gs_portal_tour_step', String(prevIndex))
 
@@ -260,6 +387,7 @@ export function PortalTour() {
     localStorage.removeItem('gs_portal_tour_active')
     localStorage.removeItem('gs_portal_tour_step')
     setActive(false)
+    window.dispatchEvent(new CustomEvent('gs-set-sidebar-open', { detail: false }))
     // Always return client to the overview dashboard after completing the tour
     router.push('/client')
   }
@@ -268,7 +396,8 @@ export function PortalTour() {
   const updatePosition = useCallback(() => {
     if (!active) return
 
-    const step = TOUR_STEPS[stepIndex]
+    const step = steps[stepIndex]
+    if (!step) return
     const tooltipEl = tooltipRef.current
 
     if (!targetRect || step.position === 'center') {
@@ -345,7 +474,7 @@ export function PortalTour() {
       opacity: 1,
     })
     setComputedPosition(bestPosition)
-  }, [active, stepIndex, targetRect])
+  }, [active, stepIndex, targetRect, steps])
 
   // ResizeObserver to watch size changes dynamically
   useEffect(() => {
@@ -383,7 +512,8 @@ export function PortalTour() {
 
   if (!active) return null
 
-  const currentStep = TOUR_STEPS[stepIndex]
+  const currentStep = steps[stepIndex]
+  if (!currentStep) return null
 
   // Only hide during page transitions — NOT while waiting for element on correct page
   if (pathname !== currentStep.path) return null
@@ -441,7 +571,7 @@ export function PortalTour() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-gold uppercase tracking-wider">
             <Sparkles size={13} className="animate-pulse" />
-            <span>Guide ({stepIndex + 1}/{TOUR_STEPS.length})</span>
+            <span>Guide ({stepIndex + 1}/{steps.length})</span>
           </div>
           <button 
             onClick={handleComplete}
@@ -476,7 +606,7 @@ export function PortalTour() {
             onClick={handleNext}
             className="flex items-center gap-1.5 px-5 py-2.5 sm:px-4 sm:py-1.5 rounded-lg bg-gold hover:bg-gold/90 text-[#050505] font-bold text-xs shadow-[0_0_12px_rgba(212,175,55,0.2)] transition-all cursor-pointer"
           >
-            {stepIndex === TOUR_STEPS.length - 1 ? (
+            {stepIndex === steps.length - 1 ? (
               <>Finish <Check size={12} /></>
             ) : (
               <>Next <ArrowRight size={12} /></>

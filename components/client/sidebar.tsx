@@ -112,6 +112,15 @@ export function ClientSidebar() {
     loadProfile()
   }, [supabase])
 
+  useEffect(() => {
+    const handleSetOpen = (e: Event) => {
+      const customEvent = e as CustomEvent
+      setIsOpen(!!customEvent.detail)
+    }
+    window.addEventListener('gs-set-sidebar-open', handleSetOpen)
+    return () => window.removeEventListener('gs-set-sidebar-open', handleSetOpen)
+  }, [])
+
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     window.location.href = '/login'
@@ -255,11 +264,18 @@ export function ClientSidebar() {
                   <div className="space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
                     {group.items.map(({ href, label, icon: Icon }) => {
                       const isActive = href === '/client' ? pathname === '/client' : pathname.startsWith(href)
+                      const tourAttr = 
+                        href === '/client' ? 'sidebar-overview' :
+                        href === '/client/actions' ? 'sidebar-actions' :
+                        href === '/client/progress' ? 'sidebar-progress' :
+                        href === '/client/messages' ? 'sidebar-messages' :
+                        undefined;
                       return (
                         <Link
                           key={href}
                           href={href}
                           onClick={handleLinkClick}
+                          data-tour={tourAttr}
                           className={`group flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
                             isActive
                               ? 'bg-gold/10 text-gold border border-gold/20'

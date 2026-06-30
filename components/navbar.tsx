@@ -201,6 +201,7 @@ export function Navbar() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo - Crest Only */}
           <button
+            suppressHydrationWarning
             onClick={() => {
               if (pathname === "/") {
                 window.scrollTo({ top: 0, behavior: "smooth" })
