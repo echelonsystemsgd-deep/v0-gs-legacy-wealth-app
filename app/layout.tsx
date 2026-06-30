@@ -7,6 +7,8 @@ import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
+import { AuditModalProvider } from '@/components/audit-modal-context'
+import { AuditModal } from '@/components/audit-modal'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -113,11 +115,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
-        {children}
+        <AuditModalProvider>
+          {children}
+          <AuditModal />
+          <StickyCTAButton />
+        </AuditModalProvider>
         <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />
         <TabRetention />
-        <StickyCTAButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
         {/*
           Calendly widget.js — loaded at root so it is available for both:

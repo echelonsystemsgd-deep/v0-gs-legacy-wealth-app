@@ -6,8 +6,10 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { useWebsiteContent } from "@/hooks/use-website-content"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
+import { useAuditModal } from "@/components/audit-modal-context"
 
 export function Hero() {
+  const { openModal } = useAuditModal()
   const { getSection } = useWebsiteContent()
   const data = getSection('hero', {
     eyebrow: "Bespoke Digital Infrastructure & Autonomic Systems",
@@ -75,14 +77,12 @@ export function Hero() {
         >
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
             <Button
-              asChild
               size="lg"
-              className="w-full sm:w-auto px-8 py-7"
+              className="w-full sm:w-auto px-8 py-7 flex items-center justify-center gap-2"
+              onClick={() => openModal()}
             >
-              <Link href="/book" className="flex items-center justify-center gap-2">
-                {data.primaryCtaText}
-                <ArrowRight size={16} />
-              </Link>
+              {data.primaryCtaText}
+              <ArrowRight size={16} />
             </Button>
 
             <Button
