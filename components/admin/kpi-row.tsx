@@ -28,6 +28,10 @@ type ProjectFinancial = {
   status: string
   amount_paid: number | null
   contract_value: number | null
+  contract_type: string | null
+  retainer_amount: number | null
+  one_time_fee: number | null
+  rev_share_percentage: number | null
 }
 
 type Payment = {
@@ -338,7 +342,12 @@ export function AdminKpiRow({
               <tbody className="divide-y divide-gold/5">
                 {projectsFinancials && projectsFinancials.length > 0 ? (
                   projectsFinancials.map((p) => {
-                    const balance = (Number(p.contract_value) || 0) - (Number(p.amount_paid) || 0)
+                    const hasEnrolled = !!p.contract_type
+                    const projectedValue = hasEnrolled && Number(p.contract_value) > 0
+                      ? Number(p.contract_value)
+                      : (Number(p.one_time_fee) || 0)
+                    const balance = projectedValue - (Number(p.amount_paid) || 0)
+
                     return (
                       <tr key={p.id} className="hover:bg-white/[0.01] transition-colors">
                         <td className="py-3 px-3 font-semibold text-foreground">{p.project_name}</td>
@@ -348,14 +357,32 @@ export function AdminKpiRow({
                             {p.status}
                           </span>
                         </td>
-                        <td className="py-3 px-3 font-mono text-muted-foreground">
-                          £{(Number(p.contract_value) || 0).toLocaleString('en-GB')}
+                        <td className="py-3 px-3 text-muted-foreground">
+                          {p.contract_type === 'retainer' ? (
+                            <span className="font-mono">£{(Number(p.contract_value) || 0).toLocaleString('en-GB')}/mo</span>
+                          ) : p.contract_type === 'one_time' ? (
+                            <span className="font-mono">£{(Number(p.contract_value) || 0).toLocaleString('en-GB')}</span>
+                          ) : p.contract_type === 'rev_share' ? (
+                            <span className="font-mono">PRY ({p.rev_share_percentage}%)</span>
+                          ) : (
+                            <div className="text-[10px] leading-normal font-sans space-y-0.5 text-muted-foreground/80">
+                              {Number(p.one_time_fee) > 0 && <div>One-Time: £{Number(p.one_time_fee).toLocaleString('en-GB')}</div>}
+                              {Number(p.retainer_amount) > 0 && <div>Retainer: £{Number(p.retainer_amount).toLocaleString('en-GB')}/mo</div>}
+                              {Number(p.rev_share_percentage) > 0 && <div>PRY: {p.rev_share_percentage}%</div>}
+                              {!p.one_time_fee && !p.retainer_amount && !p.rev_share_percentage && <span>Pending Setup</span>}
+                            </div>
+                          )}
                         </td>
                         <td className="py-3 px-3 font-mono text-muted-foreground">
                           £{(Number(p.amount_paid) || 0).toLocaleString('en-GB')}
                         </td>
-                        <td className="py-3 px-3 font-mono text-right font-bold text-gold">
-                          £{balance.toLocaleString('en-GB')}
+                        <td className="py-3 px-3 text-right">
+                          <div className="font-mono font-bold text-gold">
+                            £{balance.toLocaleString('en-GB')}
+                          </div>
+                          {!hasEnrolled && (Number(p.one_time_fee) > 0 || Number(p.retainer_amount) > 0) && (
+                            <div className="text-[8px] text-muted-foreground/60 uppercase tracking-wider">Projected</div>
+                          )}
                         </td>
                       </tr>
                     )

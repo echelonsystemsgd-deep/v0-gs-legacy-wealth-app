@@ -114,7 +114,7 @@ export default function ClientsPage() {
 
   // Health board filter
   const [healthSearch, setHealthSearch] = useState('')
-  const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Awaiting Client' | 'On Track'>('All')
+  const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Awaiting Client' | 'On Track' | 'Suspended'>('All')
 
   // Messages (for health board unread counts)
   const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string; created_at: string }[]>([])
@@ -554,6 +554,7 @@ export default function ClientsPage() {
         unreadMessageCount: unreadByProject[project.id] || 0,
         daysSinceLastMessage,
         clientAvatarUrl: clientProfile?.avatar_url || null,
+        is_suspended: clientProfile?.is_suspended || false,
         actionRequests: projRequests,
       } as ProjectWithHealth
     })
@@ -651,7 +652,7 @@ export default function ClientsPage() {
               />
             </div>
             <div className="flex items-center gap-1.5 bg-[#0A0A0A]/60 p-1 rounded-xl border border-gold/10 flex-wrap">
-              {(['All', 'Blocked', 'Awaiting Client', 'On Track'] as const).map((f) => (
+              {(['All', 'Blocked', 'Awaiting Client', 'On Track', 'Suspended'] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setHealthFilter(f)}
@@ -663,6 +664,8 @@ export default function ClientsPage() {
                         ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
                         : f === 'On Track'
                         ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+                        : f === 'Suspended'
+                        ? 'bg-zinc-500/15 text-zinc-400 border border-zinc-500/30'
                         : 'bg-gold/10 text-gold border border-gold/25'
                       : 'text-muted-foreground hover:text-foreground border border-transparent'
                   }`}

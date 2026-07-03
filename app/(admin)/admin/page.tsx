@@ -29,14 +29,19 @@ export default async function AdminDashboardPage() {
   // Projects: one query covers financials + active projects list
   const { data: projectsFinancials } = await supabase
     .from('projects')
-    .select('id, project_name, client_name, client_id, status, updated_at, amount_paid, contract_value, contract_type, retainer_amount')
+    .select('id, project_name, client_name, client_id, status, updated_at, amount_paid, contract_value, contract_type, retainer_amount, one_time_fee, rev_share_percentage')
     .eq('is_archived', false)
     .order('updated_at', { ascending: false })
 
   // Financials derived from a single projects query
   const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
-  const totalPipeline = projectsFinancials?.reduce((sum, p) => sum + ((Number(p.contract_value) - Number(p.amount_paid)) || 0), 0) || 0
-  const totalContractValue = projectsFinancials?.reduce((sum, p) => sum + (Number(p.contract_value) || 0), 0) || 0
+  const totalPipeline = projectsFinancials?.reduce((sum, p) => {
+    const projectedValue = p.contract_value && Number(p.contract_value) > 0
+      ? Number(p.contract_value)
+      : (Number(p.one_time_fee) || 0)
+    return sum + (projectedValue - (Number(p.amount_paid) || 0))
+  }, 0) || 0
+  const totalContractValue = projectsFinancials?.reduce((sum, p) => sum + ((p.contract_value && Number(p.contract_value) > 0) ? Number(p.contract_value) : (Number(p.one_time_fee) || 0)), 0) || 0
   const projectedMRR = projectsFinancials?.reduce((sum, p) => sum + (p.contract_type === 'retainer' ? (Number(p.retainer_amount) || 0) : 0), 0) || 0
   // Project count derived — no separate query needed
   const projectsCount = projectsFinancials?.length ?? 0
@@ -169,9 +174,9 @@ export default async function AdminDashboardPage() {
     leads: Array.isArray(s.leads) ? (s.leads[0] || null) : (s.leads as { name: string } | null),
   }))
 
-  // KPI row financials need the original shape (without new fields)
-  const kpiFinancials = (projectsFinancials || []).map(({ id, project_name, client_name, status, amount_paid, contract_value }) => ({
-    id, project_name, client_name, status, amount_paid, contract_value,
+  // KPI row financials need the original shape (including contract details)
+  const kpiFinancials = (projectsFinancials || []).map(({ id, project_name, client_name, status, amount_paid, contract_value, contract_type, retainer_amount, one_time_fee, rev_share_percentage }) => ({
+    id, project_name, client_name, status, amount_paid, contract_value, contract_type, retainer_amount, one_time_fee, rev_share_percentage,
   }))
 
   // Normalise recent payments type (projects relation might return array)

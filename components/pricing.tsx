@@ -7,6 +7,7 @@ import { CardContent } from "@/components/ui/card"
 import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import type { PricingTier } from "@/lib/pricing"
+import { useAuditModal } from "@/components/audit-modal-context"
 
 // Helper component to smoothly animate output values when dragging sliders
 function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
@@ -198,6 +199,7 @@ interface PricingProps {
 }
 
 export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
+  const { openModal } = useAuditModal()
   const [billingCycle, setBillingCycle] = useState<"setup" | "retainer">("setup")
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
@@ -858,7 +860,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full group font-bold"
                       >
-                        <Link href={`/book?tier=${encodeURIComponent(tier.tag)}`}>
+                        <Link href={`/book?tier=${encodeURIComponent(tier.tag ?? '')}`}>
                           <span>{tier.cta}</span>
                         </Link>
                       </Button>

@@ -15,6 +15,7 @@ import {
   X,
   CheckCircle2,
   ExternalLink,
+  Lock,
 } from 'lucide-react'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -29,6 +30,7 @@ export type ProjectWithHealth = {
   unreadMessageCount: number
   daysSinceLastMessage: number | null
   clientAvatarUrl: string | null
+  is_suspended?: boolean
   actionRequests: Array<{
     id: string
     title: string
@@ -64,18 +66,24 @@ function getStageBadge(status: string) {
 function getHealthBorder(project: ProjectWithHealth): string {
   const label = getHealthLabel(project)
   if (label === 'Blocked') return 'border-l-red-500'
+  if (label === 'Suspended') return 'border-l-zinc-500'
   if (label === 'Awaiting Client') return 'border-l-amber-400'
   return 'border-l-green-500'
 }
 
 /**
  * Health Logic:
+ * - Suspended (Zinc): Client's portal is explicitly suspended/frozen.
  * - Blocked / Stale (Red): Unread client messages older than 24 hours (daysSinceLastMessage >= 1)
- *   OR client has been completely inactive (no messages, no updates) for over 7 days (daysSinceLastMessage >= 7).
+ *   OR client has been inactive for a stage-aware threshold (Discovery/Design: 3 days, Development: 14 days, Revision: 7 days).
  * - Awaiting Client (Amber): Project has active pending action requests waiting on client input.
  * - On Track (Green): Otherwise.
  */
-export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaiting Client' | 'On Track' {
+export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaiting Client' | 'On Track' | 'Suspended' {
+  if (project.is_suspended) {
+    return 'Suspended'
+  }
+
   if (project.status === 'Complete') {
     return 'On Track'
   }
@@ -83,10 +91,20 @@ export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaitin
   // 1. Red Check (Blocked / Stale)
   const isMessageUnreadAndOver24h = project.unreadMessageCount > 0 && project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 1
   
-  const daysSinceLastUpdate = Math.floor((Date.now() - new Date(project.updated_at).getTime()) / (1000 * 60 * 60 * 24))
-  const isInactiveOver7Days = (project.daysSinceLastMessage === null || project.daysSinceLastMessage >= 7) && daysSinceLastUpdate >= 7
+  // Stage-aware thresholds (in days)
+  let threshold = 7
+  if (project.status === 'Discovery' || project.status === 'Design') {
+    threshold = 3
+  } else if (project.status === 'Development') {
+    threshold = 14
+  } else if (project.status === 'Revision') {
+    threshold = 7
+  }
 
-  if (isMessageUnreadAndOver24h || isInactiveOver7Days) {
+  const daysSinceLastUpdate = Math.floor((Date.now() - new Date(project.updated_at).getTime()) / (1000 * 60 * 60 * 24))
+  const isInactiveOverThreshold = (project.daysSinceLastMessage === null || project.daysSinceLastMessage >= threshold) && daysSinceLastUpdate >= threshold
+
+  if (isMessageUnreadAndOver24h || isInactiveOverThreshold) {
     return 'Blocked'
   }
 
@@ -134,6 +152,7 @@ export function ClientHealthGrid({
 
   const blockedCount = clients.filter((c) => getHealthLabel(c) === 'Blocked').length
   const attentionCount = clients.filter((c) => getHealthLabel(c) === 'Awaiting Client').length
+  const suspendedCount = clients.filter((c) => getHealthLabel(c) === 'Suspended').length
 
   const handleMarkRequestComplete = async (requestId: string) => {
     setUpdatingId(requestId)
@@ -210,7 +229,12 @@ export function ClientHealthGrid({
                 {attentionCount} awaiting client
               </span>
             )}
-            {blockedCount === 0 && attentionCount === 0 && (
+            {suspendedCount > 0 && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-500/10 border border-zinc-500/25 text-[9px] font-bold text-zinc-400 uppercase tracking-wide">
+                {suspendedCount} suspended
+              </span>
+            )}
+            {blockedCount === 0 && attentionCount === 0 && suspendedCount === 0 && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/25 text-[9px] font-bold text-green-400 uppercase tracking-wide">
                 All clear
               </span>
@@ -270,16 +294,22 @@ export function ClientHealthGrid({
                   </p>
                   <p className="text-[10px] text-muted-foreground truncate">{project.project_name}</p>
                 </div>
-                <span
-                  className={`shrink-0 w-2 h-2 rounded-full ${
-                    health === 'Blocked'
-                      ? 'bg-red-500'
-                      : health === 'Awaiting Client'
-                      ? 'bg-amber-400'
-                      : 'bg-green-500'
-                  }`}
-                  title={health}
-                />
+                {health === 'Suspended' ? (
+                  <span title="Suspended" className="shrink-0 flex items-center">
+                    <Lock size={11} className="text-zinc-400" />
+                  </span>
+                ) : (
+                  <span
+                    className={`shrink-0 w-2 h-2 rounded-full ${
+                      health === 'Blocked'
+                        ? 'bg-red-500'
+                        : health === 'Awaiting Client'
+                        ? 'bg-amber-400'
+                        : 'bg-green-500'
+                    }`}
+                    title={health}
+                  />
+                )}
               </div>
 
               {/* Stage Badge & Details */}
