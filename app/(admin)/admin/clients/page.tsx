@@ -321,10 +321,9 @@ export default function ClientsPage() {
 
     setLoading(true)
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_suspended: nextSuspended })
-        .eq('id', client.id)
+      const { error } = await supabase.functions.invoke('admin-user-actions', {
+        body: { target_user_id: client.id, action: nextSuspended ? 'suspend' : 'unsuspend' }
+      })
 
       if (error) throw error
       triggerToast(nextSuspended ? 'Account access suspended.' : 'Account access activated.')

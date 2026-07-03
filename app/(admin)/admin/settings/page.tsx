@@ -183,7 +183,9 @@ export default function SettingsPage() {
       return
     }
     const targetStatus = !profile.is_suspended
-    const { error } = await supabase.from('profiles').update({ is_suspended: targetStatus }).eq('id', profile.id)
+    const { error } = await supabase.functions.invoke('admin-user-actions', {
+      body: { target_user_id: profile.id, action: targetStatus ? 'suspend' : 'unsuspend' }
+    })
     if (error) {
       showToast(`Error updating status: ${error.message}`)
     } else {

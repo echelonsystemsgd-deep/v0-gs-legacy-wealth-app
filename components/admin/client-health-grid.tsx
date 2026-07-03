@@ -76,9 +76,15 @@ function getHealthBorder(project: ProjectWithHealth): string {
  * - On Track (Green): Otherwise.
  */
 export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaiting Client' | 'On Track' {
+  if (project.status === 'Complete') {
+    return 'On Track'
+  }
+
   // 1. Red Check (Blocked / Stale)
   const isMessageUnreadAndOver24h = project.unreadMessageCount > 0 && project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 1
-  const isInactiveOver7Days = project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 7
+  
+  const daysSinceLastUpdate = Math.floor((Date.now() - new Date(project.updated_at).getTime()) / (1000 * 60 * 60 * 24))
+  const isInactiveOver7Days = (project.daysSinceLastMessage === null || project.daysSinceLastMessage >= 7) && daysSinceLastUpdate >= 7
 
   if (isMessageUnreadAndOver24h || isInactiveOver7Days) {
     return 'Blocked'

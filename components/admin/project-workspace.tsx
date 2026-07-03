@@ -1265,7 +1265,9 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
                       const client = clients.find(c => c.id === clientId)
                       if (!client) return
                       const nextSusp = !client.is_suspended
-                      const { error } = await supabase.from('profiles').update({ is_suspended: nextSusp }).eq('id', clientId)
+                      const { error } = await supabase.functions.invoke('admin-user-actions', {
+                        body: { target_user_id: clientId, action: nextSusp ? 'suspend' : 'unsuspend' }
+                      })
                       if (error) {
                         toast.error(error.message)
                         return
