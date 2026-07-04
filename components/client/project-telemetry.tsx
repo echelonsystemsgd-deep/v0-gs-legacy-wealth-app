@@ -89,9 +89,9 @@ export function ProjectTelemetry({ project }: ProjectProps) {
 
   // Render Contract Selection Screen if not enrolled
   const serviceTypeLower = (project.service_type || '').toLowerCase()
-  const isAuthority = serviceTypeLower.includes('authority') || project.one_time_fee === 2750 || project.retainer_amount === 499
-  const isOperations = serviceTypeLower.includes('operations') || project.one_time_fee === 5500 || project.retainer_amount === 1290
-  const isRevenue = serviceTypeLower.includes('revenue') || project.one_time_fee === 9800 || project.retainer_amount === 2850
+  const isAuthority = serviceTypeLower.includes('authority') || project.one_time_fee === 2750 || project.one_time_fee === 3500 || project.retainer_amount === 499
+  const isOperations = serviceTypeLower.includes('operations') || project.one_time_fee === 5500 || project.one_time_fee === 5800 || project.retainer_amount === 1290 || project.retainer_amount === 1450
+  const isRevenue = serviceTypeLower.includes('revenue') || project.one_time_fee === 9800 || project.retainer_amount === 2850 || project.retainer_amount === 2950
 
   const retainerPerks = isRevenue
     ? [

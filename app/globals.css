@@ -4,18 +4,18 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Design Tokens */
+  /* Design Tokens - Sovereign Tech Lab */
   --color-bg-primary: #0A0A0A;      /* main page background */
   --color-bg-secondary: #1A0A2E;    /* section/card backgrounds */
   --color-bg-tertiary: #130D24;     /* card backgrounds */
-  --color-accent-purple: #6D28D9;   /* royal purple accent */
-  --color-accent-purple-glow: #2D0A5E; /* subtle background glow only */
+  --color-accent-purple: #8B5CF6;   /* Royal Amethyst glowing accent */
+  --color-accent-purple-glow: #2D0A5E; /* subtle background purple glow */
   --color-accent-gold: #C9A227;     /* primary gold accent */
-  --color-accent-gold-muted: #B8952A; /* secondary gold for borders/dividers */
+  --color-accent-gold-muted: rgba(201, 162, 39, 0.40); /* secondary gold border accent */
   --color-text-primary: #F0EDE6;    /* headlines, primary text */
   --color-text-secondary: #9A9A9A;  /* muted/supporting text */
-  --color-text-gold: #d4b86a;       /* contact details, highlighted text */
-  --color-border: #8B6914;          /* hairline borders/dividers */
+  --color-text-gold: #d4b86a;       /* highlighted gold text */
+  --color-border: rgba(139, 92, 246, 0.20); /* slate-purple borders for high-tech look */
 
   /* Luxury Dark Theme - Always dark, mapped to our new brand variables */
   --background: var(--color-bg-primary);

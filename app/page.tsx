@@ -75,7 +75,7 @@ export default async function Home() {
       <Navbar />
       <Hero />
       <SocialProofStrip />
-      <Services limit={3} />
+      <Services limit={4} />
       <Portfolio limit={4} />
       <Bottleneck />
       <Process />

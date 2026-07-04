@@ -56,8 +56,8 @@ export function FAQHome() {
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            {data.eyebrow}
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
+            [ {data.eyebrow} ]
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
             {data.headline}

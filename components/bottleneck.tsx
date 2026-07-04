@@ -36,8 +36,8 @@ export function Bottleneck() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16 max-w-3xl mx-auto"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            Operational Friction
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
+            [ Operational Friction ]
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
             Your operations are leaking margin. Stop paying the manual tax.

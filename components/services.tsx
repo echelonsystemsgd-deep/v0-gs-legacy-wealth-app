@@ -3,25 +3,31 @@
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { Globe, FileText, Zap, X, ShieldCheck } from "lucide-react"
+import { Globe, FileText, Zap, X, ShieldCheck, Database, GitMerge } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 const services = [
   {
-    title: "Bespoke Authority Platforms",
-    description: "Web presence designed to project absolute category dominance. Built without templates, engineered for prestige.",
+    title: "High-Yield Digital Infrastructure",
+    description: "Web presence and Next.js platforms designed to project absolute category dominance. Built without templates, engineered for prestige.",
     icon: Globe,
     outcome: "+238% Conversion Increase",
   },
   {
-    title: "High-Yield Conversion Funnels",
-    description: "Digital architectures focused on a single outcome: turning high-intent traffic into qualified pipeline.",
-    icon: FileText,
+    title: "Autonomous Pipeline Routing",
+    description: "Custom CRM bookings and synchronized lead orchestration that triages, captures, and schedules prospects in under 1 second.",
+    icon: GitMerge,
     outcome: "97% Lead Response Speed",
   },
   {
-    title: "Autonomic Systems & AI Agents",
+    title: "Relational Cloud Data Architecture",
+    description: "High-throughput cloud storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.",
+    icon: Database,
+    outcome: "100% Data Sovereignty",
+  },
+  {
+    title: "Autonomic Multi-Agent Systems",
     description: "Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.",
     icon: Zap,
     outcome: "30+ Hours Reclaimed Weekly",
@@ -30,7 +36,7 @@ const services = [
 
 const serviceDetails = [
   {
-    title: "Bespoke Authority Platforms",
+    title: "High-Yield Digital Infrastructure",
     tagline: "Engineering Category Dominance.",
     overview: "A custom website is not a marketing cost; it is your ultimate digital asset. Standard templates signal mediocrity. We build pixel-perfect, custom-designed, lightning-fast digital estates that establish your market position without compromise.",
     features: [
@@ -44,9 +50,9 @@ const serviceDetails = [
     icon: Globe,
   },
   {
-    title: "High-Yield Conversion Funnels",
+    title: "Autonomous Pipeline Routing",
     tagline: "Direct Pipeline Architecture.",
-    overview: "Traffic without conversion is vanity. We design focused, distraction-free landing experiences engineered to guide high-intent visitors straight to your CRM with zero leakage.",
+    overview: "Traffic without conversion is vanity. We design focused, distraction-free scheduling and qualification experiences engineered to guide high-intent visitors straight to your CRM with zero leakage.",
     features: [
       { name: "Frictionless Vetting Flows", description: "Short-form qualification steps that validate leads and intent in real-time." },
       { name: "Dynamic Targeting Copy", description: "Persuasive, premium copywriting focused entirely on high-ticket decision makers." },
@@ -55,10 +61,24 @@ const serviceDetails = [
     ],
     ctaText: "Secure Funnel Alignment",
     ctaHref: "/book?service=conversion-funnel",
-    icon: FileText,
+    icon: GitMerge,
   },
   {
-    title: "Autonomic Systems & AI Agents",
+    title: "Relational Cloud Data Architecture",
+    tagline: "High-Throughput Storage Engines.",
+    overview: "Scalable backend infrastructure structured on Supabase to manage complex business state, files, and users. Engineered for perfect latency and absolute data sovereignty.",
+    features: [
+      { name: "Bespoke Database Schema Design", description: "Custom relational tables and security policies aligned with your operational requirements." },
+      { name: "Sub-Millisecond Query Speeds", description: "Performance optimized querying that eliminates database latency bottlenecks." },
+      { name: "Secure Cloud Storage Buckets", description: "Fully encrypted object storage pipelines for seamless document and asset management." },
+      { name: "Automated Backup Protocols", description: "Redundant snapshot backups securing total data sovereignty and recovery." },
+    ],
+    ctaText: "Request Database Alignment",
+    ctaHref: "/book?service=database-architecture",
+    icon: Database,
+  },
+  {
+    title: "Autonomic Multi-Agent Systems",
     tagline: "Operational Leverage 24/7.",
     overview: "Human drag in qualification and data transfer is an unnecessary operational tax. We build autonomous agents and background pipelines that triage, route, and engage leads instantly.",
     features: [
@@ -113,8 +133,8 @@ export function Services({ limit }: { limit?: number }) {
           </h2>
         </div>
 
-        {/* 3-Column Card Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+        {/* 4-Column Card Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-12">
           {displayServices.map((service, index) => {
             const IconComponent = service.icon
             return (
@@ -124,7 +144,7 @@ export function Services({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}
+                className="w-full"
               >
                 <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-xl group">
                   <CardContent className="p-8 flex flex-col justify-between h-full space-y-6">

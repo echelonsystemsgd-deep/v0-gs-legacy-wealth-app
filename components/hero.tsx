@@ -41,8 +41,8 @@ export function Hero() {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 mb-6"
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            {data.eyebrow}
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
+            [ {data.eyebrow} ]
           </span>
         </motion.div>
 

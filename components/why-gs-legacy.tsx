@@ -89,8 +89,8 @@ export function WhyGSLegacy() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Standard Agency */}
             <div className="p-6 rounded-xl border border-red-500/10 bg-red-500/5 space-y-4">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-red-400">
-                Standard Agency Model
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-red-400">
+                [ Standard Agency Model ]
               </span>
               <ul className="space-y-2.5 text-xs text-text-primary opacity-70">
                 <li className="flex items-start gap-2">
@@ -110,8 +110,8 @@ export function WhyGSLegacy() {
             
             {/* GS Legacy */}
             <div className="p-6 rounded-xl border border-accent-gold/20 bg-accent-gold/5 space-y-4">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-accent-gold">
-                GS Legacy Autonomic Systems
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-accent-purple">
+                [ Autonomic Systems Lab ]
               </span>
               <ul className="space-y-2.5 text-xs text-[#F0EDE6] opacity-90">
                 <li className="flex items-start gap-2">

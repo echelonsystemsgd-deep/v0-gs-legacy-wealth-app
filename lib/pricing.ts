@@ -36,17 +36,17 @@ const FALLBACK_SETUP_TIERS: PricingTier[] = [
   {
     id: 'authority-suite',
     name: 'Authority Suite',
-    price: '2,750',
-    interval: '£687.50 deposit to initiate',
-    milestoneBreakdown: '4 milestone stages of 25% (£687.50) linked to build progress',
+    price: '3,500',
+    interval: '£875 deposit to initiate',
+    milestoneBreakdown: '4 milestone stages of 25% (£875) linked to build progress',
     description:
       'A luxury digital front-office that projects absolute authority. Engineered without templates to secure and convert elite clients.',
     features: [
       'Bespoke Next.js Authority Platform (5 Pages)',
-      'Calendly Scheduling Integration',
+      'Autonomous Lead Capture & Calendly Setup',
       'Stripe Payment Gateway Integration',
       'Core SEO Blueprint & Schema Setup',
-      'Supercharged Speed Profile (95+ Mobile)',
+      'Supercharged Speed Profile (98+ Mobile)',
       '30 Days Dedicated Post-Launch Support',
     ],
     cta: 'Request Alignment',
@@ -56,17 +56,17 @@ const FALLBACK_SETUP_TIERS: PricingTier[] = [
   {
     id: 'operations-machine',
     name: 'Operations Machine',
-    price: '5,500',
-    interval: '£1,375 deposit to initiate',
-    milestoneBreakdown: '4 milestone stages of 25% (£1,375) linked to build progress',
+    price: '5,800',
+    interval: '£1,450 deposit to initiate',
+    milestoneBreakdown: '4 milestone stages of 25% (£1,450) linked to build progress',
     description:
       'Your complete digital systems layer. We replace manual administrative overhead with custom software leverage so your business runs on autopilot.',
     features: [
       'Everything in Authority Suite (up to 10 Pages)',
-      'Custom Backend Admin Dashboard',
+      'Custom Relational Database Integration (Supabase)',
+      'Autonomous Pipeline Routing & CRM Orchestration',
       'Custom Secure Client Portal Integration',
-      'Autonomic Lead & CRM Automations',
-      'Automated Stripe Billing & Invoices',
+      'Automated Stripe Billing & Invoice Engine',
       '90 Days Dedicated Post-Launch Support',
     ],
     cta: 'Initiate Audit',
@@ -83,11 +83,11 @@ const FALLBACK_SETUP_TIERS: PricingTier[] = [
       'The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.',
     features: [
       'Everything in Operations Machine (Unlimited Pages)',
-      'Bespoke Cold Email Outreach System',
+      'Autonomic Cold Outreach Infrastructure',
       'Custom-Trained AI Agent Concierge',
-      'Full Brand Identity Suite (Logos, Guidelines)',
-      'Priority VIP Developer Slack Support',
-      'Weekly Growth & Scaling Roadmaps',
+      'Full Corporate Brand Identity Suite',
+      'Direct Slack Hotline to Principal Founders',
+      'Weekly Systems Scaling Strategy Roadmaps',
     ],
     cta: 'Initiate Audit',
     featured: false,
@@ -119,7 +119,7 @@ const FALLBACK_RETAINER_TIERS: PricingTier[] = [
   {
     id: 'operations-machine',
     name: 'Co-Pilot Growth',
-    price: '1,290',
+    price: '1,450',
     interval: 'billed monthly',
     milestoneBreakdown: '',
     description:
@@ -139,7 +139,7 @@ const FALLBACK_RETAINER_TIERS: PricingTier[] = [
   {
     id: 'revenue-engine',
     name: 'Enterprise Autonomic Partner',
-    price: '2,850',
+    price: '2,950',
     interval: 'billed monthly',
     milestoneBreakdown: '',
     description:

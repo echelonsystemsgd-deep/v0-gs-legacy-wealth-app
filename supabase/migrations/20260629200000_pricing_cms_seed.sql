@@ -1,6 +1,5 @@
 -- Seed pricing tiers into website_content CMS table
--- This is NON-DESTRUCTIVE: uses ON CONFLICT DO NOTHING
--- Running this migration multiple times is completely safe.
+-- This is set to DO UPDATE so that running migrations updates the values.
 
 INSERT INTO public.website_content (section_key, content, updated_at)
 VALUES (
@@ -9,16 +8,16 @@ VALUES (
     {
       "id": "authority-suite",
       "name": "Authority Suite",
-      "price": "2,750",
-      "interval": "£687.50 deposit to initiate",
-      "milestoneBreakdown": "4 milestone stages of 25% (£687.50) linked to build progress",
+      "price": "3,500",
+      "interval": "£875 deposit to initiate",
+      "milestoneBreakdown": "4 milestone stages of 25% (£875) linked to build progress",
       "description": "A luxury digital front-office that projects absolute authority. Engineered without templates to secure and convert elite clients.",
       "features": [
         "Bespoke Next.js Authority Platform (5 Pages)",
-        "Calendly Scheduling Integration",
+        "Autonomous Lead Capture & Calendly Setup",
         "Stripe Payment Gateway Integration",
         "Core SEO Blueprint & Schema Setup",
-        "Supercharged Speed Profile (95+ Mobile)",
+        "Supercharged Speed Profile (98+ Mobile)",
         "30 Days Dedicated Post-Launch Support"
       ],
       "cta": "Request Alignment",
@@ -28,16 +27,16 @@ VALUES (
     {
       "id": "operations-machine",
       "name": "Operations Machine",
-      "price": "5,500",
-      "interval": "£1,375 deposit to initiate",
-      "milestoneBreakdown": "4 milestone stages of 25% (£1,375) linked to build progress",
+      "price": "5,800",
+      "interval": "£1,450 deposit to initiate",
+      "milestoneBreakdown": "4 milestone stages of 25% (£1,450) linked to build progress",
       "description": "Your complete digital systems layer. We replace manual administrative overhead with custom software leverage so your business runs on autopilot.",
       "features": [
         "Everything in Authority Suite (up to 10 Pages)",
-        "Custom Backend Admin Dashboard",
+        "Custom Relational Database Integration (Supabase)",
+        "Autonomous Pipeline Routing & CRM Orchestration",
         "Custom Secure Client Portal Integration",
-        "Autonomic Lead & CRM Automations",
-        "Automated Stripe Billing & Invoices",
+        "Automated Stripe Billing & Invoice Engine",
         "90 Days Dedicated Post-Launch Support"
       ],
       "cta": "Initiate Audit",
@@ -50,14 +49,14 @@ VALUES (
       "price": "9,800",
       "interval": "£2,450 deposit to initiate",
       "milestoneBreakdown": "4 milestone stages of 25% (£2,450) linked to build progress",
-      "description": "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and program your AI lead triage.",
+      "description": "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.",
       "features": [
         "Everything in Operations Machine (Unlimited Pages)",
-        "Bespoke Cold Email Outreach System",
+        "Autonomic Cold Outreach Infrastructure",
         "Custom-Trained AI Agent Concierge",
-        "Full Brand Identity Suite (Logos, Guidelines)",
-        "Priority VIP Developer Slack Support",
-        "Weekly Growth & Scaling Roadmaps"
+        "Full Corporate Brand Identity Suite",
+        "Direct Slack Hotline to Principal Founders",
+        "Weekly Systems Scaling Strategy Roadmaps"
       ],
       "cta": "Initiate Audit",
       "featured": false,
@@ -66,7 +65,10 @@ VALUES (
   ]'::jsonb,
   now()
 )
-ON CONFLICT (section_key) DO NOTHING;
+ON CONFLICT (section_key) 
+DO UPDATE SET 
+  content = EXCLUDED.content,
+  updated_at = EXCLUDED.updated_at;
 
 INSERT INTO public.website_content (section_key, content, updated_at)
 VALUES (
@@ -94,7 +96,7 @@ VALUES (
     {
       "id": "operations-machine",
       "name": "Co-Pilot Growth",
-      "price": "1,290",
+      "price": "1,450",
       "interval": "billed monthly",
       "milestoneBreakdown": "",
       "description": "Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.",
@@ -103,7 +105,7 @@ VALUES (
         "Continuous AI Agent Re-training & Updates",
         "1 Custom High-Converting Landing Page/mo",
         "Advanced SEO Content & Competitor Strategy",
-        "Weekly Lead Funnel Optimization",
+        "Weekly Lead Funnel Optimisation",
         "10 Dedicated Developer/Designer Hours/mo"
       ],
       "cta": "Initiate Audit",
@@ -113,7 +115,7 @@ VALUES (
     {
       "id": "revenue-engine",
       "name": "Enterprise Autonomic Partner",
-      "price": "2,850",
+      "price": "2,950",
       "interval": "billed monthly",
       "milestoneBreakdown": "",
       "description": "Your complete external fractional Chief Technology & Marketing Team.",
@@ -132,4 +134,7 @@ VALUES (
   ]'::jsonb,
   now()
 )
-ON CONFLICT (section_key) DO NOTHING;
+ON CONFLICT (section_key) 
+DO UPDATE SET 
+  content = EXCLUDED.content,
+  updated_at = EXCLUDED.updated_at;
