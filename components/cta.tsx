@@ -5,7 +5,10 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { useWebsiteContent } from "@/hooks/use-website-content"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
+import { useAuditModal } from "@/components/audit-modal-context"
+
 export function CTA() {
+  const { openModal } = useAuditModal()
   const { getSection } = useWebsiteContent()
   const data = getSection('cta', {
     headline: "Ready to Assert Market Control?",
@@ -55,13 +58,11 @@ export function CTA() {
           className="w-full flex flex-col items-center gap-6 pt-4"
         >
           <Button
-            asChild
             size="lg"
             className="w-full sm:w-auto px-10 py-7"
+            onClick={() => openModal('Operations Machine')}
           >
-            <Link href="/book?tier=Operations%20Machine">
-              {data.buttonText}
-            </Link>
+            {data.buttonText}
           </Button>
 
           <div className="w-full max-w-md border-t border-white/5 pt-6 mt-2">

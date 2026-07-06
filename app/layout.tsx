@@ -8,6 +8,7 @@ import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
 import { AuditModalProvider } from '@/components/audit-modal-context'
+import { AuditModal } from '@/components/audit-modal'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -117,6 +118,7 @@ export default function RootLayout({
         <AuditModalProvider>
           {children}
           <StickyCTAButton />
+          <AuditModal />
         </AuditModalProvider>
         <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />

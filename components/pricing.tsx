@@ -855,14 +855,12 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       </div>
 
                       <Button
-                        asChild
                         size="lg"
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full group font-bold"
+                        onClick={() => openModal(tier.tag)}
                       >
-                        <Link href={`/book?tier=${encodeURIComponent(tier.tag ?? '')}`}>
-                          <span>{tier.cta}</span>
-                        </Link>
+                        <span>{tier.cta}</span>
                       </Button>
                     </CardContent>
                   </div>

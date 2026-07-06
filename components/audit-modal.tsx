@@ -94,10 +94,8 @@ export const AuditModal: React.FC = () => {
       ...utmParams,
     }
 
-    // Triage Vetting Logic
-    const isQualified = 
-      (tier === 'Operations Machine' || tier === 'Revenue Engine') && 
-      (industry !== 'Other / Custom')
+    // Triage Vetting Logic: everyone gets redirected to Calendly
+    const isQualified = true
 
     // Build the dynamic /success redirect path with query params
     const successParams = new URLSearchParams()
