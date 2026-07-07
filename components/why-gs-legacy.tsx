@@ -1,18 +1,15 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, RefreshCw, Landmark } from "lucide-react"
 import Image from "next/image"
-
-const differentiators = [
-  "Bespoke visual identity aligned with category dominance.",
-  "Autonomous AI systems, never boilerplate templates.",
-  "Rapid execution paths designed to eliminate deployment lag.",
-  "Data-backed conversion architecture on every component.",
-  "Dedicated optimization retention to preserve system throughput.",
-]
+import { SITE_COPY } from "@/lib/site-copy"
 
 export function WhyGSLegacy() {
+  const data = SITE_COPY.homepage.whyGsLegacy
+  const trendData = SITE_COPY.homepage.trendAdaptation
+  const modelData = SITE_COPY.homepage.modelHint
+
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">
       {/* Background Crest Watermark (Scrolls with page, behind text) */}
@@ -36,13 +33,13 @@ export function WhyGSLegacy() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="space-y-6"
+            className="space-y-6 text-left"
           >
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              Engineered for Leverage. Built for Prestige.
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight animate-fade-in">
+              {data.headline}
             </h2>
             <p className="font-sans text-base text-text-primary opacity-80 leading-relaxed max-w-xl">
-              We focus on premium, custom digital assets tailored specifically for businesses ready to dominate their space. By combining luxury visual storytelling with AI automation, we ensure your online presence acts as a 24/7 revenue-generating asset rather than a static brochure.
+              {data.description}
             </p>
           </motion.div>
 
@@ -54,14 +51,14 @@ export function WhyGSLegacy() {
             transition={{ duration: 0.6 }}
             className="space-y-4"
           >
-            {differentiators.map((diff, index) => (
+            {data.differentiators.map((diff, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="flex items-start gap-4 p-4 border border-border-brand/20 bg-bg-tertiary/40 hover:border-accent-gold hover:bg-bg-tertiary/60 transition-colors duration-300"
+                className="flex items-start gap-4 p-4 border border-border-brand/20 bg-bg-tertiary/40 hover:border-accent-gold hover:bg-bg-tertiary/60 transition-colors duration-300 text-left"
               >
                 {/* Gold tick icon */}
                 <div className="flex items-center justify-center w-6 h-6 text-accent-gold shrink-0 mt-0.5">
@@ -84,50 +81,73 @@ export function WhyGSLegacy() {
           className="mt-16 pt-16 border-t border-white/5"
         >
           <h3 className="font-serif text-2xl font-bold text-white text-center mb-8">
-            The Structural Reality
+            {data.structuralRealityHeadline}
           </h3>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
             {/* Standard Agency */}
             <div className="p-6 rounded-xl border border-red-500/10 bg-red-500/5 space-y-4">
               <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-red-400">
-                [ Standard Agency Model ]
+                [ {data.standardAgency.title} ]
               </span>
               <ul className="space-y-2.5 text-xs text-text-primary opacity-70">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500">✕</span> Boilerplate templates and generic layout setups.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500">✕</span> Delayed deployment paths taking 2 to 3 months.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500">✕</span> Disconnected lead qualifiers and manual CRM copying.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500">✕</span> Ongoing hourly overhead without performance guarantees.
-                </li>
+                {data.standardAgency.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-red-500">✕</span> {item}
+                  </li>
+                ))}
               </ul>
             </div>
             
             {/* GS Legacy */}
             <div className="p-6 rounded-xl border border-accent-gold/20 bg-accent-gold/5 space-y-4">
               <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-accent-purple">
-                [ Autonomic Systems Lab ]
+                [ {data.gsLegacy.title} ]
               </span>
               <ul className="space-y-2.5 text-xs text-[#F0EDE6] opacity-90">
-                <li className="flex items-start gap-2">
-                  <span className="text-accent-gold">✦</span> Bespoke authority platforms built from the ground up.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-accent-gold">✦</span> Rapid execution protocol delivering assets in under 28 days.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-accent-gold">✦</span> Autonomous capture funnels with direct CRM data pipelines.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-accent-gold">✦</span> Clear capital investment aligned with guaranteed throughput.
-                </li>
+                {data.gsLegacy.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-accent-gold">✦</span> {item}
+                  </li>
+                ))}
               </ul>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Trend Adaptation & Model Hint (Exclusivity Sections) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 pt-16 border-t border-white/5 grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left"
+        >
+          {/* Trend Adaptation Callout */}
+          <div className="p-6 rounded-xl border border-white/5 bg-bg-tertiary/20 space-y-3 hover:border-accent-gold/30 transition-all duration-300">
+            <div className="flex items-center gap-2.5">
+              <RefreshCw size={16} className="text-accent-gold animate-spin-slow" />
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-accent-gold">
+                [ {trendData.eyebrow} ]
+              </span>
+            </div>
+            <h4 className="font-serif text-lg font-bold text-white">{trendData.headline}</h4>
+            <p className="text-xs text-text-primary opacity-80 leading-relaxed">
+              {trendData.description}
+            </p>
+          </div>
+
+          {/* Model Hint Callout */}
+          <div className="p-6 rounded-xl border border-white/5 bg-bg-tertiary/20 space-y-3 hover:border-accent-gold/30 transition-all duration-300">
+            <div className="flex items-center gap-2.5">
+              <Landmark size={16} className="text-accent-gold" />
+              <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-accent-gold">
+                [ {modelData.eyebrow} ]
+              </span>
+            </div>
+            <h4 className="font-serif text-lg font-bold text-white">{modelData.headline}</h4>
+            <p className="text-xs text-text-primary opacity-80 leading-relaxed">
+              {modelData.description}
+            </p>
           </div>
         </motion.div>
       </div>

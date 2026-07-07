@@ -5,19 +5,22 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 import type { Metadata } from "next"
 
+import { SITE_COPY } from "@/lib/site-copy"
+
 export const metadata: Metadata = {
-  title: "Client Testimonials",
-  description: "Real results from ambitious businesses we have partnered with. Hear directly from our elite clientele about the impact of our premium digital solutions.",
+  title: SITE_COPY.metadata.testimonials.title,
+  description: SITE_COPY.metadata.testimonials.description,
 }
 
 export default function TestimonialsPage() {
+  const data = SITE_COPY.testimonialsPage
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
       <PageHeader
-        title="What Our Clients"
-        highlight="Say"
-        subtitle="Real results from ambitious businesses we have partnered with. Every word is from a founder who trusted us to build their legacy."
+        title={data.headerTitle}
+        highlight={data.headerHighlight}
+        subtitle={data.headerSubtitle}
       />
       <Testimonials />
       <CTA />

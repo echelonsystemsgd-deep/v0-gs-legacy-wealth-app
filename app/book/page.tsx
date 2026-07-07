@@ -3,20 +3,21 @@ import Link from "next/link"
 import { BrandLogo } from "@/components/brand-logo"
 import { ArrowLeft, Shield, Clock, Star } from "lucide-react"
 import { BookingFlow } from "@/components/booking-flow"
+import { SITE_COPY } from "@/lib/site-copy"
 
 export const metadata: Metadata = {
-  title: "Request Alignment Session",
-  description:
-    "Complete the qualification criteria to request a clinical evaluation session. Strictly limited allocations — vetted partnerships only.",
+  title: SITE_COPY.metadata.book.title,
+  description: SITE_COPY.metadata.book.description,
 }
 
-const trustItems = [
-  { icon: Clock, text: "30-minute clinical evaluation" },
-  { icon: Shield, text: "Candid operational analysis" },
-  { icon: Star, text: "Strictly limited allocations" },
-]
-
 export default function BookPage() {
+  const data = SITE_COPY.bookPage
+  const icons = [Clock, Shield, Star]
+  const trustItems = data.trustItems.map((text, idx) => ({
+    icon: icons[idx] || Star,
+    text
+  }))
+
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Background Decor */}
@@ -57,15 +58,14 @@ export default function BookPage() {
           <div className="lg:sticky lg:top-24 space-y-8">
             <div className="space-y-4">
               <p className="text-xs font-bold uppercase tracking-widest text-accent-gold">
-                Clinical Evaluation
+                {data.clinicalEvaluationLabel}
               </p>
               <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                Request{" "}
-                <span className="text-gradient-gold">Alignment</span>
+                {data.headerTitle}{" "}
+                <span className="text-gradient-gold">{data.headerHighlight}</span>
               </h1>
               <p className="text-muted-foreground leading-relaxed">
-                Our time is highly leveraged, and we expect the same of yours. Complete the qualification
-                criteria below to request an alignment session. If there is a fit, we will confirm your booking.
+                {data.headerSubtitle}
               </p>
             </div>
 
@@ -89,9 +89,9 @@ export default function BookPage() {
                 ))}
               </div>
               <p className="text-sm text-foreground italic leading-relaxed">
-                &ldquo;The clinical evaluation alone identified conversion gaps we had missed for two years.&rdquo;
+                &ldquo;{data.socialProofQuote}&rdquo;
               </p>
-              <p className="text-xs text-muted-foreground font-semibold">— Daniel K., Founder, Kensington Advisory</p>
+              <p className="text-xs text-muted-foreground font-semibold">— {data.socialProofAuthor}</p>
             </div>
 
             {/* Decorative GS Monogram */}

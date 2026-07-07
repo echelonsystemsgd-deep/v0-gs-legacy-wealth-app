@@ -8,6 +8,7 @@ import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-
 import Link from "next/link"
 import type { PricingTier } from "@/lib/pricing"
 import { useAuditModal } from "@/components/audit-modal-context"
+import { SITE_COPY } from "@/lib/site-copy"
 
 // Helper component to smoothly animate output values when dragging sliders
 function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
@@ -42,116 +43,8 @@ function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; pre
   return <span>{prefix}{displayValue.toLocaleString()}{suffix}</span>
 }
 
-const setupTiers = [
-  {
-    name: "Authority Suite",
-    price: "3,500",
-    interval: "£875 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£875) linked to build progress",
-    description: "A luxury digital front-office that projects absolute authority. Engineered without templates to secure and convert elite clients.",
-    features: [
-      "Bespoke Next.js Authority Platform (5 Pages)",
-      "Autonomous Lead Capture & Calendly Setup",
-      "Stripe Payment Gateway Integration",
-      "Core SEO Blueprint & Schema Setup",
-      "Supercharged Speed Profile (98+ Mobile)",
-      "30 Days Dedicated Post-Launch Support",
-    ],
-    cta: "Request Alignment",
-    featured: false,
-    tag: "Authority Suite"
-  },
-  {
-    name: "Operations Machine",
-    price: "5,800",
-    interval: "£1,450 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£1,450) linked to build progress",
-    description: "Your complete digital systems layer. We replace manual administrative overhead with custom software leverage so your business runs on autopilot.",
-    features: [
-      "Everything in Authority Suite (up to 10 Pages)",
-      "Custom Relational Database Integration (Supabase)",
-      "Autonomous Pipeline Routing & CRM Orchestration",
-      "Custom Secure Client Portal Integration",
-      "Automated Stripe Billing & Invoice Engine",
-      "90 Days Dedicated Post-Launch Support",
-    ],
-    cta: "Initiate Audit",
-    featured: true,
-    tag: "Operations Machine"
-  },
-  {
-    name: "Revenue Engine",
-    price: "9,800",
-    interval: "£2,450 deposit to initiate",
-    milestoneBreakdown: "4 milestone stages of 25% (£2,450) linked to build progress",
-    description: "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.",
-    features: [
-      "Everything in Operations Machine (Unlimited Pages)",
-      "Autonomic Cold Outreach Infrastructure",
-      "Custom-Trained AI Agent Concierge",
-      "Full Corporate Brand Identity Suite",
-      "Direct Slack Hotline to Principal Founders",
-      "Weekly Systems Scaling Strategy Roadmaps",
-    ],
-    cta: "Initiate Audit",
-    featured: false,
-    tag: "Revenue Engine"
-  },
-]
-
-const retainerTiers = [
-  {
-    name: "Pilot Support",
-    price: "499",
-    interval: "billed monthly",
-    description: "Continuous hosting, top-tier performance audits, and priority developer hours.",
-    features: [
-      "Premium Dedicated Ultra-Fast CDN Hosting",
-      "Weekly Security & Speed Audits",
-      "3 Hours Design & Copywriting Updates/mo",
-      "Monthly Traffic & SEO Analytics Report",
-      "24/7 Critical System Monitoring",
-      "Same-Day Urgent Edits Turnaround",
-    ],
-    cta: "Request Alignment",
-    featured: false,
-    tag: "Authority Suite"
-  },
-  {
-    name: "Co-Pilot Growth",
-    price: "1,450",
-    interval: "billed monthly",
-    description: "Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.",
-    features: [
-      "Everything in Pilot Support",
-      "Continuous AI Agent Re-training & Updates",
-      "1 Custom High-Converting Landing Page/mo",
-      "Advanced SEO Content & Competitor Strategy",
-      "Weekly Lead Funnel Optimisation",
-      "10 Dedicated Developer/Designer Hours/mo",
-    ],
-    cta: "Initiate Audit",
-    featured: true,
-    tag: "Operations Machine"
-  },
-  {
-    name: "Enterprise Autonomic Partner",
-    price: "2,950",
-    interval: "billed monthly",
-    description: "Your complete external fractional Chief Technology & Marketing Team.",
-    features: [
-      "Everything in Co-Pilot Growth",
-      "Weekly High-Level Growth Consulting Call",
-      "Unlimited Minor System & UI Adjustments",
-      "New AI Workflow Builds & Automations",
-      "Bespoke Cold Email/Marketing System setups",
-      "Direct Slack Hotline to Core Founders",
-    ],
-    cta: "Initiate Audit",
-    featured: false,
-    tag: "Revenue Engine"
-  },
-]
+const setupTiers = SITE_COPY.pricingPage.setupTiers
+const retainerTiers = SITE_COPY.pricingPage.retainerTiers
 
 const comparisonCategories = [
   {
@@ -218,10 +111,10 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
   const recommendedTier = 
     revenue < 15000 
-      ? "Authority Suite" 
+      ? "Launch Catalyst" 
       : revenue >= 15000 && revenue < 50000 
-      ? "Operations Machine" 
-      : "Revenue Engine"
+      ? "System Leverage" 
+      : "Autonomic Partner"
 
   if (isHomepage) {
     return (
@@ -231,13 +124,13 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           {/* Section Header */}
           <div className="text-center mb-12">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-              Investment
+              {SITE_COPY.homepage.modelHint.eyebrow}
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-6">
-              Bespoke Systems Architecture. Automated Pipeline Leverage.
+              {SITE_COPY.homepage.modelHint.headline}
             </h2>
             <p className="font-sans text-sm text-text-primary opacity-80 mt-4 max-w-xl mx-auto leading-relaxed">
-              We don't build websites. We build automated client acquisition machines designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
+              {SITE_COPY.homepage.modelHint.description}
             </p>
           </div>
 
@@ -255,8 +148,12 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 <Calculator size={20} className="text-accent-gold animate-pulse" />
               </div>
               <div className="text-left">
-                <span className="text-xs uppercase tracking-widest text-accent-gold font-bold block">Deficit Diagnostics</span>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">Quantify Your System Deficit</h3>
+                <span className="text-xs uppercase tracking-widest text-accent-gold font-bold block">
+                  {SITE_COPY.pricingPage.roiCalculator.eyebrow}
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
+                  {SITE_COPY.pricingPage.roiCalculator.title}
+                </h3>
               </div>
             </div>
 

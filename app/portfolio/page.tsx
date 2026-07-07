@@ -4,19 +4,22 @@ import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 
+import { SITE_COPY } from "@/lib/site-copy"
+
 export const metadata = {
-  title: "Portfolio",
-  description: "View our premium website designs and AI automation systems built for ambitious businesses.",
+  title: SITE_COPY.metadata.portfolio.title,
+  description: SITE_COPY.metadata.portfolio.description,
 }
 
 export default function PortfolioPage() {
+  const data = SITE_COPY.portfolioPage
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
       <PageHeader 
-        title="Our Digital"
-        highlight="Masterpieces"
-        subtitle="A showcase of high-end digital assets crafted to command attention and drive exceptional business results."
+        title={data.headerTitle}
+        highlight={data.headerHighlight}
+        subtitle={data.headerSubtitle}
       />
       <Portfolio />
       <CTA />

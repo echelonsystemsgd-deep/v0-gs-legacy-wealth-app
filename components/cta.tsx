@@ -3,18 +3,13 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useWebsiteContent } from "@/hooks/use-website-content"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 import { useAuditModal } from "@/components/audit-modal-context"
+import { SITE_COPY } from "@/lib/site-copy"
 
 export function CTA() {
   const { openModal } = useAuditModal()
-  const { getSection } = useWebsiteContent()
-  const data = getSection('cta', {
-    headline: "Ready to Assert Market Control?",
-    subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting only 2 new integration partnerships this month (Cohort capacity at 80%).",
-    buttonText: "Initiate Operational Audit"
-  })
+  const data = SITE_COPY.homepage.cta
 
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">

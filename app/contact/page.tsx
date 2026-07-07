@@ -4,20 +4,23 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 import { Mail, Phone, Clock, ArrowRight } from "lucide-react"
 
+import { SITE_COPY } from "@/lib/site-copy"
+
 export const metadata = {
-  title: "Contact Us",
-  description: "Connect with GS Legacy Wealth. Let's discuss your brand, AI automation requirements, and premium web systems.",
+  title: SITE_COPY.metadata.contact.title,
+  description: SITE_COPY.metadata.contact.description,
 }
 
 export default function ContactPage() {
+  const data = SITE_COPY.contactPage
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden font-sans">
       <Navbar />
       
       <PageHeader 
-        title="Contact"
-        highlight="Concierge"
-        subtitle="Let's build your digital authority and automate operations. Get in touch with our elite engineering team."
+        title={data.headerTitle}
+        highlight={data.headerHighlight}
+        subtitle={data.headerSubtitle}
       />
 
       <section className="relative pb-24 lg:pb-32 overflow-hidden bg-bg-primary">
@@ -31,13 +34,13 @@ export default function ContactPage() {
             <div className="lg:col-span-5 space-y-8">
               <div className="space-y-4">
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-                  Elite Support
+                  {data.supportEyebrow}
                 </span>
                 <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white leading-tight">
-                  Direct Concierge Desk
+                  {data.supportTitle}
                 </h2>
                 <p className="text-text-primary opacity-70 text-sm leading-relaxed max-w-md">
-                  We don't use generic support tickets or ticketing bots. You deal directly with our founders and core technical team.
+                  {data.supportDescription}
                 </p>
               </div>
 
@@ -49,7 +52,7 @@ export default function ContactPage() {
                     <Mail size={18} />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Email Concierge</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{data.emailLabel}</p>
                     <a href="mailto:gslegacywealth@gmail.com" className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono">
                       gslegacywealth@gmail.com
                     </a>
@@ -62,7 +65,7 @@ export default function ContactPage() {
                     <Phone size={18} />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Direct Call / WhatsApp</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{data.phoneLabel}</p>
                     <a href="tel:+447851055929" className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono">
                       +44 7851 055929
                     </a>
@@ -78,9 +81,9 @@ export default function ContactPage() {
                     <Clock size={18} />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Average Response SLA</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{data.slaLabel}</p>
                     <p className="text-sm font-semibold text-white">
-                      Under 12 Hours Guarantee
+                      {data.slaValue}
                     </p>
                   </div>
                 </div>
@@ -88,16 +91,16 @@ export default function ContactPage() {
 
               {/* What to expect list */}
               <div className="border-t border-white/10 pt-6 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-accent-gold">What Happens Next?</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-accent-gold">{data.whatsNextTitle}</h4>
                 <ul className="space-y-2.5 text-xs text-text-primary opacity-75">
                   <li className="flex items-center gap-2">
-                    <span className="text-accent-gold">✦</span> Initial reply confirming receipt of details.
+                    <span className="text-accent-gold">✦</span> {data.whatsNextItems[0]}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-accent-gold">✦</span> Quick technical assessment of your current website/systems.
+                    <span className="text-accent-gold">✦</span> {data.whatsNextItems[1]}
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-accent-gold">✦</span> A clinical evaluation to map your automation leverage opportunity.
+                    <span className="text-accent-gold">✦</span> {data.whatsNextItems[2]}
                   </li>
                 </ul>
               </div>

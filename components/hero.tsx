@@ -4,26 +4,13 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useWebsiteContent } from "@/hooks/use-website-content"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 import { useAuditModal } from "@/components/audit-modal-context"
+import { SITE_COPY } from "@/lib/site-copy"
 
 export function Hero() {
   const { openModal } = useAuditModal()
-  const { getSection } = useWebsiteContent()
-  const data = getSection('hero', {
-    eyebrow: "Bespoke Digital Infrastructure & Autonomic Systems",
-    headline: "We Build Digital Systems for Category Leaders. The Rest Chase Them.",
-    subheadline: "We do not build generic templates. We engineer high-performance visual platforms and automated pipelines for enterprises that require absolute leverage. Selectively aligned. Flawlessly executed.",
-    primaryCtaText: "Request System Integration Audit",
-    secondaryCtaText: "Deployed System Registry",
-    trustItems: [
-      "10+ Bespoke Deployments",
-      "Autonomic Orchestrations",
-      "Fluid Mobile Architecture",
-      "Guaranteed Throughput"
-    ]
-  })
+  const data = SITE_COPY.homepage.hero
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-bg-primary">

@@ -1,11 +1,7 @@
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
-import { SocialProofStrip } from "@/components/social-proof-strip"
 import { Bottleneck } from "@/components/bottleneck"
-import { Services } from "@/components/services"
-import { Process } from "@/components/process"
-import { Results } from "@/components/results"
-import { Portfolio } from "@/components/portfolio"
+import { CommodityTrap } from "@/components/commodity-trap"
 import { WhyGSLegacy } from "@/components/why-gs-legacy"
 import { Testimonials } from "@/components/testimonials"
 import { Pricing } from "@/components/pricing"
@@ -74,12 +70,8 @@ export default async function Home() {
       />
       <Navbar />
       <Hero />
-      <SocialProofStrip />
-      <Services limit={4} />
-      <Portfolio limit={4} />
       <Bottleneck />
-      <Process />
-      <Results />
+      <CommodityTrap />
       <WhyGSLegacy />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />

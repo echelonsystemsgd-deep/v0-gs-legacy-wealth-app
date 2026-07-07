@@ -6,23 +6,26 @@ import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 import { getPricingTiers } from "@/lib/pricing"
 
+import { SITE_COPY } from "@/lib/site-copy"
+
 export const revalidate = 60
 
 export const metadata = {
-  title: "Pricing & Investment",
-  description: "Transparent capital requirements for high-yield digital assets. Choose Authority Suite, Operations Machine, or Revenue Engine alignment.",
+  title: SITE_COPY.metadata.pricing.title,
+  description: SITE_COPY.metadata.pricing.description,
 }
 
 export default async function PricingPage() {
   const { setupTiers, retainerTiers } = await getPricingTiers()
+  const data = SITE_COPY.pricingPage
 
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
       <PageHeader 
-        title="Investment"
-        highlight="Tiers"
-        subtitle="Transparent pricing models for elite digital solutions. Choose the level of impact that matches your ambition."
+        title={data.headerTitle}
+        highlight={data.headerHighlight}
+        subtitle={data.headerSubtitle}
       />
       <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} />
       
@@ -30,13 +33,13 @@ export default async function PricingPage() {
       <section className="relative py-16 bg-bg-secondary border-y border-white/5">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            System Performance SLA
+            {data.performanceSLATitle}
           </span>
           <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white">
-            Uptime, Speed & Telemetry Guarantees
+            {data.performanceSLASubtitle}
           </h3>
           <p className="font-sans text-sm text-text-primary opacity-80 max-w-2xl mx-auto leading-relaxed">
-            Every GS Legacy custom deployment operates under a strict performance SLA. We guarantee a Mobile PageSpeed score of 90+ and immediate database replication failovers. Our engineering team maintains active telemetry dashboards to verify system throughput 24/7/365.
+            {data.performanceSLAParagraph}
           </p>
         </div>
       </section>

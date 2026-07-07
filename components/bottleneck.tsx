@@ -4,8 +4,11 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { AlertCircle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SITE_COPY } from "@/lib/site-copy"
+
 export function Bottleneck() {
   const [isOrdered, setIsOrdered] = useState(false)
+  const data = SITE_COPY.homepage.bottleneck
 
   // SVG Coordinates for Chaos vs Order state
   const nodes = [
@@ -37,16 +40,16 @@ export function Bottleneck() {
           className="text-center mb-16 max-w-3xl mx-auto"
         >
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
-            [ Operational Friction ]
+            [ {data.eyebrow} ]
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
-            Your operations are leaking margin. Stop paying the manual tax.
+            {data.headline}
           </h2>
           <p className="font-sans text-base text-text-primary opacity-75 leading-relaxed mt-6 max-w-2xl mx-auto">
-            Relying on manual lead routing, manual database updates, and delayed booking sequences is operational negligence. For every day your system remains disconnected, your customer acquisition cost compounds.
+            {data.subheadline}
           </p>
           <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">
-            Speed is the ultimate unfair advantage. While you wait to automate, your competitors are buying speed. They aren't smarter; they simply have more leverage.
+            {data.goldSlogan}
           </p>
         </motion.div>
 
@@ -65,7 +68,7 @@ export function Bottleneck() {
               <div className="absolute top-4 left-4 flex items-center gap-2">
                 <span className={`w-2.5 h-2.5 rounded-full ${isOrdered ? "bg-accent-gold animate-pulse" : "bg-red-500 animate-pulse"}`} />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-text-primary opacity-70">
-                  System Mode: {isOrdered ? "Automated & Connected" : "Manual Chaos"}
+                  {data.systemMode} {isOrdered ? data.modeAutomated : data.modeManual}
                 </span>
               </div>
 
@@ -144,7 +147,7 @@ export function Bottleneck() {
                     }}
                     className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block bg-transparent border-none p-0 cursor-pointer text-left focus:outline-none"
                   >
-                    Quantify Your System Deficit →
+                    {data.diagnosticLink}
                   </button>
                 </div>
                 <Button
@@ -157,7 +160,7 @@ export function Bottleneck() {
                       : "bg-transparent border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
                   }`}
                 >
-                  {isOrdered ? "Deactivate AI Hub" : "Activate AI Hub"}
+                  {isOrdered ? data.triggerBtnActive : data.triggerBtnInactive}
                 </Button>
               </div>
             </div>
@@ -178,11 +181,11 @@ export function Bottleneck() {
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-sans font-semibold text-lg text-white">Slipping Leads</h3>
+                  <h3 className="font-sans font-semibold text-lg text-white">{data.cards[0].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We establish instant auto-engagement to capture leads. Benefit: Every lead engaged within 60 seconds of enquiry."
-                      : "Every minute a lead sits unqualified is a decay in conversion probability. We automate immediate, high-context engagement to capture intent before it cools."
+                      : data.cards[0].description
                     }
                   </p>
                 </div>
@@ -196,11 +199,11 @@ export function Bottleneck() {
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-sans font-semibold text-lg text-white">Wasted Hours</h3>
+                  <h3 className="font-sans font-semibold text-lg text-white">{data.cards[1].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We wire automated data pipelines from capture to CRM. Benefit: Reclaim significant administrative hours back every week."
-                      : "Administrative drag dilutes your team's focus. We build direct pipelines from capture to CRM, eliminating repetitive entry entirely."
+                      : data.cards[1].description
                     }
                   </p>
                 </div>
@@ -214,11 +217,11 @@ export function Bottleneck() {
                   {isOrdered ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-sans font-semibold text-lg text-white">Missed Follow-Ups</h3>
+                  <h3 className="font-sans font-semibold text-lg text-white">{data.cards[2].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
                       ? "Mechanism: We configure smart CRM follow-ups and lead-nurtures. Benefit: Recover pipeline revenue that is normally lost to silence."
-                      : "Systemic neglect kills deals. We engineer automated follow-up sequences that run indefinitely, ensuring no pipeline value evaporates."
+                      : data.cards[2].description
                     }
                   </p>
                 </div>

@@ -10,6 +10,8 @@ import { Toaster } from '@/components/ui/sonner'
 import { AuditModalProvider } from '@/components/audit-modal-context'
 import { AuditModal } from '@/components/audit-modal'
 
+import { SITE_COPY } from '@/lib/site-copy'
+
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
@@ -41,10 +43,10 @@ export const metadata: Metadata = {
       : 'https://gslegacywealth.com'
   ),
   title: {
-    default: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    template: '%s | GS Legacy Wealth AI'
+    default: SITE_COPY.metadata.layout.defaultTitle,
+    template: SITE_COPY.metadata.layout.titleTemplate
   },
-  description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+  description: SITE_COPY.metadata.layout.description,
   applicationName: 'GS Legacy Wealth',
   keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
   authors: [{ name: 'GS Legacy Wealth' }],
@@ -113,7 +115,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`} suppressHydrationWarning>
       <body className="font-sans antialiased">
         <AuditModalProvider>
           {children}

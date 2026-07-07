@@ -7,6 +7,7 @@ import { ArrowRight, X, ExternalLink, Loader2, Wrench } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
+import { SITE_COPY } from "@/lib/site-copy"
 
 type PortfolioItem = {
   title: string
@@ -114,8 +115,8 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
             <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">ESTATES</span>
           </div>
           <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-white leading-tight">The Mayfair Penthouse</h4>
-            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Luxury architectural design with panoramic London views.</p>
+            <h4 className="text-[11px] font-bold text-white leading-tight">The Premier Penthouse</h4>
+            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Luxury architectural design with panoramic cityscape views.</p>
           </div>
           <div className="bg-bg-secondary border border-white/5 rounded p-2 flex justify-between items-center">
             <div>
@@ -373,10 +374,10 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           </div>
 
           <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
-            Request Sanitized System Schema
+            {SITE_COPY.portfolioPage.constructionTitle}
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            Due to NDAs, we cannot expose this active client dashboard to public traffic. Enter your email to instantly receive a sanitized architectural blueprint, database schema, and Loom walkthrough of this build.
+            {SITE_COPY.portfolioPage.constructionDescription}
           </p>
 
           {errorMsg ? (
@@ -432,7 +433,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-3 text-left">
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Your Name</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">{SITE_COPY.portfolioPage.nameLabel}</label>
                   <input
                     type="text"
                     placeholder="Enter your name"
@@ -442,7 +443,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Your Email Address *</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">{SITE_COPY.portfolioPage.emailLabel}</label>
                   <input
                     required
                     type="email"
@@ -463,7 +464,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                     <span>Request System Schema</span>
+                     <span>{SITE_COPY.portfolioPage.submitBtnText}</span>
                      <ArrowRight size={16} />
                   </>
                 )}

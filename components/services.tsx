@@ -7,91 +7,26 @@ import { Globe, FileText, Zap, X, ShieldCheck, Database, GitMerge } from "lucide
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-const services = [
-  {
-    title: "High-Yield Digital Infrastructure",
-    description: "Web presence and Next.js platforms designed to project absolute category dominance. Built without templates, engineered for prestige.",
-    icon: Globe,
-    outcome: "+238% Conversion Increase",
-  },
-  {
-    title: "Autonomous Pipeline Routing",
-    description: "Custom CRM bookings and synchronized lead orchestration that triages, captures, and schedules prospects in under 1 second.",
-    icon: GitMerge,
-    outcome: "97% Lead Response Speed",
-  },
-  {
-    title: "Relational Cloud Data Architecture",
-    description: "High-throughput cloud storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.",
-    icon: Database,
-    outcome: "100% Data Sovereignty",
-  },
-  {
-    title: "Autonomic Multi-Agent Systems",
-    description: "Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.",
-    icon: Zap,
-    outcome: "30+ Hours Reclaimed Weekly",
-  },
-]
+import { SITE_COPY } from "@/lib/site-copy"
 
-const serviceDetails = [
-  {
-    title: "High-Yield Digital Infrastructure",
-    tagline: "Engineering Category Dominance.",
-    overview: "A custom website is not a marketing cost; it is your ultimate digital asset. Standard templates signal mediocrity. We build pixel-perfect, custom-designed, lightning-fast digital estates that establish your market position without compromise.",
-    features: [
-      { name: "Custom Art Direction", description: "Tailored styling aligned with elite luxury standards, designed from scratch for your brand." },
-      { name: "Zero-Template Next.js Codebase", description: "Pure, high-performance React engineering delivering perfect mobile speeds (98+)." },
-      { name: "SEO Schema Blueprint", description: "Hard-coded schemas and semantic HTML structure to command organic visibility." },
-      { name: "Telemetric Auditing", description: "Integrated conversion tracking to monitor interaction accuracy and lead flow." },
-    ],
-    ctaText: "Apply for Platform Build",
-    ctaHref: "/book?service=authority-platform",
-    icon: Globe,
-  },
-  {
-    title: "Autonomous Pipeline Routing",
-    tagline: "Direct Pipeline Architecture.",
-    overview: "Traffic without conversion is vanity. We design focused, distraction-free scheduling and qualification experiences engineered to guide high-intent visitors straight to your CRM with zero leakage.",
-    features: [
-      { name: "Frictionless Vetting Flows", description: "Short-form qualification steps that validate leads and intent in real-time." },
-      { name: "Dynamic Targeting Copy", description: "Persuasive, premium copywriting focused entirely on high-ticket decision makers." },
-      { name: "Speed Optimization", description: "Instant page load delivery that prevents lead drop-off and attrition." },
-      { name: "Direct Routing Pipeline", description: "Automated routing that delivers hot prospects straight into your sales pipeline." },
-    ],
-    ctaText: "Secure Funnel Alignment",
-    ctaHref: "/book?service=conversion-funnel",
-    icon: GitMerge,
-  },
-  {
-    title: "Relational Cloud Data Architecture",
-    tagline: "High-Throughput Storage Engines.",
-    overview: "Scalable backend infrastructure structured on Supabase to manage complex business state, files, and users. Engineered for perfect latency and absolute data sovereignty.",
-    features: [
-      { name: "Bespoke Database Schema Design", description: "Custom relational tables and security policies aligned with your operational requirements." },
-      { name: "Sub-Millisecond Query Speeds", description: "Performance optimized querying that eliminates database latency bottlenecks." },
-      { name: "Secure Cloud Storage Buckets", description: "Fully encrypted object storage pipelines for seamless document and asset management." },
-      { name: "Automated Backup Protocols", description: "Redundant snapshot backups securing total data sovereignty and recovery." },
-    ],
-    ctaText: "Request Database Alignment",
-    ctaHref: "/book?service=database-architecture",
-    icon: Database,
-  },
-  {
-    title: "Autonomic Multi-Agent Systems",
-    tagline: "Operational Leverage 24/7.",
-    overview: "Human drag in qualification and data transfer is an unnecessary operational tax. We build autonomous agents and background pipelines that triage, route, and engage leads instantly.",
-    features: [
-      { name: "Bespoke AI Concierge", description: "Dynamic chat agents trained on your specific business knowledge to qualify queries instantly." },
-      { name: "Instant Lead Routing", description: "Webhook integrations linking capture events to CRM and Slack in less than 5 seconds." },
-      { name: "Continuous Nurture Scripts", description: "Automated, high-context follow-up sequences that prevent lead decay indefinitely." },
-      { name: "System Telemetry", description: "Dedicated admin dashboards to track lead flow and system performance in real-time." },
-    ],
-    ctaText: "Request Autonomic Integration",
-    ctaHref: "/book?service=ai-agents",
-    icon: Zap,
-  },
-]
+const icons = [Globe, GitMerge, Database, Zap]
+
+const services = SITE_COPY.servicesPage.list.map((item, idx) => ({
+  title: item.title,
+  description: item.description,
+  outcome: item.outcome,
+  icon: icons[idx],
+}))
+
+const serviceDetails = SITE_COPY.servicesPage.list.map((item, idx) => ({
+  title: item.title,
+  tagline: item.tagline,
+  overview: item.overview,
+  features: item.features,
+  ctaText: item.ctaText,
+  ctaHref: item.ctaHref,
+  icon: icons[idx],
+}))
 
 export function Services({ limit }: { limit?: number }) {
   const [activeService, setActiveService] = useState<number | null>(null)
@@ -202,7 +137,7 @@ export function Services({ limit }: { limit?: number }) {
 
         {/* Timing Objection Callout */}
         <p className="text-center text-xs text-text-secondary mt-12 max-w-lg mx-auto leading-relaxed">
-          Standard development cycles take 3 to 6 months of back-and-forth friction. Our clinical Execution Protocol delivers custom operational systems fully verified in under 28 days.
+          {SITE_COPY.servicesPage.objectionCallout}
         </p>
       </div>
 
