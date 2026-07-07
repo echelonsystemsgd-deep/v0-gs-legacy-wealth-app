@@ -42,24 +42,38 @@ export function StickyCTAButton() {
   // Hide when footer enters the viewport — using a 150px positive rootMargin buffer
   // so the fade-out completes before any visual overlap with footer text occurs
   useEffect(() => {
-    const footer = document.querySelector("footer")
-    if (!footer) return
+    let observer: IntersectionObserver | null = null
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setFooterVisible(entry.isIntersecting)
-      },
-      {
-        // Positive bottom margin expands the root's bounding box downwards by 150px.
-        // This triggers intersection 150px before the footer enters the viewport,
-        // allowing the CTA button to hide smoothly before overlapping.
-        rootMargin: "0px 0px 150px 0px",
+    // We add a tiny delay to ensure the client has finished rendering the page
+    const timer = setTimeout(() => {
+      const footer = document.querySelector("footer")
+      if (!footer) {
+        setFooterVisible(false)
+        return
       }
-    )
 
-    observer.observe(footer)
-    return () => observer.disconnect()
-  }, [])
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          setFooterVisible(entry.isIntersecting)
+        },
+        {
+          // Positive bottom margin expands the root's bounding box downwards by 150px.
+          // This triggers intersection 150px before the footer enters the viewport,
+          // allowing the CTA button to hide smoothly before overlapping.
+          rootMargin: "0px 0px 150px 0px",
+        }
+      )
+
+      observer.observe(footer)
+    }, 150)
+
+    return () => {
+      clearTimeout(timer)
+      if (observer) {
+        observer.disconnect()
+      }
+    }
+  }, [pathname])
 
   if (isExcluded) return null
 
