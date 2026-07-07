@@ -411,8 +411,10 @@ Checked pages: `/` `/services` `/process` `/portfolio` `/pricing` `/testimonials
 - **Blockers:** None
 - **Issues Found:**
   1. **Empty Sync Availability Directory:** `/api/admin/sync-availability` contains no route handler.
+  2. **Sticky CTA Button Overlapping Footer:** The floating button did not hide when reaching the footer due to obsolete observer bindings during page transitions.
 - **Remediations Taken:**
   1. Applied `suppressHydrationWarning` to the outer layout `<html>` element in [layout.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real World/Campuses/AI Automation/New Lessons/CODING/v0-gs-legacy-wealth-app/app/layout.tsx) to prevent browser-fill extensions from throwing console warnings.
   2. Aligned `components/pricing.tsx` calculator recommendation categories to output correct new pricing packages (`Launch Catalyst`, `System Leverage`, `Autonomic Partner`).
+  3. Modified `components/sticky-cta-button.tsx` to update its IntersectionObserver target dynamically on `pathname` changes and wrapped binding in a 150ms timeout, ensuring it hides before hitting footer text.
 
 
