@@ -530,3 +530,19 @@ When the final Mercian Wealth logo file is ready:
 | Component | Status | Action Details | Files Modified |
 | :--- | :---: | :--- | :--- |
 | **Calendly Gold Contrast** | **PASS** | Updated the default primary_color parameter sent to the Calendly iframe from the old bright yellow C9A227 to the brand's official gold C5A059. This resolves the low contrast issue where date numbers were hard to read. | [components/booking-flow.tsx], [app/success/page.tsx], [components/calendly-popup-button.tsx], [components/client/booking-calendly.tsx] |
+
+---
+
+## 16. SUPABASE LEADS DATABASE COLUMN MAPPING FOR SERVICE INTERESTED (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** e36544c
+- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+
+### Actions & Remediation Log
+
+| Component / Column | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Database Column Mapping** | **PASS** | Updated the forms API submit route (pp/api/forms/submit/route.ts) to extract service_interested from the JSON payload and map it directly to the service_interested column inside the Supabase leads database table, ensuring leads data is saved in a structured format rather than only inside unstructured 
+otes. | [app/api/forms/submit/route.ts] |
+| **Client Payload Update** | **PASS** | Modified ooking-flow.tsx's qualification submit handler to transmit the service_interested parameter inside the fetch POST payload payload to /api/forms/submit. | [components/booking-flow.tsx] |
