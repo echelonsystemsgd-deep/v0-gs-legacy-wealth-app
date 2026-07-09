@@ -486,3 +486,18 @@ When the final Mercian Wealth logo file is ready:
 | **Audit Modal Deprecation** | **PASS** | Removed the unmounted AuditModal from root layout. All homepage CTAs and navigation hooks updated to link directly to /book. | [app/layout.tsx], [components/hero.tsx], [components/cta.tsx], [components/pricing.tsx], [components/sticky-cta-button.tsx] |
 | **Qualify Route Redirection** | **PASS** | Configured pp/qualify/page.tsx as a client-side redirect forwarding all query parameters cleanly to /book so legacy campaign links don't break. | [app/qualify/page.tsx] |
 | **GDPR Compliance Integration** | **PASS** | Stage 1 contains a mandatory GDPR agreement checkbox validating before saving identity. | [components/booking-flow.tsx] |
+
+---
+
+## 13. PERSONAL EMAIL SUPPORT & DYNAMIC PROGRESS BAR CORRECTIONS (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** 815380b
+- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+
+### Actions & Remediation Log
+
+| Stage / Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Personal Email Support** | **PASS** | Removed the personal domain validation check (PERSONAL_EMAIL_DOMAINS blocklist lookup) so users can submit forms using personal emails (e.g. @gmail.com, @yahoo.com, etc.) without errors. | [components/booking-flow.tsx] |
+| **Dynamic Completion Progress** | **PASS** | Refactored ProgressBar percentage tracking to calculate dynamically based on filled fields per stage. Stage 1 now begins at  % when completely blank, incrementing dynamically on keystroke/selection, and reaching 100% on Stage 3. | [components/booking-flow.tsx] |
