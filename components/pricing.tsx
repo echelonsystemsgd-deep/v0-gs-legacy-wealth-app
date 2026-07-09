@@ -7,7 +7,6 @@ import { CardContent } from "@/components/ui/card"
 import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import type { PricingTier } from "@/lib/pricing"
-import { useAuditModal } from "@/components/audit-modal-context"
 import { SITE_COPY } from "@/lib/site-copy"
 
 // Helper component to smoothly animate output values when dragging sliders
@@ -92,7 +91,6 @@ interface PricingProps {
 }
 
 export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
-  const { openModal } = useAuditModal()
   const [billingCycle, setBillingCycle] = useState<"setup" | "retainer">("setup")
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
@@ -426,12 +424,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
                       {/* CTA */}
                       <Button
+                        asChild
                         size="lg"
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full py-5 text-xs"
-                        onClick={() => openModal(tier.tag)}
                       >
-                        <span>Initiate Audit</span>
+                        <Link href={`/book?tier=${tier.tag}`}>
+                          <span>Initiate Audit</span>
+                        </Link>
                       </Button>
                     </CardContent>
                   </div>
@@ -752,12 +752,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       </div>
 
                       <Button
+                        asChild
                         size="lg"
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full group font-bold"
-                        onClick={() => openModal(tier.tag)}
                       >
-                        <span>{tier.cta}</span>
+                        <Link href={`/book?tier=${tier.tag}`}>
+                          <span>{tier.cta}</span>
+                        </Link>
                       </Button>
                     </CardContent>
                   </div>

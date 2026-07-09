@@ -5,11 +5,9 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
-import { useAuditModal } from "@/components/audit-modal-context"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export function Hero() {
-  const { openModal } = useAuditModal()
   const data = SITE_COPY.homepage.hero
 
   return (
@@ -64,12 +62,14 @@ export function Hero() {
         >
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
             <Button
+              asChild
               size="lg"
               className="w-full sm:w-auto px-8 py-7 flex items-center gap-2 justify-center"
-              onClick={() => openModal()}
             >
-              {data.primaryCtaText}
-              <ArrowRight size={16} />
+              <Link href="/book">
+                {data.primaryCtaText}
+                <ArrowRight size={16} className="inline ml-2" />
+              </Link>
             </Button>
 
             <Button

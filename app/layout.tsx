@@ -7,8 +7,8 @@ import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
-import { AuditModalProvider } from '@/components/audit-modal-context'
-import { AuditModal } from '@/components/audit-modal'
+// import { AuditModalProvider } from '@/components/audit-modal-context'
+// import { AuditModal } from '@/components/audit-modal'
 
 import { SITE_COPY } from '@/lib/site-copy'
 
@@ -117,11 +117,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`} suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <AuditModalProvider>
           {children}
           <StickyCTAButton />
-          <AuditModal />
-        </AuditModalProvider>
         <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />
         <TabRetention />

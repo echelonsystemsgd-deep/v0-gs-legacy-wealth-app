@@ -4,11 +4,9 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
-import { useAuditModal } from "@/components/audit-modal-context"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export function CTA() {
-  const { openModal } = useAuditModal()
   const data = SITE_COPY.homepage.cta
 
   return (
@@ -53,11 +51,13 @@ export function CTA() {
           className="w-full flex flex-col items-center gap-6 pt-4"
         >
           <Button
+            asChild
             size="lg"
             className="w-full sm:w-auto px-10 py-7"
-            onClick={() => openModal('Operations Machine')}
           >
-            {data.buttonText}
+            <Link href="/book">
+              {data.buttonText}
+            </Link>
           </Button>
 
           <div className="w-full max-w-md border-t border-white/5 pt-6 mt-2">
