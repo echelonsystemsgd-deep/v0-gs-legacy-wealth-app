@@ -407,6 +407,7 @@ function BookingFlowInner() {
           website: identity.websiteUrl || null,
           linkedin_url: identity.linkedinUrl || null,
           notes,
+          service_interested: qual.serviceInterested,
         }),
       })
       if (!res.ok) {

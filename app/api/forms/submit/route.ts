@@ -15,7 +15,7 @@ const getLogoUrl = () => {
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const { source, name, email, business_name, phone, website, notes, linkedin_url } = payload
+    const { source, name, email, business_name, phone, website, notes, linkedin_url, service_interested } = payload
 
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
@@ -53,6 +53,7 @@ export async function POST(request: Request) {
                 phone: phone || existingLead.phone,
                 linkedin_url: linkedin_url || existingLead.linkedin_url,
                 notes: notes || existingLead.notes,
+                service_interested: service_interested || existingLead.service_interested,
                 status: 'New',
                 source: 'booking_form',
               })
@@ -74,6 +75,7 @@ export async function POST(request: Request) {
                 linkedin_url: linkedin_url || null,
                 website: website || null,
                 notes: notes || 'Booking request qualification',
+                service_interested: service_interested || null,
                 status: 'New',
                 source: 'booking_form',
               })
