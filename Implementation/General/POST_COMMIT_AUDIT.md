@@ -516,3 +516,17 @@ When the final Mercian Wealth logo file is ready:
 | :--- | :---: | :--- | :--- |
 | **Grid Re-layout (Stage 2)** | **PASS** | Refactored all Stage 2 radio selectors (Service Interested, Biggest Challenge, Monthly Revenue, Start Timeline) into 2-column grids. Cuts form height by over 50%, eliminating the vertical scrolling wall. | [components/booking-flow.tsx] |
 | **Sequential Back Nav** | **PASS** | Corrected back navigation links on Stage 3 (Schedule/Calendly page) to return the user to Stage 2 (Assessment) rather than the beginning of the form (Stage 1), preserving details. | [components/booking-flow.tsx] |
+
+---
+
+## 15. CALENDLY WIDGET COLOR & CONTRAST FIXES (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** ffef062
+- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+
+### Actions & Remediation Log
+
+| Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Calendly Gold Contrast** | **PASS** | Updated the default primary_color parameter sent to the Calendly iframe from the old bright yellow C9A227 to the brand's official gold C5A059. This resolves the low contrast issue where date numbers were hard to read. | [components/booking-flow.tsx], [app/success/page.tsx], [components/calendly-popup-button.tsx], [components/client/booking-calendly.tsx] |
