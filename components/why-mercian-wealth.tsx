@@ -5,8 +5,8 @@ import { ShieldCheck, RefreshCw, Landmark } from "lucide-react"
 import Image from "next/image"
 import { SITE_COPY } from "@/lib/site-copy"
 
-export function WhyGSLegacy() {
-  const data = SITE_COPY.homepage.whyGsLegacy
+export function WhyMercianWealth() {
+  const data = SITE_COPY.homepage.whyMercianWealth
   const trendData = SITE_COPY.homepage.trendAdaptation
   const modelData = SITE_COPY.homepage.modelHint
 
@@ -98,13 +98,13 @@ export function WhyGSLegacy() {
               </ul>
             </div>
             
-            {/* GS Legacy */}
+            {/* Mercian Wealth */}
             <div className="p-6 rounded-xl border border-accent-gold/20 bg-accent-gold/5 space-y-4">
               <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-accent-purple">
-                [ {data.gsLegacy.title} ]
+                [ {data.mercianWealth.title} ]
               </span>
               <ul className="space-y-2.5 text-xs text-[#F0EDE6] opacity-90">
-                {data.gsLegacy.items.map((item, i) => (
+                {data.mercianWealth.items.map((item, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="text-accent-gold">✦</span> {item}
                   </li>

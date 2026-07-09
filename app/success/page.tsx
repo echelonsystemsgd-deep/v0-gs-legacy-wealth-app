@@ -22,7 +22,7 @@ const TRUST_ITEMS = [
 
 export default function SuccessPage() {
   const [calendlyBaseUrl, setCalendlyBaseUrl] = useState(
-    process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/gslegacywealth/30min"
+    process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/mercianwealth/30min"
   )
   const [loading, setLoading] = useState(true)
   const [calendlyHeight, setCalendlyHeight] = useState("650px")
@@ -108,7 +108,7 @@ export default function SuccessPage() {
               <BrandLogo fill className="object-contain" priority />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent-gold hidden sm:block">
-              GS Legacy Wealth
+              Mercian Wealth
             </span>
           </Link>
 
@@ -145,7 +145,7 @@ export default function SuccessPage() {
 
             <div className="space-y-5 text-sm text-muted-foreground leading-relaxed border-y border-white/5 py-8">
               <p>
-                GS Legacy Wealth operates under strict bandwidth calibrations. We only allocate active developer channels where a minimum of <strong>3x operational leverage</strong> is guaranteed.
+                Mercian Wealth operates under strict bandwidth calibrations. We only allocate active developer channels where a minimum of <strong>3x operational leverage</strong> is guaranteed.
               </p>
               <p>
                 Your diagnostic data has been securely logged. An initial roadmap calibration report has been staged for transmission to your corporate address:{" "}
@@ -216,7 +216,7 @@ export default function SuccessPage() {
                   <iframe
                     src={buildCalendlyUrl()}
                     width="100%"
-                    title="Schedule alignment session — GS Legacy Wealth"
+                    title="Schedule alignment session — Mercian Wealth"
                     loading="lazy"
                     style={{ height: calendlyHeight, minWidth: "320px", border: "none" }}
                   />
@@ -229,7 +229,7 @@ export default function SuccessPage() {
 
       {/* Footer */}
       <footer className="border-t border-accent-gold/10 py-6 text-center text-xs text-muted-foreground relative z-10 glass">
-        <p>© {new Date().getFullYear()} GS Legacy Wealth. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Mercian Wealth. All rights reserved.</p>
       </footer>
     </main>
   )

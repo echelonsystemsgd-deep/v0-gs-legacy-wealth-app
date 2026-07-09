@@ -285,7 +285,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText("gslegacywealth@gmail.com")
+      await navigator.clipboard.writeText("info@mercianwealth.com")
       setCopied(true)
       setTimeout(() => setCopied(false), 3000)
     } catch (err) {
@@ -404,7 +404,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                     Concierge Desk Email
                   </span>
                   <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-accent-gold transition-colors">
-                    gslegacywealth@gmail.com
+                    info@mercianwealth.com
                   </span>
                   <span className="text-[10px] text-muted-foreground mt-1 underline decoration-primary/30 group-hover:decoration-primary transition-all">
                     {copied ? "✓ Copied to clipboard!" : "Click to copy email"}
@@ -412,7 +412,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
                 </button>
 
                 <a
-                  href="mailto:gslegacywealth@gmail.com?subject=Inquiry%20regarding%20Portfolio"
+                  href="mailto:info@mercianwealth.com?subject=Inquiry%20regarding%20Portfolio"
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/95 transition-all cursor-pointer"
                 >
                   <span>Open Mail Client</span>

@@ -8,14 +8,14 @@ export interface SocialLink {
 export const socialLinks: SocialLink[] = [
   {
     name: "Instagram",
-    href: "https://instagram.com/gslegacywealth",
+    href: "https://instagram.com/mercianwealth",
     iconName: "Instagram",
-    ariaLabel: "Follow GS Legacy Wealth on Instagram",
+    ariaLabel: "Follow Mercian Wealth on Instagram",
   },
   {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/gs-legacy-wealth",
+    href: "https://www.linkedin.com/company/mercian-wealth",
     iconName: "Linkedin",
-    ariaLabel: "Connect with GS Legacy Wealth on LinkedIn",
+    ariaLabel: "Connect with Mercian Wealth on LinkedIn",
   },
 ]

@@ -1,6 +1,6 @@
-# GS Legacy Wealth Rebrand Implementation Plan
+# Mercian Wealth Rebrand Implementation Plan
 
-This implementation plan focuses on rebranding the GS Legacy Wealth website to transition from the current flashy "gold-on-black" look to a restrained, authoritative luxury consultancy identity (Bloomberg, McKinsey, Stripe). We will systematically update fonts, colors, spacing, and layouts across all pages and components.
+This implementation plan focuses on rebranding the Mercian Wealth website to transition from the current flashy "gold-on-black" look to a restrained, authoritative luxury consultancy identity (Bloomberg, McKinsey, Stripe). We will systematically update fonts, colors, spacing, and layouts across all pages and components.
 
 ## User Review Required
 

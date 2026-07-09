@@ -216,7 +216,7 @@ export function Navbar() {
             <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-14 w-14"}`}>
               <BrandLogo
                 variant="watermark"
-                alt="GS Legacy Wealth Crest"
+                alt="Mercian Wealth Crest"
                 fill
                 className="object-contain"
                 priority

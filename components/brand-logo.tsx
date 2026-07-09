@@ -16,7 +16,7 @@ type BrandLogoProps = Omit<ImageProps, "src" | "alt"> & {
 
 export function BrandLogo({
   variant = "logo",
-  alt = "GS Legacy Wealth",
+  alt = "Mercian Wealth",
   ...props
 }: BrandLogoProps) {
   const { getSection } = useWebsiteContent()

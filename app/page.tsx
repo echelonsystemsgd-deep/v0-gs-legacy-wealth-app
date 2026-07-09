@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { Bottleneck } from "@/components/bottleneck"
 import { CommodityTrap } from "@/components/commodity-trap"
-import { WhyGSLegacy } from "@/components/why-gs-legacy"
+import { WhyMercianWealth } from "@/components/why-mercian-wealth"
 import { Testimonials } from "@/components/testimonials"
 import { Pricing } from "@/components/pricing"
 import { FAQHome } from "@/components/faq-home"
@@ -24,43 +24,43 @@ export default async function Home() {
             "@graph": [
               {
                 "@type": "Organization",
-                "@id": "https://gslegacywealth.com/#organization",
-                "name": "GS Legacy Wealth AI",
-                "url": "https://gslegacywealth.com",
+                "@id": "https://mercianwealth.com/#organization",
+                "name": "Mercian Wealth",
+                "url": "https://mercianwealth.com",
                 "logo": {
                   "@type": "ImageObject",
-                  "@id": "https://gslegacywealth.com/#logo",
-                  "url": "https://gslegacywealth.com/GS_Legacy_Wealth-removebg-preview.png",
-                  "caption": "GS Legacy Wealth AI"
+                  "@id": "https://mercianwealth.com/#logo",
+                  "url": "https://mercianwealth.com/logo.png",
+                  "caption": "Mercian Wealth"
                 },
                 "image": {
-                  "@id": "https://gslegacywealth.com/#logo"
+                  "@id": "https://mercianwealth.com/#logo"
                 },
                 "sameAs": [
-                  "https://instagram.com/gslegacywealth",
-                  "https://www.linkedin.com/in/gs-legacy-wealth"
+                  "https://instagram.com/mercianwealth",
+                  "https://www.linkedin.com/company/mercian-wealth"
                 ]
               },
               {
                 "@type": "WebSite",
-                "@id": "https://gslegacywealth.com/#website",
-                "url": "https://gslegacywealth.com",
-                "name": "GS Legacy Wealth AI",
+                "@id": "https://mercianwealth.com/#website",
+                "url": "https://mercianwealth.com",
+                "name": "Mercian Wealth",
                 "description": "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders.",
                 "publisher": {
-                  "@id": "https://gslegacywealth.com/#organization"
+                  "@id": "https://mercianwealth.com/#organization"
                 }
               },
               {
                 "@type": "WebPage",
-                "@id": "https://gslegacywealth.com/#webpage",
-                "url": "https://gslegacywealth.com",
-                "name": "GS Legacy Wealth AI | Luxury AI-Powered Websites",
+                "@id": "https://mercianwealth.com/#webpage",
+                "url": "https://mercianwealth.com",
+                "name": "Mercian Wealth | Luxury AI-Powered Websites",
                 "isPartOf": {
-                  "@id": "https://gslegacywealth.com/#website"
+                  "@id": "https://mercianwealth.com/#website"
                 },
                 "about": {
-                  "@id": "https://gslegacywealth.com/#organization"
+                  "@id": "https://mercianwealth.com/#organization"
                 },
                 "description": "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
               }
@@ -72,7 +72,7 @@ export default async function Home() {
       <Hero />
       <Bottleneck />
       <CommodityTrap />
-      <WhyGSLegacy />
+      <WhyMercianWealth />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
       <FAQHome />

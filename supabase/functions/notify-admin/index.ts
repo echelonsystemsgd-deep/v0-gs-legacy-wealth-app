@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
           color: 13938487, // Gold #D4AF37
           fields: [
             { name: 'Content', value: record.content || '—', inline: false },
-            { name: 'Dashboard Link', value: 'https://gslegacywealth.com/admin/messages', inline: false }
+            { name: 'Dashboard Link', value: 'https://mercianwealth.com/admin/messages', inline: false }
           ],
           timestamp: new Date().toISOString()
         }

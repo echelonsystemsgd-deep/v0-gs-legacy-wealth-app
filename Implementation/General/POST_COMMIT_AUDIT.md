@@ -418,3 +418,25 @@ Checked pages: `/` `/services` `/process` `/portfolio` `/pricing` `/testimonials
   3. Modified `components/sticky-cta-button.tsx` to update its IntersectionObserver target dynamically on `pathname` changes and wrapped binding in a 150ms timeout, ensuring it hides before hitting footer text.
 
 
+
+---
+
+## 10. SYSTEMATIC BRAND AUDIT & MERCIAN WEALTH REBRAND (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Objective:** Complete, systematic rebrand of all codebase visual wordmarks, static assets, schema blocks, and Supabase database records from **GS Legacy Wealth** to **Mercian Wealth**.
+- **Execution Status:** **PASS**
+
+### Rebrand Actions & Remediation Log
+
+| Stage / Component | Status | Action Details | Files Modified / Updated |
+| :--- | :---: | :--- | :--- |
+| **Stage 1: Centralized Copy** | **PASS** | Rebranded all references, slogans, and tagline definitions from GS Legacy Wealth to Mercian Wealth. | [lib/site-copy.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/lib/site-copy.ts) |
+| **Stage 2: SEO & Meta Schema** | **PASS** | Rebranded metadata titles, descriptions, Open Graph schema URLs, Twitter handles (`@mercianwealth`), and JSON-LD schema graphs across all page files. | [app/layout.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/layout.tsx), [app/page.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/page.tsx), [app/privacy/page.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/privacy/page.tsx), [app/terms/page.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/terms/page.tsx), [lib/social-links.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/lib/social-links.ts) |
+| **Stage 3: Component Wordmarks** | **PASS** | Renamed `components/why-gs-legacy.tsx` to `components/why-mercian-wealth.tsx`. Updated all page layouts, header/footer elements, and client portals to use "Mercian Wealth". | [app/page.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/page.tsx), [components/why-mercian-wealth.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/why-mercian-wealth.tsx), and 20+ visual components |
+| **Stage 4: Visual Theme Colors** | **PASS** | Updated core CSS custom variables to represent deep purple (`#5F22B5`), Sterling Silver (`#A3A8B4`), and Antique Gold (`#C5A059`) tokens. | [app/globals.css](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/app/globals.css) |
+| **Stage 5: Logo Placeholders** | **PASS** | Changed logo and watermark reference targets to clean paths (`/logo.png` and `/logo-watermark.png`) to support drop-in assets later. | [lib/brand-assets.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/lib/brand-assets.ts) |
+| **Stage 6: Supabase DB** | **PASS** | Rebranded admin profile address, booking session category naming, and testing activity logs via Supabase SQL. Kept login email intact to prevent session breaks. | Executed via Supabase SQL commands |
+| **Stage 7: Vercel Env Vars** | **PASS** | Flagged active environment variables in Vercel that reference old domain links (e.g. `NEXT_PUBLIC_CALENDLY_URL` and Sentry scopes). | Reported to User |
+
+

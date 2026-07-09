@@ -352,7 +352,7 @@ export function InspectorPanel() {
                 <div className="bg-[#050505] p-2.5 rounded-lg border border-gold/5 space-y-2 text-[10px]">
                   <p className="text-foreground font-semibold">Operations Desk</p>
                   <p className="text-muted-foreground">For emergencies or architectural escalations:</p>
-                  <p className="text-gold font-mono">ops@gslegacywealth.com</p>
+                  <p className="text-gold font-mono">ops@mercianwealth.com</p>
                 </div>
               </div>
             </div>

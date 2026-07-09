@@ -40,34 +40,34 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : 'https://gslegacywealth.com'
+      : 'https://mercianwealth.com'
   ),
   title: {
     default: SITE_COPY.metadata.layout.defaultTitle,
     template: SITE_COPY.metadata.layout.titleTemplate
   },
   description: SITE_COPY.metadata.layout.description,
-  applicationName: 'GS Legacy Wealth',
+  applicationName: 'Mercian Wealth',
   keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
-  authors: [{ name: 'GS Legacy Wealth' }],
-  creator: 'GS Legacy Wealth AI',
-  publisher: 'GS Legacy Wealth AI',
+  authors: [{ name: 'Mercian Wealth' }],
+  creator: 'Mercian Wealth',
+  publisher: 'Mercian Wealth',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+    title: 'Mercian Wealth | Luxury AI-Powered Websites',
     description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
-    url: 'https://gslegacywealth.com',
-    siteName: 'GS Legacy Wealth AI',
+    url: 'https://mercianwealth.com',
+    siteName: 'Mercian Wealth',
     images: [
       {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'GS Legacy Wealth AI Website Preview',
+        alt: 'Mercian Wealth Website Preview',
       },
     ],
     locale: 'en_US',
@@ -75,10 +75,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
+    title: 'Mercian Wealth | Luxury AI-Powered Websites',
     description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
     images: ['/twitter-image.png'],
-    creator: '@gslegacywealth',
+    creator: '@mercianwealth',
   },
   robots: {
     index: true,

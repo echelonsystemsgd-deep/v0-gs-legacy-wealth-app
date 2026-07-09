@@ -6,16 +6,16 @@
 :root {
   /* Design Tokens - Sovereign Tech Lab */
   --color-bg-primary: #0A0A0A;      /* main page background */
-  --color-bg-secondary: #1A0A2E;    /* section/card backgrounds */
-  --color-bg-tertiary: #130D24;     /* card backgrounds */
-  --color-accent-purple: #8B5CF6;   /* Royal Amethyst glowing accent */
-  --color-accent-purple-glow: #2D0A5E; /* subtle background purple glow */
-  --color-accent-gold: #C9A227;     /* primary gold accent */
-  --color-accent-gold-muted: rgba(201, 162, 39, 0.40); /* secondary gold border accent */
+  --color-bg-secondary: #0D0716;    /* section/card backgrounds */
+  --color-bg-tertiary: #130B24;     /* card backgrounds */
+  --color-accent-purple: #5F22B5;   /* Mayfair Royal Purple */
+  --color-accent-purple-glow: #1D063A; /* subtle background purple glow */
+  --color-accent-gold: #C5A059;     /* Antique Polished Gold */
+  --color-accent-gold-muted: rgba(197, 160, 89, 0.40); /* secondary gold border accent */
   --color-text-primary: #F0EDE6;    /* headlines, primary text */
-  --color-text-secondary: #9A9A9A;  /* muted/supporting text */
-  --color-text-gold: #d4b86a;       /* highlighted gold text */
-  --color-border: rgba(139, 92, 246, 0.20); /* slate-purple borders for high-tech look */
+  --color-text-secondary: #A3A8B4;  /* Sterling Silver */
+  --color-text-gold: #E2C792;       /* highlighted gold text */
+  --color-border: rgba(95, 34, 181, 0.18); /* slate-purple borders */
 
   /* Luxury Dark Theme - Always dark, mapped to our new brand variables */
   --background: var(--color-bg-primary);
@@ -103,8 +103,8 @@
 
   /* Helper Gold Tokens */
   --color-gold: var(--color-accent-gold);
-  --color-gold-light: #E5C453;
-  --color-gold-dark: #A27E1C;
+  --color-gold-light: #D9BA7B;
+  --color-gold-dark: #99783D;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

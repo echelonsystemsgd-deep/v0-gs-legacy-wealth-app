@@ -113,7 +113,7 @@ export function SpeedGapVisualizer() {
             <div className="flex justify-between items-center text-xs">
               <span className="font-bold text-accent-gold uppercase tracking-wider flex items-center gap-1.5">
                 <Zap size={12} className="animate-bounce" />
-                GS Legacy Autonomic Engine
+                Mercian Wealth Autonomic Engine
               </span>
               <span className="text-xxs text-accent-gold/80 flex items-center gap-1 font-bold">
                 <Clock size={10} />

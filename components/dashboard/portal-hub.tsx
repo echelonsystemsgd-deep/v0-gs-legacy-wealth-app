@@ -88,13 +88,13 @@ export function PortalHub() {
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gold/25 transition-all duration-300 group-hover:border-gold group-hover:rounded-xl">
             <Image
               src="/GS_Legacy_Wealth-removebg-preview.png"
-              alt="GS Legacy"
+              alt="Mercian Wealth"
               fill
               className="object-contain p-1.5"
             />
           </div>
           <span className="absolute left-20 bg-[#0D0D0D] text-foreground text-xs font-semibold px-3 py-1.5 rounded-md border border-gold/20 shadow-xl opacity-0 translate-x-[-10px] pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap">
-            GS Legacy Wealth
+            Mercian Wealth
           </span>
         </Link>
 

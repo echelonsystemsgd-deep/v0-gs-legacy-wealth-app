@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     // Send email via Resend
     // Resend allows sending from "onboarding@resend.dev" for free testing.
     // Domain authenticated accounts should override using SENDER_EMAIL secret.
-    const senderEmail = Deno.env.get('SENDER_EMAIL') || 'GS Legacy Wealth <onboarding@resend.dev>'
+    const senderEmail = Deno.env.get('SENDER_EMAIL') || 'Mercian Wealth <onboarding@resend.dev>'
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">GS Legacy Wealth</div>
+            <div class="logo">Mercian Wealth</div>
           </div>
           <h1>${title}</h1>
           <p>You have a new update in your client portal workspace:</p>
@@ -141,13 +141,13 @@ Deno.serve(async (req) => {
             ${description || '—'}
           </div>
           <div class="btn-container">
-            <a href="https://gslegacywealth.com/client/messages" class="btn">View Messages Hub</a>
+             <a href="https://mercianwealth.com/client/messages" class="btn">View Messages Hub</a>
           </div>
           <p style="font-size: 12px; color: #525252; text-align: center;">
             This is an automated notification. Please do not reply directly to this email.
           </p>
           <div class="footer">
-            &copy; 2026 GS Legacy Wealth. All rights reserved.
+            &copy; 2026 Mercian Wealth. All rights reserved.
           </div>
         </div>
       </body>

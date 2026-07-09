@@ -426,7 +426,7 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
 
 Reason: This extension has been applied due to ${reasonText}.
 
-GS Legacy Wealth remains fully committed to delivering a system that exceeds your expectations and is continuing to operate at maximum capacity.
+Mercian Wealth remains fully committed to delivering a system that exceeds your expectations and is continuing to operate at maximum capacity.
 
 Important Notice: As stipulated in your service agreement, consistent delays in the provision of required materials, approvals, or client responses may result in contractual delay surcharges being applied to your account. Our team is available to ensure this does not apply to your engagement — please action any outstanding requests without delay.`
 

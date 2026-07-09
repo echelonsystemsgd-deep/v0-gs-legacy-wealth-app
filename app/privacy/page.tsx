@@ -19,7 +19,7 @@ export default function PrivacyPage() {
             "@type": "WebPage",
             "name": "Privacy Policy",
             "description": "Our privacy policy outlines how we handle and protect your personal information.",
-            "url": "https://gslegacywealth.com/privacy"
+            "url": "https://mercianwealth.com/privacy"
           })
         }}
       />

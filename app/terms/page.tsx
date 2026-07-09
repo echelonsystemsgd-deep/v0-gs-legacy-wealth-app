@@ -19,7 +19,7 @@ export default function TermsPage() {
             "@type": "WebPage",
             "name": "Terms of Service",
             "description": "Read our Terms of Service to understand your rights and obligations when using our solutions.",
-            "url": "https://gslegacywealth.com/terms"
+            "url": "https://mercianwealth.com/terms"
           })
         }}
       />
@@ -91,7 +91,7 @@ export default function TermsPage() {
             <div className="space-y-3">
               <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">2. Scope of Services</h2>
               <p className="text-text-primary opacity-80 leading-relaxed text-sm sm:text-base">
-                GS Legacy Wealth AI provides custom high-performance website build services, CRM automation pipelines, and digital strategy consulting. Specific deliverables, build phases, and support scopes are <span className="text-white font-semibold">governed by separate signed client agreement contracts</span> customized for each project.
+                Mercian Wealth provides custom high-performance website build services, CRM automation pipelines, and digital strategy consulting. Specific deliverables, build phases, and support scopes are <span className="text-white font-semibold">governed by separate signed client agreement contracts</span> customized for each project.
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function TermsPage() {
             <div className="space-y-3">
               <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">3. Intellectual Property</h2>
               <p className="text-text-primary opacity-80 leading-relaxed text-sm sm:text-base">
-                All branding designs, layout codes, content, and proprietary systems created by GS Legacy Wealth AI <span className="text-white font-semibold">remain our intellectual property until fully paid for and officially transferred to the client</span> as specified in our client agreements. Upon completion, you receive full license and ownership.
+                All branding designs, layout codes, content, and proprietary systems created by Mercian Wealth <span className="text-white font-semibold">remain our intellectual property until fully paid for and officially transferred to the client</span> as specified in our client agreements. Upon completion, you receive full license and ownership.
               </p>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function TermsPage() {
             <div className="space-y-3">
               <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">4. Limitation of Liability</h2>
               <p className="text-text-primary opacity-80 leading-relaxed text-sm sm:text-base">
-                <span className="text-white font-semibold">In no event shall GS Legacy Wealth AI be liable for any indirect, incidental, special, consequential, or punitive damages</span> (including loss of profits, data, or business opportunities) arising out of or related to your use of our platforms, automation strategies, or consulting assets.
+                <span className="text-white font-semibold">In no event shall Mercian Wealth be liable for any indirect, incidental, special, consequential, or punitive damages</span> (including loss of profits, data, or business opportunities) arising out of or related to your use of our platforms, automation strategies, or consulting assets.
               </p>
             </div>
           </div>

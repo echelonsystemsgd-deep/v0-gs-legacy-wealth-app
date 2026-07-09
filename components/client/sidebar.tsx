@@ -158,13 +158,13 @@ export function ClientSidebar() {
             <div className="relative h-9 w-9 shrink-0">
               <Image
                 src="/GS_Legacy_Wealth-removebg-preview.png"
-                alt="GS Legacy Wealth"
+                alt="Mercian Wealth"
                 fill
                 className="object-contain"
               />
             </div>
             <div>
-              <p className="font-serif text-sm font-bold text-foreground leading-tight">GS Legacy</p>
+              <p className="font-serif text-sm font-bold text-foreground leading-tight">Mercian</p>
               <p className="text-xxs text-gold/70 font-semibold uppercase tracking-widest font-sans">Client Portal</p>
             </div>
           </div>

@@ -111,10 +111,10 @@ export default function DiagnosticsPage() {
         <div className="flex flex-col items-center gap-2 mb-8">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="relative h-10 w-10">
-              <BrandLogo variant="watermark" alt="GS Legacy Wealth" fill className="object-contain" />
+              <BrandLogo variant="watermark" alt="Mercian Wealth" fill className="object-contain" />
             </div>
             <span className="font-serif text-lg font-bold tracking-tight text-white">
-              GS LEGACY WEALTH
+              MERCIAN WEALTH
             </span>
           </Link>
           <span className="text-[9px] font-mono font-bold tracking-[0.3em] text-accent-gold uppercase">

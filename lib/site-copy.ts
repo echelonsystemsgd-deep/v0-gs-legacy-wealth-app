@@ -1,7 +1,7 @@
 /**
  * lib/site-copy.ts
  *
- * Centralized Copy Registry for gslegacywealth.com
+ * Centralized Copy Registry for mercianwealth.com
  *
  * Contains all copywriting for the homepage and secondary pages.
  * By updating text here, the changes propagate site-wide.
@@ -16,47 +16,47 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "GS Legacy Wealth AI | Luxury AI-Powered Websites",
-      titleTemplate: "%s | GS Legacy Wealth AI",
+      defaultTitle: "Mercian Wealth | Luxury AI-Powered Websites",
+      titleTemplate: "%s | Mercian Wealth",
       description: "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
     },
     home: {
-      title: "GS Legacy Wealth | Bespoke Digital Infrastructure & Autonomic Systems",
+      title: "Mercian Wealth | Bespoke Digital Infrastructure & Autonomic Systems",
       description: "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.",
     },
     services: {
-      title: "Our Services | GS Legacy Wealth",
+      title: "Our Services | Mercian Wealth",
       description: "Forensic audits, bespoke authority platforms, and automated lead conduits. View our clinical execution protocol.",
     },
     process: {
-      title: "Our Process | GS Legacy Wealth",
+      title: "Our Process | Mercian Wealth",
       description: "Forensic audits, bespoke authority platforms, and automated lead conduits. View our clinical execution protocol.",
     },
     portfolio: {
-      title: "Deployed System Registry | GS Legacy Wealth",
+      title: "Deployed System Registry | Mercian Wealth",
       description: "A registry of high-yield digital assets and automated operations engineered to command market authority.",
     },
     pricing: {
-      title: "Capital Allocations | GS Legacy Wealth",
+      title: "Capital Allocations | Mercian Wealth",
       description: "Transparent capital requirements for high-yield digital assets. Choose Authority Suite, Operations Machine, or Revenue Engine alignment.",
     },
     testimonials: {
-      title: "Client Testimonials | GS Legacy Wealth",
+      title: "Client Testimonials | Mercian Wealth",
       description: "Real results from ambitious businesses we have partnered with. Hear directly from our elite clientele about the impact of our premium digital solutions.",
     },
     contact: {
-      title: "Concierge Assessment | GS Legacy Wealth",
-      description: "Connect with GS Legacy Wealth. Let's discuss your brand, AI automation requirements, and premium web systems.",
+      title: "Concierge Assessment | Mercian Wealth",
+      description: "Connect with Mercian Wealth. Let's discuss your brand, AI automation requirements, and premium web systems.",
     },
     book: {
-      title: "Request Alignment Session | GS Legacy Wealth",
+      title: "Request Alignment Session | Mercian Wealth",
       description: "Complete the qualification criteria to request a clinical evaluation session. Strictly limited allocations — vetted partnerships only.",
     },
   },
 
   // Navbar Component
   navbar: {
-    logo: "GS Legacy Wealth",
+    logo: "Mercian Wealth",
     links: [
       { label: "Services", href: "/services" },
       { label: "Portfolio", href: "/portfolio" },
@@ -120,11 +120,11 @@ export const SITE_COPY = {
     commodityTrap: {
       eyebrow: "The Commodity Trap",
       headline: "The Hidden Cost of the \"Free\" Web Builder Illusion.",
-      description: "The high-ticket B2B and agency markets are saturated with platforms promising free websites, cheap templates, and easy setups. Operators opt in, only to discover quiet compounding costs: high-value client leads dropping off due to 10-second page speeds, outdated database listings, and siloed software that requires constant manual copying. They sell you basic tools. They do not sell you outcomes. They disappear after the transaction. GS Legacy Wealth does not sell tools. We build high-performance digital estates and take full ownership of their operational output.",
+      description: "The high-ticket B2B and agency markets are saturated with platforms promising free websites, cheap templates, and easy setups. Operators opt in, only to discover quiet compounding costs: high-value client leads dropping off due to 10-second page speeds, outdated database listings, and siloed software that requires constant manual copying. They sell you basic tools. They do not sell you outcomes. They disappear after the transaction. Mercian Wealth does not sell tools. We build high-performance digital estates and take full ownership of their operational output.",
     },
 
-    // 4. GS Legacy Difference (Broadened to all High-Ticket/High-Margin Operators)
-    whyGsLegacy: {
+    // 4. Mercian Wealth Difference (Broadened to all High-Ticket/High-Margin Operators)
+    whyMercianWealth: {
       headline: "Engineered for Leverage. Built for Prestige.",
       description: "We focus on premium, custom digital assets tailored specifically for businesses ready to dominate their space. By combining luxury visual storytelling with AI automation, we ensure your online presence acts as a 24/7 revenue-generating asset rather than a static brochure.",
       differentiators: [
@@ -144,7 +144,7 @@ export const SITE_COPY = {
           "Ongoing hourly overhead without performance guarantees.",
         ],
       },
-      gsLegacy: {
+      mercianWealth: {
         title: "Autonomic Systems Lab",
         items: [
           "Bespoke authority platforms built from the ground up.",
@@ -207,7 +207,7 @@ export const SITE_COPY = {
           name: "James Carter",
           role: "Bespoke Portfolio Director",
           badge: "97% FRICTION REDUCTION",
-          content: "GS Legacy Wealth completely transformed our web operations. What used to take 3 days of manual follow-up now happens in under 45 seconds. The system reclaimed its implementation cost within the first cohort launch.",
+          content: "Mercian Wealth completely transformed our web operations. What used to take 3 days of manual follow-up now happens in under 45 seconds. The system reclaimed its implementation cost within the first cohort launch.",
         },
         {
           name: "Sophie Bennett",
@@ -392,7 +392,7 @@ export const SITE_COPY = {
     headerSubtitle: "Transparent setup requirements for custom system assets. Choose the level of operational leverage that matches your growth path.",
     performanceSLATitle: "System Performance SLA",
     performanceSLASubtitle: "Uptime, Speed & Telemetry Guarantees",
-    performanceSLAParagraph: "Every GS Legacy custom deployment operates under a strict performance SLA. We guarantee a Mobile PageSpeed score of 90+ and immediate database replication failovers. Our engineering team maintains active telemetry dashboards to verify system throughput 24/7/365.",
+    performanceSLAParagraph: "Every Mercian Wealth custom deployment operates under a strict performance SLA. We guarantee a Mobile PageSpeed score of 90+ and immediate database replication failovers. Our engineering team maintains active telemetry dashboards to verify system throughput 24/7/365.",
     roiCalculator: {
       eyebrow: "Deficit Diagnostics",
       title: "Quantify Your System Deficit",

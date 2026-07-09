@@ -35,7 +35,7 @@ export function SecureVault() {
 
   const handleDownload = (file: ProjectAsset) => {
     // If it's a mock external link, generate a local Blob download to prevent 404
-    if (file.file_url.startsWith('https://gslegacywealth.com') || file.file_url.includes('mock') || file.file_url.includes('google.com') || file.file_url.includes('drive.google.com')) {
+    if (file.file_url.startsWith('https://mercianwealth.com') || file.file_url.includes('mock') || file.file_url.includes('google.com') || file.file_url.includes('drive.google.com')) {
       let content = `Sovereign Vault Cryptographic Container\n`
       content += `======================================\n`
       content += `File Name: ${file.file_name}\n`
@@ -114,7 +114,7 @@ export function SecureVault() {
     try {
       // Calculate bytes from MB
       const sizeBytes = Math.round(parseFloat(fileSizeMB) * 1024 * 1024) || 2048576
-      const mockUrl = fileUrl.trim() || `https://gslegacywealth.com/assets/${fileName.toLowerCase().replace(/ /g, '_')}`
+      const mockUrl = fileUrl.trim() || `https://mercianwealth.com/assets/${fileName.toLowerCase().replace(/ /g, '_')}`
       
       let fileType = 'application/pdf'
       if (fileName.endsWith('.zip')) fileType = 'application/zip'

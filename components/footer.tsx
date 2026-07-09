@@ -10,11 +10,11 @@ export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
     tagline: "Building Wealth. Creating Legacy. Giving Back.",
-    email: "gslegacywealth@gmail.com",
+    email: "info@mercianwealth.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929",
-    instagramLink: "https://instagram.com/gslegacywealth",
-    linkedinLink: "https://www.linkedin.com/in/gs-legacy-wealth",
+    instagramLink: "https://instagram.com/mercianwealth",
+    linkedinLink: "https://www.linkedin.com/company/mercian-wealth",
     ctaDescription: "Request an alignment session. Strictly limited allocations each month.",
     ctaButtonText: "Initiate Clinical Audit"
   })
@@ -41,7 +41,7 @@ export function Footer() {
             <div className="relative h-12 w-12">
               <Image 
                 src="/GS_Legacy_Wealth_Watermark-removebg-preview.png" 
-                alt="GS Legacy Wealth Crest" 
+                alt="Mercian Wealth Crest" 
                 fill
                 className="object-contain"
               />
@@ -155,7 +155,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-65">
           <p>
-            © {new Date().getFullYear()} GS Legacy Wealth. All Rights Reserved.
+            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
           </p>
           <div className="flex justify-center gap-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-accent-gold transition-colors">

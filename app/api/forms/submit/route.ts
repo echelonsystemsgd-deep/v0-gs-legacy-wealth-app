@@ -8,8 +8,8 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
-  const prodUrl = 'https://gslegacywealth.com'
-  return `${prodUrl}/GS_Legacy_Wealth_Watermark-removebg-preview.png`
+  const prodUrl = 'https://mercianwealth.com'
+  return `${prodUrl}/logo-watermark.png`
 }
 
 export async function POST(request: Request) {
@@ -144,7 +144,7 @@ export async function POST(request: Request) {
     if (!resend) {
       console.warn('RESEND_API_KEY is not set. Skipping email alerts.')
     } else {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'GS Legacy Wealth <onboarding@resend.dev>'
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <onboarding@resend.dev>'
       const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC'
       const cleanSource = source.replace('_', ' ').toUpperCase()
 
@@ -152,7 +152,7 @@ export async function POST(request: Request) {
       const ownerEmailHtml = `
         <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #C9A227; font-family: serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1px;">GS LEGACY WEALTH</h2>
+            <h2 style="color: #C5A059; font-family: serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1px;">MERCIAN WEALTH</h2>
             <p style="color: #8E8E93; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0;">New Inbound Form Submission</p>
           </div>
           
@@ -205,36 +205,36 @@ export async function POST(request: Request) {
 
       // Email B: Confirmation to the Customer (Lead)
       let customerGreeting = name ? `Dear ${name.split(' ')[0]}` : 'Hello'
-      let customerSubject = "Inquiry Received — GS Legacy Wealth"
+      let customerSubject = "Inquiry Received — Mercian Wealth"
       let customerBodyHeader = "We have received your details."
       let customerBodyText = "A member of our digital strategy team is conducting an initial assessment of your brand and will contact you directly within 12 hours."
       let actionButtonText = "Book Strategy Call"
-      let actionButtonUrl = "https://gslegacywealth.com/book"
+      let actionButtonUrl = "https://mercianwealth.com/book"
 
       if (source === 'booking_form') {
-        customerSubject = "Details Confirmed — GS Legacy Wealth"
+        customerSubject = "Details Confirmed — Mercian Wealth"
         customerBodyHeader = "Your qualification details are secured."
         customerBodyText = "Thank you for completing the strategy call qualifier. If you did not finish booking your session in the calendar, please click the button below to reserve a slot."
         actionButtonText = "Choose Call Slot"
       } else if (source === 'portfolio_waitlist') {
-        customerSubject = "Waitlist Registered — GS Legacy Wealth"
+        customerSubject = "Waitlist Registered — Mercian Wealth"
         customerBodyHeader = "You are in the queue."
         customerBodyText = "We have recorded your email request for early access. You will receive an immediate notification as soon as the platform goes live."
         actionButtonText = "Explore Our Services"
-        actionButtonUrl = "https://gslegacywealth.com/portfolio"
+        actionButtonUrl = "https://mercianwealth.com/portfolio"
       } else if (source === 'fast_track_audit') {
-        customerSubject = "Fast-Track Audit Request Secured — GS Legacy Wealth"
+        customerSubject = "Fast-Track Audit Request Secured — Mercian Wealth"
         customerBodyHeader = "Your Loom audit request is scheduled."
         customerBodyText = `Thank you for requesting a 5-minute speed, SEO, and operational leverage review of your site: ${website || 'your brand'}. An engineering lead will record and transmit your video audit link within 12 hours.`
         actionButtonText = "Book Full Systems Consultation"
-        actionButtonUrl = "https://gslegacywealth.com/book"
+        actionButtonUrl = "https://mercianwealth.com/book"
       }
 
       const customerEmailHtml = `
         <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
           <div style="text-align: center; margin-bottom: 35px;">
-            <img src="${getLogoUrl()}" alt="GS Legacy Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block;" />
-            <h2 style="color: #C9A227; font-family: serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1px;">GS LEGACY WEALTH</h2>
+            <img src="${getLogoUrl()}" alt="Mercian Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block;" />
+            <h2 style="color: #C5A059; font-family: serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1px;">MERCIAN WEALTH</h2>
             <p style="color: #8E8E93; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin: 0;">Digital Systems & AI Engineering</p>
           </div>
 
@@ -249,7 +249,7 @@ export async function POST(request: Request) {
           </div>
 
           <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #8E8E93;">
-            <p style="margin: 0 0 8px 0; font-weight: bold; color: #C9A227;">GS LEGACY WEALTH</p>
+            <p style="margin: 0 0 8px 0; font-weight: bold; color: #C5A059;">MERCIAN WEALTH</p>
             <p style="margin: 0 0 15px 0; font-style: italic;">Building Wealth. Creating Legacy. Giving Back.</p>
             <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.4);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
           </div>
@@ -261,7 +261,7 @@ export async function POST(request: Request) {
         // 1. Notify Owner
         await resend.emails.send({
           from: fromEmail,
-          to: 'gslegacywealth@gmail.com',
+          to: 'info@mercianwealth.com',
           subject: `✨ [New Lead] ${name || email} via ${cleanSource}`,
           html: ownerEmailHtml,
         })

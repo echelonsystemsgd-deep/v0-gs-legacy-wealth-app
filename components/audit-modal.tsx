@@ -288,7 +288,7 @@ export const AuditModal: React.FC = () => {
                     className="mt-1 h-4 w-4 rounded border-white/10 bg-[#141414] text-[#d4af37] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#d4af37]"
                   />
                   <label htmlFor="gdpr_consent" className="text-[11px] text-gray-400 leading-relaxed cursor-pointer select-none">
-                    I agree to be contacted by GS Legacy Wealth regarding my audit request. I have read and agree to the{' '}
+                    I agree to be contacted by Mercian Wealth regarding my audit request. I have read and agree to the{' '}
                     <a href="/privacy" target="_blank" className="text-[#d4af37] hover:underline">
                       Privacy Policy
                     </a>

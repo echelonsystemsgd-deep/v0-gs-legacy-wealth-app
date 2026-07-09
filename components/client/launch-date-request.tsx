@@ -128,7 +128,7 @@ export function LaunchDateRequest({ projectId, currentDate }: LaunchDateRequestP
             </button>
           </div>
           <p className="text-[9px] text-muted-foreground/40 leading-relaxed">
-            Date adjustments are subject to team review and operational capacity. Approval is not guaranteed and final decisions rest with the GS Legacy Wealth team.
+            Date adjustments are subject to team review and operational capacity. Approval is not guaranteed and final decisions rest with the Mercian Wealth team.
           </p>
         </form>
       )}
