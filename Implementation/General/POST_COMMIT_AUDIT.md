@@ -501,3 +501,18 @@ When the final Mercian Wealth logo file is ready:
 | :--- | :---: | :--- | :--- |
 | **Personal Email Support** | **PASS** | Removed the personal domain validation check (PERSONAL_EMAIL_DOMAINS blocklist lookup) so users can submit forms using personal emails (e.g. @gmail.com, @yahoo.com, etc.) without errors. | [components/booking-flow.tsx] |
 | **Dynamic Completion Progress** | **PASS** | Refactored ProgressBar percentage tracking to calculate dynamically based on filled fields per stage. Stage 1 now begins at  % when completely blank, incrementing dynamically on keystroke/selection, and reaching 100% on Stage 3. | [components/booking-flow.tsx] |
+
+---
+
+## 14. VETTING PAGE (STAGE 2) GRID RE-LAYOUT & SEQUENTIAL BACK NAVIGATION (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** 4b072ab
+- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+
+### Actions & Remediation Log
+
+| Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Grid Re-layout (Stage 2)** | **PASS** | Refactored all Stage 2 radio selectors (Service Interested, Biggest Challenge, Monthly Revenue, Start Timeline) into 2-column grids. Cuts form height by over 50%, eliminating the vertical scrolling wall. | [components/booking-flow.tsx] |
+| **Sequential Back Nav** | **PASS** | Corrected back navigation links on Stage 3 (Schedule/Calendly page) to return the user to Stage 2 (Assessment) rather than the beginning of the form (Stage 1), preserving details. | [components/booking-flow.tsx] |
