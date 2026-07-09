@@ -40,7 +40,7 @@ export function Footer() {
           <div className="space-y-4 flex flex-col items-start">
             <div className="relative h-12 w-12">
               <Image 
-                src="/GS_Legacy_Wealth_Watermark-removebg-preview.png" 
+                src="/MercianWealthwatermark.jpeg" 
                 alt="Mercian Wealth Crest" 
                 fill
                 className="object-contain"

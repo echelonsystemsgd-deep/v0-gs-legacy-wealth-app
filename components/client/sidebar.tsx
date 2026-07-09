@@ -157,7 +157,7 @@ export function ClientSidebar() {
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 shrink-0">
               <Image
-                src="/GS_Legacy_Wealth-removebg-preview.png"
+                src="/MercianWealthlogo.jpeg"
                 alt="Mercian Wealth"
                 fill
                 className="object-contain"

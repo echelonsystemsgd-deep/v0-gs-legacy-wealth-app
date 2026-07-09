@@ -21,7 +21,7 @@ export default function Loading() {
           className="absolute w-40 h-40 sm:w-56 sm:h-56 mix-blend-screen"
         >
           <Image
-            src="/GS_Legacy_Wealth_Watermark-removebg-preview.png"
+            src="/MercianWealthwatermark.jpeg"
             alt=""
             fill
             className="object-contain"

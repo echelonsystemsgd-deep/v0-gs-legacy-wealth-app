@@ -9,7 +9,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
   const prodUrl = 'https://mercianwealth.com'
-  return `${prodUrl}/logo-watermark.png`
+  return `${prodUrl}/MercianWealthwatermark.jpeg`
 }
 
 export async function POST(request: Request) {

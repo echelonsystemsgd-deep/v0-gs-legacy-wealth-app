@@ -1,5 +1,5 @@
 # CALENDLY_INTEGRATION_PLAN.md
-## Calendly Embed Integration — GS Legacy Wealth
+## Calendly Embed Integration — Mercian Wealth
 
 > **Repo inspection date:** 2026-06-23
 > **Framework:** Next.js 16 (App Router), React 19, TypeScript

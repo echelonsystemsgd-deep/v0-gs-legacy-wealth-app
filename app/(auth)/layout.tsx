@@ -23,8 +23,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Link href="/" className="group">
             <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300">
               <Image
-                src="/GS_Legacy_Wealth-removebg-preview.png"
-                alt="GS Legacy Wealth"
+                src="/MercianWealthlogo.jpeg"
+                alt="Mercian Wealth"
                 fill
                 className="object-contain"
                 priority

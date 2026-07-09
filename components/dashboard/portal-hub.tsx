@@ -87,7 +87,7 @@ export function PortalHub() {
           <div className="absolute left-0 w-1 h-5 bg-gold rounded-r-md transition-all scale-0 group-hover:scale-100" />
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gold/25 transition-all duration-300 group-hover:border-gold group-hover:rounded-xl">
             <Image
-              src="/GS_Legacy_Wealth-removebg-preview.png"
+              src="/MercianWealthlogo.jpeg"
               alt="Mercian Wealth"
               fill
               className="object-contain p-1.5"

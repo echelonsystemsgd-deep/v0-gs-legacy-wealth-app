@@ -1,6 +1,6 @@
 # Implementation Plan: Robust Metadata & URL Previews
 
-This plan outlines the steps to implement a complete and robust metadata strategy for the GS Legacy Wealth AI website, including rich social media URL previews (Open Graph and Twitter Cards).
+This plan outlines the steps to implement a complete and robust metadata strategy for the Mercian Wealth website, including rich social media URL previews (Open Graph and Twitter Cards).
 
 ## Goal
 Replace the current lack of URL previews with a snapshot of the website and establish comprehensive metadata for better SEO and social sharing experiences.
@@ -9,46 +9,46 @@ Replace the current lack of URL previews with a snapshot of the website and esta
 
 Next.js App Router automatically handles Open Graph and Twitter images if specific files are placed in the `app/` directory.
 
-- **Action:** We will generate a high-quality snapshot of the website (1200x630 pixels) to serve as the preview image.
-- **Files to create in `app/` directory:**
-  - `app/opengraph-image.png` (or `.jpg`) - 1200x630px, used for LinkedIn, Facebook, iMessage, Discord, etc.
-  - `app/twitter-image.png` (or `.jpg`) - 1200x630px, used specifically for X/Twitter previews.
-- **Alternative (Dynamic):** If we want the image to include dynamic text later, we can use `app/opengraph-image.tsx` using Next.js `ImageResponse`. For now, a static snapshot is the quickest and most robust solution.
+- **Action:** Generate high-quality preview images.
+- **Files placed in `app/` directory:**
+  - `app/opengraph-image.png` - 1200x630px, used for LinkedIn, Facebook, iMessage, Discord, etc.
+  - `app/twitter-image.png` - 1200x630px, used specifically for X/Twitter previews.
 
-## 2. Expanding Global Metadata in `app/layout.tsx`
+## 2. Global Metadata in `app/layout.tsx`
 
-We will update the `metadata` object in `app/layout.tsx` to include complete Open Graph and Twitter properties, as well as additional SEO fields.
+The `metadata` object in `app/layout.tsx` has been updated to include complete Open Graph and Twitter properties, as well as additional SEO fields.
 
-**Target updates in `app/layout.tsx`:**
+**Target updates implemented in `app/layout.tsx`:**
 
 ```typescript
 export const metadata: Metadata = {
+  metadataBase: new URL('https://mercianwealth.com'),
   title: {
-    default: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    template: '%s | GS Legacy Wealth AI'
+    default: 'Mercian Wealth | Luxury AI-Powered Websites',
+    template: '%s | Mercian Wealth'
   },
-  description: 'We engineer digital assets that create authority, automate growth, and generate revenue. Premium AI-powered websites for ambitious businesses.',
-  applicationName: 'GS Legacy Wealth',
+  description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+  applicationName: 'Mercian Wealth',
   keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
-  authors: [{ name: 'GS Legacy Wealth' }],
-  creator: 'GS Legacy Wealth AI',
-  publisher: 'GS Legacy Wealth AI',
+  authors: [{ name: 'Mercian Wealth' }],
+  creator: 'Mercian Wealth',
+  publisher: 'Mercian Wealth',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    description: 'Premium AI-powered websites for ambitious businesses. We engineer digital assets that create authority and generate revenue.',
-    url: 'https://gslegacywealth.com', // Replace with actual production URL
-    siteName: 'GS Legacy Wealth AI',
+    title: 'Mercian Wealth | Luxury AI-Powered Websites',
+    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+    url: 'https://mercianwealth.com',
+    siteName: 'Mercian Wealth',
     images: [
       {
-        url: '/opengraph-image.png', // Automatically resolved by Next.js if placed in app/
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'GS Legacy Wealth AI Website Preview',
+        alt: 'Mercian Wealth Website Preview',
       },
     ],
     locale: 'en_US',
@@ -56,10 +56,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GS Legacy Wealth AI | Luxury AI-Powered Websites',
-    description: 'Premium AI-powered websites for ambitious businesses.',
-    images: ['/twitter-image.png'], // Automatically resolved
-    creator: '@gslegacywealth', // Replace with actual handle if available
+    title: 'Mercian Wealth | Luxury AI-Powered Websites',
+    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+    images: ['/twitter-image.png'],
+    creator: '@mercianwealth',
   },
   robots: {
     index: true,
@@ -72,23 +72,19 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // existing icons config...
 }
 ```
 
-## 3. Metadata for Specific Pages (Optional but Recommended)
+## 3. Metadata for Specific Pages
 
-If the site has multiple distinct pages (e.g., `/about`, `/services`), we should define specific `metadata` exports in those route's `page.tsx` files. This allows Next.js to merge the global metadata with page-specific titles and descriptions.
+We define specific `metadata` exports in subroute `page.tsx` files. This allows Next.js to merge the global metadata with page-specific titles and descriptions.
 
-## Open Questions & Required Information
+## Completed Specifications
 
-> [!IMPORTANT]
-> To proceed effectively, please provide the following details:
-
-1. **Production URL:** What is the actual or intended domain name for the production website? (e.g., `https://gslegacywealth.com`)
-2. **Social Handles:** Do you have an official Twitter handle or other social links we should include in the metadata?
-3. **Snapshot Image:** Do you want me to generate an initial mockup snapshot image using the `generate_image` tool, or would you prefer to provide a screenshot of the site once it's closer to the final design?
+1. **Production URL:** `https://mercianwealth.com`
+2. **Social Handles:** `@mercianwealth`
+3. **Snapshot Image:** Static `opengraph-image.png` and `twitter-image.png` configured and built in root.
 
 ## Next Steps
 
-Once you review and approve this plan (and provide the requested details), I can execute the changes to `app/layout.tsx` and generate/place the required preview image files.
+All steps in this plan have been successfully implemented and validated in the codebase. No further tasks are outstanding.

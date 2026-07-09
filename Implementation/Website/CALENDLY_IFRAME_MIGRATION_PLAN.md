@@ -56,7 +56,7 @@ The Nordwacht dark-theme Calendly the user demonstrated is almost certainly usin
   src={buildCalendlyUrl()}
   width="100%"
   style={{ height: calendlyHeight, minWidth: "320px", border: "none" }}
-  title="Book your strategy session — GS Legacy Wealth"
+  title="Book your strategy session — Mercian Wealth"
   loading="lazy"
   onLoad={() => {
     setCalendlyLoaded(true)
