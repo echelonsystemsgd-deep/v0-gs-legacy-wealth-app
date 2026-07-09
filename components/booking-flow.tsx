@@ -4,11 +4,11 @@ import { useState, useEffect, useRef, Suspense, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   ArrowRight, User, Mail, Phone, Linkedin, Globe, Building2,
   CheckCircle2, Loader2, ExternalLink, AlertCircle, TrendingUp,
-  Clock, Target, ChevronRight, Shield,
+  Clock, Target, ChevronRight, Shield, HelpCircle, X, ChevronDown
 } from "lucide-react"
 
 // ---------------------------------------------------------------------------
@@ -51,6 +51,7 @@ interface IdentityData {
 }
 
 interface QualData {
+  serviceInterested: string
   biggestChallenge: Challenge | ""
   monthlyRevenue: Revenue | ""
   desiredOutcome: string
@@ -60,6 +61,14 @@ interface QualData {
 // ---------------------------------------------------------------------------
 // Options
 // ---------------------------------------------------------------------------
+const serviceOptions = [
+  "High-Yield Digital Infrastructure",
+  "Autonomous Pipeline Routing",
+  "Relational Cloud Data Architecture",
+  "Autonomic Multi-Agent Systems",
+  "Unsure / Consultation"
+]
+
 const challengeOptions: { value: Challenge; label: string; description: string }[] = [
   { value: "No website yet",                        label: "No website yet",      description: "I need a brand new website built from scratch" },
   { value: "Outdated website",                      label: "Outdated website",    description: "My design and copy need a premium modern update" },
@@ -131,6 +140,7 @@ function validateIdentity(d: IdentityData): Partial<Record<keyof IdentityData, s
 
 function validateQual(d: QualData): Partial<Record<keyof QualData, string>> {
   const e: Partial<Record<keyof QualData, string>> = {}
+  if (!d.serviceInterested) e.serviceInterested = "Please select a service you are interested in."
   if (!d.biggestChallenge) e.biggestChallenge = "Please select your biggest priority."
   if (!d.monthlyRevenue) e.monthlyRevenue = "Please select your monthly revenue."
   if (!d.desiredOutcome.trim()) e.desiredOutcome = "Please describe a successful outcome."
@@ -274,8 +284,10 @@ function CalendlyFallback({ url, onRetry }: { url: string; onRetry?: () => void 
 // ---------------------------------------------------------------------------
 function BookingFlowInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const containerRef = useRef<HTMLDivElement>(null)
   const [stage, setStage] = useState<Stage>(1)
+  const [showServicesModal, setShowServicesModal] = useState(false)
 
   // Stage 1 — Identity
   const [identity, setIdentity] = useState<IdentityData>({
@@ -288,7 +300,7 @@ function BookingFlowInner() {
 
   // Stage 2 — Qualification
   const [qual, setQual] = useState<QualData>({
-    biggestChallenge: "", monthlyRevenue: "", desiredOutcome: "", startTimeline: "",
+    serviceInterested: "", biggestChallenge: "", monthlyRevenue: "", desiredOutcome: "", startTimeline: "",
   })
   const [qualErrors, setQualErrors] = useState<Partial<Record<keyof QualData, string>>>({})
   const [qualSubmitting, setQualSubmitting] = useState(false)
@@ -300,6 +312,22 @@ function BookingFlowInner() {
   const [calendlyTimedOut, setCalendlyTimedOut] = useState(false)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [retryCount, setRetryCount] = useState(0)
+
+  // Prefill service selector from URL parameters
+  useEffect(() => {
+    const serviceParam = searchParams?.get("service")
+    if (serviceParam) {
+      const mapping: Record<string, string> = {
+        "authority-platform": "High-Yield Digital Infrastructure",
+        "conversion-funnel": "Autonomous Pipeline Routing",
+        "database-architecture": "Relational Cloud Data Architecture",
+        "ai-agents": "Autonomic Multi-Agent Systems"
+      }
+      if (mapping[serviceParam]) {
+        setQual((p) => ({ ...p, serviceInterested: mapping[serviceParam] }))
+      }
+    }
+  }, [searchParams])
 
   // Helpers
   const updateIdentity = <K extends keyof IdentityData>(key: K, value: IdentityData[K]) => {
@@ -360,6 +388,7 @@ function BookingFlowInner() {
     }
     setQualSubmitting(true)
     const notes = [
+      `Service Interested: ${qual.serviceInterested}`,
       `Biggest Challenge: ${qual.biggestChallenge}`,
       `Monthly Revenue: ${qual.monthlyRevenue}`,
       `Start Timeline: ${qual.startTimeline}`,
@@ -441,11 +470,12 @@ function BookingFlowInner() {
     if (stage === 3) return 100
     if (stage === 2) {
       const stage2Count =
+        (qual.serviceInterested ? 1 : 0) +
         (qual.biggestChallenge ? 1 : 0) +
         (qual.monthlyRevenue ? 1 : 0) +
         (qual.desiredOutcome.trim() ? 1 : 0) +
         (qual.startTimeline ? 1 : 0)
-      return 33 + Math.round((stage2Count / 4) * 33)
+      return 33 + Math.round((stage2Count / 5) * 33)
     }
     // stage === 1
     const stage1Count =
@@ -596,6 +626,42 @@ function BookingFlowInner() {
                 </div>
               </div>
 
+              {/* Service Interested In */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="serviceInterested" className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                    <Target size={11} className="text-accent-gold" />Service Interested In
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowServicesModal(true)}
+                    className="text-xs text-accent-gold hover:opacity-80 flex items-center gap-1 transition-opacity"
+                  >
+                    <HelpCircle size={12} />
+                    Unsure?
+                  </button>
+                </div>
+                <div className="relative">
+                  <select
+                    id="serviceInterested"
+                    value={qual.serviceInterested}
+                    onChange={(e) => updateQual("serviceInterested", e.target.value)}
+                    className={`w-full bg-[#141414] border rounded-xl px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent-gold/30 appearance-none transition-all ${
+                      qualErrors.serviceInterested ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
+                    }`}
+                  >
+                    <option value="" disabled>Select a service...</option>
+                    {serviceOptions.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
+                    <ChevronDown size={14} />
+                  </div>
+                </div>
+                {qualErrors.serviceInterested && <p className="text-xs text-red-400">{qualErrors.serviceInterested}</p>}
+              </div>
+
               {/* Biggest Bottleneck */}
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
@@ -733,6 +799,11 @@ function BookingFlowInner() {
 
             {/* Selection tags */}
             <div className="flex flex-wrap gap-2">
+              {qual.serviceInterested && (
+                <span className="px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
+                  {qual.serviceInterested}
+                </span>
+              )}
               {qual.biggestChallenge && (
                 <span className="px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-xs font-bold text-accent-gold">
                   {qual.biggestChallenge}
@@ -784,6 +855,60 @@ function BookingFlowInner() {
               ← Go back and edit my details
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Services explanation modal */}
+      <AnimatePresence>
+        {showServicesModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-lg glass border border-accent-gold/20 rounded-2xl p-6 relative overflow-hidden text-left"
+            >
+              <button
+                type="button"
+                onClick={() => setShowServicesModal(false)}
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X size={18} />
+              </button>
+              
+              <h3 className="font-serif text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <Target className="text-accent-gold" size={18} />
+                Our Solutions Overview
+              </h3>
+              
+              <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1">
+                <div>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">High-Yield Digital Infrastructure</h4>
+                  <p className="text-xs text-text-secondary mt-1">Bespoke Next.js platforms designed to project absolute category dominance. Built without templates, engineered for prestige.</p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Autonomous Pipeline Routing</h4>
+                  <p className="text-xs text-text-secondary mt-1">Custom CRM bookings and synchronized lead orchestration that triages, captures, and schedules prospects in under 1 second.</p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Relational Cloud Data Architecture</h4>
+                  <p className="text-xs text-text-secondary mt-1">High-throughput cloud storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.</p>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Autonomic Multi-Agent Systems</h4>
+                  <p className="text-xs text-text-secondary mt-1">Automated pipelines that qualify, qualify, and nurture leads 24/7/365. Replacing manual drag with software leverage.</p>
+                </div>
+              </div>
+              
+              <Button
+                type="button"
+                onClick={() => setShowServicesModal(false)}
+                className="w-full mt-6 text-xs font-bold"
+              >
+                Close Overview
+              </Button>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
