@@ -61,33 +61,33 @@ interface QualData {
 // ---------------------------------------------------------------------------
 // Options
 // ---------------------------------------------------------------------------
-const serviceOptions = [
-  "High-Yield Digital Infrastructure",
-  "Autonomous Pipeline Routing",
-  "Relational Cloud Data Architecture",
-  "Autonomic Multi-Agent Systems",
-  "Unsure / Consultation"
+const serviceOptions: { value: string; label: string; description: string }[] = [
+  { value: "High-Yield Digital Infrastructure",    label: "Web Infrastructure",  description: "Bespoke luxury web presence" },
+  { value: "Autonomous Pipeline Routing",          label: "Pipeline Routing",    description: "CRM bookings and lead triage" },
+  { value: "Relational Cloud Data Architecture",   label: "Database Design",     description: "Supabase relational backend state" },
+  { value: "Autonomic Multi-Agent Systems",        label: "AI & Automation",     description: "Autonomous lead qualifiers and sync" },
+  { value: "Unsure / Consultation",                label: "Unsure / Consultation",description: "Discuss best strategy and fit" },
 ]
 
 const challengeOptions: { value: Challenge; label: string; description: string }[] = [
-  { value: "No website yet",                        label: "No website yet",      description: "I need a brand new website built from scratch" },
-  { value: "Outdated website",                      label: "Outdated website",    description: "My design and copy need a premium modern update" },
-  { value: "Not getting leads",                     label: "Not getting leads",   description: "My site exists but isn't converting traffic into clients" },
-  { value: "Want to modernise / add AI features",   label: "Add AI & automation", description: "I want AI chatbots, calendars or CRM automation" },
+  { value: "No website yet",                        label: "No website yet",      description: "Brand new website from scratch" },
+  { value: "Outdated website",                      label: "Outdated website",    description: "Premium modern redesign update" },
+  { value: "Not getting leads",                     label: "Not getting leads",   description: "Site exists but isn't converting" },
+  { value: "Want to modernise / add AI features",   label: "Add AI & automation", description: "AI chatbots, calendars or CRM sync" },
 ]
 
 const revenueOptions: { value: Revenue; label: string; description: string }[] = [
-  { value: "Under £5,000",      label: "Under £5,000 / month",      description: "Early-stage or solopreneur seeking initial growth systems" },
-  { value: "£5,000 – £20,000",  label: "£5,000 – £20,000 / month",  description: "Established brand ready to scale and capture more leads" },
-  { value: "£20,000 – £50,000", label: "£20,000 – £50,000 / month", description: "High-growth business ready for advanced custom systems & AI" },
-  { value: "£50,000+",          label: "£50,000+ / month",           description: "Enterprise leader seeking to optimise at scale & automate" },
+  { value: "Under £5,000",      label: "Under £5,000 / mo",      description: "Early-stage growth systems" },
+  { value: "£5,000 – £20,000",  label: "£5,000 – £20,000 / mo",  description: "Scale and capture more leads" },
+  { value: "£20,000 – £50,000", label: "£20,000 – £50,000 / mo", description: "Advanced custom systems & AI" },
+  { value: "£50,000+",          label: "£50,000+ / mo",           description: "Optimise at scale & automate" },
 ]
 
 const timelineOptions: { value: Timeline; label: string; description: string }[] = [
-  { value: "Immediately",     label: "Immediately",     description: "Ready to kick off development right away" },
-  { value: "Within 1 month",  label: "Within 1 month",  description: "Aligning budget, assets, or internal stakeholders" },
-  { value: "1 – 3 months",    label: "1 – 3 months",    description: "Mapping out strategic quarterly goals" },
-  { value: "Just researching", label: "Just researching", description: "Gathering information and looking at potential partners" },
+  { value: "Immediately",     label: "Immediately",     description: "Ready to kick off right away" },
+  { value: "Within 1 month",  label: "Within 1 month",  description: "Aligning budget or assets" },
+  { value: "1 – 3 months",    label: "1 – 3 months",    description: "Strategic quarterly roadmap" },
+  { value: "Just researching", label: "Just researching", description: "Gathering information and fits" },
 ]
 
 // ---------------------------------------------------------------------------
@@ -188,27 +188,27 @@ function ProgressBar({ stage, pct }: { stage: Stage; pct: number }) {
 }
 
 /** Radio selection card */
-function RadioCard({ selected, onClick, label, description }: {
-  selected: boolean; onClick: () => void; label: string; description: string
+function RadioCard({ selected, onClick, label, description, className = "" }: {
+  selected: boolean; onClick: () => void; label: string; description: string; className?: string
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-left flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
+      className={`w-full text-left flex items-start gap-3 p-3 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent-gold/30 ${
         selected
           ? "border-accent-gold bg-accent-gold/10"
           : "border-border-brand/20 bg-background/40 hover:border-accent-gold/40 hover:bg-accent-gold/5"
-      }`}
+      } ${className}`}
     >
-      <div className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors ${
+      <div className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 flex items-center justify-center transition-colors mt-0.5 ${
         selected ? "border-accent-gold bg-accent-gold" : "border-accent-gold/40"
       }`}>
         {selected && <div className="w-1.5 h-1.5 rounded-full bg-bg-primary" />}
       </div>
       <div className="min-w-0">
         <p className={`text-xs font-semibold leading-tight ${selected ? "text-accent-gold" : "text-foreground"}`}>{label}</p>
-        <p className="text-xs text-text-secondary leading-tight mt-0.5">{description}</p>
+        <p className="text-[10px] text-text-secondary leading-tight mt-1">{description}</p>
       </div>
     </button>
   )
@@ -627,9 +627,9 @@ function BookingFlowInner() {
               </div>
 
               {/* Service Interested In */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="serviceInterested" className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                     <Target size={11} className="text-accent-gold" />Service Interested In
                   </label>
                   <button
@@ -641,23 +641,17 @@ function BookingFlowInner() {
                     Unsure?
                   </button>
                 </div>
-                <div className="relative">
-                  <select
-                    id="serviceInterested"
-                    value={qual.serviceInterested}
-                    onChange={(e) => updateQual("serviceInterested", e.target.value)}
-                    className={`w-full bg-[#141414] border rounded-xl px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-accent-gold/30 appearance-none transition-all ${
-                      qualErrors.serviceInterested ? "border-red-500/60" : "border-border-brand/20 hover:border-accent-gold/40"
-                    }`}
-                  >
-                    <option value="" disabled>Select a service...</option>
-                    {serviceOptions.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
-                    <ChevronDown size={14} />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {serviceOptions.map((opt, idx) => (
+                    <RadioCard
+                      key={opt.value}
+                      selected={qual.serviceInterested === opt.value}
+                      onClick={() => updateQual("serviceInterested", opt.value)}
+                      label={opt.label}
+                      description={opt.description}
+                      className={idx === 4 ? "sm:col-span-2" : ""}
+                    />
+                  ))}
                 </div>
                 {qualErrors.serviceInterested && <p className="text-xs text-red-400">{qualErrors.serviceInterested}</p>}
               </div>
@@ -667,7 +661,7 @@ function BookingFlowInner() {
                 <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <AlertCircle size={11} className="text-accent-gold" />Biggest Operational Bottleneck
                 </label>
-                <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {challengeOptions.map((opt) => (
                     <RadioCard key={opt.value}
                       selected={qual.biggestChallenge === opt.value}
@@ -691,7 +685,7 @@ function BookingFlowInner() {
                 <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <TrendingUp size={11} className="text-accent-gold" />Approximate Monthly Revenue
                 </label>
-                <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {revenueOptions.map((opt) => (
                     <RadioCard key={opt.value}
                       selected={qual.monthlyRevenue === opt.value}
@@ -735,7 +729,7 @@ function BookingFlowInner() {
                 <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <Clock size={11} className="text-accent-gold" />Desired Start Timeline
                 </label>
-                <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {timelineOptions.map((opt) => (
                     <RadioCard key={opt.value}
                       selected={qual.startTimeline === opt.value}
@@ -791,7 +785,7 @@ function BookingFlowInner() {
                   <p className="text-xs text-text-secondary">Pick a time below — your details are pre-filled.</p>
                 </div>
               </div>
-              <Button type="button" variant="outline" size="sm" onClick={() => setStage(1)}
+              <Button type="button" variant="outline" size="sm" onClick={() => setStage(2)}
                 className="text-xs border-accent-gold/35 text-accent-gold hover:bg-accent-gold/10 hover:text-white transition-all shrink-0">
                 Edit Details
               </Button>
@@ -850,7 +844,7 @@ function BookingFlowInner() {
               />
             </div>
 
-            <button onClick={() => { setStage(1); setCalendlyLoaded(false); setCalendlyTimedOut(false) }}
+            <button onClick={() => { setStage(2); setCalendlyLoaded(false); setCalendlyTimedOut(false) }}
               className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-2">
               ← Go back and edit my details
             </button>
@@ -896,7 +890,7 @@ function BookingFlowInner() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Autonomic Multi-Agent Systems</h4>
-                  <p className="text-xs text-text-secondary mt-1">Automated pipelines that qualify, qualify, and nurture leads 24/7/365. Replacing manual drag with software leverage.</p>
+                  <p className="text-xs text-text-secondary mt-1">Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.</p>
                 </div>
               </div>
               
