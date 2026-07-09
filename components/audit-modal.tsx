@@ -18,9 +18,11 @@ const industries = [
 
 export const AuditModal: React.FC = () => {
   const { isOpen, tier, closeModal } = useAuditModal()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [linkedinUrl, setLinkedinUrl] = useState('')
   const [industry, setIndustry] = useState('')
   const [gdprConsent, setGdprConsent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,9 +32,11 @@ export const AuditModal: React.FC = () => {
   useEffect(() => {
     if (isOpen) {
       setErrorMsg(null)
-      setFirstName('')
-      setLastName('')
+      setFullName('')
       setEmail('')
+      setPhone('')
+      setCompanyName('')
+      setLinkedinUrl('')
       setGdprConsent(false)
       setIndustry(industries[0])
     }
@@ -60,10 +64,34 @@ export const AuditModal: React.FC = () => {
     }
   }, [isOpen])
 
+  // List of blacklisted personal email domains
+  const PERSONAL_EMAIL_DOMAINS = [
+    "gmail.com",
+    "yahoo.com",
+    "hotmail.com",
+    "outlook.com",
+    "icloud.com",
+    "aol.com",
+    "zoho.com",
+    "protonmail.com",
+    "proton.me",
+    "mail.com",
+    "yandex.com",
+    "gmx.com",
+    "fastmail.com",
+    "live.com",
+    "msn.com",
+  ]
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email || !firstName || !lastName || !gdprConsent) {
+    if (!fullName.trim() || !email.trim() || !phone.trim() || !companyName.trim() || !gdprConsent) {
       setErrorMsg('Please complete all required fields and accept the terms.')
+      return
+    }
+
+    if (!/^\+?[0-9\s\-()]{7,20}$/.test(phone.trim())) {
+      setErrorMsg('Please enter a valid phone number.')
       return
     }
 
@@ -82,9 +110,11 @@ export const AuditModal: React.FC = () => {
     }
 
     const payload = {
-      first_name: firstName,
-      last_name: lastName,
-      email,
+      name: fullName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      business_name: companyName.trim(),
+      linkedin_url: linkedinUrl.trim() || null,
       industry,
       tier: tier || 'General Lead',
       gdpr_consent: gdprConsent,
@@ -94,22 +124,18 @@ export const AuditModal: React.FC = () => {
       ...utmParams,
     }
 
-    // Triage Vetting Logic: everyone gets redirected to Calendly
-    const isQualified = true
-
-    // Build the dynamic /success redirect path with query params
-    const successParams = new URLSearchParams()
-    successParams.set('status', isQualified ? 'qualified' : 'queued')
-    successParams.set('email', email)
-    if (isQualified) {
-      successParams.set('name', `${firstName} ${lastName}`)
-    }
+    // Build the dynamic /qualify redirect path with query params
+    const qualifyParams = new URLSearchParams()
+    qualifyParams.set('email', email.trim())
+    qualifyParams.set('name', fullName.trim())
+    qualifyParams.set('phone', phone.trim())
+    
     // Forward UTM params
     Object.entries(utmParams).forEach(([key, val]) => {
-      successParams.set(key, val)
+      qualifyParams.set(key, val)
     })
 
-    const redirectUrl = `/success?${successParams.toString()}`
+    const redirectUrl = `/qualify?${qualifyParams.toString()}`
 
     try {
       const response = await fetch('/api/audit', {
@@ -198,55 +224,88 @@ export const AuditModal: React.FC = () => {
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Names */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Full Name */}
+                <div className="space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="full_name">
+                    Full Name *
+                  </label>
+                  <input
+                    id="full_name"
+                    type="text"
+                    required
+                    disabled={isSubmitting}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
+                  />
+                </div>
+
+                {/* Email & Phone side by side */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="first_name">
-                      First Name *
+                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="email">
+                      Corporate Email Address *
                     </label>
                     <input
-                      id="first_name"
-                      type="text"
+                      id="email"
+                      type="email"
                       required
                       disabled={isSubmitting}
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="John"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="john@company.com"
                       className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="last_name">
-                      Last Name *
+                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="phone">
+                      Phone Number *
                     </label>
                     <input
-                      id="last_name"
-                      type="text"
+                      id="phone"
+                      type="tel"
                       required
                       disabled={isSubmitting}
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Doe"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="e.g. +44 7123 456789"
                       className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
                     />
                   </div>
                 </div>
 
-                {/* Email */}
-                <div className="space-y-1">
-                  <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="email">
-                    Corporate Email Address *
+                {/* Company Name & LinkedIn Profile side by side */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="company_name">
+                      Company Name *
                     </label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    disabled={isSubmitting}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="john@company.com"
-                    className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
-                  />
+                    <input
+                      id="company_name"
+                      type="text"
+                      required
+                      disabled={isSubmitting}
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="e.g. Acme Corp"
+                      className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold" htmlFor="linkedin_url">
+                      LinkedIn Profile <span className="text-[9px] text-gray-500 font-normal">(optional)</span>
+                    </label>
+                    <input
+                      id="linkedin_url"
+                      type="url"
+                      disabled={isSubmitting}
+                      value={linkedinUrl}
+                      onChange={(e) => setLinkedinUrl(e.target.value)}
+                      placeholder="e.g. https://linkedin.com/in/username"
+                      className="w-full h-10 px-3 bg-[#141414] border border-white/10 rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#d4af37]/50 transition-colors disabled:opacity-50"
+                    />
+                  </div>
                 </div>
 
                 {/* Industry Dropdown */}

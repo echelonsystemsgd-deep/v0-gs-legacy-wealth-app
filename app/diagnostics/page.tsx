@@ -4,6 +4,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ShieldAlert, ArrowRight, Loader2, Play, AlertTriangle, CheckCircle, RefreshCw, BarChart2, Shield } from "lucide-react"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/brand-logo"
 
 export default function DiagnosticsPage() {

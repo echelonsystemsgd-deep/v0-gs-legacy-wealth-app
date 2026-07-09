@@ -31,6 +31,7 @@ export default function SuccessPage() {
   const [status, setStatus] = useState<string | null>(null)
   const [leadEmail, setLeadEmail] = useState<string | null>(null)
   const [leadName, setLeadName] = useState<string | null>(null)
+  const [leadPhone, setLeadPhone] = useState<string | null>(null)
   const [utmParams, setUtmParams] = useState<Record<string, string>>({})
 
   // Parse URL search parameters on mount (safe for static HTML generation)
@@ -40,6 +41,7 @@ export default function SuccessPage() {
       setStatus(searchParams.get("status") || "qualified") // default to qualified if not specified
       setLeadEmail(searchParams.get("email"))
       setLeadName(searchParams.get("name"))
+      setLeadPhone(searchParams.get("phone"))
 
       const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]
       const utms: Record<string, string> = {}
@@ -84,11 +86,12 @@ export default function SuccessPage() {
     const params = new URLSearchParams(CALENDLY_PARAMS)
     if (leadName) params.set("name", leadName)
     if (leadEmail) params.set("email", leadEmail)
+    if (leadPhone) params.set("phone_number", leadPhone)
     Object.entries(utmParams).forEach(([k, v]) => {
       params.set(k, v)
     })
     return `${calendlyBaseUrl}?${params.toString()}`
-  }, [calendlyBaseUrl, leadName, leadEmail, utmParams])
+  }, [calendlyBaseUrl, leadName, leadEmail, leadPhone, utmParams])
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden flex flex-col justify-between">

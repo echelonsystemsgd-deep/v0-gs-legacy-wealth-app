@@ -9,13 +9,13 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
   const prodUrl = 'https://mercianwealth.com'
-  return `${prodUrl}/MercianWealthwatermark.jpeg`
+  return `${prodUrl}/MercianWealthlogo.jpeg`
 }
 
 export async function POST(request: Request) {
   try {
     const payload = await request.json()
-    const { source, name, email, business_name, phone, website, notes } = payload
+    const { source, name, email, business_name, phone, website, notes, linkedin_url } = payload
 
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
@@ -50,6 +50,8 @@ export async function POST(request: Request) {
                 name: name || existingLead.name,
                 business_name: business_name || existingLead.business_name,
                 website: website || existingLead.website,
+                phone: phone || existingLead.phone,
+                linkedin_url: linkedin_url || existingLead.linkedin_url,
                 notes: notes || existingLead.notes,
                 status: 'New',
                 source: 'booking_form',
@@ -68,6 +70,8 @@ export async function POST(request: Request) {
                 name: name || 'Anonymous Scheduler',
                 email: email,
                 business_name: business_name || 'N/A (Booking Form)',
+                phone: phone || null,
+                linkedin_url: linkedin_url || null,
                 website: website || null,
                 notes: notes || 'Booking request qualification',
                 status: 'New',
@@ -179,6 +183,11 @@ export async function POST(request: Request) {
               <tr>
                 <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Phone Number:</td>
                 <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px; font-family: monospace;">${phone}</td>
+              </tr>` : ''}
+              ${linkedin_url ? `
+              <tr>
+                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">LinkedIn URL:</td>
+                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px;"><a href="${linkedin_url}" style="color: #6d28d9; text-decoration: underline;">${linkedin_url}</a></td>
               </tr>` : ''}
               ${website ? `
               <tr>

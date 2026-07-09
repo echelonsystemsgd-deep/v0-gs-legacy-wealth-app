@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion"
 import { ShieldCheck, RefreshCw, Landmark } from "lucide-react"
-import Image from "next/image"
 import { SITE_COPY } from "@/lib/site-copy"
+import { BrandLogo } from "@/components/brand-logo"
 
 export function WhyMercianWealth() {
   const data = SITE_COPY.homepage.whyMercianWealth
@@ -15,8 +15,7 @@ export function WhyMercianWealth() {
       {/* Background Crest Watermark (Scrolls with page, behind text) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
         <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] opacity-[0.03]">
-          <Image 
-            src="/MercianWealthlogo.jpeg"
+          <BrandLogo 
             alt=""
             fill
             className="object-contain mix-blend-screen"

@@ -5,9 +5,13 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json()
     const {
+      name,
       first_name,
       last_name,
       email,
+      phone,
+      business_name,
+      linkedin_url,
       industry,
       tier,
       gdpr_consent,
@@ -25,12 +29,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
     }
 
-    if (!first_name || !last_name) {
-      return NextResponse.json({ error: 'First name and last name are required' }, { status: 400 })
+    const resolvedName = name || `${first_name || ''} ${last_name || ''}`.trim()
+    if (!resolvedName) {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 })
     }
 
-    const name = `${first_name} ${last_name}`
-    const business_name = industry || 'N/A'
+    const resolvedBusinessName = business_name || industry || 'N/A'
 
     let dbSaved = false
     let insertedLead = null
@@ -53,11 +57,13 @@ export async function POST(request: Request) {
           const { data, error } = await supabaseAdmin
             .from('leads')
             .update({
-              name,
-              first_name,
-              last_name,
-              business_name,
-              industry,
+              name: resolvedName,
+              first_name: first_name || existingLead.first_name,
+              last_name: last_name || existingLead.last_name,
+              business_name: resolvedBusinessName,
+              phone: phone || existingLead.phone,
+              linkedin_url: linkedin_url || existingLead.linkedin_url,
+              industry: industry || existingLead.industry,
               tier,
               gdpr_consent: !!gdpr_consent,
               source_page: source_page || 'Unknown',
@@ -75,11 +81,13 @@ export async function POST(request: Request) {
           const { data, error } = await supabaseAdmin
             .from('leads')
             .insert({
-              name,
-              first_name,
-              last_name,
+              name: resolvedName,
+              first_name: first_name || null,
+              last_name: last_name || null,
               email,
-              business_name,
+              business_name: resolvedBusinessName,
+              phone: phone || null,
+              linkedin_url: linkedin_url || null,
               industry,
               tier,
               gdpr_consent: !!gdpr_consent,
@@ -113,12 +121,14 @@ export async function POST(request: Request) {
 
     const webhookPayload = {
       lead_id: insertedLead?.id || null,
-      first_name,
-      last_name,
-      name,
+      first_name: first_name || null,
+      last_name: last_name || null,
+      name: resolvedName,
       email,
+      phone: phone || null,
+      linkedin_url: linkedin_url || null,
       industry,
-      business_name,
+      business_name: resolvedBusinessName,
       tier: tier || 'Unspecified',
       gdpr_consent: !!gdpr_consent,
       source_page: source_page || 'Unknown',

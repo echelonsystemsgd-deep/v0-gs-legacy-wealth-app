@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+import { BrandLogo } from "@/components/brand-logo"
 import { motion } from "framer-motion"
 
 export default function Loading() {
@@ -20,8 +20,7 @@ export default function Loading() {
           }}
           className="absolute w-40 h-40 sm:w-56 sm:h-56 mix-blend-screen"
         >
-          <Image
-            src="/MercianWealthlogo.jpeg"
+          <BrandLogo
             alt=""
             fill
             className="object-contain"

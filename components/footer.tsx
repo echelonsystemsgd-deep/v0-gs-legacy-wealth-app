@@ -1,5 +1,7 @@
 "use client"
 
+import { BrandLogo } from "@/components/brand-logo"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Mail, Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
@@ -39,9 +41,8 @@ export function Footer() {
           {/* Column 1: Logo & Tagline */}
           <div className="space-y-4 flex flex-col items-start">
             <div className="relative h-12 w-12">
-              <Image 
-                src="/MercianWealthlogo.jpeg" 
-                alt="Mercian Wealth Crest" 
+              <BrandLogo
+                alt="Mercian Wealth"
                 fill
                 className="object-contain mix-blend-screen"
               />

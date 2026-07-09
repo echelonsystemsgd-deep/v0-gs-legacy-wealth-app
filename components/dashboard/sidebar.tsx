@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import { BrandLogo } from '@/components/brand-logo'
 import { useState } from 'react'
 import {
   LayoutDashboard,
@@ -86,8 +87,7 @@ export function UserSidebar() {
         <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10">
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 shrink-0">
-              <Image
-                src="/MercianWealthlogo.jpeg"
+              <BrandLogo
                 alt="Mercian Wealth"
                 fill
                 className="object-contain"
