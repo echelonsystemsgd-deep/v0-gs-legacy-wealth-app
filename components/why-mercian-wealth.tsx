@@ -16,10 +16,10 @@ export function WhyMercianWealth() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
         <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] opacity-[0.03]">
           <Image 
-            src="/MercianWealthwatermark.jpeg"
+            src="/MercianWealthlogo.jpeg"
             alt=""
             fill
-            className="object-contain"
+            className="object-contain mix-blend-screen"
           />
         </div>
       </div>

@@ -215,10 +215,10 @@ export function Navbar() {
           >
             <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-14 w-14"}`}>
               <BrandLogo
-                variant="watermark"
-                alt="Mercian Wealth Crest"
+                variant="logo"
+                alt="Mercian Wealth Logo"
                 fill
-                className="object-contain"
+                className="object-contain mix-blend-screen"
                 priority
               />
             </div>
@@ -339,6 +339,7 @@ export function Navbar() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden text-foreground p-2"
             aria-label="Toggle menu"
+            suppressHydrationWarning
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

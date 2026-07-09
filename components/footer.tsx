@@ -40,10 +40,10 @@ export function Footer() {
           <div className="space-y-4 flex flex-col items-start">
             <div className="relative h-12 w-12">
               <Image 
-                src="/MercianWealthwatermark.jpeg" 
+                src="/MercianWealthlogo.jpeg" 
                 alt="Mercian Wealth Crest" 
                 fill
-                className="object-contain"
+                className="object-contain mix-blend-screen"
               />
             </div>
             <p className="font-serif italic text-sm text-text-primary opacity-80 leading-relaxed max-w-[200px]">
