@@ -468,3 +468,21 @@ When the final Mercian Wealth logo file is ready:
 1. Place the file at /public/MercianWealthlogo.jpeg (or update the path in lib/brand-assets.ts).
 2. The entire site — navbar, footer, loading screen, dashboard sidebar, email templates, SEO schema — picks it up automatically.
 3. No component-level changes required.
+
+---
+
+## 12. THREE-STAGE GUIDED BOOKING FLOW CONSOLIDATION (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** 2df3429
+- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+
+### Actions & Consolidation Details
+
+| Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Guided 3-Stage Flow** | **PASS** | Refactored ooking-flow.tsx into a guided 3-stage onboarder: Stage 1 (Identity), Stage 2 (Assessment), and Stage 3 (Schedule). Includes an animated gold progress indicator tracking completion percentage. | [components/booking-flow.tsx] |
+| **Contextual Sonner Toasts** | **PASS** | Embedded dynamic sonner notifications that trigger when key operational bottlenecks, monthly revenues, and start timelines are selected, building a premium, conversational onboarding experience. | [components/booking-flow.tsx] |
+| **Audit Modal Deprecation** | **PASS** | Removed the unmounted AuditModal from root layout. All homepage CTAs and navigation hooks updated to link directly to /book. | [app/layout.tsx], [components/hero.tsx], [components/cta.tsx], [components/pricing.tsx], [components/sticky-cta-button.tsx] |
+| **Qualify Route Redirection** | **PASS** | Configured pp/qualify/page.tsx as a client-side redirect forwarding all query parameters cleanly to /book so legacy campaign links don't break. | [app/qualify/page.tsx] |
+| **GDPR Compliance Integration** | **PASS** | Stage 1 contains a mandatory GDPR agreement checkbox validating before saving identity. | [components/booking-flow.tsx] |
