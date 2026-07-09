@@ -117,8 +117,6 @@ function validateIdentity(d: IdentityData): Partial<Record<keyof IdentityData, s
     const lower = d.email.trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lower)) {
       e.email = "Please enter a valid email address."
-    } else if (PERSONAL_EMAIL_DOMAINS.includes(lower.split("@")[1])) {
-      e.email = "Please use a business email — personal domains are not accepted."
     }
   }
   if (!d.phone.trim()) {
@@ -145,8 +143,7 @@ function validateQual(d: QualData): Partial<Record<keyof QualData, string>> {
 // ---------------------------------------------------------------------------
 
 /** Animated gold progress bar */
-function ProgressBar({ stage }: { stage: Stage }) {
-  const pct = stage === 1 ? 33 : stage === 2 ? 66 : 100
+function ProgressBar({ stage, pct }: { stage: Stage; pct: number }) {
   const labels = ["Identity", "Assessment", "Schedule"]
 
   return (
@@ -439,10 +436,31 @@ function BookingFlowInner() {
     return () => { if (fallbackTimerRef.current) { clearTimeout(fallbackTimerRef.current); fallbackTimerRef.current = null } }
   }, [stage, retryCount])
 
+  // Dynamic completion percentage calculation
+  const getProgressPct = () => {
+    if (stage === 3) return 100
+    if (stage === 2) {
+      const stage2Count =
+        (qual.biggestChallenge ? 1 : 0) +
+        (qual.monthlyRevenue ? 1 : 0) +
+        (qual.desiredOutcome.trim() ? 1 : 0) +
+        (qual.startTimeline ? 1 : 0)
+      return 33 + Math.round((stage2Count / 4) * 33)
+    }
+    // stage === 1
+    const stage1Count =
+      (identity.fullName.trim() ? 1 : 0) +
+      (identity.email.trim() ? 1 : 0) +
+      (identity.phone.trim() ? 1 : 0) +
+      (identity.companyName.trim() ? 1 : 0) +
+      (identity.gdprConsent ? 1 : 0)
+    return Math.round((stage1Count / 5) * 33)
+  }
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div ref={containerRef} className="w-full max-w-2xl mx-auto">
-      <ProgressBar stage={stage} />
+      <ProgressBar stage={stage} pct={getProgressPct()} />
 
       <AnimatePresence mode="wait">
 
