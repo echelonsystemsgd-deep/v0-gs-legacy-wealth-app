@@ -20,7 +20,7 @@ const CALENDLY_URL =
 const CALENDLY_PARAMS = new URLSearchParams({
   background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",
   text_color:       process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "F0EDE6",
-  primary_color:    process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C9A227",
+  primary_color:    process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C5A059",
   hide_landing_page_details: "1",
   hide_gdpr_banner: "1",
 })
