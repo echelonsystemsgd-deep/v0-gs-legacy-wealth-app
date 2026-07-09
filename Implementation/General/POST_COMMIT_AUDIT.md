@@ -440,3 +440,31 @@ Checked pages: `/` `/services` `/process` `/portfolio` `/pricing` `/testimonials
 | **Stage 7: Vercel Env Vars** | **PASS** | Flagged active environment variables in Vercel that reference old domain links (e.g. `NEXT_PUBLIC_CALENDLY_URL` and Sentry scopes). | Reported to User |
 
 
+
+---
+
+## 11. BOOKING FORM REBUILD, BRANDLOGO WORDMARK & NAVIGATION FIXES (2026-07-09)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth)
+- **Commit:** f49a2ad
+- **Execution Status:** **PASS** — Build confirmed clean (58/58 static pages generated, zero TS errors)
+
+### Actions & Remediation Log
+
+| Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Booking Form Rebuild** | **PASS** | Replaced 5-step wizard (subStep 1-5) with unified single-page two-column assessment. Left column: Full Name, Business Email (corporate domain blocklist — rejects Gmail, Yahoo, Hotmail, iCloud etc.), Phone, Company Name, Website URL (optional), LinkedIn (strongly encouraged). Right column: Biggest Bottleneck (radio-cards), Monthly Revenue (radio-cards), Desired Outcome (free-text textarea, 300 chars), Start Timeline (radio-cards). Single 'Submit & View Calendar' CTA. All validation runs in a single pass on submit. | [components/booking-flow.tsx] |
+| **Desired Outcome Field** | **PASS** | New desiredOutcome string field added to FormData interface. Included in the 
+otes block sent to /api/forms/submit. No API or DB schema changes required. | [components/booking-flow.tsx] |
+| **Edit Details Back Button** | **PASS** | Added 'Edit Details' button on Calendly step (step 2) success banner. Clicking returns the user to step 1 (the vetting form) with all fields retained. | [components/booking-flow.tsx] |
+| **Qualify Page Back Navigation** | **PASS** | Added back button above the /qualify form card. Changed from outer.back() (unpredictable history) to explicit outer.push("/book") so users always return to step 1. | [app/qualify/page.tsx] |
+| **BrandLogo Wordmark Fallback** | **PASS** | Extended BrandLogo component with a WordmarkLogo CSS fallback rendered in Cormorant Garamond: gold Mercian + silver Wealth. Waterfall: primary asset ? placeholder-logo.svg ? CSS wordmark. Activated when MercianWealthlogo.jpeg is absent or 404s. All swap-in points tagged with // LOGO_SWAP comment. | [components/brand-logo.tsx], [lib/brand-assets.ts] |
+| **Logo Component Migration** | **PASS** | Migrated 5 components from hardcoded <Image src="/MercianWealthlogo.jpeg"> to <BrandLogo> so the wordmark fallback covers the entire public site and dashboard. | [components/footer.tsx], [app/loading.tsx], [components/dashboard/sidebar.tsx], [components/why-mercian-wealth.tsx], [components/dashboard/portal-hub.tsx] |
+| **Diagnostics TS Fix** | **PASS** | Added missing Button import to pp/diagnostics/page.tsx — pre-existing error unrelated to session changes. | [app/diagnostics/page.tsx] |
+
+### Logo Swap-In Instructions (Pending Final Asset)
+
+When the final Mercian Wealth logo file is ready:
+1. Place the file at /public/MercianWealthlogo.jpeg (or update the path in lib/brand-assets.ts).
+2. The entire site — navbar, footer, loading screen, dashboard sidebar, email templates, SEO schema — picks it up automatically.
+3. No component-level changes required.
