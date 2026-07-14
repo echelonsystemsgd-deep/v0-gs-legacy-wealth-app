@@ -447,26 +447,26 @@ Checked pages: `/` `/services` `/process` `/portfolio` `/pricing` `/testimonials
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** f49a2ad
-- **Execution Status:** **PASS** — Build confirmed clean (58/58 static pages generated, zero TS errors)
+- **Execution Status:** **PASS** ï¿½ Build confirmed clean (58/58 static pages generated, zero TS errors)
 
 ### Actions & Remediation Log
 
 | Component | Status | Action Details | Files Modified |
 | :--- | :---: | :--- | :--- |
-| **Booking Form Rebuild** | **PASS** | Replaced 5-step wizard (subStep 1-5) with unified single-page two-column assessment. Left column: Full Name, Business Email (corporate domain blocklist — rejects Gmail, Yahoo, Hotmail, iCloud etc.), Phone, Company Name, Website URL (optional), LinkedIn (strongly encouraged). Right column: Biggest Bottleneck (radio-cards), Monthly Revenue (radio-cards), Desired Outcome (free-text textarea, 300 chars), Start Timeline (radio-cards). Single 'Submit & View Calendar' CTA. All validation runs in a single pass on submit. | [components/booking-flow.tsx] |
+| **Booking Form Rebuild** | **PASS** | Replaced 5-step wizard (subStep 1-5) with unified single-page two-column assessment. Left column: Full Name, Business Email (corporate domain blocklist ï¿½ rejects Gmail, Yahoo, Hotmail, iCloud etc.), Phone, Company Name, Website URL (optional), LinkedIn (strongly encouraged). Right column: Biggest Bottleneck (radio-cards), Monthly Revenue (radio-cards), Desired Outcome (free-text textarea, 300 chars), Start Timeline (radio-cards). Single 'Submit & View Calendar' CTA. All validation runs in a single pass on submit. | [components/booking-flow.tsx] |
 | **Desired Outcome Field** | **PASS** | New desiredOutcome string field added to FormData interface. Included in the 
 otes block sent to /api/forms/submit. No API or DB schema changes required. | [components/booking-flow.tsx] |
 | **Edit Details Back Button** | **PASS** | Added 'Edit Details' button on Calendly step (step 2) success banner. Clicking returns the user to step 1 (the vetting form) with all fields retained. | [components/booking-flow.tsx] |
 | **Qualify Page Back Navigation** | **PASS** | Added back button above the /qualify form card. Changed from outer.back() (unpredictable history) to explicit outer.push("/book") so users always return to step 1. | [app/qualify/page.tsx] |
 | **BrandLogo Wordmark Fallback** | **PASS** | Extended BrandLogo component with a WordmarkLogo CSS fallback rendered in Cormorant Garamond: gold Mercian + silver Wealth. Waterfall: primary asset ? placeholder-logo.svg ? CSS wordmark. Activated when MercianWealthlogo.jpeg is absent or 404s. All swap-in points tagged with // LOGO_SWAP comment. | [components/brand-logo.tsx], [lib/brand-assets.ts] |
 | **Logo Component Migration** | **PASS** | Migrated 5 components from hardcoded <Image src="/MercianWealthlogo.jpeg"> to <BrandLogo> so the wordmark fallback covers the entire public site and dashboard. | [components/footer.tsx], [app/loading.tsx], [components/dashboard/sidebar.tsx], [components/why-mercian-wealth.tsx], [components/dashboard/portal-hub.tsx] |
-| **Diagnostics TS Fix** | **PASS** | Added missing Button import to pp/diagnostics/page.tsx — pre-existing error unrelated to session changes. | [app/diagnostics/page.tsx] |
+| **Diagnostics TS Fix** | **PASS** | Added missing Button import to pp/diagnostics/page.tsx ï¿½ pre-existing error unrelated to session changes. | [app/diagnostics/page.tsx] |
 
 ### Logo Swap-In Instructions (Pending Final Asset)
 
 When the final Mercian Wealth logo file is ready:
 1. Place the file at /public/MercianWealthlogo.jpeg (or update the path in lib/brand-assets.ts).
-2. The entire site — navbar, footer, loading screen, dashboard sidebar, email templates, SEO schema — picks it up automatically.
+2. The entire site ï¿½ navbar, footer, loading screen, dashboard sidebar, email templates, SEO schema ï¿½ picks it up automatically.
 3. No component-level changes required.
 
 ---
@@ -475,7 +475,7 @@ When the final Mercian Wealth logo file is ready:
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** 2df3429
-- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+- **Execution Status:** **PASS** ï¿½ Build clean, TypeScript verified zero errors.
 
 ### Actions & Consolidation Details
 
@@ -493,7 +493,7 @@ When the final Mercian Wealth logo file is ready:
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** 815380b
-- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+- **Execution Status:** **PASS** ï¿½ Build clean, TypeScript verified zero errors.
 
 ### Actions & Remediation Log
 
@@ -508,7 +508,7 @@ When the final Mercian Wealth logo file is ready:
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** 4b072ab
-- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+- **Execution Status:** **PASS** ï¿½ Build clean, TypeScript verified zero errors.
 
 ### Actions & Remediation Log
 
@@ -523,7 +523,7 @@ When the final Mercian Wealth logo file is ready:
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** ffef062
-- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+- **Execution Status:** **PASS** ï¿½ Build clean, TypeScript verified zero errors.
 
 ### Actions & Remediation Log
 
@@ -537,7 +537,7 @@ When the final Mercian Wealth logo file is ready:
 
 - **Initiator:** Gurtej Singh (Mercian Wealth)
 - **Commit:** e36544c
-- **Execution Status:** **PASS** — Build clean, TypeScript verified zero errors.
+- **Execution Status:** **PASS** ï¿½ Build clean, TypeScript verified zero errors.
 
 ### Actions & Remediation Log
 
@@ -546,3 +546,23 @@ When the final Mercian Wealth logo file is ready:
 | **Database Column Mapping** | **PASS** | Updated the forms API submit route (pp/api/forms/submit/route.ts) to extract service_interested from the JSON payload and map it directly to the service_interested column inside the Supabase leads database table, ensuring leads data is saved in a structured format rather than only inside unstructured 
 otes. | [app/api/forms/submit/route.ts] |
 | **Client Payload Update** | **PASS** | Modified ooking-flow.tsx's qualification submit handler to transmit the service_interested parameter inside the fetch POST payload payload to /api/forms/submit. | [components/booking-flow.tsx] |
+
+---
+
+## 17. ADMIN DASHBOARD LAYOUT RESTRENGTHENING & ROYAL PURPLE CARBON-FIBER THEME (2026-07-14)
+
+- **Initiator:** Gurtej Singh (Mercian Wealth) / Antigravity AI
+- **Commit:** 7f5c147
+- **Execution Status:** **PASS** - Build confirmed clean (58/58 static pages generated, zero TS/parsing errors).
+
+### Actions & Remediation Log
+
+| Component | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Balanced Layout Grid** | **PASS** | Restructured the admin page main dashboard layout to a balanced 3-column grid layout across wide viewports and responsive stacking on mobile. Eliminated large empty black regions. | [app/(admin)/admin/page.tsx] |
+| **Royal Purple & Carbon-Fiber Background** | **PASS** | Applied a premium, realistic carbon-fiber diagonal weave pattern (tinted with Royal Purple `#6D28D9`) to the admin dashboard main layout and vertical navigation divider border outlines. | [app/globals.css], [app/(admin)/layout.tsx] |
+| **Baseline Capital Realised** | **PASS** | Set baseline sales total to Â£40,000 + actual payments on top, and total contract value by +Â£40,000, isolating changes from database records. | [app/(admin)/admin/page.tsx] |
+| **Purple KPI Text Gradients** | **PASS** | Transformed standard secondary KPI numbers to display in a high-contrast Royal Purple-to-Lavender text gradient. | [components/admin/kpi-row.tsx] |
+| **Active Sidebar Highlight** | **PASS** | Modified active menu link background hover states to use a custom Royal Purple glass background and a solid left accent border indicator. | [components/admin/sidebar.tsx] |
+| **Quick Action Amethyst Glows** | **PASS** | Refactored checklist action link styling in Attention Panel to glow with purple borders and text on hover. | [components/admin/attention-panel.tsx] |
+| **Client Card Borders & Shadow Glows** | **PASS** | Adjusted Client Health card container borders and hover state shadows to utilize slate-purple border outlines and purple backlights. | [components/admin/client-health-grid.tsx] |
