@@ -129,10 +129,10 @@ export function AdminKpiRow({
         {/* Hero: Capital Realised */}
         <button
           onClick={() => togglePanel('sales')}
-          className={`p-3.5 sm:p-6 glass rounded-2xl border transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left hover:scale-[1.02] hover:-translate-y-0.5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent ${
+          className={`p-3.5 sm:p-6 glass rounded-2xl border transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left hover:scale-[1.02] hover:-translate-y-0.5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent ${
             expandedPanel === 'sales'
-              ? 'border-gold/40 shadow-[0_0_30px_rgba(212,175,55,0.12)]'
-              : 'border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)]'
+              ? 'border-gold/40 shadow-[0_0_30px_rgba(139,92,246,0.12)]'
+              : 'border-purple-500/15 hover:border-purple-500/30 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)]'
           }`}
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
@@ -147,7 +147,7 @@ export function AdminKpiRow({
             </p>
           </div>
           <div className="flex flex-col items-center gap-1 shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-all">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center group-hover:bg-gold/20 transition-all">
               <PoundSterling size={18} className="text-gold" />
             </div>
             {expandedPanel === 'sales' ? (
@@ -161,10 +161,10 @@ export function AdminKpiRow({
         {/* Hero: Pipeline Value */}
         <button
           onClick={() => togglePanel('pipeline')}
-          className={`p-3.5 sm:p-6 glass rounded-2xl border transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left hover:scale-[1.02] hover:-translate-y-0.5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent ${
+          className={`p-3.5 sm:p-6 glass rounded-2xl border transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left hover:scale-[1.02] hover:-translate-y-0.5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent ${
             expandedPanel === 'pipeline'
-              ? 'border-gold/40 shadow-[0_0_30px_rgba(212,175,55,0.12)]'
-              : 'border-gold/10 hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)]'
+              ? 'border-gold/40 shadow-[0_0_30px_rgba(139,92,246,0.12)]'
+              : 'border-purple-500/15 hover:border-purple-500/30 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)]'
           }`}
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
@@ -179,7 +179,7 @@ export function AdminKpiRow({
             </p>
           </div>
           <div className="flex flex-col items-center gap-1 shrink-0">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-all">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center group-hover:bg-gold/20 transition-all">
               <Sparkles size={18} className="text-gold" />
             </div>
             {expandedPanel === 'pipeline' ? (
@@ -193,7 +193,7 @@ export function AdminKpiRow({
         {/* Standard: Inbound Pipelines */}
         <button
           onClick={() => handleOpenPreviewModal('leads')}
-          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent hover:border-purple-500/20 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
             <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">
@@ -203,7 +203,7 @@ export function AdminKpiRow({
               {leadsCount ?? 0}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
             <Users size={18} className="text-gold" />
           </div>
         </button>
@@ -211,7 +211,7 @@ export function AdminKpiRow({
         {/* Standard: Active Mandates */}
         <button
           onClick={() => handleOpenPreviewModal('projects')}
-          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent hover:border-purple-500/20 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
             <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">
@@ -221,7 +221,7 @@ export function AdminKpiRow({
               {projectsCount ?? 0}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
             <FolderKanban size={18} className="text-gold" />
           </div>
         </button>
@@ -229,7 +229,7 @@ export function AdminKpiRow({
         {/* Standard: Scheduled Briefings */}
         <button
           onClick={() => handleOpenPreviewModal('bookings')}
-          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent hover:border-purple-500/20 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
             <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">
@@ -239,7 +239,7 @@ export function AdminKpiRow({
               {sessionsCount ?? 0}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
             <Calendar size={18} className="text-gold" />
           </div>
         </button>
@@ -247,7 +247,7 @@ export function AdminKpiRow({
         {/* Standard: MRR Run Rate */}
         <button
           onClick={() => handleOpenPreviewModal('mrr')}
-          className="p-3.5 sm:p-6 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent hover:border-gold/25 hover:shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
+          className="p-3.5 sm:p-6 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent hover:border-purple-500/20 hover:shadow-[0_0_30px_rgba(139,92,246,0.08)] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-between gap-2.5 sm:gap-4 relative group cursor-pointer text-left w-full"
         >
           <div className="space-y-1 sm:space-y-1.5 min-w-0">
             <span className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground block">
@@ -257,7 +257,7 @@ export function AdminKpiRow({
               £{projectedMRR.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </p>
           </div>
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gold/10 border border-purple-500/15 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-all">
             <TrendingUp size={18} className="text-gold" />
           </div>
         </button>
@@ -266,7 +266,7 @@ export function AdminKpiRow({
       {/* Inline Expand Panels */}
       {expandedPanel === 'sales' && (
         <div
-          className="glass border border-gold/25 rounded-2xl p-5 sm:p-6 space-y-4 animate-in slide-in-from-top-2 duration-300"
+          className="glass border border-purple-500/20 rounded-2xl p-5 sm:p-6 space-y-4 animate-in slide-in-from-top-2 duration-300"
           style={{ overflow: 'hidden' }}
         >
           <div className="flex items-center justify-between">
@@ -314,7 +314,7 @@ export function AdminKpiRow({
 
       {expandedPanel === 'pipeline' && (
         <div
-          className="glass border border-gold/25 rounded-2xl p-5 sm:p-6 space-y-4 animate-in slide-in-from-top-2 duration-300"
+          className="glass border border-purple-500/20 rounded-2xl p-5 sm:p-6 space-y-4 animate-in slide-in-from-top-2 duration-300"
           style={{ overflow: 'hidden' }}
         >
           <div className="flex items-center justify-between">
@@ -330,7 +330,7 @@ export function AdminKpiRow({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-gold/10 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
+                <tr className="border-b border-purple-500/15 text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-white/[0.01]">
                   <th className="py-3 px-3">Project</th>
                   <th className="py-3 px-3">Client</th>
                   <th className="py-3 px-3">Status</th>
@@ -353,7 +353,7 @@ export function AdminKpiRow({
                         <td className="py-3 px-3 font-semibold text-foreground">{p.project_name}</td>
                         <td className="py-3 px-3 text-muted-foreground">{p.client_name}</td>
                         <td className="py-3 px-3">
-                          <span className="px-2 py-0.5 rounded bg-gold/5 border border-gold/20 text-[9px] font-bold text-gold">
+                          <span className="px-2 py-0.5 rounded bg-gold/5 border border-purple-500/15 text-[9px] font-bold text-gold">
                             {p.status}
                           </span>
                         </td>
@@ -412,9 +412,9 @@ export function AdminKpiRow({
       {/* ── Metric Cards Detail Preview Modal ───────────────────────────────── */}
       {activeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="w-full max-w-lg glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[85vh] overflow-hidden">
+          <div className="w-full max-w-lg glass border border-purple-500/15 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[85vh] overflow-hidden">
             {/* Header */}
-            <div className="flex items-start justify-between border-b border-gold/10 pb-4">
+            <div className="flex items-start justify-between border-b border-purple-500/15 pb-4">
               <div>
                 <h3 className="font-serif text-base font-bold text-foreground">
                   {activeModal === 'leads'
@@ -458,12 +458,12 @@ export function AdminKpiRow({
                   return (
                     <div className="space-y-5">
                       {/* Goal Meter */}
-                      <div className="p-4 rounded-xl bg-gold/5 border border-gold/15 space-y-3">
+                      <div className="p-4 rounded-xl bg-gold/5 border border-purple-500/15 space-y-3">
                         <div className="flex items-center justify-between text-xs font-bold text-foreground font-serif">
                           <span>£10,000/mo Monthly Profit Target</span>
                           <span className="text-gold font-mono">{percentage}% Achieved</span>
                         </div>
-                        <div className="w-full h-2.5 rounded-full bg-white/5 overflow-hidden border border-gold/10">
+                        <div className="w-full h-2.5 rounded-full bg-white/5 overflow-hidden border border-purple-500/15">
                           <div className="h-full bg-gradient-to-r from-gold to-gold-light transition-all duration-500" style={{ width: `${percentage}%` }} />
                         </div>
                         <div className="flex justify-between text-[10px] text-muted-foreground font-mono">
@@ -476,13 +476,13 @@ export function AdminKpiRow({
                       <div className="space-y-2.5">
                         <label className="text-[10px] font-bold uppercase tracking-widest text-gold/70 block">Retainer Clients Breakdown</label>
                         {modalData.length === 0 ? (
-                          <div className="py-8 text-center text-xs text-muted-foreground/60 italic border border-dashed border-gold/10 rounded-xl">
+                          <div className="py-8 text-center text-xs text-muted-foreground/60 italic border border-dashed border-purple-500/15 rounded-xl">
                             No active projects on monthly retainers.
                           </div>
                         ) : (
                           <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
                             {modalData.map((item) => (
-                              <div key={item.id} className="p-3.5 rounded-xl border border-gold/10 bg-white/[0.01] hover:border-gold/20 flex items-center justify-between gap-3 transition-all">
+                              <div key={item.id} className="p-3.5 rounded-xl border border-purple-500/15 bg-white/[0.01] hover:border-purple-500/15 flex items-center justify-between gap-3 transition-all">
                                 <div className="min-w-0">
                                   <h4 className="text-xs font-bold text-foreground truncate">{item.project_name}</h4>
                                   <p className="text-[10px] text-muted-foreground truncate">Client: {item.client_name}</p>
@@ -507,7 +507,7 @@ export function AdminKpiRow({
                   )
                 })()
               ) : modalData.length === 0 ? (
-                <div className="py-12 text-center text-xs text-muted-foreground/60 italic border border-dashed border-gold/10 rounded-xl">
+                <div className="py-12 text-center text-xs text-muted-foreground/60 italic border border-dashed border-purple-500/15 rounded-xl">
                   No active logs found in this channel.
                 </div>
               ) : (
@@ -515,7 +515,7 @@ export function AdminKpiRow({
                   {modalData.map((item) => (
                     <div
                       key={item.id}
-                      className="p-4 rounded-xl border border-gold/10 bg-white/[0.01] hover:border-gold/25 transition-all flex flex-col gap-2"
+                      className="p-4 rounded-xl border border-purple-500/15 bg-white/[0.01] hover:border-purple-500/20 transition-all flex flex-col gap-2"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <h4 className="text-xs font-bold text-foreground truncate">
@@ -523,7 +523,7 @@ export function AdminKpiRow({
                         </h4>
                         <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider ${
                           activeModal === 'leads'
-                            ? item.status === 'New' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-gold/10 text-gold border border-gold/20'
+                            ? item.status === 'New' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-gold/10 text-gold border border-purple-500/15'
                             : activeModal === 'projects'
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                             : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
@@ -555,10 +555,10 @@ export function AdminKpiRow({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gold/10 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+            <div className="border-t border-purple-500/15 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
               <button
                 onClick={() => setActiveModal(null)}
-                className="px-4 py-2.5 rounded-xl border border-gold/15 hover:bg-white/5 text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer order-last sm:order-first"
+                className="px-4 py-2.5 rounded-xl border border-purple-500/15 hover:bg-white/5 text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer order-last sm:order-first"
               >
                 Close
               </button>
@@ -575,7 +575,7 @@ export function AdminKpiRow({
                       : '/admin/projects?filter=retainer'
                   }
                   onClick={() => setActiveModal(null)}
-                  className="px-4 py-2.5 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-gold/25 hover:border-gold/45 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-purple-500/20 hover:border-purple-500/30 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
                 >
                   {activeModal === 'mrr' ? 'Manage Active Retainers' : 'Open Console'} <ExternalLink size={11} />
                 </Link>

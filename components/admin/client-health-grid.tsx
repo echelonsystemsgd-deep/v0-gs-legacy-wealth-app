@@ -187,7 +187,7 @@ export function ClientHealthGrid({
 
   if (clients.length === 0) {
     return (
-      <section className="p-6 glass rounded-2xl border border-gold/10 flex flex-col items-center justify-center text-center gap-4 min-h-[200px]">
+      <section className="p-6 glass rounded-2xl border border-purple-500/15 flex flex-col items-center justify-center text-center gap-4 min-h-[200px]">
         <div className="w-12 h-12 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center">
           <Users size={22} className="text-gold" />
         </div>
@@ -265,7 +265,7 @@ export function ClientHealthGrid({
             <button
               key={project.id}
               onClick={() => setSelectedProject(project)}
-              className={`relative p-4 glass rounded-2xl border border-gold/10 hover:border-gold/25 hover:shadow-[0_0_20px_rgba(212,175,55,0.06)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full cursor-pointer`}
+              className={`relative p-4 glass rounded-2xl border border-purple-500/15 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.08)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full cursor-pointer`}
             >
               {/* Avatar + Name */}
               <div className="flex items-center gap-3">
@@ -358,7 +358,7 @@ export function ClientHealthGrid({
         {hiddenCount > 0 && (
           <Link
             href="/admin/clients"
-            className="p-4 glass rounded-2xl border border-gold/10 border-dashed hover:border-gold/30 transition-all duration-300 flex flex-col items-center justify-center gap-2 text-center group min-h-[100px]"
+            className="p-4 glass rounded-2xl border border-purple-500/15 border-dashed hover:border-purple-500/30 transition-all duration-300 flex flex-col items-center justify-center gap-2 text-center group min-h-[100px]"
           >
             <div className="w-9 h-9 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/15 transition-all">
               <Users size={16} className="text-gold" />
@@ -379,7 +379,7 @@ export function ClientHealthGrid({
           <div className="w-full max-w-lg glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[85vh] overflow-hidden">
             
             {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-gold/10 pb-4">
+            <div className="flex items-start justify-between border-b border-purple-500/15 pb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
                   <span className="text-xs font-bold text-gold">
@@ -458,7 +458,7 @@ export function ClientHealthGrid({
                 </p>
 
                 {selectedProject.actionRequests.length === 0 ? (
-                  <p className="text-xs text-muted-foreground italic bg-white/[0.01] border border-dashed border-gold/10 p-4 rounded-xl text-center">
+                  <p className="text-xs text-muted-foreground italic bg-white/[0.01] border border-dashed border-purple-500/15 p-4 rounded-xl text-center">
                     No active action requests registered for this client.
                   </p>
                 ) : (
@@ -469,7 +469,7 @@ export function ClientHealthGrid({
                         className={`p-4 rounded-xl border flex flex-col gap-3 transition-all ${
                           req.status === 'submitted'
                             ? 'bg-amber-500/[0.03] border-amber-500/25'
-                            : 'bg-white/[0.02] border-gold/10'
+                            : 'bg-white/[0.02] border-purple-500/15'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-3">
@@ -530,7 +530,7 @@ export function ClientHealthGrid({
             </div>
 
             {/* Modal Footer */}
-            <div className="border-t border-gold/10 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+            <div className="border-t border-purple-500/15 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
               <button
                 onClick={() => setSelectedProject(null)}
                 className="px-4 py-2.5 rounded-xl border border-gold/15 hover:bg-white/5 text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer order-last sm:order-first"

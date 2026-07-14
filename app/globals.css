@@ -8,14 +8,14 @@
   --color-bg-primary: #0A0A0A;      /* main page background */
   --color-bg-secondary: #0D0716;    /* section/card backgrounds */
   --color-bg-tertiary: #130B24;     /* card backgrounds */
-  --color-accent-purple: #5F22B5;   /* Mayfair Royal Purple */
+  --color-accent-purple: #6D28D9;   /* Royal Purple */
   --color-accent-purple-glow: #1D063A; /* subtle background purple glow */
   --color-accent-gold: #C5A059;     /* Antique Polished Gold */
   --color-accent-gold-muted: rgba(197, 160, 89, 0.40); /* secondary gold border accent */
   --color-text-primary: #F0EDE6;    /* headlines, primary text */
   --color-text-secondary: #A3A8B4;  /* Sterling Silver */
   --color-text-gold: #E2C792;       /* highlighted gold text */
-  --color-border: rgba(95, 34, 181, 0.18); /* slate-purple borders */
+  --color-border: rgba(109, 40, 217, 0.18); /* slate-purple borders */
 
   /* Luxury Dark Theme - Always dark, mapped to our new brand variables */
   --background: var(--color-bg-primary);
@@ -515,3 +515,14 @@ input[type="range"]::-moz-range-thumb:active {
   -ms-overflow-style: none;  /* IE/Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Premium micro-carbon-fiber pattern with Royal Purple accents */
+.bg-carbon-purple {
+  background-color: #050308;
+  background-image: 
+    linear-gradient(45deg, #090610 25%, transparent 25%, transparent 75%, #090610 75%, #090610), 
+    linear-gradient(45deg, #090610 25%, transparent 25%, transparent 75%, #090610 75%, #090610);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+}
+

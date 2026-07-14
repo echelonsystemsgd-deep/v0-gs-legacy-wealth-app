@@ -36,7 +36,7 @@ export function TransactionsFeed({
   const displayPayments = payments.slice(0, 3)
 
   return (
-    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
+    <section className="p-4 sm:p-5 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
       <h2 className="text-base font-serif font-bold text-foreground flex items-center gap-2">
         <PoundSterling size={15} className="text-gold" />
         Recent Sales
@@ -82,7 +82,7 @@ export function TransactionsFeed({
 
       {/* Collection Rate Bar */}
       {totalContractValue > 0 && (
-        <div className="space-y-1.5 pt-1 border-t border-gold/10">
+        <div className="space-y-1.5 pt-1 border-t border-purple-500/15">
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
             <span>
               £{totalCollected.toLocaleString('en-GB')} Realised · £{Math.max(0, totalContractValue - totalCollected).toLocaleString('en-GB')} Projected Pipeline
@@ -91,7 +91,7 @@ export function TransactionsFeed({
           </div>
           <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-gold/60 to-gold rounded-full transition-all duration-700"
+              className="h-full bg-gradient-to-r from-purple-600 to-gold rounded-full transition-all duration-700"
               style={{ width: `${Math.min(collectionRate, 100)}%` }}
             />
           </div>
@@ -115,7 +115,7 @@ export function TransactionsFeed({
           <div className="w-full max-w-xl glass border border-gold/20 rounded-2xl shadow-2xl p-6 relative flex flex-col max-h-[80vh] overflow-hidden">
             
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gold/10 pb-4 shrink-0">
+            <div className="flex items-center justify-between border-b border-purple-500/15 pb-4 shrink-0">
               <div className="flex items-center gap-2">
                 <PoundSterling size={18} className="text-gold" />
                 <h3 className="font-serif text-base font-bold text-foreground">
@@ -135,7 +135,7 @@ export function TransactionsFeed({
               {payments.map((payment) => (
                 <div
                   key={payment.id}
-                  className="p-3.5 rounded-xl border border-gold/10 bg-white/[0.01] hover:bg-white/[0.02] flex items-center justify-between gap-4 transition-all"
+                  className="p-3.5 rounded-xl border border-purple-500/15 bg-white/[0.01] hover:bg-white/[0.02] flex items-center justify-between gap-4 transition-all"
                 >
                   <div className="min-w-0 space-y-1">
                     <p className="text-xs font-bold text-foreground truncate">
@@ -165,7 +165,7 @@ export function TransactionsFeed({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gold/10 pt-4 flex justify-end shrink-0">
+            <div className="border-t border-purple-500/15 pt-4 flex justify-end shrink-0">
               <button
                 onClick={() => setShowModal(false)}
                 className="px-4 py-2 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"

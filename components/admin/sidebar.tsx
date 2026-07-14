@@ -158,9 +158,9 @@ export function AdminSidebar() {
         />
       )}
 
-      <aside className={`flex flex-col h-dvh w-64 border-r border-gold/10 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:relative lg:left-0`}>
+      <aside className={`flex flex-col h-dvh w-64 border-r border-purple-500/15 bg-[#0A0A0A]/95 backdrop-blur-md fixed inset-y-0 z-40 transition-[left] duration-300 lg:left-auto ${isOpen ? 'left-0' : 'left-[-256px]'} lg:relative lg:left-0`}>
         {/* Logo */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gold/10 shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-purple-500/15 shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 shrink-0">
               <Image
@@ -178,7 +178,7 @@ export function AdminSidebar() {
         </div>
 
         {/* Console Switcher */}
-        <div className="px-4 py-3.5 border-b border-gold/10 relative shrink-0 z-50">
+        <div className="px-4 py-3.5 border-b border-purple-500/15 relative shrink-0 z-50">
           <button
             onClick={() => setIsSwitcherOpen(!isSwitcherOpen)}
             className="w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl bg-white/[0.02] border border-gold/15 hover:border-gold/30 hover:bg-white/[0.04] transition-all duration-200 text-left cursor-pointer"
@@ -228,7 +228,7 @@ export function AdminSidebar() {
                   <span>Vetting Terminal</span>
                 </Link>
 
-                <div className="h-px bg-gold/10 my-1" />
+                <div className="h-px bg-purple-500/15 my-1" />
 
                 <Link
                   href="/"
@@ -253,7 +253,7 @@ export function AdminSidebar() {
               <button
                 type="button"
                 onClick={() => toggleGroup(group.key)}
-                className="w-full flex items-center justify-between px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-gold/50 hover:text-gold transition-colors cursor-pointer text-left"
+                className="w-full flex items-center justify-between px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-purple-500/50 hover:text-gold transition-colors cursor-pointer text-left"
               >
                 <span>{group.title}</span>
                 <ChevronDown
@@ -280,7 +280,7 @@ export function AdminSidebar() {
                       >
                         <Icon
                           size={14}
-                          className={`shrink-0 transition-colors ${isActive ? 'text-gold' : 'text-muted-foreground group-hover:text-foreground'}`}
+                          className={`shrink-0 transition-colors ${isActive ? 'text-purple-400' : 'text-muted-foreground group-hover:text-foreground'}`}
                         />
                         <span className="flex-1 truncate">{label}</span>
                         {isActive && <ChevronRight size={12} className="text-gold/50" />}
@@ -295,7 +295,7 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer Admin Profile Card */}
-      <div className="px-4 py-3.5 border-t border-gold/10 flex items-center justify-between gap-3 shrink-0 bg-white/[0.01]">
+      <div className="px-4 py-3.5 border-t border-purple-500/15 flex items-center justify-between gap-3 shrink-0 bg-white/[0.01]">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 overflow-hidden flex items-center justify-center relative shrink-0">
             {adminProfile?.avatar_url ? (

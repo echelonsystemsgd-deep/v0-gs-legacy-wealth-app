@@ -32,7 +32,7 @@ export function AttentionPanel({
     todaySessionCount > 0
 
   return (
-    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
+    <section className="p-4 sm:p-5 glass rounded-2xl border border-purple-500/15 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
       <h2 className="text-base font-serif font-bold text-foreground">Attention Needed</h2>
 
       {/* Dynamic rows */}
@@ -135,25 +135,25 @@ export function AttentionPanel({
       </div>
 
       {/* Divider */}
-      <div className="border-t border-gold/10 pt-3 space-y-1.5">
+      <div className="border-t border-purple-500/15 pt-3 space-y-1.5">
         <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
           Quick Actions
         </p>
         <Link
           href="/admin/projects?create=true&redirect=/admin"
-          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-200 flex items-center justify-between"
+          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-purple-600/5 border border-purple-500/15 hover:border-purple-500/35 text-xs font-semibold text-foreground hover:text-purple-400 transition-all duration-200 flex items-center justify-between"
         >
           Deploy Client Mandate <ArrowUpRight size={11} />
         </Link>
         <Link
           href="/admin/leads?status=New"
-          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-200 flex items-center justify-between"
+          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-purple-600/5 border border-purple-500/15 hover:border-purple-500/35 text-xs font-semibold text-foreground hover:text-purple-400 transition-all duration-200 flex items-center justify-between"
         >
           Assess CRM Pipeline <ArrowUpRight size={11} />
         </Link>
         <Link
           href="/admin/bookings?schedule=true&redirect=/admin"
-          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-gold/5 border border-gold/10 hover:border-gold/30 text-xs font-semibold text-foreground hover:text-gold transition-all duration-200 flex items-center justify-between"
+          className="w-full py-2 px-3 rounded-xl bg-background/50 hover:bg-purple-600/5 border border-purple-500/15 hover:border-purple-500/35 text-xs font-semibold text-foreground hover:text-purple-400 transition-all duration-200 flex items-center justify-between"
         >
           Initiate Strategic Call <ArrowUpRight size={11} />
         </Link>
