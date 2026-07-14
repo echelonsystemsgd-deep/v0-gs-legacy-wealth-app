@@ -7,9 +7,6 @@ import { StickyCTAButton } from '@/components/sticky-cta-button'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
-// import { AuditModalProvider } from '@/components/audit-modal-context'
-// import { AuditModal } from '@/components/audit-modal'
-
 import { SITE_COPY } from '@/lib/site-copy'
 
 const playfair = Playfair_Display({
