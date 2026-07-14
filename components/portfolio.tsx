@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, X, ExternalLink, Loader2, Wrench } from "lucide-react"
+import { ArrowRight, X, Loader2, Lock } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
@@ -188,114 +188,16 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
   )
 }
 
-function SitePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
-  const [isLoading, setIsLoading] = useState(true)
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        key="modal-backdrop"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.25 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
-        onClick={onClose}
-      >
-        <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
-
-        <motion.div
-          key="modal-window"
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 20 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-6xl h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-primary/20 bg-card shadow-2xl shadow-black/60"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center gap-3 px-4 py-3 bg-bg-primary border-b border-white/10 shrink-0">
-            <div className="flex gap-1.5">
-              <button
-                onClick={onClose}
-                className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 transition-colors"
-                aria-label="Close modal"
-              />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-              <div className="w-3 h-3 rounded-full bg-green-500/50" />
-            </div>
-
-            <div className="flex-1 mx-2 h-7 bg-white/5 border border-white/10 rounded-lg flex items-center px-3 gap-2 min-w-0">
-              <div className="w-3 h-3 shrink-0 text-accent/60">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </div>
-              <span className="text-xs text-white/40 truncate font-mono">
-                {item.href?.replace("https://", "")}
-              </span>
-            </div>
-
-            <a
-              href={item.href ?? undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[11px] text-accent/60 hover:text-accent transition-colors shrink-0 px-2 py-1 rounded-md hover:bg-white/5"
-            >
-              <ExternalLink size={12} />
-              <span className="hidden sm:inline">Open in tab</span>
-            </a>
-
-            <button
-              onClick={onClose}
-              className="flex items-center justify-center w-7 h-7 rounded-md text-white/40 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-              aria-label="Close"
-            >
-              <X size={14} />
-            </button>
-          </div>
-
-          <div className="relative flex-1 bg-white">
-            {isLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-primary gap-3 z-10">
-                <Loader2 size={28} className="text-accent animate-spin" />
-                <p className="text-sm text-muted-foreground">Loading {item.title}...</p>
-              </div>
-            )}
-            <iframe
-              src={item.href ?? undefined}
-              title={item.title}
-              className="w-full h-full border-0"
-              onLoad={() => setIsLoading(false)}
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            />
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  )
-}
-
-function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
+function RequestSystemSchemaModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText("info@mercianwealth.com")
-      setCopied(true)
-      setTimeout(() => setCopied(false), 3000)
-    } catch (err) {
-      // Fallback
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email || !name) return
     setIsSubmitting(true)
     setErrorMsg(null)
 
@@ -311,15 +213,13 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
     }
 
     try {
-      const res = await fetch('/api/forms/submit', {
+      const res = await fetch('/api/portfolio/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          source: 'portfolio_waitlist',
-          name: name || "Anonymous Visitor",
+          name: name,
           email: email,
-          website: item.href || null,
-          notes: `Waitlist registration for under-construction site: ${item.title}`,
+          project_name: item.title,
           referrer: typeof document !== 'undefined' ? document.referrer : 'none',
           user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'none',
           ...utmParams,
@@ -328,7 +228,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
 
       const result = await res.json()
       if (!res.ok) {
-        throw new Error(result.error || "Failed to register. Please try again.")
+        throw new Error(result.error || "Failed to submit request. Please try again.")
       }
 
       setSubmitted(true)
@@ -342,7 +242,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
   return (
     <AnimatePresence>
       <motion.div
-        key="construction-backdrop"
+        key="schema-backdrop"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -353,24 +253,24 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
         <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
 
         <motion.div
-          key="construction-window"
+          key="schema-window"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-md bg-card border border-primary/20 rounded-2xl overflow-hidden shadow-2xl p-6 md:p-8 text-center"
+          className="relative z-10 w-full max-w-md bg-bg-tertiary border border-primary/20 rounded-2xl overflow-hidden shadow-2xl p-6 md:p-8 text-center"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white/40 hover:text-white hover:bg-white/10 transition-colors rounded-full p-1.5"
+            className="absolute top-4 right-4 text-white/40 hover:text-white hover:bg-white/10 transition-colors rounded-full p-1.5 cursor-pointer"
             aria-label="Close"
           >
             <X size={18} />
           </button>
 
           <div className="relative mx-auto w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-accent-gold mb-6">
-            <Wrench size={28} />
+            <Lock size={28} />
           </div>
 
           <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
@@ -380,74 +280,52 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
             {SITE_COPY.portfolioPage.constructionDescription}
           </p>
 
-          {errorMsg ? (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-6 text-center"
-            >
-              <div className="py-4 px-3 bg-white/5 border border-white/10 rounded-xl space-y-3">
-                <p className="text-xs font-serif text-accent uppercase tracking-widest leading-none font-bold">
-                  Registry Offline
-                </p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Our automated invitation queue is currently undergoing scheduled refinement. To secure early access and submit your inquiry, please contact our concierge team directly.
-                </p>
-              </div>
+          {errorMsg && (
+            <div className="mb-4 text-xs text-red-400 bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-lg text-left">
+              {errorMsg}
+            </div>
+          )}
 
-              <div className="space-y-3">
-                <button
-                  onClick={handleCopy}
-                  className="w-full flex flex-col items-center justify-center gap-1 py-4 px-4 rounded-xl bg-card border border-primary/20 hover:border-primary/45 text-accent transition-all cursor-pointer relative overflow-hidden group"
-                >
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent-gold/60 leading-none">
-                    Concierge Desk Email
-                  </span>
-                  <span className="text-sm font-semibold font-mono tracking-wide text-foreground mt-1 group-hover:text-accent-gold transition-colors">
-                    info@mercianwealth.com
-                  </span>
-                  <span className="text-[10px] text-muted-foreground mt-1 underline decoration-primary/30 group-hover:decoration-primary transition-all">
-                    {copied ? "✓ Copied to clipboard!" : "Click to copy email"}
-                  </span>
-                </button>
-
-                <a
-                  href="mailto:info@mercianwealth.com?subject=Inquiry%20regarding%20Portfolio"
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/95 transition-all cursor-pointer"
-                >
-                  <span>Open Mail Client</span>
-                  <ArrowRight size={16} />
-                </a>
-              </div>
-            </motion.div>
-          ) : submitted ? (
+          {submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-4 px-3 bg-primary/5 border border-primary/20 rounded-xl text-sm text-accent-gold"
+              className="py-6 px-4 bg-primary/10 border border-primary/20 rounded-xl text-center space-y-3"
             >
-              <p className="font-bold mb-1">Access Request Confirmed!</p>
-              <p className="text-xs text-muted-foreground">Check your inbox. The sanitized blueprints and Loom video walkthrough are on their way.</p>
+              <div className="w-12 h-12 rounded-full bg-accent-gold/20 border border-accent-gold/40 flex items-center justify-center mx-auto text-accent-gold">
+                <svg className="w-6 h-6 animate-bounce text-accent-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h4 className="font-serif text-lg font-bold text-accent-gold">Request Received</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Your request for the sanitized blueprints and case study of <strong>{item.title}</strong> has been secured. We will transmit the walkthrough details directly to <strong>{email}</strong> shortly.
+              </p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-3 text-left">
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">{SITE_COPY.portfolioPage.nameLabel}</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">
+                    {SITE_COPY.portfolioPage.nameLabel} *
+                  </label>
                   <input
+                    required
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Enter your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 hover:border-primary/45 focus:border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">{SITE_COPY.portfolioPage.emailLabel}</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">
+                    {SITE_COPY.portfolioPage.emailLabel} *
+                  </label>
                   <input
                     required
                     type="email"
-                    placeholder="name@example.com"
+                    placeholder="name@business.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 hover:border-primary/45 focus:border-primary/60 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none transition-all font-sans"
@@ -458,10 +336,10 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/95 disabled:opacity-50 transition-all cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent-gold text-bg-primary font-bold hover:bg-accent-gold/90 disabled:opacity-50 transition-all cursor-pointer"
               >
                 {isSubmitting ? (
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 size={16} className="animate-spin text-bg-primary" />
                 ) : (
                   <>
                      <span>{SITE_COPY.portfolioPage.submitBtnText}</span>
@@ -475,7 +353,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
           <div className="mt-6 pt-4 border-t border-white/5">
             <button
               onClick={onClose}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4 cursor-pointer"
+              className="text-xs text-muted-foreground hover:text-accent-gold transition-colors underline underline-offset-4 cursor-pointer"
             >
               Go Back to Portfolio
             </button>
@@ -488,8 +366,7 @@ function UnderConstructionModal({ item, onClose }: { item: PortfolioItem; onClos
 
 export function Portfolio({ limit }: { limit?: number }) {
   const supabase = createClient()
-  const [activeModal, setActiveModal] = useState<PortfolioItem | null>(null)
-  const [constructionModal, setConstructionModal] = useState<PortfolioItem | null>(null)
+  const [requestSchemaModal, setRequestSchemaModal] = useState<PortfolioItem | null>(null)
   const [items, setItems] = useState<PortfolioItem[]>(DEFAULT_PORTFOLIO)
 
   useEffect(() => {
@@ -593,7 +470,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
+                        onClick={() => setRequestSchemaModal(item)}
                       >
                         <span className="text-xs font-bold uppercase tracking-wider">
                           View Project →
@@ -615,7 +492,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                   </div>
                   <button
                     className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
-                    onClick={() => item.underConstruction ? setConstructionModal(item) : (item.href ? setActiveModal(item) : undefined)}
+                    onClick={() => setRequestSchemaModal(item)}
                   >
                     View →
                   </button>
@@ -643,14 +520,9 @@ export function Portfolio({ limit }: { limit?: number }) {
         </div>
       </section>
 
-      {/* Site Preview Modal */}
-      {activeModal && (
-        <SitePreviewModal item={activeModal} onClose={() => setActiveModal(null)} />
-      )}
-
-      {/* Under Construction Modal */}
-      {constructionModal && (
-        <UnderConstructionModal item={constructionModal} onClose={() => setConstructionModal(null)} />
+      {/* Request System Schema Modal */}
+      {requestSchemaModal && (
+        <RequestSystemSchemaModal item={requestSchemaModal} onClose={() => setRequestSchemaModal(null)} />
       )}
     </>
   )
