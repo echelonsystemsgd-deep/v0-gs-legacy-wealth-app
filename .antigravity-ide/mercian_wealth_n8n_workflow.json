@@ -1,0 +1,287 @@
+{
+  "name": "Mercian Wealth - Gated Portfolio Lead Nurture",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "0391bf66-36e5-4003-82c9-70df65c1512a",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-node-id",
+      "name": "Webhook Receiver",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "{\"success\":true}",
+        "options": {}
+      },
+      "id": "response-node-id",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        450,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.source }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "portfolio_request",
+              "output": 0
+            }
+          ]
+        }
+      },
+      "id": "switch-node-id",
+      "name": "Check Source",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        450,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.body.email }}",
+        "subject": "={{ `🔓 [Blueprint Access] Sanitized System Schema: ` + $json.body.project_name }}",
+        "emailType": "html",
+        "html": "=<!DOCTYPE html>\n<html>\n<body style=\"background-color: #0A0A0A; color: #F0EDE6; font-family: sans-serif; padding: 40px 20px; margin: 0;\">\n  <div style=\"max-width: 600px; margin: 0 auto; border: 1px solid #C5A059; padding: 30px; background-color: #0D0716; text-align: left;\">\n    <h2 style=\"color: #C5A059; font-family: serif; letter-spacing: 1px; text-align: center; margin-bottom: 5px;\">MERCIAN WEALTH</h2>\n    <p style=\"color: #A3A8B4; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; text-align: center; margin-top: 0; margin-bottom: 30px;\">Digital Systems &amp; AI Engineering</p>\n    \n    <p style=\"font-size: 15px; line-height: 1.7;\">Dear {{ $json.body.name.split(' ')[0] }},</p>\n    <p style=\"font-size: 15px; line-height: 1.7;\">Your access request for the system schema and case study of the <strong>{{ $json.body.project_name }}</strong> has been verified.</p>\n    \n    <div style=\"background-color: #130B24; border-left: 3px solid #C5A059; padding: 15px; margin: 25px 0;\">\n      <h4 style=\"color: #C5A059; margin: 0 0 5px 0; font-size: 13px;\">🔓 SECURED ASSETS:</h4>\n      <ul style=\"margin: 0; padding-left: 20px; font-size: 13px; color: #A3A8B4; line-height: 1.6;\">\n        <li>Sanitized Blueprint: <a href=\"https://mercianwealth.com/blueprints/placeholder.pdf\" style=\"color: #C5A059; text-decoration: underline;\">Download Schema PDF</a></li>\n        <li>Video Walkthrough: <a href=\"https://mercianwealth.com/blueprints/placeholder-video\" style=\"color: #C5A059; text-decoration: underline;\">Watch 3-Min Loom</a></li>\n      </ul>\n    </div>\n\n    <p style=\"font-size: 14px; line-height: 1.7; color: #A3A8B4;\">In this system, we eliminated over 97% of administrative friction and automated lead routing straight to client CRM channels within 840ms. If you are interested in auditing your own brand's digital infrastructure for similar operational leverage, we can conduct a forensic audit.</p>\n    \n    <div style=\"text-align: center; margin: 35px 0;\">\n      <a href=\"https://calendly.com/gslegacywealth/30min\" style=\"display: inline-block; background-color: #5F22B5; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C5A059; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;\">Book Systems Audit</a>\n    </div>\n  </div>\n</body>\n</html>"
+      },
+      "id": "email-1-node-id",
+      "name": "Send Email 1 (Immediate)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        680,
+        350
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-credential-id",
+          "name": "mercianwealthgs@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "wait-1-node-id",
+      "name": "Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        880,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.body.email }}",
+        "subject": "The \"Manual Admin Tax\" draining high-ticket agencies",
+        "emailType": "html",
+        "html": "=<!DOCTYPE html>\n<html>\n<body style=\"background-color: #0A0A0A; color: #F0EDE6; font-family: sans-serif; padding: 40px 20px; margin: 0;\">\n  <div style=\"max-width: 600px; margin: 0 auto; border: 1px solid #C5A059; padding: 30px; background-color: #0D0716; text-align: left;\">\n    <h2 style=\"color: #C5A059; font-family: serif; letter-spacing: 1px; text-align: center; margin-bottom: 5px;\">MERCIAN WEALTH</h2>\n    \n    <p style=\"font-size: 15px; line-height: 1.7;\">Hi {{ $json.body.name.split(' ')[0] }},</p>\n    <p style=\"font-size: 15px; line-height: 1.7;\">Yesterday, you requested the system schema for the <strong>{{ $json.body.project_name }}</strong>. Today, I want to talk about the silent killer of growth: <strong>The Manual Tax</strong>.</p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">Relying on agents or managers to copy-paste form inputs into CRM tables, send follow-ups, and calendar invites leaks up to 15% of your pipeline value. For every minute an inbound lead waits, the probability of converting them decays by 40%.</p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">We replace this friction with custom cloud routing pipelines. The moment a client engages, they are qualified, synced, and calendar routed in less than 5 seconds.</p>\n    \n    <div style=\"text-align: center; margin: 35px 0;\">\n      <a href=\"https://calendly.com/gslegacywealth/30min\" style=\"display: inline-block; background-color: #5F22B5; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C5A059; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;\">Quantify Your Deficit</a>\n    </div>\n  </div>\n</body>\n</html>"
+      },
+      "id": "email-2-node-id",
+      "name": "Send Email 2 (Diagnostic)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        350
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-credential-id",
+          "name": "mercianwealthgs@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 48,
+        "unit": "hours"
+      },
+      "id": "wait-2-node-id",
+      "name": "Wait 48 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.body.email }}",
+        "subject": "Case Study: Reclaiming 30+ hours/week",
+        "emailType": "html",
+        "html": "=<!DOCTYPE html>\n<html>\n<body style=\"background-color: #0A0A0A; color: #F0EDE6; font-family: sans-serif; padding: 40px 20px; margin: 0;\">\n  <div style=\"max-width: 600px; margin: 0 auto; border: 1px solid #C5A059; padding: 30px; background-color: #0D0716; text-align: left;\">\n    <h2 style=\"color: #C5A059; font-family: serif; letter-spacing: 1px; text-align: center; margin-bottom: 5px;\">MERCIAN WEALTH</h2>\n    \n    <p style=\"font-size: 15px; line-height: 1.7;\">Hi {{ $json.body.name.split(' ')[0] }},</p>\n    <p style=\"font-size: 15px; line-height: 1.7;\">When we partner with high-ticket agencies, they usually ask: <em>\"Will this actually save my team time?\"</em></p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">Our partner James Carter recovered <strong>30+ hours per week</strong> of manual administrative busywork by integrating our autonomic data pipelines. His response times dropped from 24 hours to 45 seconds, resulting in immediate pipeline lifts.</p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">To maintain absolute quality and founder-level engineering focus, we only accept exactly 2 new integration partnerships each month. Our slots for this cohort are currently filling up.</p>\n    \n    <div style=\"text-align: center; margin: 35px 0;\">\n      <a href=\"https://calendly.com/gslegacywealth/30min\" style=\"display: inline-block; background-color: #5F22B5; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C5A059; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;\">Apply for Cohort Integration</a>\n    </div>\n  </div>\n</body>\n</html>"
+      },
+      "id": "email-3-node-id",
+      "name": "Send Email 3 (Social Proof)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        350
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-credential-id",
+          "name": "mercianwealthgs@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "wait-3-node-id",
+      "name": "Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.body.email }}",
+        "subject": "Forensic Operational Audit",
+        "emailType": "html",
+        "html": "=<!DOCTYPE html>\n<html>\n<body style=\"background-color: #0A0A0A; color: #F0EDE6; font-family: sans-serif; padding: 40px 20px; margin: 0;\">\n  <div style=\"max-width: 600px; margin: 0 auto; border: 1px solid #C5A059; padding: 30px; background-color: #0D0716; text-align: left;\">\n    <h2 style=\"color: #C5A059; font-family: serif; letter-spacing: 1px; text-align: center; margin-bottom: 5px;\">MERCIAN WEALTH</h2>\n    \n    <p style=\"font-size: 15px; line-height: 1.7;\">Hi {{ $json.body.name.split(' ')[0] }},</p>\n    <p style=\"font-size: 15px; line-height: 1.7;\">I noticed you downloaded our schema blueprints for <strong>{{ $json.body.project_name }}</strong> a few days ago, but haven't booked an audit session yet.</p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">If you are looking to map out your digital channels, identify system leakage, and replace manual overhead with high-performance autonomic software, let's schedule a 30-minute forensic audit.</p>\n    <p style=\"font-size: 15px; line-height: 1.7; color: #A3A8B4;\">We'll review your current CRM pipelines and draw up a custom systems roadmap for your brand.</p>\n    \n    <div style=\"text-align: center; margin: 35px 0;\">\n      <a href=\"https://calendly.com/gslegacywealth/30min\" style=\"display: inline-block; background-color: #5F22B5; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C5A059; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;\">Schedule 30-Min Audit</a>\n    </div>\n  </div>\n</body>\n</html>"
+      },
+      "id": "email-4-node-id",
+      "name": "Send Email 4 (Final CTA)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1880,
+        350
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gmail-credential-id",
+          "name": "mercianwealthgs@gmail.com"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Receiver": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Source": {
+      "main": [
+        [
+          {
+            "node": "Send Email 1 (Immediate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email 1 (Immediate)": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Send Email 2 (Diagnostic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email 2 (Diagnostic)": {
+      "main": [
+        [
+          {
+            "node": "Wait 48 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 48 Hours": {
+      "main": [
+        [
+          {
+            "node": "Send Email 3 (Social Proof)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email 3 (Social Proof)": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Send Email 4 (Final CTA)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "meta": null,
+  "pinData": {}
+}
