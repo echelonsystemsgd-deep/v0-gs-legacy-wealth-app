@@ -36,7 +36,7 @@ export function TransactionsFeed({
   const displayPayments = payments.slice(0, 3)
 
   return (
-    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 space-y-4">
+    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
       <h2 className="text-base font-serif font-bold text-foreground flex items-center gap-2">
         <PoundSterling size={15} className="text-gold" />
         Recent Sales
@@ -85,7 +85,7 @@ export function TransactionsFeed({
         <div className="space-y-1.5 pt-1 border-t border-gold/10">
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
             <span>
-              £{totalCollected.toLocaleString('en-GB')} of £{totalContractValue.toLocaleString('en-GB')} collected
+              £{totalCollected.toLocaleString('en-GB')} Realised · £{Math.max(0, totalContractValue - totalCollected).toLocaleString('en-GB')} Projected Pipeline
             </span>
             <span className="font-bold text-gold">{collectionRate}%</span>
           </div>

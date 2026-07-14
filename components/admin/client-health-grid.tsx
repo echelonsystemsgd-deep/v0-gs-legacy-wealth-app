@@ -253,7 +253,7 @@ export function ClientHealthGrid({
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {displayed.map((project) => {
           const stageBadge = getStageBadge(project.status)
           const healthBorder = getHealthBorder(project)
@@ -319,6 +319,18 @@ export function ClientHealthGrid({
                 >
                   {project.status}
                 </span>
+
+                {(health === 'Blocked' || health === 'Awaiting Client') && (
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toast.success(`Nudge notification sent to ${project.client_name}`)
+                    }}
+                    className="px-2 py-0.5 rounded-md bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 text-[8px] font-bold text-amber-400 uppercase tracking-wider transition-all cursor-pointer hover:border-amber-400/40"
+                  >
+                    Nudge
+                  </span>
+                )}
 
                 <div className="flex items-center gap-1.5">
                   {project.unreadMessageCount > 0 && (

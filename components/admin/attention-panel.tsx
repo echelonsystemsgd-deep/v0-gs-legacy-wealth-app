@@ -32,7 +32,7 @@ export function AttentionPanel({
     todaySessionCount > 0
 
   return (
-    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 space-y-4">
+    <section className="p-4 sm:p-5 glass rounded-2xl border border-gold/10 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent space-y-4 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-300">
       <h2 className="text-base font-serif font-bold text-foreground">Attention Needed</h2>
 
       {/* Dynamic rows */}

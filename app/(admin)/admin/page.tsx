@@ -241,18 +241,20 @@ export default async function AdminDashboardPage() {
       {/* ── Today's Schedule Strip ───────────────────────────────────────────── */}
       <TodayScheduleStrip sessions={safeTodaySessions} />
 
-      {/* ── Main Grid: Client Health + Right Sidebar ─────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+      {/* ── Main Grid: Balanced Three-Column Cockpit ─────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
           <ClientHealthGrid clients={clientHealthData} maxItems={3} showViewAll />
         </div>
-        <div className="space-y-6">
+        <div>
           <AttentionPanel
             unreadMessagesCount={totalUnreadMessages}
             pendingApprovalsCount={totalSubmittedActionRequests}
             coldLeadsCount={coldLeadsCount ?? 0}
             todaySessionCount={safeTodaySessions.length}
           />
+        </div>
+        <div className="md:col-span-2 lg:col-span-1">
           <TransactionsFeed
             payments={safePayments}
             totalCollected={totalSales}

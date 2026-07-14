@@ -115,12 +115,18 @@ Review and polish all 15 admin pages:
 ### Phase 24 — Symmetrical Dashboard Command & Authority Refactor (Machiavellian Approach)
 - **Goal:** Redesign the dashboard layout to establish visual authority, simplify administrative workflows, and implement boundary control mechanisms that enforce client compliance.
 - **Implementation:**
-  - **Sovereign Command Console Layout:** Replace the current busy background borders with flat, borderless panels. Use strict, centered title grids with Outfit/Cinzel serif typography and high-contrast, low-density gold accenting (`#D4AF37`) to signal premium, executive authority.
+  - **Sovereign Command Console Layout (Balanced Three-Column Cockpit):** Restructure the `/admin` main grid from `lg:grid-cols-3` (with left `lg:col-span-2` and right column) to a balanced three-column layout (`grid-cols-1 lg:grid-cols-3`) on desktop:
+    * Column 1: Client Health Feed (vertical layout stack for active mandates). If only one client card is active (e.g., "Ali Nawaz"), it stretches to fill the column width cleanly, resolving the black empty space issue.
+    * Column 2: Attention Needed & Quick Actions.
+    * Column 3: Recent Sales & Collection Progress.
+    * Bottom: Activity Log Panel (full-width span).
+    * This layout is fully responsive, collapsing to a single-column stack on mobile (`grid-cols-1`) and a 2-column/stacked view on tablet (`md:grid-cols-2 lg:grid-cols-3`) to guarantee cross-device visual balance without overflow or layout shifts.
   - **Right-Side Sliding Drawer Sheets:** Replace fullscreen redirects and heavy dialog modals with responsive, side-sliding Sheets (drawers) for projects, leads, and transaction details. This ensures the admin cockpit view remains active and centered at all times.
   - **Asymmetric Checklist Control (Client Bottlenecks):** Combine client health and attention statuses into a unified "Bottleneck Tasklist" highlighting client-side blockers (e.g., *Asset Upload Awaiting*). Client health checks are stage-aware (Discovery/Design: 3 days, Development: 14 days, Revision: 7 days) and require both message and project update inactivity before flagging a client as "Blocked".
   - **Psychological Nudge & Boundary Triggers:** Embed automatic due-date nudge controls next to blocker items. When clicked, these trigger webhook notifications styled as personalized emails from the agency director.
   - **Portal Suspension Safeguards:** Implement milestone lock options in the project settings. If a client fails to provide layout approvals within 48 hours, the administrator can freeze portal features, displaying an elegant "Mandate Paused — Contact Director to Reactivate" interface. Suspended accounts are explicitly labelled as "Suspended" in the cockpit with neutral styling, and suspension triggers use the secure `admin-user-actions` Edge Function to bypass client RLS limits and record audit trail entries.
   - **Optimistic State & Teletime Broadcasters:** Ensure the cockpit updates immediately when toggles are clicked, with background rollbacks on Supabase API failures.
+  - **Recent Sales Progress Copy Refinement:** Update the collection rate progress bar in the Transactions panel to display `£[totalCollected] Realised · £[projectedPipeline] Projected Pipeline` (specifically £40,000 Realised · £4,500 Projected Pipeline based on active contract telemetry), replacing the busy `£X of £Y collected` text. The transactions feed list itself remains blank (omitting manual transaction entries for the gold sale as it doesn't map to web design project milestones).
 
 ---
 
