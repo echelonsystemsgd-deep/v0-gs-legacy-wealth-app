@@ -33,15 +33,15 @@ export default async function AdminDashboardPage() {
     .eq('is_archived', false)
     .order('updated_at', { ascending: false })
 
-  // Financials derived from a single projects query
-  const totalSales = projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0
+  // Financials derived from a single projects query (adding 40k baseline)
+  const totalSales = (projectsFinancials?.reduce((sum, p) => sum + (Number(p.amount_paid) || 0), 0) || 0) + 40000
   const totalPipeline = projectsFinancials?.reduce((sum, p) => {
     const projectedValue = p.contract_value && Number(p.contract_value) > 0
       ? Number(p.contract_value)
       : (Number(p.one_time_fee) || 0)
     return sum + (projectedValue - (Number(p.amount_paid) || 0))
   }, 0) || 0
-  const totalContractValue = projectsFinancials?.reduce((sum, p) => sum + ((p.contract_value && Number(p.contract_value) > 0) ? Number(p.contract_value) : (Number(p.one_time_fee) || 0)), 0) || 0
+  const totalContractValue = (projectsFinancials?.reduce((sum, p) => sum + ((p.contract_value && Number(p.contract_value) > 0) ? Number(p.contract_value) : (Number(p.one_time_fee) || 0)), 0) || 0) + 40000
   const projectedMRR = projectsFinancials?.reduce((sum, p) => sum + (p.contract_type === 'retainer' ? (Number(p.retainer_amount) || 0) : 0), 0) || 0
   // Project count derived — no separate query needed
   const projectsCount = projectsFinancials?.length ?? 0
