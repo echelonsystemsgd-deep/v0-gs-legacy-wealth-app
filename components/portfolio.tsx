@@ -40,7 +40,8 @@ const DEFAULT_PORTFOLIO: PortfolioItem[] = [
     title: "Prestige Properties",
     category: "Lead System · Real Estate",
     gradient: "from-emerald-500/20 to-teal-500/20",
-    underConstruction: true,
+    href: "https://real-estate-application-build.vercel.app/",
+    underConstruction: false,
     metric: "£4.2M Pipeline Sync",
   },
   {
@@ -112,7 +113,10 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
         <div className="flex-1 p-3 flex flex-col justify-between">
           <div className="flex justify-between items-center">
             <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest font-serif">PRESTIGE</span>
-            <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">ESTATES</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">ESTATES</span>
+              <span className="text-[6px] text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-full font-mono">PROTOTYPE</span>
+            </div>
           </div>
           <div className="space-y-1">
             <h4 className="text-[11px] font-bold text-white leading-tight">The Premier Penthouse</h4>
@@ -455,9 +459,16 @@ export function Portfolio({ limit }: { limit?: number }) {
                 {/* Hover Reveal Slide-Up Overlay — Desktop only */}
                 <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 hidden md:flex flex-col justify-center items-center p-8 text-center space-y-4">
                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 space-y-3">
-                    <p className="text-xs uppercase tracking-widest text-accent-gold font-semibold">
-                      {item.category}
-                    </p>
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
+                      <p className="text-xs uppercase tracking-widest text-accent-gold font-semibold">
+                        {item.category}
+                      </p>
+                      {item.href && !item.underConstruction && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">
+                          Prototype
+                        </span>
+                      )}
+                    </div>
                     <h3 className="font-serif text-2xl font-bold text-white">
                       {item.title}
                     </h3>
@@ -467,15 +478,29 @@ export function Portfolio({ limit }: { limit?: number }) {
                       </p>
                     )}
                     <div className="pt-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setRequestSchemaModal(item)}
-                      >
-                        <span className="text-xs font-bold uppercase tracking-wider">
-                          View Project →
-                        </span>
-                      </Button>
+                      {item.href && !item.underConstruction ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          asChild
+                        >
+                          <a href={item.href} target="_blank" rel="noopener noreferrer">
+                            <span className="text-xs font-bold uppercase tracking-wider">
+                              View Prototype →
+                            </span>
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setRequestSchemaModal(item)}
+                        >
+                          <span className="text-xs font-bold uppercase tracking-wider">
+                            View Project →
+                          </span>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -483,19 +508,37 @@ export function Portfolio({ limit }: { limit?: number }) {
                 {/* Mobile Bottom Bar — always visible, hidden on desktop */}
                 <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm">
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none mb-0.5 truncate">
-                      {item.category} {item.metric ? `· ${item.metric}` : ''}
-                    </p>
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none truncate">
+                        {item.category} {item.metric ? `· ${item.metric}` : ''}
+                      </p>
+                      {item.href && !item.underConstruction && (
+                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-full font-mono">
+                          Prototype
+                        </span>
+                      )}
+                    </div>
                     <h3 className="font-serif text-sm font-bold text-white truncate">
                       {item.title}
                     </h3>
                   </div>
-                  <button
-                    className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
-                    onClick={() => setRequestSchemaModal(item)}
-                  >
-                    View →
-                  </button>
+                  {item.href && !item.underConstruction ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
+                    >
+                      View →
+                    </a>
+                  ) : (
+                    <button
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
+                      onClick={() => setRequestSchemaModal(item)}
+                    >
+                      View →
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}
