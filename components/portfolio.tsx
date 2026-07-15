@@ -536,6 +536,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                            fill
                            className="object-cover object-top"
                            sizes="(max-width: 768px) 100vw, 50vw"
+                           priority={index === 0}
                         />
                       </div>
                     </div>
