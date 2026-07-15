@@ -37,10 +37,11 @@ const DEFAULT_PORTFOLIO: PortfolioItem[] = [
     metric: "94% Booking Rate",
   },
   {
-    title: "Prestige Properties",
+    title: "Sterling Direct Purchases",
     category: "Lead System · Real Estate",
     gradient: "from-emerald-500/20 to-teal-500/20",
     href: "https://real-estate-application-build.vercel.app/",
+    image: "/sterling-direct-purchases-preview.png",
     underConstruction: false,
     metric: "£4.2M Pipeline Sync",
   },
@@ -96,7 +97,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
     )
   }
 
-  if (item.title === "Prestige Properties") {
+  if (item.title === "Sterling Direct Purchases") {
     return (
       <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
         <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
@@ -106,29 +107,29 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
           </div>
           <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
-            prestigeproperties.com
+            sterlingdirectpurchases.co.uk
           </div>
           <div className="w-4" />
         </div>
         <div className="flex-1 p-3 flex flex-col justify-between">
           <div className="flex justify-between items-center">
-            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest font-serif">PRESTIGE</span>
+            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest font-serif">STERLING</span>
             <div className="flex items-center gap-1">
-              <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">ESTATES</span>
+              <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">PURCHASES</span>
               <span className="text-[6px] text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-full font-mono">PROTOTYPE</span>
             </div>
           </div>
           <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-white leading-tight">The Premier Penthouse</h4>
-            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Luxury architectural design with panoramic cityscape views.</p>
+            <h4 className="text-[11px] font-bold text-white leading-tight">Direct Property Acquisitions</h4>
+            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Guaranteed fast cash purchases for UK residential property.</p>
           </div>
           <div className="bg-bg-secondary border border-white/5 rounded p-2 flex justify-between items-center">
             <div>
-              <span className="text-[6px] text-white/40 block font-mono">GUIDE PRICE</span>
-              <span className="text-[9px] font-bold text-[#f5f5f7]">£4,250,000</span>
+              <span className="text-[6px] text-white/40 block font-mono">TIMELINE SPEED</span>
+              <span className="text-[9px] font-bold text-[#f5f5f7]">14-Day Completion</span>
             </div>
             <div className="w-8 h-3.5 bg-emerald-500/20 border border-emerald-500/40 rounded flex items-center justify-center">
-              <span className="text-[6px] text-emerald-400 font-bold font-mono">INQUIRE</span>
+              <span className="text-[6px] text-emerald-400 font-bold font-mono">GET OFFER</span>
             </div>
           </div>
         </div>
@@ -368,9 +369,96 @@ function RequestSystemSchemaModal({ item, onClose }: { item: PortfolioItem; onCl
   )
 }
 
+function PrototypePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
+  const [loading, setLoading] = useState(true)
+
+  if (!item.href) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        key="preview-backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6"
+        onClick={onClose}
+      >
+        <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
+
+        <motion.div
+          key="preview-window"
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="relative z-10 w-full h-full md:h-[85vh] md:max-w-6xl bg-bg-tertiary md:border md:border-white/10 rounded-none md:rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 bg-bg-secondary border-b border-white/5 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+              </div>
+              <div className="h-4 w-px bg-white/10" />
+              <div className="text-left">
+                <h4 className="font-serif text-sm font-bold text-white leading-tight">
+                  {item.title}
+                </h4>
+                <p className="text-[10px] uppercase tracking-wider text-accent-gold font-semibold leading-none mt-0.5">
+                  {item.category}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onClose}
+                className="text-white/40 hover:text-white hover:bg-white/10 transition-colors rounded-full p-1.5 cursor-pointer"
+                aria-label="Close Preview"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Prototype Banner */}
+          <div className="bg-amber-500/10 border-b border-amber-500/10 text-amber-400 py-2 px-4 text-center text-[10px] md:text-xs font-semibold font-sans flex items-center justify-center gap-1.5 tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span>Interactive Demo · Sandbox Preview Mode</span>
+          </div>
+
+          {/* Interactive Frame Box */}
+          <div className="flex-1 relative bg-black/40">
+            {loading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-tertiary z-20 transition-opacity duration-300">
+                <Loader2 className="w-8 h-8 text-accent-gold animate-spin" />
+                <p className="text-xs text-muted-foreground font-mono">
+                  Loading prototype viewport...
+                </p>
+              </div>
+            )}
+            <iframe
+              src={item.href}
+              className="w-full h-full border-none bg-white"
+              onLoad={() => setLoading(false)}
+              sandbox="allow-same-origin allow-scripts allow-forms"
+            />
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
 export function Portfolio({ limit }: { limit?: number }) {
   const supabase = createClient()
   const [requestSchemaModal, setRequestSchemaModal] = useState<PortfolioItem | null>(null)
+  const [previewPrototype, setPreviewPrototype] = useState<PortfolioItem | null>(null)
   const [items, setItems] = useState<PortfolioItem[]>(DEFAULT_PORTFOLIO)
 
   useEffect(() => {
@@ -482,13 +570,11 @@ export function Portfolio({ limit }: { limit?: number }) {
                         <Button
                           size="sm"
                           variant="outline"
-                          asChild
+                          onClick={() => setPreviewPrototype(item)}
                         >
-                          <a href={item.href} target="_blank" rel="noopener noreferrer">
-                            <span className="text-xs font-bold uppercase tracking-wider">
-                              View Prototype →
-                            </span>
-                          </a>
+                          <span className="text-xs font-bold uppercase tracking-wider">
+                            View Prototype →
+                          </span>
                         </Button>
                       ) : (
                         <Button
@@ -523,17 +609,15 @@ export function Portfolio({ limit }: { limit?: number }) {
                     </h3>
                   </div>
                   {item.href && !item.underConstruction ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
+                    <button
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
+                      onClick={() => setPreviewPrototype(item)}
                     >
                       View →
-                    </a>
+                    </button>
                   ) : (
                     <button
-                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity"
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
                       onClick={() => setRequestSchemaModal(item)}
                     >
                       View →
@@ -566,6 +650,11 @@ export function Portfolio({ limit }: { limit?: number }) {
       {/* Request System Schema Modal */}
       {requestSchemaModal && (
         <RequestSystemSchemaModal item={requestSchemaModal} onClose={() => setRequestSchemaModal(null)} />
+      )}
+
+      {/* Prototype Preview Modal */}
+      {previewPrototype && (
+        <PrototypePreviewModal item={previewPrototype} onClose={() => setPreviewPrototype(null)} />
       )}
     </>
   )
