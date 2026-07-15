@@ -117,7 +117,7 @@ export default function ClientsPage() {
   const [healthFilter, setHealthFilter] = useState<'All' | 'Blocked' | 'Awaiting Client' | 'On Track' | 'Suspended'>('All')
 
   // Messages (for health board unread counts)
-  const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string; created_at: string }[]>([])
+  const [allMessages, setAllMessages] = useState<{ id: string; project_id: string; sender_id: string; created_at: string; is_read?: boolean }[]>([])
 
   // Action requests (for health board detail modals)
   const [dbActionRequests, setDbActionRequests] = useState<any[]>([])
@@ -199,7 +199,7 @@ export default function ClientsPage() {
       // 5. Fetch messages for health board unread counts
       const { data: msgs } = await supabase
         .from('messages')
-        .select('id, project_id, sender_id, created_at')
+        .select('id, project_id, sender_id, created_at, is_read')
       setAllMessages((msgs as any) ?? [])
 
       // 6. Fetch action requests
@@ -528,7 +528,7 @@ export default function ClientsPage() {
     const lastMessageByProject: Record<string, string> = {}
     
     for (const msg of allMessages) {
-      if (msg.sender_id !== currentUserId) {
+      if (msg.sender_id !== currentUserId && !msg.is_read) {
         unreadByProject[msg.project_id] = (unreadByProject[msg.project_id] || 0) + 1
       }
       if (!lastMessageByProject[msg.project_id] || msg.created_at > lastMessageByProject[msg.project_id]) {

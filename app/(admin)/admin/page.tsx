@@ -73,10 +73,10 @@ export default async function AdminDashboardPage() {
     clientAvatarMap[cp.id] = cp.avatar_url || null
   }
 
-  // Client messages (exclude admin's own — those are replies, not unread)
+  // Client messages (exclude admin's own and already read ones)
   const { data: clientMessages } = adminId
-    ? await supabase.from('messages').select('id, project_id, sender_id, created_at').neq('sender_id', adminId)
-    : await supabase.from('messages').select('id, project_id, sender_id, created_at')
+    ? await supabase.from('messages').select('id, project_id, sender_id, created_at').neq('sender_id', adminId).eq('is_read', false)
+    : await supabase.from('messages').select('id, project_id, sender_id, created_at').eq('is_read', false)
 
   // Active action requests (pending + submitted)
   const { data: activeActionRequests } = await supabase

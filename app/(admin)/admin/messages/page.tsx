@@ -26,6 +26,7 @@ type Message = {
   sender_id: string
   content: string
   created_at: string
+  is_read?: boolean
 }
 
 export default function AdminMessageDesk() {
@@ -147,21 +148,33 @@ export default function AdminMessageDesk() {
           const isFromOther = newMsg.sender_id !== adminUserId
 
           if (isFromOther) {
-            playChime()
+            if (newMsg.project_id === selectedProjectId) {
+              // Automatically mark as read in DB since the chat is open
+              supabase
+                .from('messages')
+                .update({ is_read: true })
+                .eq('id', newMsg.id)
+                .then(({ error }) => {
+                  if (error) console.error('Failed to mark real-time message read:', error)
+                })
+              newMsg.is_read = true
+            } else {
+              playChime()
 
-            if (
-              typeof window !== 'undefined' &&
-              'Notification' in window &&
-              Notification.permission === 'granted'
-            ) {
-              new Notification('New Client Message', {
-                body: newMsg.content,
-                icon: '/favicon.ico',
-              })
-            }
+              if (
+                typeof window !== 'undefined' &&
+                'Notification' in window &&
+                Notification.permission === 'granted'
+              ) {
+                new Notification('New Client Message', {
+                  body: newMsg.content,
+                  icon: '/favicon.ico',
+                })
+              }
 
-            if (document.hidden) {
-              startTitleFlash()
+              if (document.hidden) {
+                startTitleFlash()
+              }
             }
           }
 
@@ -184,7 +197,7 @@ export default function AdminMessageDesk() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase, adminUserId])
+  }, [supabase, adminUserId, selectedProjectId])
 
   // Scroll chat window to bottom
   useEffect(() => {
@@ -193,6 +206,37 @@ export default function AdminMessageDesk() {
       container.scrollTop = container.scrollHeight
     }
   }, [selectedProjectId, allMessages])
+
+  // Automatically mark client messages as read when opening conversation
+  useEffect(() => {
+    if (!selectedProjectId || !adminUserId) return
+
+    const markAsRead = async () => {
+      try {
+        const { error } = await supabase
+          .from('messages')
+          .update({ is_read: true })
+          .eq('project_id', selectedProjectId)
+          .neq('sender_id', adminUserId)
+          .eq('is_read', false)
+
+        if (error) throw error
+
+        // Update local state to reflect read status
+        setAllMessages((prev) =>
+          prev.map((m) =>
+            m.project_id === selectedProjectId && m.sender_id !== adminUserId
+              ? { ...m, is_read: true }
+              : m
+          )
+        )
+      } catch (err) {
+        console.error('Error marking messages as read:', err)
+      }
+    }
+
+    markAsRead()
+  }, [selectedProjectId, adminUserId, supabase])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()

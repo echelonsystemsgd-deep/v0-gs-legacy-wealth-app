@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -144,6 +144,44 @@ export function ClientHealthGrid({
   const router = useRouter()
   const [selectedProject, setSelectedProject] = useState<ProjectWithHealth | null>(null)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [markingRead, setMarkingRead] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setCurrentUserId(data.user.id)
+      }
+    })
+  }, [supabase])
+
+  const handleMarkMessagesRead = async (projectId: string) => {
+    setMarkingRead(true)
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('project_id', projectId)
+        .neq('sender_id', currentUserId || '')
+
+      if (error) throw error
+
+      toast.success('All client messages marked as read.')
+      
+      if (selectedProject) {
+        setSelectedProject({
+          ...selectedProject,
+          unreadMessageCount: 0,
+        })
+      }
+
+      router.refresh()
+    } catch (err: any) {
+      toast.error(`Update failed: ${err.message}`)
+    } finally {
+      setMarkingRead(false)
+    }
+  }
 
   // Sort by urgency score
   const sorted = [...clients].sort((a, b) => getUrgencyScore(b) - getUrgencyScore(a))
@@ -438,10 +476,19 @@ export function ClientHealthGrid({
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   {selectedProject.unreadMessageCount > 0 ? (
-                    <p className="text-xs text-amber-400 font-medium flex items-center gap-1.5">
-                      <MessageSquare size={13} />
-                      {selectedProject.unreadMessageCount} unread message{selectedProject.unreadMessageCount > 1 ? 's' : ''} from client.
-                    </p>
+                    <div className="flex items-center justify-between w-full gap-2">
+                      <p className="text-xs text-amber-400 font-medium flex items-center gap-1.5">
+                        <MessageSquare size={13} />
+                        {selectedProject.unreadMessageCount} unread message{selectedProject.unreadMessageCount > 1 ? 's' : ''} from client.
+                      </p>
+                      <button
+                        onClick={() => handleMarkMessagesRead(selectedProject.id)}
+                        disabled={markingRead}
+                        className="px-2.5 py-1 bg-gold/15 hover:bg-gold/25 border border-gold/30 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gold hover:text-white transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {markingRead ? 'Marking...' : 'Mark Read'}
+                      </button>
+                    </div>
                   ) : (
                     <p className="text-xs text-muted-foreground italic flex items-center gap-1.5">
                       <CheckCircle2 size={13} className="text-green-400" />
