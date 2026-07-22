@@ -566,3 +566,22 @@ otes. | [app/api/forms/submit/route.ts] |
 | **Active Sidebar Highlight** | **PASS** | Modified active menu link background hover states to use a custom Royal Purple glass background and a solid left accent border indicator. | [components/admin/sidebar.tsx] |
 | **Quick Action Amethyst Glows** | **PASS** | Refactored checklist action link styling in Attention Panel to glow with purple borders and text on hover. | [components/admin/attention-panel.tsx] |
 | **Client Card Borders & Shadow Glows** | **PASS** | Adjusted Client Health card container borders and hover state shadows to utilize slate-purple border outlines and purple backlights. | [components/admin/client-health-grid.tsx] |
+
+---
+
+## 18. MERCIAN WEALTH FULL SITE REDESIGN, BRAND SWEEP & SYSTEM AUDIT (2026-07-22)
+
+- **Initiator:** Mercian Wealth / Antigravity AI
+- **Commit:** `bc8ea75`
+- **Execution Status:** **PASS** — Build clean, TypeScript verified 0 errors (`npx tsc --noEmit`), 0 legacy brand occurrences remaining.
+
+### Actions & Remediation Log
+
+| Category | Status | Action Details | Files Modified |
+| :--- | :---: | :--- | :--- |
+| **Brand Replacement Sweep** | **PASS** | Replaced all instances of legacy brand text (`GS Legacy Wealth`, `gslegacywealth`) across code files with `Mercian Wealth` and updated public contact email to `mercianwealthgs@gmail.com`. | [app/loading.tsx], [app/book/page.tsx], [app/(auth)/layout.tsx], [app/(auth)/login/layout.tsx], [app/(auth)/login/page.tsx], [app/(auth)/forgot-password/page.tsx], [app/(user)/dashboard/layout.tsx], [app/(client)/client/page.tsx], [app/(admin)/admin/content/page.tsx], [app/api/revalidate-pricing/route.ts], [app/api/forms/submit/route.ts], [components/dashboard/dashboard-client-container.tsx], [components/dashboard/portal-hub.tsx], [components/booking-flow.tsx], [next.config.mjs], [.env.local], [components/footer.tsx], [app/contact/page.tsx], [app/api/portfolio/request/route.ts] |
+| **5-Section Structural Redesign** | **PASS** | Streamlined homepage from 8 stacked sections down to a high-velocity 5-section narrative journey (Hero → Deficit → Infrastructure → Cohort & Capital → Closing). Offloaded FAQ to `/process` & `/book`, relocated ROI slider to `/pricing#roi-calculator`. | [app/page.tsx], [components/hero.tsx], [components/bottleneck.tsx], [components/why-mercian-wealth.tsx], [components/testimonials.tsx], [components/pricing.tsx], [components/cta.tsx] |
+| **Zero Fabrication & Cohort Status** | **PASS** | Replaced fictional client testimonials with Option B Launch Cohort Status Card (`eyebrow: "ACTIVE DEPLOYMENT COHORT"`). All capability claims framed honestly with *"Engineered for..."*. | [components/testimonials.tsx], [lib/site-copy.ts] |
+| **Plain-English Copy Audit** | **PASS** | Replaced "autonomic" jargon across eyebrows, titles, and tier descriptions with plain-English equivalents (*"Bespoke Digital Infrastructure & Automated Engines"*, *"Automated Pipeline Architecture"*, *"Systems Built for Speed"*). | [lib/site-copy.ts], [components/hero.tsx], [components/why-mercian-wealth.tsx], [components/pricing.tsx] |
+| **Responsive Layout Bottlenecks** | **PASS** | Converted Bottleneck left-panel fixed height constraints (`min-h-[440px]`) to `h-auto` and `overflow-visible`, enlarged mobile navigation touch targets (`py-3.5 px-4`), and fixed footer wrapping. | [components/bottleneck.tsx], [components/navbar.tsx], [components/testimonials.tsx] |
+

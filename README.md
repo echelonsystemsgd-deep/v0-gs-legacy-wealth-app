@@ -1,6 +1,6 @@
-# 🏛️ GS Legacy Wealth AI — Developer Hub
+# 🏛️ Mercian Wealth — Developer Hub
 
-Welcome to the **GS Legacy Wealth AI** web application and administrative hub. This repository is built as a hybrid architecture combining a high-performance **Next.js App Router** frontend with a robust **Supabase** backend. It is designed to engineer luxury digital assets, streamline client onboarding, showcase agency portfolio/testimonials, and handle lead/project operations.
+Welcome to the **Mercian Wealth** web application and administrative hub. This repository is built as a hybrid architecture combining a high-performance **Next.js App Router** frontend with a robust **Supabase** backend. It is designed to engineer luxury digital assets, streamline client onboarding, showcase agency portfolio/testimonials, and handle lead/project operations.
 
 ---
 
