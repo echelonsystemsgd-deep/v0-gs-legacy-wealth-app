@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export function CTA() {
@@ -60,8 +59,11 @@ export function CTA() {
             </Link>
           </Button>
 
-          <div className="w-full max-w-md border-t border-white/5 pt-6 mt-2">
-            <SpeedGapVisualizer />
+          <div className="pt-4 flex flex-col items-center gap-2 text-xs text-text-secondary">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/20 text-[10px] font-mono text-accent-gold uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Direct Founder SLA · Response Under 12 Hours
+            </span>
           </div>
         </motion.div>
       </div>

@@ -528,7 +528,7 @@ function BookingFlowInner() {
                 type="tel" placeholder="e.g. +44 7123 456789" value={identity.phone}
                 onChange={(v) => updateIdentity("phone", v)} error={identityErrors.phone} />
               <FieldInput id="companyName" label="Company Name" icon={<Building2 size={11} className="text-accent-gold" />}
-                placeholder="e.g. GS Ventures" value={identity.companyName}
+                placeholder="e.g. Mercian Partners" value={identity.companyName}
                 onChange={(v) => updateIdentity("companyName", v)} error={identityErrors.companyName} />
               <FieldInput id="websiteUrl" label="Website URL" icon={<Globe size={11} className="text-accent-gold" />}
                 type="url" placeholder="e.g. https://yourbrand.com" value={identity.websiteUrl}

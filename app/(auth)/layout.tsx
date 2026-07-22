@@ -36,7 +36,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               Secure Gateway
             </p>
             <h1 className="font-serif text-xl font-bold text-foreground mt-1">
-              GS Legacy Wealth AI
+              Mercian Wealth
             </h1>
           </div>
         </div>

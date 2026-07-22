@@ -27,15 +27,15 @@ export default function Loading() {
           />
         </motion.div>
 
-        {/* GS Monogram */}
+        {/* Mercian Wealth Monogram */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="relative z-10 flex flex-col items-center"
         >
-          <div className="font-serif text-5xl sm:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gold-light via-gold to-gold-dark animate-pulse glow-gold">
-            GS
+          <div className="font-serif text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gold-light via-gold to-gold-dark animate-pulse glow-gold">
+            <BrandLogo wordmarkOnly />
           </div>
           <motion.div
             initial={{ width: 0 }}

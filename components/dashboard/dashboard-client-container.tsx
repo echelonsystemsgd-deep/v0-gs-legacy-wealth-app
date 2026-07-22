@@ -1035,7 +1035,7 @@ export default function DashboardClientContainer({
                   <h3 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
                     <Zap size={16} className="text-gold" /> Authority Vault
                   </h3>
-                  <p className="text-xs text-muted-foreground">Case studies from GS Legacy Wealth AI-powered systems.</p>
+                  <p className="text-xs text-muted-foreground">Case studies from Mercian Wealth AI-powered systems.</p>
                 </div>
 
                 {[

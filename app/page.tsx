@@ -1,13 +1,12 @@
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { Bottleneck } from "@/components/bottleneck"
-import { CommodityTrap } from "@/components/commodity-trap"
 import { WhyMercianWealth } from "@/components/why-mercian-wealth"
 import { Testimonials } from "@/components/testimonials"
 import { Pricing } from "@/components/pricing"
-import { FAQHome } from "@/components/faq-home"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
+import { SectionDivider } from "@/components/section-divider"
 import { getPricingTiers } from "@/lib/pricing"
 
 export const revalidate = 60
@@ -70,12 +69,14 @@ export default async function Home() {
       />
       <Navbar />
       <Hero />
+      <SectionDivider chapter="I" title="Operational Friction" />
       <Bottleneck />
-      <CommodityTrap />
+      <SectionDivider chapter="II" title="System Architecture" />
       <WhyMercianWealth />
+      <SectionDivider chapter="III" title="Cohort Telemetry & Allocation" />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
-      <FAQHome />
+      <SectionDivider chapter="IV" title="Initiate Integration" />
       <CTA />
       <Footer />
     </main>

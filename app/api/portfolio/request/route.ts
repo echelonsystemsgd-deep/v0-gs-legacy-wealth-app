@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <onboarding@resend.dev>'
       const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC'
 
-      // Email A: Notification to business owner (info@mercianwealth.com)
+      // Email A: Notification to business owner (mercianwealthgs@gmail.com)
       const ownerEmailHtml = `
         <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
           <div style="text-align: center; margin-bottom: 30px;">
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
 
           <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #8E8E93;">
             <p style="margin: 0 0 8px 0; font-weight: bold; color: #C5A059;">MERCIAN WEALTH</p>
-            <p style="margin: 0 0 15px 0; font-style: italic;">Building Wealth. Creating Legacy. Giving Back.</p>
+            <p style="margin: 0 0 15px 0; font-style: italic;">Align, Protect, Multiply, Legacy.</p>
             <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.4);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
           </div>
         </div>
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
         // 1. Notify Owner
         await resend.emails.send({
           from: fromEmail,
-          to: 'info@mercianwealth.com',
+          to: 'mercianwealthgs@gmail.com',
           subject: `✨ [Schema Request] ${name} requested ${project_name}`,
           html: ownerEmailHtml,
         })

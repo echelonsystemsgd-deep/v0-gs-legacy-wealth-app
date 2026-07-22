@@ -34,11 +34,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'https://mercianwealth.com'
-  ),
+  metadataBase: new URL('https://mercianwealth.com'),
   title: {
     default: SITE_COPY.metadata.layout.defaultTitle,
     template: SITE_COPY.metadata.layout.titleTemplate

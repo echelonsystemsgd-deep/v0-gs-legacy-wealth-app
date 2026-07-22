@@ -21,14 +21,18 @@ export function Hero() {
       />
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">
-        {/* Eyebrow label */}
+        {/* Eyebrow label & Scarcity Indicator */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 mb-6"
+          className="flex flex-col sm:flex-row items-center gap-3 mb-6"
         >
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/25 text-[10px] font-mono font-semibold text-accent-gold uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS PER COHORT
+          </span>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple hidden sm:inline">
             [ {data.eyebrow} ]
           </span>
         </motion.div>
@@ -95,7 +99,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-text-secondary border-t border-border-brand/20 pt-8 w-full max-w-3xl"
+          className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-2.5 text-xs sm:text-sm text-text-secondary border-t border-border-brand/20 pt-8 w-full max-w-3xl"
         >
           {Array.isArray(data.trustItems) && data.trustItems.map((item: string, idx: number) => (
             <span key={idx} className="flex items-center gap-1.5">

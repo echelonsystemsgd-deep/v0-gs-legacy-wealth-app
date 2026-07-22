@@ -199,7 +199,7 @@ export function Navbar() {
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo - Crest Only */}
+          {/* Logo - Crest + Wordmark Combo */}
           <button
             suppressHydrationWarning
             onClick={() => {
@@ -210,17 +210,25 @@ export function Navbar() {
                 setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
               }
             }}
-            className="flex items-center gap-3 cursor-pointer"
-            aria-label="Go to homepage top"
+            className="flex items-center gap-3 cursor-pointer group"
+            aria-label="Mercian Wealth Homepage"
           >
-            <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-14 w-14"}`}>
+            <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-12 w-12"}`}>
               <BrandLogo
                 variant="logo"
-                alt="Mercian Wealth Logo"
+                alt="Mercian Wealth Crest"
                 fill
-                className="object-contain mix-blend-screen"
+                className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
                 priority
               />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="font-serif font-bold text-lg sm:text-xl tracking-wide text-foreground group-hover:text-accent-gold transition-colors duration-200">
+                <span className="text-accent-gold">Mercian</span> Wealth
+              </span>
+              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent-gold/70 -mt-1 hidden sm:block">
+                Autonomic Systems Lab
+              </span>
             </div>
           </button>
 

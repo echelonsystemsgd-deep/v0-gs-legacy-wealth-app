@@ -82,7 +82,7 @@ export function PortalHub() {
     <aside className="w-[72px] shrink-0 bg-[#050505] border-r border-gold/10 flex flex-col items-center py-4 justify-between select-none z-30 h-screen sticky top-0 hidden lg:flex">
       {/* Top Stack */}
       <div className="flex flex-col gap-3.5 items-center w-full">
-        {/* Brand GS Logo Icon */}
+        {/* Brand Mercian Wealth Logo Icon */}
         <Link href="/" className="relative group flex items-center justify-center w-full h-12 mb-2">
           <div className="absolute left-0 w-1 h-5 bg-gold rounded-r-md transition-all scale-0 group-hover:scale-100" />
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gold/25 transition-all duration-300 group-hover:border-gold group-hover:rounded-xl">

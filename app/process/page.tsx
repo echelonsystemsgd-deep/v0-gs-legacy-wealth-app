@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar"
 import { Process } from "@/components/process"
+import { FAQHome } from "@/components/faq-home"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
@@ -22,6 +23,7 @@ export default function ProcessPage() {
         subtitle={data.headerSubtitle}
       />
       <Process />
+      <FAQHome />
       <CTA />
       <Footer />
     </main>

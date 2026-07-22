@@ -11,8 +11,8 @@ import { useWebsiteContent } from "@/hooks/use-website-content"
 export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
-    tagline: "Building Wealth. Creating Legacy. Giving Back.",
-    email: "info@mercianwealth.com",
+    tagline: "Align, Protect, Multiply, Legacy.",
+    email: "mercianwealthgs@gmail.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929",
     instagramLink: "https://instagram.com/mercianwealth",

@@ -17,7 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 
-const ADMIN_SECRET = process.env.ADMIN_REVALIDATE_SECRET ?? 'gs-legacy-admin-revalidate'
+const ADMIN_SECRET = process.env.ADMIN_REVALIDATE_SECRET ?? 'mercian-wealth-admin-revalidate'
 
 export async function POST(req: NextRequest) {
   const key = req.headers.get('x-admin-key')

@@ -51,6 +51,14 @@ export function Bottleneck() {
           <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">
             {data.goldSlogan}
           </p>
+
+          {/* Commodity Trap Absorbed Callout Box */}
+          <div className="mt-8 p-4 rounded-xl border border-accent-gold/30 bg-accent-gold/5 max-w-2xl mx-auto text-left flex items-start gap-3">
+            <span className="text-accent-gold text-base shrink-0 mt-0.5">✦</span>
+            <p className="text-xs sm:text-sm text-text-primary opacity-90 leading-relaxed font-medium">
+              <strong className="text-accent-gold font-serif">A Note on Commodity Infrastructure:</strong> Off-the-shelf templates and budget web builders look economical until you calculate lost instructions. We build high-converting infrastructure engineered for absolute market leverage.
+            </p>
+          </div>
         </motion.div>
 
         {/* ── Visual + Cards side-by-side ── */}
@@ -64,8 +72,8 @@ export function Bottleneck() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 flex justify-center"
           >
-            <div className="relative w-full max-w-md min-h-[440px] sm:min-h-[460px] md:aspect-square bg-bg-tertiary border border-border-brand/20 p-6 rounded-xl shadow-2xl flex flex-col justify-between items-center overflow-hidden">
-              <div className="absolute top-4 left-4 flex items-center gap-2">
+            <div className="relative w-full max-w-lg h-auto bg-bg-tertiary border border-border-brand/20 p-5 sm:p-6 rounded-xl shadow-2xl flex flex-col justify-start items-center overflow-visible">
+              <div className="w-full flex items-center gap-2 mb-3 pb-3 border-b border-white/5">
                 <span className={`w-2.5 h-2.5 rounded-full ${isOrdered ? "bg-accent-gold animate-pulse" : "bg-red-500 animate-pulse"}`} />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-text-primary opacity-70">
                   {data.systemMode} {isOrdered ? data.modeAutomated : data.modeManual}
@@ -73,8 +81,8 @@ export function Bottleneck() {
               </div>
 
               {/* Interactive Node Graph */}
-              <div className="flex-1 w-full flex items-center justify-center pt-8 pb-4">
-                <svg viewBox="0 0 400 400" className="w-full h-full max-h-[220px] sm:max-h-[320px]">
+              <div className="w-full flex items-center justify-center py-2">
+                <svg viewBox="0 0 400 400" className="w-full h-auto max-h-[220px] sm:max-h-[260px]">
                   {/* Connection Lines */}
                   {isOrdered ? (
                     <>
@@ -133,7 +141,7 @@ export function Bottleneck() {
               </div>
 
               {/* Toggle Switch */}
-              <div className="w-full border-t border-white/5 pt-4 flex flex-col sm:flex-row gap-4 items-center sm:justify-between bg-transparent relative z-20 shrink-0">
+              <div className="w-full border-t border-white/10 pt-4 mt-4 flex flex-col sm:flex-row gap-4 items-center sm:justify-between bg-transparent relative z-20 shrink-0">
                 <div className="flex flex-col text-center sm:text-left">
                   <span className="text-xs font-semibold text-text-primary opacity-80 leading-relaxed">
                     {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}

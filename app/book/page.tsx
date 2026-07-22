@@ -3,6 +3,7 @@ import Link from "next/link"
 import { BrandLogo } from "@/components/brand-logo"
 import { ArrowLeft, Shield, Clock, Star } from "lucide-react"
 import { BookingFlow } from "@/components/booking-flow"
+import { FAQHome } from "@/components/faq-home"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export const metadata: Metadata = {
@@ -94,10 +95,10 @@ export default function BookPage() {
               <p className="text-xs text-muted-foreground font-semibold">— {data.socialProofAuthor}</p>
             </div>
 
-            {/* Decorative GS Monogram */}
-            <div className="hidden lg:flex items-center gap-3 opacity-20 select-none pointer-events-none">
+            {/* Decorative Mercian Monogram */}
+            <div className="hidden lg:flex items-center gap-3 opacity-30 select-none pointer-events-none">
               <div className="h-px flex-1 bg-accent-gold/50" />
-              <span className="font-serif text-4xl font-bold text-accent-gold">GS</span>
+              <span className="font-serif text-sm font-bold tracking-widest uppercase text-accent-gold">Mercian Wealth</span>
               <div className="h-px flex-1 bg-accent-gold/50" />
             </div>
           </div>
@@ -107,7 +108,7 @@ export default function BookPage() {
             {/* GDPR / Data Notice — replaces the hidden Calendly in-widget banner */}
             <div className="flex items-start gap-3 px-4 py-3 rounded-xl border border-accent-gold/10 bg-accent-gold/5">
               <Shield size={13} className="text-accent-gold/70 mt-0.5 shrink-0" />
-              <p className="text-xxs text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Your name, email, and responses are captured here and shared with{" "}
                 <a
                   href="https://calendly.com/pages/privacy"
@@ -130,6 +131,11 @@ export default function BookPage() {
             <BookingFlow />
           </div>
 
+        </div>
+
+        {/* Objections Handling FAQ Section */}
+        <div className="mt-20 border-t border-white/10 pt-16">
+          <FAQHome />
         </div>
       </div>
     </main>

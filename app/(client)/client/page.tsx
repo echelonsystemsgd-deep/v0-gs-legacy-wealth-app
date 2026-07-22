@@ -353,7 +353,7 @@ export default async function ClientDashboardPage() {
                 <GrowthTelemetry />
               ) : (project.status === 'Development' || project.status === 'Revision') ? (
                 <StagingPreview 
-                  previewUrl={project.preview_url || project.live_url || 'https://gslegacywealth.com'} 
+                  previewUrl={project.preview_url || project.live_url || 'https://mercianwealth.com'} 
                   projectUpdates={projectUpdates} 
                 />
               ) : null}

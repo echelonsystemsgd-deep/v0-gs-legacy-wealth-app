@@ -36,8 +36,8 @@ const DEFAULT_SECTIONS: Record<SectionKey, any> = {
     ]
   },
   footer: {
-    copyright: 'Â© 2026 GS Legacy Wealth AI. All rights reserved.',
-    email: 'agency@gslegacywealth.ai',
+    copyright: '© 2026 Mercian Wealth. All Rights Reserved.',
+    email: 'mercianwealthgs@gmail.com',
     phone: '+1 (555) 019-2831',
     address: 'London, UK',
     twitter_url: 'https://twitter.com',
@@ -145,7 +145,7 @@ export default function ContentPage() {
         try {
           await fetch('/api/revalidate-pricing', {
             method: 'POST',
-            headers: { 'x-admin-key': 'gs-legacy-admin-revalidate' },
+            headers: { 'x-admin-key': 'mercian-wealth-admin-revalidate' },
           })
         } catch {
           // Non-fatal — the 60s background revalidation will still pick it up
@@ -183,7 +183,7 @@ export default function ContentPage() {
       try {
         await fetch('/api/revalidate-pricing', {
           method: 'POST',
-          headers: { 'x-admin-key': 'gs-legacy-admin-revalidate' },
+          headers: { 'x-admin-key': 'mercian-wealth-admin-revalidate' },
         })
       } catch { /* non-fatal */ }
     }

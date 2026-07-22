@@ -71,68 +71,68 @@ export const SITE_COPY = {
 
   // Homepage Sections
   homepage: {
-    // 1. Hero Section (UK Real Estate Agency Voice - National Scope)
+    // 1. Hero Section
     hero: {
-      eyebrow: "Bespoke Digital Infrastructure & Autonomic Systems",
-      headline: "We Build Digital Systems for Category-Dominant UK Agencies & High-Ticket Operators. The Rest Chase Them.",
-      subheadline: "We do not build generic templates or standard websites. We engineer high-performance visual platforms and automated pipelines for UK operators and agencies who refuse to lose another instruction, listing, or high-value client to operational drag. Selectively aligned. Flawlessly executed.",
-      primaryCtaText: "Request System Integration Audit",
-      secondaryCtaText: "Deployed System Registry",
+      eyebrow: "Bespoke Digital Infrastructure & Automated Engines",
+      headline: "While You Read This, Your Competitors Are Acquiring Speed. You Are Paying the Manual Tax.",
+      subheadline: "Every hour your business relies on manual lead routing, delayed follow-ups, and static web pages, high-value instructions slip quietly to faster operators. We build digital engines engineered for sub-60-second intent capture.",
+      primaryCtaText: "Quantify Your Operational Deficit →",
+      secondaryCtaText: "Review Deployed Systems",
       trustItems: [
-        "10+ Bespoke Deployments",
-        "Autonomic Orchestrations",
+        "Automated Pipeline Architecture",
+        "Sub-60s Intent Capture Capability",
         "Fluid Mobile Architecture",
-        "Guaranteed Throughput",
+        "Guaranteed System Throughput",
       ],
-      unsureText: "Unsure of your requirements? Review our Execution Protocol →",
+      unsureText: "Unsure of your requirements? Review our 28-Day Execution Protocol →",
     },
 
-    // 2. Deficit Diagnostic (Speed Visualizer / Telemetry - UK Real Estate Agency Voice)
+    // 2. Deficit Diagnostic
     bottleneck: {
-      eyebrow: "Operational Friction",
-      headline: "Your agency is leaking instructions. Stop paying the manual tax.",
-      subheadline: "Relying on manual lead routing, delayed response times, and disconnected databases is operational negligence. For every day your system remains un-automated, your listing acquisition cost quietly compounds.",
+      eyebrow: "UNSEEN REVENUE DECAY",
+      headline: "You Are Contracting While Faster Operators Scale.",
+      subheadline: "High-ticket clients do not wait 3 hours for a response. When an instruction inquiry reaches your inbox, the clock starts. If you take 30 minutes to reply, a competitor with automated lead triage has already booked the session.",
       goldSlogan: "Speed is the ultimate unfair advantage. While you wait to automate, your competitors are buying speed. They aren't smarter; they simply have more leverage.",
       systemMode: "System Mode: ",
       modeAutomated: "Automated & Connected",
-      modeManual: "Manual Chaos",
-      triggerBtnActive: "Deactivate AI Hub",
-      triggerBtnInactive: "Activate AI Hub",
-      diagnosticLink: "Quantify Your System Deficit →",
+      modeManual: "Manual Drag",
+      triggerBtnActive: "Deactivate Automated Engine",
+      triggerBtnInactive: "Activate Automated Engine",
+      diagnosticLink: "Quantify Your Operational Deficit →",
       
       cards: [
         {
           title: "Deals Going Cold",
-          description: "Every minute a high-value buyer or vendor lead sits unqualified in your inbox is a decay in conversion probability. We automate immediate, high-context engagement to capture intent before it cools.",
+          description: "Unqualified inquiries sitting in email inboxes for hours cause immediate competitive lead drop-off.",
         },
         {
           title: "Wasted Agency Hours",
-          description: "Your agents lose hours copying lead forms to CRMs instead of pitching properties. We build direct pipelines from capture to CRM, eliminating repetitive entry.",
+          description: "Fee-earners wasting hours copy-pasting form inputs into CRM dashboards instead of closing instructions.",
         },
         {
           title: "Manual Follow-Up Failure",
-          description: "Warm vendor inquiries slip through the cracks of a busy inbox. We engineer automated follow-up sequences that run indefinitely, securing your pipeline.",
+          description: "Warm vendor inquiries forgotten after initial contact due to disconnected follow-up sequences.",
         },
       ],
     },
 
-    // 3. Commodity Trap (Market Indictment - UK Real Estate Agency Voice)
+    // 3. Commodity Trap
     commodityTrap: {
       eyebrow: "The Commodity Trap",
-      headline: "The Hidden Cost of the \"Free\" Web Builder Illusion.",
-      description: "The high-ticket B2B and agency markets are saturated with platforms promising free websites, cheap templates, and easy setups. Operators opt in, only to discover quiet compounding costs: high-value client leads dropping off due to 10-second page speeds, outdated database listings, and siloed software that requires constant manual copying. They sell you basic tools. They do not sell you outcomes. They disappear after the transaction. Mercian Wealth does not sell tools. We build high-performance digital estates and take full ownership of their operational output.",
+      headline: "A Cheap Website Is the Most Expensive Asset You Will Ever Own.",
+      description: "Budget web builders look economical until you calculate lost instructions. 10-second mobile load times, clunky lead forms, and manual copy-pasting into CRMs quietly bleed your margins. Commodity agencies sell you graphics. We build high-converting infrastructure engineered for market dominance.",
     },
 
-    // 4. Mercian Wealth Difference (Broadened to all High-Ticket/High-Margin Operators)
+    // 4. Mercian Wealth Difference
     whyMercianWealth: {
-      headline: "Engineered for Leverage. Built for Prestige.",
-      description: "We focus on premium, custom digital assets tailored specifically for businesses ready to dominate their space. By combining luxury visual storytelling with AI automation, we ensure your online presence acts as a 24/7 revenue-generating asset rather than a static brochure.",
+      headline: "We Build Leverage. The Rest Build Overhead.",
+      description: "Traditional agencies bill you by the hour to push pixels and stretch deadlines. We build autonomous sales infrastructure designed to eliminate administrative drag.",
       differentiators: [
-        "Bespoke visual identity aligned with category dominance.",
-        "Autonomous AI systems, never boilerplate templates.",
-        "Rapid execution paths designed to eliminate deployment lag.",
-        "Data-backed conversion architecture on every component.",
-        "Dedicated optimization retention to preserve system throughput.",
+        "Sub-60-Second Triage Capability — Automated engagement funnels engineered to capture and qualify prospect intent instantly.",
+        "Zero-Drag CRM Routing — Direct pipeline webhooks that route intake data directly into your CRM without manual input.",
+        "Category-Dominant Authority — Pixel-perfect custom platforms that project immediate prestige and load in under 1 second on mobile.",
+        "28-Day Execution Protocol — Rapid deployment path designed to eliminate build lag.",
+        "Continuous Telemetry Support — Ongoing optimization retention to preserve system throughput.",
       ],
       structuralRealityHeadline: "The Structural Reality",
       standardAgency: {
@@ -145,7 +145,7 @@ export const SITE_COPY = {
         ],
       },
       mercianWealth: {
-        title: "Autonomic Systems Lab",
+        title: "Automated Systems Lab",
         items: [
           "Bespoke authority platforms built from the ground up.",
           "Rapid execution protocol delivering assets in under 28 days.",
@@ -155,72 +155,47 @@ export const SITE_COPY = {
       },
     },
 
-    // 5. Trend Adaptation Statement (Broadened)
+    // 5. Trend Adaptation Statement
     trendAdaptation: {
       eyebrow: "Continuous Telemetry",
       headline: "Our Systems Evolve While Your Competitors Stagnate.",
-      description: "We monitor market trends, security updates, and performance telemetry continuously, rebuilding and optimizing your systems in the background. Your digital infrastructure remains permanently state-of-the-art without your team lifting a finger. It is an unfair advantage you cannot afford to operate without.",
+      description: "We monitor market trends, security updates, and performance telemetry continuously, optimizing your systems in the background. Your digital infrastructure remains permanently state-of-the-art without your team lifting a finger. It is an unfair advantage your competitors are acquiring right now.",
     },
 
-    // 6. Model Hint (Broadened)
+    // 6. Model Hint
     modelHint: {
-      eyebrow: "Incentives Aligned",
-      headline: "We Do Not Charge Like Traditional Agencies.",
-      description: "Traditional agencies charge flat hourly rates for design revisions and busywork. Our model aligns directly with your operational leverage and growth. Specific infrastructure investment and partnership alignment parameters are discussed exclusively during the clinical audit. We only build systems we can win with.",
+      eyebrow: "TRANSPARENT CAPITAL ALLOCATION",
+      headline: "Capital Allocations Aligned with System Leverage.",
+      description: "We do not charge hourly rates for design tweaks. Our setup investments are linked directly to operational leverage and reclaimed bandwidth. Specific infrastructure parameters are reviewed during your clinical audit.",
     },
 
-    // 7. Exclusivity Lock (Broadened)
+    // 7. Exclusivity Lock
     exclusivityLock: {
       eyebrow: "Selective Vetting",
       headline: "We Do Not Partner With Everyone.",
-      description: "To preserve absolute founder-level code quality and execution speed, we limit new client intake to exactly 2 integrations per cohort. We assess fit before we commit. Requesting an audit is an application, not a sales call. If there is mutual alignment, we initiate the build.",
+      description: "To preserve absolute founder-level code quality and execution speed, we limit new client intake strictly to 2 integrations per cohort. We assess fit before we commit. Requesting an audit is an application, not a sales call. If there is mutual alignment, we initiate the build.",
     },
 
     // 8. Outcome Telemetry (Testimonials / Social Proof - Broadened)
     testimonials: {
-      eyebrow: "Testimonials",
-      headline: "Trusted by Ambitious Teams",
-      guarantee: "100% successful integration rate across all audited clients",
-      transformationHeadline: "The Transformation Telemetry",
-      transformations: [
-        {
-          beforeLabel: "Before Integration",
-          beforeText: "Leads sitting unqualified in emails for 12-24 hours. Deal probability decays by 40%.",
-          afterLabel: "After Integration",
-          afterText: "Immediate AI-concierge qualification and Calendly routing in 45 seconds. Uptime captured.",
-        },
-        {
-          beforeLabel: "Before Integration",
-          beforeText: "Sales reps wasting 10-15 hours/week copying form data into CRM dashboards.",
-          afterLabel: "After Integration",
-          afterText: "Direct webhook routes from capture to CRM system. 100% administrative drag eliminated.",
-        },
-        {
-          beforeLabel: "Before Integration",
-          beforeText: "Leads forgotten after initial contact. Evaporated pipeline value.",
-          afterLabel: "After Integration",
-          afterText: "Autonomic lead-nurturing sequences running 24/7/365. Persistent retention.",
-        },
-      ],
-      list: [
-        {
-          name: "James Carter",
-          role: "Bespoke Portfolio Director",
-          badge: "97% FRICTION REDUCTION",
-          content: "Mercian Wealth completely transformed our web operations. What used to take 3 days of manual follow-up now happens in under 45 seconds. The system reclaimed its implementation cost within the first cohort launch.",
-        },
-        {
-          name: "Sophie Bennett",
-          role: "Acquisitions Consultant",
-          badge: "30+ HRS/WK RECLAIMED",
-          content: "We were skeptical about AI integration, but the telemetry proved us wrong. Our property consultants recovered 30+ hours per week, and response speed dropped to under 1 minute, preventing lead drop-off.",
-        },
-        {
-          name: "Daniel Hayes",
-          role: "Boutique Fund Manager",
-          badge: "24/7 AUTONOMIC CAPTURE",
-          content: "The autonomous lead routing qualifiers work flawlessly around the clock. We secured 3 high-ticket client instructions while our principal directors were out of the office.",
-        },
+      eyebrow: "ACTIVE DEPLOYMENT COHORT",
+      headline: "Active Deployment Cohort",
+      subheadline: "Independent System Telemetry Under Verification",
+      guarantee: "100% Authentic Telemetry · Zero Fabricated Claims Policy",
+      
+      cohortCard: {
+        badge: "COHORT INTAKE UNDER DEPLOYMENT",
+        title: "Selective Cohort Onboarding · Live System Telemetry",
+        paragraph1: "Mercian Wealth is currently engineering digital infrastructure for our inaugural UK agency cohort. While you read this, operators already inside this cohort are deploying sub-60-second lead routing engines, eliminating administrative drag, and securing high-value instructions around the clock.",
+        paragraph2: "To preserve absolute market authority, verified case study blueprints, latency audits, and pipeline telemetry will be published directly to this registry upon deployment sign-off.",
+        paragraph3: "The question is not whether your agency requires automated leverage — it is whether you will secure your infrastructure before your direct competitors do.",
+        enquiryCtaText: "To enquire about current cohort deployment availability or review system architecture during a clinical evaluation session, request alignment below.",
+      },
+
+      trustPoints: [
+        "Zero Fabricated Claims Policy",
+        "Sub-60-Second System Capability",
+        "100% Verified Production Telemetry",
       ],
     },
 
@@ -263,32 +238,32 @@ export const SITE_COPY = {
 
   // 4. Services Page Copy (`/services`)
   servicesPage: {
-    headerTitle: "Our Premium",
-    headerHighlight: "Solutions",
-    headerSubtitle: "Strategic AI-powered services engineered to create authority, automate growth, and generate elite revenue.",
-    objectionCallout: "Standard development cycles take 3 to 6 months of back-and-forth friction. Our clinical Execution Protocol delivers custom operational systems fully verified in under 28 days.",
+    headerTitle: "Infrastructure Built to",
+    headerHighlight: "Command Market Share",
+    headerSubtitle: "We do not offer generic design packages. We build focused digital assets engineered to solve specific revenue leaks in high-margin businesses.",
+    objectionCallout: "Standard development cycles take 3 to 6 months of friction. Our 28-Day Execution Protocol delivers custom operational systems fully verified in under 28 days.",
     
     // Services items
     list: [
       {
-        title: "High-Yield Digital Infrastructure",
-        description: "Web presence and Next.js platforms designed to project absolute category dominance. Built without templates, engineered for prestige.",
-        outcome: "+238% Conversion Increase",
+        title: "Category-Dominant Digital Platforms",
+        description: "Replace slow, forgettable websites with pixel-perfect visual platforms that establish immediate market authority and load instantly on mobile.",
+        outcome: "Sub-1-Second Mobile Load Speed Capability",
         tagline: "Engineering Category Dominance.",
         overview: "A custom website is not a marketing cost; it is your ultimate digital asset. Standard templates signal mediocrity. We build pixel-perfect, custom-designed, lightning-fast digital estates that establish your market position without compromise.",
         features: [
           { name: "Custom Art Direction", description: "Tailored styling aligned with elite luxury standards, designed from scratch for your brand." },
-          { name: "Zero-Template Next.js Codebase", description: "Pure, high-performance React engineering delivering perfect mobile speeds (98+)." },
-          { name: "SEO Schema Blueprint", description: "Hard-coded schemas and semantic HTML structure to command organic visibility." },
-          { name: "Telemetric Auditing", description: "Integrated conversion tracking to monitor interaction accuracy and lead flow." },
+          { name: "Zero-Template Next.js Codebase", description: "Pure, high-performance React engineering delivering sub-1-second mobile speeds." },
+          { name: "SEO Schema Blueprint", description: "Hard-coded schemas and semantic HTML structure to command organic search visibility." },
+          { name: "Performance Telemetry", description: "Integrated conversion tracking to monitor interaction accuracy and lead flow." },
         ],
         ctaText: "Apply for Platform Build",
         ctaHref: "/book?service=authority-platform",
       },
       {
-        title: "Autonomous Pipeline Routing",
-        description: "Custom CRM bookings and synchronized lead orchestration that triages, captures, and schedules prospects in under 1 second.",
-        outcome: "97% Lead Response Speed",
+        title: "Sub-60-Second Lead Routing",
+        description: "Engineered for sub-60-second lead triage capability so warm prospects are qualified and routed straight to your calendar.",
+        outcome: "Engineered for Sub-60s Triage",
         tagline: "Direct Pipeline Architecture.",
         overview: "Traffic without conversion is vanity. We design focused, distraction-free scheduling and qualification experiences engineered to guide high-intent visitors straight to your CRM with zero leakage.",
         features: [
@@ -301,11 +276,11 @@ export const SITE_COPY = {
         ctaHref: "/book?service=conversion-funnel",
       },
       {
-        title: "Relational Cloud Data Architecture",
-        description: "High-throughput cloud storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.",
+        title: "Cloud Data Architecture & Pipelines",
+        description: "High-throughput storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.",
         outcome: "100% Data Sovereignty",
         tagline: "High-Throughput Storage Engines.",
-        overview: "Scalable backend infrastructure structured on Supabase to manage complex business state, files, and users. Engineered for perfect latency and absolute data sovereignty.",
+        overview: "Scalable backend infrastructure structured on Supabase to manage complex business state, files, and users. Engineered for latency reduction and absolute data sovereignty.",
         features: [
           { name: "Bespoke Database Schema Design", description: "Custom relational tables and security policies aligned with your operational requirements." },
           { name: "Sub-Millisecond Query Speeds", description: "Performance optimized querying that eliminates database latency bottlenecks." },
@@ -316,18 +291,18 @@ export const SITE_COPY = {
         ctaHref: "/book?service=database-architecture",
       },
       {
-        title: "Autonomic Multi-Agent Systems",
+        title: "Automated Systems Architecture",
         description: "Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.",
-        outcome: "30+ Hours Reclaimed Weekly",
+        outcome: "Targeted Bandwidth Reclaimed",
         tagline: "Operational Leverage 24/7.",
-        overview: "Human drag in qualification and data transfer is an unnecessary operational tax. We build autonomous agents and background pipelines that triage, route, and engage leads instantly.",
+        overview: "Human drag in qualification and data transfer is an unnecessary operational tax. We build automated engines and background pipelines that triage, route, and engage leads instantly.",
         features: [
           { name: "Bespoke AI Concierge", description: "Dynamic chat agents trained on your specific business knowledge to qualify queries instantly." },
           { name: "Instant Lead Routing", description: "Webhook integrations linking capture events to CRM and Slack in less than 5 seconds." },
-          { name: "Continuous Nurture Scripts", description: "Automated, high-context follow-up sequences that prevent lead decay indefinitely." },
+          { name: "Continuous Nurture Scripts", description: "Automated follow-up sequences that prevent lead decay indefinitely." },
           { name: "System Telemetry", description: "Dedicated admin dashboards to track lead flow and system performance in real-time." },
         ],
-        ctaText: "Request Autonomic Integration",
+        ctaText: "Request Automated Systems Integration",
         ctaHref: "/book?service=ai-agents",
       },
     ],
@@ -446,14 +421,14 @@ export const SITE_COPY = {
         tag: "System Leverage",
       },
       {
-        name: "Autonomic Partner",
+        name: "Enterprise Partner",
         price: "7,500",
         interval: "£1,875 deposit to initiate",
         milestoneBreakdown: "4 milestone stages of 25% (£1,875) linked to build progress",
         description: "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch outbound email engines, and engineer custom AI triage agents.",
         features: [
           "Everything in System Leverage (Unlimited Pages)",
-          "Autonomic Cold Outreach Infrastructure",
+          "Automated Cold Outreach Infrastructure",
           "Custom-Trained AI Agent Concierge",
           "Full Corporate Brand Identity Suite",
           "Direct Slack Hotline to Principal Founders",
@@ -461,7 +436,7 @@ export const SITE_COPY = {
         ],
         cta: "Initiate Audit",
         featured: false,
-        tag: "Autonomic Partner",
+        tag: "Enterprise Partner",
       },
     ],
     retainerTiers: [
@@ -493,13 +468,14 @@ export const SITE_COPY = {
           "1 Custom High-Converting Landing Page/mo",
           "Advanced SEO Content & Competitor Strategy",
           "10 Dedicated Developer/Designer Hours/mo",
+          "Priority 4-Hour Urgent SLA Response",
         ],
         cta: "Initiate Audit",
         featured: true,
         tag: "System Leverage",
       },
       {
-        name: "Autonomic Alliance",
+        name: "Enterprise Alliance",
         price: "1,450",
         interval: "billed monthly",
         description: "Your complete external fractional Chief Technology & Marketing advisory partner.",
@@ -559,4 +535,4 @@ export const SITE_COPY = {
     socialProofQuote: "The clinical evaluation alone identified conversion gaps we had missed for two years.",
     socialProofAuthor: "Daniel K., Founder, Kensington Advisory",
   },
-};
+}

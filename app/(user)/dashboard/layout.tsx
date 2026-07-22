@@ -83,7 +83,7 @@ export default async function UserDashboardLayout({
           </div>
 
           <footer className="w-full border-t border-gold/10 py-5 text-center text-xs text-muted-foreground bg-[#050505]/80 backdrop-blur-md shrink-0">
-            © {new Date().getFullYear()} GS Legacy Wealth AI. All rights reserved.
+            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
           </footer>
         </div>
       </div>

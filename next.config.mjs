@@ -14,9 +14,9 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "gs-legacy-wealth",
+  org: "mercian-wealth",
 
-  project: "gs-legacy-wealth",
+  project: "mercian-wealth",
 
   // Disable Sentry plugin when SENTRY_AUTH_TOKEN is missing to prevent build crashes
   disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN && !process.env.SENTRY_AUTH_TOKEN_BUILD,
