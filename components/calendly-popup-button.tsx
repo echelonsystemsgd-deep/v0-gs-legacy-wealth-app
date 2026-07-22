@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 // ---------------------------------------------------------------------------
 const CALENDLY_URL =
   process.env.NEXT_PUBLIC_CALENDLY_URL ??
-  "https://calendly.com/mercianwealth/30min"
+  "https://calendly.com/gslegacywealth/30min"
 
 const CALENDLY_PARAMS = new URLSearchParams({
   background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",

@@ -38,7 +38,7 @@ function cleanUkPhoneDigits(input: string): string {
 
 function formatUkPhonePayload(input: string): string | null {
   const digits = cleanUkPhoneDigits(input)
-  return digits ? `+44 ${digits}` : null
+  return digits ? `+44${digits}` : null
 }
 
 function validateContactForm(data: ContactFormData): Partial<Record<keyof ContactFormData, string>> {
