@@ -117,6 +117,22 @@ const TIMELINE_TOASTS: Record<Timeline, string> = {
 // ---------------------------------------------------------------------------
 // Validation helpers
 // ---------------------------------------------------------------------------
+function cleanUkPhoneDigits(input: string): string {
+  let digits = input.replace(/\D/g, '')
+  if (digits.startsWith('44') && digits.length >= 12) {
+    digits = digits.slice(2)
+  }
+  if (digits.startsWith('0')) {
+    digits = digits.slice(1)
+  }
+  return digits
+}
+
+function formatUkPhonePayload(input: string): string {
+  const digits = cleanUkPhoneDigits(input)
+  return digits ? `+44 ${digits}` : ""
+}
+
 function validateIdentity(d: IdentityData): Partial<Record<keyof IdentityData, string>> {
   const e: Partial<Record<keyof IdentityData, string>> = {}
   if (!d.fullName.trim()) e.fullName = "Full name is required."
@@ -130,8 +146,11 @@ function validateIdentity(d: IdentityData): Partial<Record<keyof IdentityData, s
   }
   if (!d.phone.trim()) {
     e.phone = "Phone number is required."
-  } else if (!/^\+?[0-9\s\-()]{7,20}$/.test(d.phone.trim())) {
-    e.phone = "Please enter a valid phone number."
+  } else {
+    const digits = cleanUkPhoneDigits(d.phone)
+    if (digits.length < 10 || digits.length > 11) {
+      e.phone = "Please enter a valid 10 to 11-digit UK phone number."
+    }
   }
   if (!d.companyName.trim()) e.companyName = "Company name is required."
   if (!d.gdprConsent) e.gdprConsent = "You must accept to continue."
@@ -359,7 +378,7 @@ function BookingFlowInner() {
         body: JSON.stringify({
           name: identity.fullName,
           email: identity.email,
-          phone: identity.phone,
+          phone: formatUkPhonePayload(identity.phone),
           business_name: identity.companyName,
           linkedin_url: identity.linkedinUrl || null,
           industry: "General",
@@ -402,7 +421,7 @@ function BookingFlowInner() {
           source: "booking_form",
           name: identity.fullName,
           email: identity.email,
-          phone: identity.phone,
+          phone: formatUkPhonePayload(identity.phone),
           business_name: identity.companyName,
           website: identity.websiteUrl || null,
           linkedin_url: identity.linkedinUrl || null,
@@ -429,7 +448,7 @@ function BookingFlowInner() {
     const params = new URLSearchParams(CALENDLY_PARAMS)
     params.set("name", identity.fullName)
     params.set("email", identity.email)
-    params.set("phone_number", identity.phone)
+    params.set("phone_number", formatUkPhonePayload(identity.phone))
     params.set("a1", identity.websiteUrl)
     params.set("a2", qual.biggestChallenge)
     params.set("a3", qual.monthlyRevenue)
@@ -518,24 +537,53 @@ function BookingFlowInner() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <FieldInput id="fullName" label="Full Name" icon={<User size={11} className="text-accent-gold" />}
-                  placeholder="e.g. Gurtej Singh" value={identity.fullName}
+                  placeholder="e.g. Mercian Partner" value={identity.fullName}
                   onChange={(v) => updateIdentity("fullName", v)} error={identityErrors.fullName} />
               </div>
               <FieldInput id="email" label="Business Email" icon={<Mail size={11} className="text-accent-gold" />}
-                type="email" placeholder="e.g. gurtej@yourbrand.com" value={identity.email}
+                type="email" placeholder="e.g. director@mercianwealth.com" value={identity.email}
                 onChange={(v) => updateIdentity("email", v)} error={identityErrors.email} />
-              <FieldInput id="phone" label="Phone Number" icon={<Phone size={11} className="text-accent-gold" />}
-                type="tel" placeholder="e.g. +44 7123 456789" value={identity.phone}
-                onChange={(v) => updateIdentity("phone", v)} error={identityErrors.phone} />
+              <div className="space-y-1">
+                <label htmlFor="phone" className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                  <Phone size={11} className="text-accent-gold" /> Phone Number
+                </label>
+                <div className={`flex items-center bg-background/60 border rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-accent-gold/30 transition-all ${
+                  identityErrors.phone ? "border-red-500/60" : "border-border-brand/20 focus-within:border-accent-gold/40 hover:border-accent-gold/40"
+                }`}>
+                  <div className="bg-accent-gold/10 text-accent-gold font-mono font-semibold text-xs px-3 py-2.5 border-r border-border-brand/20 select-none shrink-0 flex items-center gap-1">
+                    <span className="text-xs">🇬🇧</span>
+                    <span>+44</span>
+                  </div>
+                  <input
+                    id="phone"
+                    type="tel"
+                    placeholder="7123 456789"
+                    value={identity.phone}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/[^\d\s-]/g, '')
+                      if (val.startsWith('0')) val = val.slice(1)
+                      updateIdentity("phone", val)
+                    }}
+                    className="w-full bg-transparent px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                  />
+                </div>
+                {identityErrors.phone ? (
+                  <p className="text-xs text-red-400">{identityErrors.phone}</p>
+                ) : (
+                  <p className="text-[11px] text-muted-foreground/80 leading-snug mt-1">
+                    Mercian Wealth operates exclusively with United Kingdom based businesses.
+                  </p>
+                )}
+              </div>
               <FieldInput id="companyName" label="Company Name" icon={<Building2 size={11} className="text-accent-gold" />}
-                placeholder="e.g. Mercian Partners" value={identity.companyName}
+                placeholder="e.g. Mercian Holdings" value={identity.companyName}
                 onChange={(v) => updateIdentity("companyName", v)} error={identityErrors.companyName} />
               <FieldInput id="websiteUrl" label="Website URL" icon={<Globe size={11} className="text-accent-gold" />}
-                type="url" placeholder="e.g. https://yourbrand.com" value={identity.websiteUrl}
+                type="url" placeholder="e.g. https://mercianwealth.com" value={identity.websiteUrl}
                 onChange={(v) => updateIdentity("websiteUrl", v)} error={identityErrors.websiteUrl} optional />
               <div className="sm:col-span-2">
                 <FieldInput id="linkedinUrl" label="LinkedIn Profile" icon={<Linkedin size={11} className="text-accent-gold" />}
-                  type="url" placeholder="e.g. https://linkedin.com/in/username" value={identity.linkedinUrl}
+                  type="url" placeholder="e.g. https://linkedin.com/company/mercian-wealth" value={identity.linkedinUrl}
                   onChange={(v) => updateIdentity("linkedinUrl", v)} error={identityErrors.linkedinUrl} optional
                   hint="Strongly encouraged — helps us prepare for your call" />
               </div>

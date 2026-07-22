@@ -25,6 +25,22 @@ interface ContactFormData {
   message: string
 }
 
+function cleanUkPhoneDigits(input: string): string {
+  let digits = input.replace(/\D/g, '')
+  if (digits.startsWith('44') && digits.length >= 12) {
+    digits = digits.slice(2)
+  }
+  if (digits.startsWith('0')) {
+    digits = digits.slice(1)
+  }
+  return digits
+}
+
+function formatUkPhonePayload(input: string): string | null {
+  const digits = cleanUkPhoneDigits(input)
+  return digits ? `+44 ${digits}` : null
+}
+
 function validateContactForm(data: ContactFormData): Partial<Record<keyof ContactFormData, string>> {
   const errors: Partial<Record<keyof ContactFormData, string>> = {}
   if (!data.fullName.trim()) errors.fullName = "Full name is required."
@@ -32,6 +48,12 @@ function validateContactForm(data: ContactFormData): Partial<Record<keyof Contac
     errors.email = "Email is required."
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
     errors.email = "Please enter a valid email address."
+  }
+  if (data.phone.trim()) {
+    const digits = cleanUkPhoneDigits(data.phone)
+    if (digits.length < 10 || digits.length > 11) {
+      errors.phone = "Please enter a valid 10 to 11-digit UK phone number."
+    }
   }
   if (!data.message.trim()) errors.message = "Message details are required."
   return errors
@@ -88,7 +110,7 @@ export function ContactForm() {
           name: formData.fullName,
           email: formData.email,
           business_name: formData.companyName || "N/A (Contact Form)",
-          phone: formData.phone || null,
+          phone: formatUkPhonePayload(formData.phone),
           notes: formData.message,
           referrer: typeof document !== 'undefined' ? document.referrer : 'none',
           user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : 'none',
@@ -122,7 +144,7 @@ export function ContactForm() {
             <input
               id="fullName"
               type="text"
-              placeholder="e.g. John Doe"
+              placeholder="e.g. Mercian Partner"
               value={formData.fullName}
               onChange={(e) => updateField("fullName", e.target.value)}
               className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
@@ -140,7 +162,7 @@ export function ContactForm() {
             <input
               id="email"
               type="email"
-              placeholder="e.g. john@yourbrand.com"
+              placeholder="e.g. director@mercianwealth.com"
               value={formData.email}
               onChange={(e) => updateField("email", e.target.value)}
               className={`w-full bg-background/60 border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all ${
@@ -159,7 +181,7 @@ export function ContactForm() {
               <input
                 id="companyName"
                 type="text"
-                placeholder="e.g. Acme Corp"
+                placeholder="e.g. Mercian Holdings"
                 value={formData.companyName}
                 onChange={(e) => updateField("companyName", e.target.value)}
                 className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
@@ -170,14 +192,33 @@ export function ContactForm() {
               <label htmlFor="phone" className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Phone size={14} className="text-accent-gold" /> Phone Number
               </label>
-              <input
-                id="phone"
-                type="tel"
-                placeholder="e.g. +44 7700 900077"
-                value={formData.phone}
-                onChange={(e) => updateField("phone", e.target.value)}
-                className="w-full bg-background/60 border border-border-brand/20 hover:border-accent-gold/40 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:ring-2 focus:ring-accent-purple/40 transition-all"
-              />
+              <div className={`flex items-center bg-background/60 border rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-accent-purple/40 transition-all ${
+                errors.phone ? "border-red-500/60" : "border-border-brand/20 focus-within:border-accent-gold/40 hover:border-accent-gold/40"
+              }`}>
+                <div className="bg-accent-gold/10 text-accent-gold font-mono font-semibold text-xs px-3.5 py-3 border-r border-border-brand/20 select-none shrink-0 flex items-center gap-1">
+                  <span className="text-xs">🇬🇧</span>
+                  <span>+44</span>
+                </div>
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="7123 456789"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    let val = e.target.value.replace(/[^\d\s-]/g, '')
+                    if (val.startsWith('0')) val = val.slice(1)
+                    updateField("phone", val)
+                  }}
+                  className="w-full bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                />
+              </div>
+              {errors.phone ? (
+                <p className="text-xs text-red-400 mt-1">{errors.phone}</p>
+              ) : (
+                <p className="text-[11px] text-muted-foreground/80 leading-snug mt-1">
+                  Mercian Wealth operates exclusively with United Kingdom based businesses.
+                </p>
+              )}
             </div>
           </div>
 
