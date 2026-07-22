@@ -7,7 +7,7 @@ import { toast } from 'sonner'
  
 const CALENDLY_URL =
   process.env.NEXT_PUBLIC_CALENDLY_URL ??
-  "https://calendly.com/gslegacywealth/30min"
+  "https://calendly.com/mercianwealthgs/30min"
  
 const CALENDLY_PARAMS = {
   background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",

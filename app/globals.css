@@ -355,11 +355,16 @@ input[type="range"]::-moz-range-thumb:active {
 }
 
 /*
- * CSS filter fallback — forced dark theme on free plans (Session 3).
+ * Calendly native dark theme shell styling.
  */
+.calendly-widget-wrapper,
+.calendly-inline-widget {
+  background-color: #0A0A0A !important;
+  color-scheme: dark;
+}
+
 .calendly-widget-wrapper iframe,
 .calendly-inline-widget iframe {
-  filter: invert(1) hue-rotate(10deg) saturate(0.9) brightness(0.95) !important;
   color-scheme: dark;
   will-change: opacity;
 }

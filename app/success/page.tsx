@@ -22,7 +22,7 @@ const TRUST_ITEMS = [
 
 export default function SuccessPage() {
   const [calendlyBaseUrl, setCalendlyBaseUrl] = useState(
-    process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/gslegacywealth/30min"
+    process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/mercianwealthgs/30min"
   )
   const [loading, setLoading] = useState(true)
   const [calendlyHeight, setCalendlyHeight] = useState("650px")

@@ -15,12 +15,12 @@ import {
 // Calendly config
 // ---------------------------------------------------------------------------
 const CALENDLY_URL =
-  process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/gslegacywealth/30min"
+  process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/mercianwealthgs/30min"
 
 const CALENDLY_PARAMS = new URLSearchParams({
-  background_color: process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0A0A0A",
-  text_color:       process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "F0EDE6",
-  primary_color:    process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "C5A059",
+  background_color: (process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0a0a0a").replace('#', '').toLowerCase(),
+  text_color:       (process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "f0ede6").replace('#', '').toLowerCase(),
+  primary_color:    (process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "c9a227").replace('#', '').toLowerCase(),
   hide_landing_page_details: "1",
   hide_gdpr_banner: "1",
 })
@@ -445,14 +445,19 @@ function BookingFlowInner() {
 
   // ── Calendly URL builder ──────────────────────────────────────────────────
   const buildCalendlyUrl = useCallback(() => {
-    const params = new URLSearchParams(CALENDLY_PARAMS)
-    params.set("name", identity.fullName)
-    params.set("email", identity.email)
-    params.set("phone_number", formatUkPhonePayload(identity.phone))
-    params.set("a1", identity.websiteUrl)
-    params.set("a2", qual.biggestChallenge)
-    params.set("a3", qual.monthlyRevenue)
-    params.set("a4", qual.startTimeline)
+    const params = new URLSearchParams()
+    params.set("background_color", (process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR || "1a1a1a").replace('#', '').toLowerCase())
+    params.set("text_color", (process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR || "f0ede6").replace('#', '').toLowerCase())
+    params.set("primary_color", (process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR || "c5a059").replace('#', '').toLowerCase())
+    params.set("hide_landing_page_details", "1")
+    params.set("hide_gdpr_banner", "1")
+    if (identity.fullName) params.set("name", identity.fullName)
+    if (identity.email) params.set("email", identity.email)
+    if (identity.phone.trim()) params.set("phone_number", formatUkPhonePayload(identity.phone))
+    if (identity.websiteUrl) params.set("a1", identity.websiteUrl)
+    if (qual.biggestChallenge) params.set("a2", qual.biggestChallenge)
+    if (qual.monthlyRevenue) params.set("a3", qual.monthlyRevenue)
+    if (qual.startTimeline) params.set("a4", qual.startTimeline)
     return `${CALENDLY_URL}?${params.toString()}`
   }, [identity, qual])
 

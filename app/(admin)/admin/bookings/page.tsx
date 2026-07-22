@@ -400,6 +400,14 @@ export default function BookingsPage() {
           .insert(payload)
 
       if (error) throw error
+
+      if (bookingForm.targetType === 'lead' && bookingForm.targetId) {
+        await supabase
+          .from('leads')
+          .update({ status: 'Call Booked' })
+          .eq('id', bookingForm.targetId)
+      }
+
       triggerToast('Booking scheduled successfully.')
       handleCloseBookingModal()
       fetchData()
@@ -1359,13 +1367,14 @@ export default function BookingsPage() {
 
       {/* MODAL 2: SCHEDULE CALL (MANUAL BOOKING) */}
       {showBookingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="w-full max-w-md glass border border-gold/25 rounded-2xl shadow-2xl p-6 space-y-5 animate-scale-up max-h-[85vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 animate-fade-in">
+          <div className="w-full max-w-lg glass border border-gold/25 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 animate-scale-up max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gold/10 pb-3">
-              <h2 className="font-serif text-lg font-bold text-foreground">Schedule Booking</h2>
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-foreground">Schedule Booking</h2>
               <button
                 onClick={handleCloseBookingModal}
-                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"
+                className="text-muted-foreground hover:text-foreground text-sm cursor-pointer p-1 rounded-lg hover:bg-white/5 transition-colors"
+                aria-label="Close dialog"
               >
                 ✕
               </button>
@@ -1376,8 +1385,8 @@ export default function BookingsPage() {
                 <button
                   type="button"
                   onClick={() => setBookingForm({ ...bookingForm, targetType: 'lead', targetId: '' })}
-                  className={`py-1.5 rounded-lg text-xxs font-semibold tracking-wider transition-all cursor-pointer uppercase ${
-                    bookingForm.targetType === 'lead' ? 'bg-gold text-background font-bold' : 'text-muted-foreground'
+                  className={`py-2 rounded-lg text-xs font-bold tracking-wider transition-all cursor-pointer uppercase ${
+                    bookingForm.targetType === 'lead' ? 'bg-gold text-background font-bold shadow-md' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   Provisional Lead
@@ -1385,8 +1394,8 @@ export default function BookingsPage() {
                 <button
                   type="button"
                   onClick={() => setBookingForm({ ...bookingForm, targetType: 'client', targetId: '' })}
-                  className={`py-1.5 rounded-lg text-xxs font-semibold tracking-wider transition-all cursor-pointer uppercase ${
-                    bookingForm.targetType === 'client' ? 'bg-gold text-background font-bold' : 'text-muted-foreground'
+                  className={`py-2 rounded-lg text-xs font-bold tracking-wider transition-all cursor-pointer uppercase ${
+                    bookingForm.targetType === 'client' ? 'bg-gold text-background font-bold shadow-md' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   Client / User
@@ -1394,23 +1403,28 @@ export default function BookingsPage() {
               </div>
 
               {/* Target Selector */}
-              <div className="space-y-1">
-                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Select {bookingForm.targetType === 'lead' ? 'Lead Profile' : 'Client/User Profile'}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                  <span>Select {bookingForm.targetType === 'lead' ? 'Lead Profile' : 'Client/User Profile'}</span>
+                  <span className="text-[10px] text-gold/80 font-normal">
+                    {bookingForm.targetType === 'lead' ? `${leads.length} available` : `${clients.length} registered`}
+                  </span>
                 </label>
                 <select
                   required
                   value={bookingForm.targetId}
                   onChange={(e) => setBookingForm({ ...bookingForm, targetId: e.target.value })}
-                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/20 transition-all appearance-none"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3.5 py-2.5 text-sm text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/30 transition-all"
                 >
-                  <option value="">-- Choose Contact --</option>
+                  <option value="" className="bg-bg-tertiary text-foreground">-- Choose Contact --</option>
                   {bookingForm.targetType === 'lead'
                     ? leads.map((l) => (
-                        <option key={l.id} value={l.id}>{l.name} ({l.business_name})</option>
+                        <option key={l.id} value={l.id} className="bg-bg-tertiary text-foreground">
+                          {l.name} ({l.business_name || 'No Brand'})
+                        </option>
                       ))
                     : clients.map((c) => (
-                        <option key={c.id} value={c.id}>
+                        <option key={c.id} value={c.id} className="bg-bg-tertiary text-foreground">
                           {c.full_name} ({c.email}) — {c.role === 'client' ? 'Client' : 'User'}
                         </option>
                       ))}
@@ -1418,60 +1432,62 @@ export default function BookingsPage() {
               </div>
 
               {/* Category Selector */}
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Session Package</label>
                 <select
                   required
                   value={bookingForm.categoryId}
                   onChange={(e) => setBookingForm({ ...bookingForm, categoryId: e.target.value })}
-                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/20 transition-all appearance-none"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3.5 py-2.5 text-sm text-foreground outline-none cursor-pointer focus:ring-2 focus:ring-gold/30 transition-all"
                 >
-                  <option value="">-- Select Package Type --</option>
+                  <option value="" className="bg-bg-tertiary text-foreground">-- Select Package Type --</option>
                   {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name} ({c.duration_minutes}m)</option>
+                    <option key={c.id} value={c.id} className="bg-bg-tertiary text-foreground">
+                      {c.name} ({c.duration_minutes}m)
+                    </option>
                   ))}
                 </select>
               </div>
 
               {/* Date & Time */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Date</label>
                   <input
                     type="date"
                     required
                     value={bookingForm.date}
                     onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3.5 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all cursor-pointer"
                   />
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Time</label>
                   <input
                     type="time"
                     required
                     value={bookingForm.time}
                     onChange={(e) => setBookingForm({ ...bookingForm, time: e.target.value })}
-                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all cursor-pointer"
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3.5 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all cursor-pointer"
                   />
                 </div>
               </div>
 
               {/* Notes */}
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Administrative Notes</label>
                 <textarea
                   value={bookingForm.notes}
                   onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
                   placeholder="Meeting agenda details..."
                   rows={2}
-                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3.5 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/30 transition-all resize-none"
                 />
               </div>
 
               {/* Action buttons */}
-              <div className="pt-3 flex justify-end gap-3 border-t border-gold/10">
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-gold/10">
                 <button
                   type="button"
                   onClick={handleCloseBookingModal}
@@ -1482,7 +1498,7 @@ export default function BookingsPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-lg shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.2)] transition-all cursor-pointer"
+                  className="px-5 py-2.5 text-xs font-bold bg-gradient-to-r from-gold to-gold-light text-background rounded-xl shadow-lg hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
                 >
                   {loading ? 'Scheduling...' : 'Schedule call'}
                 </button>
