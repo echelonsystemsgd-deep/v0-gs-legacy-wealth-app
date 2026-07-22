@@ -18,11 +18,11 @@ export const SITE_COPY = {
     layout: {
       defaultTitle: "Mercian Wealth | Luxury AI-Powered Websites",
       titleTemplate: "%s | Mercian Wealth",
-      description: "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
+      description: "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
     },
     home: {
-      title: "Mercian Wealth | Bespoke Digital Infrastructure & Autonomic Systems",
-      description: "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.",
+      title: "Mercian Wealth | Bespoke Digital Infrastructure & Automated Engines",
+      description: "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.",
     },
     services: {
       title: "Our Services | Mercian Wealth",

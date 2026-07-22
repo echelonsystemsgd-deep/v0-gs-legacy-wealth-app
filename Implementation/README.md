@@ -10,6 +10,7 @@ For the primary application documentation, setup guides, tech stack details, and
 
 ### 1. [Website](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website)
 Contains documentation and implementation plans related to the public-facing marketing website, pricing page, booking flow, and forms.
+*   [SITE_DESIGN_UX_IMPROVEMENTS.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/SITE_DESIGN_UX_IMPROVEMENTS.md)
 *   [CALENDLY_IFRAME_MIGRATION_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/CALENDLY_IFRAME_MIGRATION_PLAN.md)
 *   [CALENDLY_INTEGRATION_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/CALENDLY_INTEGRATION_PLAN.md)
 *   [booking_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/booking_implementation_plan.md)

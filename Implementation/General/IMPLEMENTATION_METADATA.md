@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: 'Mercian Wealth | Luxury AI-Powered Websites',
     template: '%s | Mercian Wealth'
   },
-  description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+  description: 'Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
   applicationName: 'Mercian Wealth',
   keywords: ['AI Automation', 'Luxury Websites', 'Digital Assets', 'Web Development', 'Business Growth'],
   authors: [{ name: 'Mercian Wealth' }],
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Mercian Wealth | Luxury AI-Powered Websites',
-    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+    description: 'Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
     url: 'https://mercianwealth.com',
     siteName: 'Mercian Wealth',
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Mercian Wealth | Luxury AI-Powered Websites',
-    description: 'Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
+    description: 'Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.',
     images: ['/twitter-image.png'],
     creator: '@mercianwealth',
   },
@@ -77,14 +77,17 @@ export const metadata: Metadata = {
 
 ## 3. Metadata for Specific Pages
 
-We define specific `metadata` exports in subroute `page.tsx` files. This allows Next.js to merge the global metadata with page-specific titles and descriptions.
+We define specific `metadata` exports in subroute `page.tsx` files. This allows Next.js to merge the global metadata with page-specific titles and descriptions using `lib/site-copy.ts`.
 
 ## Completed Specifications
 
 1. **Production URL:** `https://mercianwealth.com`
 2. **Social Handles:** `@mercianwealth`
 3. **Snapshot Image:** Static `opengraph-image.png` and `twitter-image.png` configured and built in root.
+4. **Plain-English Terminology Audit:** All metadata fields updated to plain-English standard (`automated AI architectures`).
 
-## Next Steps
+## Final Implementation Status
 
-All steps in this plan have been successfully implemented and validated in the codebase. No further tasks are outstanding.
+- ✅ **Metadata Strategy:** 100% implemented across `app/layout.tsx`, `app/page.tsx`, and all subroute `page.tsx` files.
+- ✅ **Open Graph & Twitter Cards:** Configured with `summary_large_image` cards pointing to `https://mercianwealth.com`.
+- ✅ **Build & Compilation:** Verified via `npx tsc --noEmit` with **0 errors**.
