@@ -4,6 +4,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { AlertCircle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export function Bottleneck() {
@@ -146,17 +147,12 @@ export function Bottleneck() {
                   <span className="text-xs font-semibold text-text-primary opacity-80 leading-relaxed">
                     {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
                   </span>
-                  <button
-                    onClick={() => {
-                      const el = document.getElementById("roi-calculator")
-                      if (el) {
-                        el.scrollIntoView({ behavior: "smooth", block: "start" })
-                      }
-                    }}
-                    className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block bg-transparent border-none p-0 cursor-pointer text-left focus:outline-none"
+                  <Link
+                    href="/pricing#roi-calculator"
+                    className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block text-center sm:text-left focus:outline-none"
                   >
                     {data.diagnosticLink}
-                  </button>
+                  </Link>
                 </div>
                 <Button
                   onClick={() => setIsOrdered(!isOrdered)}
