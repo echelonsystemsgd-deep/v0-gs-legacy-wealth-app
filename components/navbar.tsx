@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/brand-logo"
 import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
 import { createClient } from "@/lib/supabase/client"
+import { LiveTelemetryTicker } from "@/components/live-telemetry-ticker"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -49,7 +49,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 40)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
@@ -75,7 +75,6 @@ export function Navbar() {
 
   useEffect(() => {
     const checkUser = async () => {
-      // Fast path: seed from cached session before network round-trip
       try {
         const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)/)?.[1]
         const storageKey = projectRef ? `sb-${projectRef}-auth-token` : null
@@ -149,7 +148,6 @@ export function Navbar() {
     }
   }, [supabase])
 
-
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -162,16 +160,18 @@ export function Navbar() {
     if (profile?.first_name || profile?.last_name) {
       return `${profile.first_name?.[0] || ""}${profile.last_name?.[0] || ""}`.toUpperCase()
     }
-    return user?.email?.[0]?.toUpperCase() || "U"
+    return user?.email?.[0]?.toUpperCase() || "MW"
   }
 
   const getFullName = () => {
     if (profile?.first_name || profile?.last_name) {
       return `${profile.first_name || ""} ${profile.last_name || ""}`.trim()
     }
-    return user?.email?.split("@")[0] || "User"
+    if (user?.email) {
+      return user.email.split("@")[0]
+    }
+    return "Mercian Wealth Admin"
   }
-
 
   // Outside click handler for mobile menu drawer
   useEffect(() => {
@@ -192,180 +192,185 @@ export function Navbar() {
   }, [isMobileMenuOpen])
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-bg-primary/95 border-b border-border-brand/25 backdrop-blur-md" : "bg-transparent"
-      }`}
-    >
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo - Crest + Wordmark Combo */}
-          <button
-            suppressHydrationWarning
-            onClick={() => {
-              if (pathname === "/") {
-                window.scrollTo({ top: 0, behavior: "smooth" })
-              } else {
-                router.push("/")
-                setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
-              }
-            }}
-            className="flex items-center gap-3 cursor-pointer group"
-            aria-label="Mercian Wealth Homepage"
-          >
-            <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-12 w-12"}`}>
-              <BrandLogo
-                variant="logo"
-                alt="Mercian Wealth Crest"
-                fill
-                className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
-                priority
-              />
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="font-serif font-bold text-lg sm:text-xl tracking-wide text-foreground group-hover:text-accent-gold transition-colors duration-200">
-                <span className="text-accent-gold">Mercian</span> Wealth
-              </span>
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent-gold/70 -mt-1 hidden sm:block">
-                Autonomic Systems Lab
-              </span>
-            </div>
-          </button>
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      {/* Top Telemetry Ticker Strip */}
+      <LiveTelemetryTicker />
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm transition-colors duration-200 hover:text-accent-gold ${
-                  isActive(link.href) 
-                    ? "text-accent-gold font-semibold" 
-                    : "text-text-secondary"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+      {/* Main Navbar */}
+      <div
+        className={`w-full transition-all duration-300 ${
+          isScrolled ? "bg-bg-primary/95 border-b border-border-brand/25 backdrop-blur-md shadow-lg" : "bg-bg-primary/60 backdrop-blur-sm"
+        }`}
+      >
+        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 sm:h-20 items-center justify-between">
+            {/* Logo - Crest + Wordmark Combo */}
+            <button
+              suppressHydrationWarning
+              onClick={() => {
+                if (pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" })
+                } else {
+                  router.push("/")
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
+                }
+              }}
+              className="flex items-center gap-3 cursor-pointer group"
+              aria-label="Mercian Wealth Homepage"
+            >
+              <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-11 w-11"}`}>
+                <BrandLogo
+                  variant="logo"
+                  alt="Mercian Wealth Crest"
+                  fill
+                  className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="font-serif font-bold text-base sm:text-xl tracking-wide text-foreground group-hover:text-accent-gold transition-colors duration-200">
+                  <span className="text-accent-gold">Mercian</span> Wealth
+                </span>
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent-gold/70 -mt-1 hidden sm:block">
+                  Autonomic Systems Lab
+                </span>
+              </div>
+            </button>
 
-          {/* CTA Button / User Profile Dropdown */}
-          <div className="hidden lg:flex lg:items-center lg:gap-6">
-            {loading ? (
-              <div className="h-10 w-10 rounded-full border border-gold/15 bg-gold/5 animate-pulse" />
-            ) : user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-gold/15 hover:border-gold/30 outline-none focus-visible:ring-0">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                      <AvatarFallback className="bg-gradient-to-br from-gold/20 to-purple-500/20 text-gold text-xs font-bold font-serif">
-                        {getInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-bg-secondary border border-gold/15 text-text-primary rounded-xl p-2 shadow-2xl" align="end">
-                  <DropdownMenuLabel className="font-normal px-2 py-1.5">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-bold font-serif truncate text-foreground">{getFullName()}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                      {profile?.role && (
-                        <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-gold/10 border border-gold/20 text-[9px] font-bold text-gold uppercase tracking-wider">
-                          {profile.role}
-                        </span>
-                      )}
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-gold/10" />
-                  {profile?.role === "admin" ? (
-                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
-                      <Link href="/admin" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <LayoutDashboard size={14} />
-                        Admin Panel
-                      </Link>
-                    </DropdownMenuItem>
-                  ) : profile?.role === "client" ? (
-                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
-                      <Link href="/client" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <LayoutDashboard size={14} />
-                        Client Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
-                      <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <LayoutDashboard size={14} />
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
-                    <Link href="/profile" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                      <User size={14} />
-                      Profile Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="focus:bg-gold/10 focus:text-gold cursor-pointer rounded-lg">
-                    <Link href="/" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                      <Globe size={14} />
-                      Go to Website
-                    </Link>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuSeparator className="bg-gold/10" />
-                  <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-500 rounded-lg">
-                    <div className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                      <LogOut size={14} />
-                      Log Out
-                    </div>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">
+              {navLinks.map((link) => (
                 <Link
-                  href="/login"
-                  className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm transition-colors duration-200 hover:text-accent-gold ${
+                    isActive(link.href) 
+                      ? "text-accent-gold font-semibold" 
+                      : "text-text-secondary"
+                  }`}
                 >
-                  Login
+                  {link.label}
                 </Link>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="px-6 py-2"
-                >
-                  <Link href="/book">Apply for System Audit</Link>
-                </Button>
-              </>
-            )}
+              ))}
+            </div>
+
+            {/* CTA Button / User Profile Dropdown */}
+            <div className="hidden lg:flex lg:items-center lg:gap-6">
+              {loading ? (
+                <div className="h-10 w-10 rounded-full border border-accent-gold/15 bg-accent-gold/5 animate-pulse" />
+              ) : user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-accent-gold/25 hover:border-accent-gold outline-none focus-visible:ring-0">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                        <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-accent-purple/30 text-accent-gold text-xs font-bold font-serif">
+                          {getInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-bg-secondary border border-accent-gold/20 text-text-primary rounded-xl p-2 shadow-2xl" align="end">
+                    <DropdownMenuLabel className="font-normal px-2 py-1.5">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-bold font-serif truncate text-foreground">{getFullName()}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email || "info@mercianwealth.com"}</p>
+                        {profile?.role && (
+                          <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-accent-gold/10 border border-accent-gold/20 text-[9px] font-bold text-accent-gold uppercase tracking-wider">
+                            {profile.role}
+                          </span>
+                        )}
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-accent-gold/10" />
+                    {profile?.role === "admin" ? (
+                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                        <Link href="/admin" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                          <LayoutDashboard size={14} />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    ) : profile?.role === "client" ? (
+                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                        <Link href="/client" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                          <LayoutDashboard size={14} />
+                          Client Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                        <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                          <LayoutDashboard size={14} />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                      <Link href="/profile" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <User size={14} />
+                        Profile Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                      <Link href="/" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <Globe size={14} />
+                        Go to Website
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator className="bg-accent-gold/10" />
+                    <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-500 rounded-lg">
+                      <div className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
+                        <LogOut size={14} />
+                        Log Out
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
+                  >
+                    Login
+                  </Link>
+                  <Button
+                    asChild
+                    size="sm"
+                    className="px-5 py-2 font-bold bg-accent-gold text-black hover:bg-amber-300 shadow-md"
+                  >
+                    <Link href="/book">Apply for Audit</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden text-foreground p-2"
+              aria-label="Toggle menu"
+              suppressHydrationWarning
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
+        </nav>
+      </div>
 
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-foreground p-2"
-            aria-label="Toggle menu"
-            suppressHydrationWarning
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             ref={mobileMenuRef}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-20 bg-bg-secondary z-50 lg:hidden overflow-y-auto flex flex-col"
+            className="fixed inset-0 top-[6rem] bg-[#0D0716] z-40 lg:hidden overflow-y-auto flex flex-col border-t border-accent-gold/20 shadow-2xl"
             style={{
-              height: "calc(100vh - 5rem)",
+              height: "calc(100vh - 6rem)",
             }}
           >
             <div className="flex-1 px-6 py-8 space-y-6 flex flex-col justify-start">
@@ -374,103 +379,42 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold ${
-                    isActive(link.href) ? "text-accent-gold font-semibold" : "text-text-secondary"
+                  className={`block text-xl py-2 border-b border-white/10 transition-colors duration-200 hover:text-accent-gold ${
+                    isActive(link.href) ? "text-accent-gold font-bold" : "text-white/80"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              {loading ? (
-                <div className="h-10 w-24 bg-gold/5 border border-gold/15 rounded-lg animate-pulse" />
-              ) : user ? (
-                <>
-                  <div className="py-2 border-b border-border-brand/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Avatar className="h-10 w-10 border border-gold/15">
-                        <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-gold/20 to-purple-500/20 text-gold font-bold font-serif">
-                          {getInitials()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-bold text-foreground font-serif truncate">{getFullName()}</span>
-                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
-                      </div>
+
+              {user && (
+                <div className="py-3 border-b border-white/10">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Avatar className="h-10 w-10 border border-accent-gold/20">
+                      <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                      <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-sm font-bold text-white font-serif truncate">{getFullName()}</span>
+                      <span className="text-xs text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
                     </div>
                   </div>
-                  {profile?.role === "admin" ? (
-                    <Link
-                      href="/admin"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                    >
-                      Admin Panel
-                    </Link>
-                  ) : profile?.role === "client" ? (
-                    <Link
-                      href="/client"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                    >
-                      Client Dashboard
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                    >
-                      Dashboard
-                    </Link>
-                  )}
-                  <Link
-                    href="/profile"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                  >
-                    Profile Settings
-                  </Link>
-                  <Link
-                    href="/"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                  >
-                    Go to Website
-                  </Link>
-
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      handleSignOut()
-                    }}
-                    className="block w-full text-left text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 text-red-500 hover:text-red-400"
-                  >
-                    Log Out
-                  </button>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-xl py-2 border-b border-border-brand/10 transition-colors duration-200 hover:text-accent-gold text-text-secondary"
-                >
-                  Login
-                </Link>
+                </div>
               )}
 
-              <div className="pt-6">
+              <div className="pt-4">
                 <Button
                   asChild
-                  variant="outline"
-                  className="w-full py-6 text-lg"
+                  className="w-full py-6 text-base font-bold bg-accent-gold text-black hover:bg-amber-300"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
                     Apply for System Audit
                   </Link>
                 </Button>
               </div>
-              <div className="flex justify-center pt-8 border-t border-white/5">
+              <div className="flex justify-center pt-6 border-t border-white/10">
                 <SocialMediaLinks />
               </div>
             </div>

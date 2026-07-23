@@ -87,7 +87,7 @@ export const SITE_COPY = {
       eyebrow: "Bespoke Digital Infrastructure & Automated Engines",
       headline: "While You Read This, Your Competitors Are Acquiring Speed. You Are Paying the Manual Tax.",
       subheadline: "Every hour your business relies on manual lead routing, delayed follow-ups, and static web pages, high-value instructions slip quietly to faster operators. We build digital engines engineered for sub-60-second intent capture.",
-      primaryCtaText: "Apply for System Alignment →",
+      primaryCtaText: "Apply for System Alignment",
       secondaryCtaText: "Review Deployed Systems",
       trustItems: [
         "Automated Pipeline Architecture",

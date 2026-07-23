@@ -69,7 +69,6 @@ export default async function Home() {
           })
         }}
       />
-      <LiveTelemetryTicker />
       <Navbar />
       <Hero />
       <SectionDivider chapter="I" title="Operational Friction" />
