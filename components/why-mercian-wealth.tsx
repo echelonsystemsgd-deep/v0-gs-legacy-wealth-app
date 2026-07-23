@@ -38,7 +38,7 @@ export function WhyMercianWealth() {
               [ SYSTEM ARCHITECTURE ]
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              We Build <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Leverage</span>. The Rest Build Overhead.
+              We Build <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Leverage.</span> The Rest Build Overhead.
             </h2>
             <p className="font-sans text-base sm:text-lg text-white/80 leading-relaxed max-w-xl font-normal">
               {data.description}

@@ -27,17 +27,17 @@ export function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center gap-2.5 mb-8"
+          className="flex flex-col items-center justify-center gap-2.5 mb-8 text-center max-w-full px-2"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[11px] font-mono font-bold text-accent-gold uppercase tracking-wider shadow-[0_0_15px_rgba(212,175,55,0.15)]">
-            <span className="relative flex h-2 w-2">
+          <span className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-wider shadow-[0_0_15px_rgba(212,175,55,0.15)] text-center">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS
+            <span>COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS</span>
           </span>
 
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-gold/80">
+          <span className="font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-accent-gold/80">
             [ {data.eyebrow} ]
           </span>
         </motion.div>
@@ -47,9 +47,9 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.12] text-balance mb-8 max-w-4xl tracking-tight"
+          className="font-serif text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.14] text-balance mb-8 max-w-5xl tracking-tight"
         >
-          While You Read This, Your Competitors Are <span className="inline-block pr-2 bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Acquiring Speed</span>. You Are Paying the <span className="text-red-400 font-extrabold">Manual Tax</span>.
+          While You Read This, Your Competitors Are <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Acquiring Speed.</span> You Are Paying the <span className="inline text-red-400 font-extrabold">Manual Tax.</span>
         </motion.h1>
 
         {/* Subheadline with Elevated Weight & Readability */}
@@ -57,7 +57,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-sans text-base sm:text-lg md:text-xl text-white/90 max-w-[640px] leading-relaxed mb-10 font-normal"
+          className="font-sans text-base sm:text-lg md:text-xl text-white/90 max-w-[680px] leading-relaxed mb-10 font-normal"
         >
           {data.subheadline}
         </motion.p>

@@ -75,7 +75,7 @@ export function SpeedGapVisualizer() {
             </div>
 
             {/* Steps Visual */}
-            <div className="grid grid-cols-3 gap-2 text-[9px] font-medium text-text-secondary/60">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-[8px] sm:text-[9px] font-medium text-text-secondary/60 text-center">
               <div className={`p-1.5 rounded bg-white/[0.02] border transition-colors ${manualStep >= 1 ? "border-red-500/20 text-red-400 bg-red-500/5" : "border-transparent"}`}>
                 1. Lead Enters
               </div>
@@ -97,7 +97,7 @@ export function SpeedGapVisualizer() {
             </div>
 
             {/* Status Output */}
-            <div className="h-4 flex items-center justify-between text-[10px]">
+            <div className="h-auto min-h-[16px] flex items-center justify-between text-[10px]">
               <span className="text-text-secondary/80">Pipeline Status:</span>
               <span className={`font-bold transition-all duration-300 ${manualStep === 3 ? "text-red-500 animate-pulse" : "text-text-secondary/60"}`}>
                 {manualStep === 0 && "Idle"}
@@ -110,19 +110,19 @@ export function SpeedGapVisualizer() {
 
           {/* Card 2: Autonomic Engine */}
           <div className="p-4 bg-gradient-to-br from-accent-purple/10 to-transparent border border-accent-purple/20 rounded-lg space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-bold text-accent-gold uppercase tracking-wider flex items-center gap-1.5">
-                <Zap size={12} className="animate-bounce" />
-                Mercian Wealth Autonomic Engine
+            <div className="flex justify-between items-center text-xs gap-2">
+              <span className="font-bold text-accent-gold uppercase tracking-wider flex items-center gap-1.5 text-[11px] sm:text-xs">
+                <Zap size={12} className="animate-bounce shrink-0" />
+                <span className="truncate sm:whitespace-normal">Mercian Wealth Autonomic Engine</span>
               </span>
-              <span className="text-xxs text-accent-gold/80 flex items-center gap-1 font-bold">
+              <span className="text-[10px] text-accent-gold/80 flex items-center gap-1 font-bold shrink-0">
                 <Clock size={10} />
                 Elapsed: {autoStep === 0 ? "0s" : autoStep === 1 ? "4s" : autoStep === 2 ? "12s" : autoStep === 3 ? "25s" : "45s"}
               </span>
             </div>
 
             {/* Steps Visual */}
-            <div className="grid grid-cols-4 gap-1.5 text-[8px] font-bold text-text-secondary/50">
+            <div className="grid grid-cols-4 gap-1 sm:gap-1.5 text-[7.5px] sm:text-[8px] font-bold text-text-secondary/50 text-center">
               <div className={`p-1.5 rounded transition-all duration-300 text-center ${autoStep >= 1 ? "bg-accent-gold/10 border border-accent-gold/20 text-accent-gold" : "bg-white/[0.01] border border-transparent"}`}>
                 Capture
               </div>

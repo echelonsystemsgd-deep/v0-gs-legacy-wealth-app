@@ -27,10 +27,10 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] font-mono font-bold text-accent-gold uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(212,175,55,0.15)]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-[0.18em] sm:tracking-[0.2em] shadow-[0_0_20px_rgba(212,175,55,0.15)] text-center"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>VETTES PARTNERSHIPS ONLY · STRICTLY LIMITED ALLOCATION</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <span>VETTED PARTNERSHIPS ONLY · STRICTLY LIMITED ALLOCATION</span>
         </motion.div>
 
         {/* Headline */}
@@ -39,9 +39,9 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance max-w-3xl"
+          className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance max-w-4xl"
         >
-          Ready to Eliminate <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Manual Drag</span> & Secure Category Supremacy?
+          Ready to Eliminate <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Manual Drag</span> & Secure Category Supremacy?
         </motion.h2>
 
         {/* Subheadline */}
