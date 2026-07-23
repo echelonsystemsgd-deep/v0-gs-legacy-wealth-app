@@ -20,7 +20,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">
         
         {/* Unified Centered Eyebrow & Scarcity Indicator */}
         <motion.div
@@ -49,7 +49,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.12] text-balance mb-8 max-w-4xl tracking-tight"
         >
-          While You Read This, Your Competitors Are <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Acquiring Speed</span>. You Are Paying the <span className="text-red-400 font-extrabold">Manual Tax</span>.
+          While You Read This, Your Competitors Are <span className="inline-block pr-2 bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Acquiring Speed</span>. You Are Paying the <span className="text-red-400 font-extrabold">Manual Tax</span>.
         </motion.h1>
 
         {/* Subheadline with Elevated Weight & Readability */}

@@ -19,14 +19,14 @@ export function DivergenceComparison() {
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10 text-center">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10 text-center">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accent-purple/10 border border-accent-purple/20 text-[10px] font-mono font-semibold text-accent-purple uppercase tracking-[0.2em] mb-4"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[11px] font-mono font-semibold text-accent-gold uppercase tracking-[0.25em] mb-4"
         >
           <span>✦</span>
           <span>{data.eyebrow}</span>

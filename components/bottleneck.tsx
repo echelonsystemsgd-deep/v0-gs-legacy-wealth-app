@@ -30,7 +30,7 @@ export function Bottleneck() {
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10">
 
         {/* ── Centered headline ── */}
         <motion.div
@@ -40,7 +40,7 @@ export function Bottleneck() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16 max-w-3xl mx-auto"
         >
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-gold/80">
             [ {data.eyebrow} ]
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">

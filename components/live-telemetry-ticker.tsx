@@ -4,32 +4,42 @@ import { SITE_COPY } from "@/lib/site-copy"
 
 export function LiveTelemetryTicker() {
   const items = SITE_COPY.homepage.telemetryTicker.items
+  // Duplicate array for 360-degree seamless infinite marquee loop
+  const duplicatedItems = [...items, ...items]
 
   return (
-    <div className="w-full bg-[#090410] border-b border-accent-gold/20 py-1.5 px-4 overflow-hidden z-30 relative select-none">
-      <div className="mx-auto max-w-7xl flex items-center justify-between gap-4 font-mono text-[10px] sm:text-[11px]">
-        {/* Left Telemetry Badge */}
-        <div className="flex items-center gap-2 shrink-0">
+    <div className="w-full bg-[#090410] border-b border-accent-gold/20 py-1.5 overflow-hidden z-30 relative select-none">
+      <div className="mx-auto max-w-7xl flex items-center justify-between gap-0 font-mono text-[10px] sm:text-[11px] px-2 sm:px-4">
+        
+        {/* Fixed Left Status Anchor */}
+        <div className="flex items-center gap-2 shrink-0 bg-[#090410] z-20 pr-4 sm:pr-6 py-0.5 border-r border-accent-gold/20 shadow-[5px_0_15px_rgba(9,4,16,0.9)]">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span className="text-accent-gold font-bold tracking-wider uppercase text-[10px] sm:text-[11px]">
+          <span className="text-accent-gold font-bold tracking-wider uppercase text-[10px] sm:text-[11px] whitespace-nowrap">
             [ LIVE SYSTEM TELEMETRY ]
           </span>
         </div>
 
-        {/* Right Ticker Flow without scrollbars */}
-        <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar scrollbar-none py-0.5 text-text-secondary whitespace-nowrap">
-          {items.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3 shrink-0">
-              {idx > 0 && <span className="text-accent-gold/40 text-[9px]">✦</span>}
-              <span className={idx === 2 ? "text-accent-gold font-semibold" : "text-white/80"}>
-                {item}
-              </span>
-            </div>
-          ))}
+        {/* Continuous Infinite Marquee Stream */}
+        <div className="relative flex-1 overflow-hidden ml-3 sm:ml-4">
+          {/* Subtle Edge Gradients for Smooth Entrance/Exit */}
+          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[#090410] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#090410] to-transparent z-10 pointer-events-none" />
+
+          <div className="animate-marquee flex items-center gap-6 text-text-secondary whitespace-nowrap cursor-pointer">
+            {duplicatedItems.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-3 shrink-0 hover:text-accent-gold transition-colors duration-200">
+                <span className="text-accent-gold/40 text-[9px]">✦</span>
+                <span className={idx % items.length === 2 ? "text-accent-gold font-semibold" : "text-white/80 font-normal"}>
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
     </div>
   )

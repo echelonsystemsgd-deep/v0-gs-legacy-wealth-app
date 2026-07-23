@@ -23,7 +23,7 @@ export function WhyMercianWealth() {
         </div>
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left Side: Headline & Copy */}

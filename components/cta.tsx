@@ -19,7 +19,7 @@ export function CTA() {
         }}
       />
 
-      <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center space-y-8">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center space-y-8">
         
         {/* Scarcity / Eyebrow Header */}
         <motion.div

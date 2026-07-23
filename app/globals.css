@@ -533,3 +533,18 @@ input[type="range"]::-moz-range-thumb:active {
   background-position: 0 0, 4px 4px;
 }
 
+/* Infinite Marquee Animation for Live Telemetry */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
