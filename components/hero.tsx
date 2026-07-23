@@ -37,7 +37,7 @@ export function Hero() {
             COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS
           </span>
 
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-purple/90">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-accent-gold/80">
             [ {data.eyebrow} ]
           </span>
         </motion.div>

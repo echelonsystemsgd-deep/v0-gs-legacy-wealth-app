@@ -1,6 +1,6 @@
-allowBuilds:
-  '@sentry/cli': true
-  sharp: true
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - sharp
 minimumReleaseAgeExclude:
   - '@sentry-internal/browser-utils@10.57.0'
   - '@sentry-internal/feedback@10.57.0'
@@ -21,3 +21,6 @@ minimumReleaseAgeExclude:
   - '@supabase/realtime-js@2.108.0'
   - '@supabase/storage-js@2.108.0'
   - '@supabase/supabase-js@2.108.0'
+allowBuilds:
+  '@sentry/cli': set this to true or false
+  sharp: set this to true or false

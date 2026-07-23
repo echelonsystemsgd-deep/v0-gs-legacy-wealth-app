@@ -4,15 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "npx next dev",
-    "build": "npx next build --webpack",
+    "build": "next build",
     "start": "npx next start",
     "lint": "eslint ."
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@sentry/cli",
-      "sharp"
-    ]
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
