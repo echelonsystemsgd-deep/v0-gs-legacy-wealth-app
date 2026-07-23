@@ -1,6 +1,6 @@
 allowBuilds:
-  '@sentry/cli': set this to true or false
-  sharp: set this to true or false
+  '@sentry/cli': true
+  sharp: true
 minimumReleaseAgeExclude:
   - '@sentry-internal/browser-utils@10.57.0'
   - '@sentry-internal/feedback@10.57.0'

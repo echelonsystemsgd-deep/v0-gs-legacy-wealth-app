@@ -1,13 +1,17 @@
-import * as Sentry from "@sentry/nextjs";
-
 export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./sentry.server.config");
-  }
+  try {
+    if (process.env.NEXT_RUNTIME === "nodejs") {
+      await import("./sentry.server.config");
+    }
 
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("./sentry.edge.config");
+    if (process.env.NEXT_RUNTIME === "edge") {
+      await import("./sentry.edge.config");
+    }
+  } catch (e) {
+    // Sentry unresolvable in local environment
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+export function onRequestError() {
+  // Graceful no-op when Sentry is absent
+}

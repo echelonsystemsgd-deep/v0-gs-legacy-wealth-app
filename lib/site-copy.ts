@@ -71,12 +71,23 @@ export const SITE_COPY = {
 
   // Homepage Sections
   homepage: {
+    // 0. Live Telemetry Ticker
+    telemetryTicker: {
+      items: [
+        "99.98% System Throughput Uptime",
+        "Sub-60s Intent Capture Capability",
+        "Q3 Cohort: 1 Allocation Slot Remaining",
+        "Direct Founder SLA < 12 Hours",
+        "Bespoke Digital Infrastructure",
+      ]
+    },
+
     // 1. Hero Section
     hero: {
       eyebrow: "Bespoke Digital Infrastructure & Automated Engines",
       headline: "While You Read This, Your Competitors Are Acquiring Speed. You Are Paying the Manual Tax.",
       subheadline: "Every hour your business relies on manual lead routing, delayed follow-ups, and static web pages, high-value instructions slip quietly to faster operators. We build digital engines engineered for sub-60-second intent capture.",
-      primaryCtaText: "Quantify Your Operational Deficit →",
+      primaryCtaText: "Apply for System Alignment →",
       secondaryCtaText: "Review Deployed Systems",
       trustItems: [
         "Automated Pipeline Architecture",
@@ -85,6 +96,36 @@ export const SITE_COPY = {
         "Guaranteed System Throughput",
       ],
       unsureText: "Unsure of your requirements? Review our 28-Day Execution Protocol →",
+    },
+
+    // Divergence Comparison (The Two-Path Mechanic)
+    divergenceComparison: {
+      eyebrow: "THE STRUCTURAL REALITY",
+      headline: "THE DIVERGENCE: Manual Operational Drag vs. The Autonomic Engine",
+      subheadline: "Every high-margin business reaches a fork: continue paying the cumulative tax of fragmented manual systems, or deploy automated infrastructure engineered for category supremacy.",
+      pathConventional: {
+        badge: "CONVENTIONAL PATH",
+        title: "Manual Operational Drag",
+        subtitle: "Fragmented systems, manual copy-pasting, and delayed response loops.",
+        points: [
+          "24–48 hour lead response lag causing high-intent drop-off and lost instructions.",
+          "Fee-earners wasting 15+ hours weekly copy-pasting form inputs into CRMs.",
+          "Static, slow-loading templates (6-10s) that project low-tier brand authority.",
+          "Recurring agency retainer overhead with zero performance throughput SLA.",
+        ]
+      },
+      pathMercian: {
+        badge: "MERCIAN AUTONOMIC PATH",
+        title: "The Autonomic Engine",
+        subtitle: "Bespoke digital assets, 0-second AI triage, and direct CRM data conduits.",
+        points: [
+          "Sub-60-second intent capture & automated qualification firing 24/7/365.",
+          "Direct pipeline webhooks routing prospect data instantly to your CRM.",
+          "Sub-1-second mobile load speeds projecting instant category authority.",
+          "Dedicated 28-day execution protocol backed by ongoing telemetry support.",
+        ],
+        ctaText: "Secure Your Cohort Alignment →",
+      }
     },
 
     // 2. Deficit Diagnostic

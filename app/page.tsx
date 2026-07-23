@@ -1,12 +1,14 @@
 import { Navbar } from "@/components/navbar"
 import { Hero } from "@/components/hero"
 import { Bottleneck } from "@/components/bottleneck"
+import { DivergenceComparison } from "@/components/divergence-comparison"
 import { WhyMercianWealth } from "@/components/why-mercian-wealth"
 import { Testimonials } from "@/components/testimonials"
 import { Pricing } from "@/components/pricing"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { SectionDivider } from "@/components/section-divider"
+import { LiveTelemetryTicker } from "@/components/live-telemetry-ticker"
 import { getPricingTiers } from "@/lib/pricing"
 
 export const revalidate = 60
@@ -45,7 +47,7 @@ export default async function Home() {
                 "@id": "https://mercianwealth.com/#website",
                 "url": "https://mercianwealth.com",
                 "name": "Mercian Wealth",
-                "description": "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders.",
+                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders.",
                 "publisher": {
                   "@id": "https://mercianwealth.com/#organization"
                 }
@@ -61,22 +63,25 @@ export default async function Home() {
                 "about": {
                   "@id": "https://mercianwealth.com/#organization"
                 },
-                "description": "Custom digital systems and autonomic AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
+                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
               }
             ]
           })
         }}
       />
+      <LiveTelemetryTicker />
       <Navbar />
       <Hero />
       <SectionDivider chapter="I" title="Operational Friction" />
       <Bottleneck />
-      <SectionDivider chapter="II" title="System Architecture" />
+      <SectionDivider chapter="II" title="The Structural Divergence" />
+      <DivergenceComparison />
+      <SectionDivider chapter="III" title="System Architecture" />
       <WhyMercianWealth />
-      <SectionDivider chapter="III" title="Cohort Telemetry & Allocation" />
+      <SectionDivider chapter="IV" title="Cohort Telemetry & Allocation" />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
-      <SectionDivider chapter="IV" title="Initiate Integration" />
+      <SectionDivider chapter="V" title="Initiate Integration" />
       <CTA />
       <Footer />
     </main>

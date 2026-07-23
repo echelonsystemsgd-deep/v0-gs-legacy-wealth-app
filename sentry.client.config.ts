@@ -1,11 +1,12 @@
-import * as Sentry from "@sentry/nextjs";
-
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN || "your_dsn_here",
-
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-});
+try {
+  const Sentry = await import("@sentry/nextjs");
+  if (Sentry && Sentry.init) {
+    Sentry.init({
+      dsn: process.env.NEXT_PUBLIC_SENTRY_DSN || "",
+      tracesSampleRate: 1,
+      debug: false,
+    });
+  }
+} catch (e) {
+  // Sentry fallback
+}

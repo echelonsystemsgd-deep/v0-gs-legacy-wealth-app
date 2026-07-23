@@ -234,6 +234,27 @@ export function Bottleneck() {
           </motion.div>
 
         </div>
+
+        {/* Post-Bottleneck Intermediate CTA Bar */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <Button
+            asChild
+            size="lg"
+            className="px-8 py-7 text-sm sm:text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.15)] hover:shadow-accent-gold/25"
+          >
+            <Link href="/book" className="flex items-center gap-2">
+              <span>Calculate Your Latency Deficit — Apply for System Alignment</span>
+              <span className="text-lg">→</span>
+            </Link>
+          </Button>
+        </motion.div>
+
       </div>
 
     </section>
