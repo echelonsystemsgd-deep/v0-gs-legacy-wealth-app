@@ -386,7 +386,7 @@ export function Navbar() {
           >
             {/* Mobile Drawer Top Header Bar */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-accent-gold/20 bg-[#090410] shrink-0">
-              <BrandLogo size="sm" />
+              <BrandLogo />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-white/10 transition-colors"
