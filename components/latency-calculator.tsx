@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Calculator, ArrowRight, DollarSign, Clock, ShieldAlert, Zap, TrendingUp } from "lucide-react"
+import { ArrowRight, DollarSign, Clock, ShieldAlert, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -50,13 +50,13 @@ export function LatencyCalculator() {
           </p>
         </div>
 
-        {/* Calculator Grid: Output card FIRST on mobile/tablets so users instantly see results */}
+        {/* Calculator Grid */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           
           {/* Sliders Area (7 cols on desktop) */}
-          <div className="lg:col-span-7 bg-bg-tertiary/40 border border-white/10 p-6 sm:p-8 rounded-2xl space-y-8 backdrop-blur-md flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-bg-tertiary/40 border border-white/10 p-6 sm:p-8 rounded-2xl space-y-6 backdrop-blur-md flex flex-col justify-between">
             
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Slider 1: Monthly Leads */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -111,26 +111,40 @@ export function LatencyCalculator() {
                 </div>
               </div>
 
-              {/* Live Mini Output Bar inside slider card for instant feedback */}
-              <div className="p-4 rounded-xl bg-accent-gold/10 border border-accent-gold/30 flex items-center justify-between gap-4">
+              {/* Live Output Banner inside slider card */}
+              <div className="p-4 sm:p-5 rounded-xl bg-accent-gold/10 border border-accent-gold/30 flex items-center justify-between gap-4">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-accent-gold block">
                     LIVE CALCULATED REVENUE LEAK
                   </span>
                   <span className="text-xs text-text-secondary">Based on {monthlyLeads} leads @ {formatCurrency(avgDealValue)}</span>
                 </div>
-                <span className="font-serif text-2xl font-bold text-accent-gold shrink-0">
+                <span className="font-serif text-2xl sm:text-3xl font-bold text-accent-gold shrink-0">
                   {formatCurrency(estimatedAnnualLeak)}
                 </span>
               </div>
             </div>
 
-            {/* Context Note */}
-            <div className="mt-4 p-4 rounded-xl bg-black/40 border border-white/5 text-xs text-text-secondary leading-relaxed flex items-start gap-3">
-              <ShieldAlert size={16} className="text-amber-400 shrink-0 mt-0.5" />
-              <span>
-                Based on Harvard Business Review speed-to-lead benchmark data: responding within 60 seconds yields a <strong className="text-white">391% increase</strong> in conversion versus a 30-minute delay.
-              </span>
+            {/* Context Note + Action Button */}
+            <div className="space-y-4 pt-2">
+              <div className="p-4 rounded-xl bg-black/40 border border-white/5 text-xs text-text-secondary leading-relaxed flex items-start gap-3">
+                <ShieldAlert size={16} className="text-amber-400 shrink-0 mt-0.5" />
+                <span>
+                  Based on Harvard Business Review speed-to-lead benchmark data: responding within 60 seconds yields a <strong className="text-white">391% increase</strong> in conversion versus a 30-minute delay.
+                </span>
+              </div>
+
+              {/* Action Button inside diagnostic card */}
+              <Button
+                asChild
+                size="lg"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-5 text-sm"
+              >
+                <Link href="/book" className="flex items-center justify-center gap-2">
+                  <span>Plug Revenue Leak — Apply for Alignment</span>
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
             </div>
 
           </div>
@@ -164,16 +178,19 @@ export function LatencyCalculator() {
               </div>
             </div>
 
-            <Button
-              asChild
-              size="lg"
-              className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-6 text-sm"
-            >
-              <Link href="/book" className="flex items-center justify-center gap-2">
-                <span>Plug Revenue Leak — Apply for Alignment</span>
-                <ArrowRight size={16} />
-              </Link>
-            </Button>
+            <div className="space-y-2">
+              <Button
+                asChild
+                size="lg"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-6 text-sm"
+              >
+                <Link href="/book" className="flex items-center justify-center gap-2">
+                  <span>Schedule Autonomic Audit</span>
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+              <p className="text-[10px] text-text-secondary/70">Zero commitment • 15-minute diagnostic session</p>
+            </div>
 
           </div>
 
