@@ -10,7 +10,7 @@ export function Testimonials() {
   const data = SITE_COPY.homepage.testimonials
 
   return (
-    <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
+    <section id="telemetry" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10">
         
         {/* Section Header */}

@@ -3,14 +3,15 @@
 import { motion } from "framer-motion"
 
 interface SectionDividerProps {
+  id?: string
   chapter?: string
   title?: string
   className?: string
 }
 
-export function SectionDivider({ chapter, title, className = "" }: SectionDividerProps) {
+export function SectionDivider({ id, chapter, title, className = "" }: SectionDividerProps) {
   return (
-    <div className={`relative w-full py-4 sm:py-10 flex items-center justify-center overflow-hidden z-20 ${className}`}>
+    <div id={id} className={`relative w-full py-4 sm:py-10 flex items-center justify-center overflow-hidden z-20 ${className}`}>
       {/* Background Ambient Radial Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0 opacity-50"

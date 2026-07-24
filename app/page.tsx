@@ -75,18 +75,18 @@ export default async function Home() {
       <Navbar />
       <ChapterTracker />
       <Hero />
-      <SectionDivider chapter="I" title="Operational Friction" />
+      <SectionDivider id="chapter-divider-I" chapter="I" title="Operational Friction" />
       <Bottleneck />
       <LatencyCalculator />
-      <SectionDivider chapter="II" title="The Structural Divergence" />
+      <SectionDivider id="chapter-divider-II" chapter="II" title="The Structural Divergence" />
       <DivergenceComparison />
-      <SectionDivider chapter="III" title="System Architecture" />
+      <SectionDivider id="chapter-divider-III" chapter="III" title="System Architecture" />
       <WhyMercianWealth />
       <SystemBlueprint />
-      <SectionDivider chapter="IV" title="Cohort Telemetry & Allocation" />
+      <SectionDivider id="chapter-divider-IV" chapter="IV" title="Cohort Telemetry & Allocation" />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
-      <SectionDivider chapter="V" title="Initiate Integration" />
+      <SectionDivider id="chapter-divider-V" chapter="V" title="Initiate Integration" />
       <CTA />
       <Footer />
     </main>

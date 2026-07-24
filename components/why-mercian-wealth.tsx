@@ -11,7 +11,7 @@ export function WhyMercianWealth() {
   const modelData = SITE_COPY.homepage.modelHint
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden bg-[#130B24]">
+    <section id="architecture" className="relative py-24 lg:py-32 overflow-hidden bg-[#130B24]">
       {/* Background Crest Watermark (Scrolls with page, behind text) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
         <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] opacity-[0.04]">

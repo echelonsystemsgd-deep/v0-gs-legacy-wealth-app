@@ -10,7 +10,7 @@ export function CTA() {
   const data = SITE_COPY.homepage.cta
 
   return (
-    <section className="relative py-28 lg:py-36 overflow-hidden bg-[#07050B]">
+    <section id="cta" className="relative py-28 lg:py-36 overflow-hidden bg-[#07050B]">
       {/* Background Radial Gold Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"

@@ -63,7 +63,7 @@ export function SystemBlueprint() {
   const activeNode = nodes.find((n) => n.id === selectedNode) || nodes[0]
 
   return (
-    <div id="architecture" className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
+    <div id="system-blueprint" className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
