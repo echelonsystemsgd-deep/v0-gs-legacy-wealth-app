@@ -90,19 +90,15 @@ export function BrandLogo({
     return <WordmarkLogo className={className as string | undefined} />
   }
 
-  const isFill = Boolean((props as any).fill)
-  const imageDimensions = !isFill
-    ? {
-        width: (props as any).width || 140,
-        height: (props as any).height || 40,
-      }
-    : {}
+  const hasFill = (props as any).fill
+  const imgWidth = hasFill ? undefined : (props as any).width || 140
+  const imgHeight = hasFill ? undefined : (props as any).height || 40
 
   return (
     // LOGO_SWAP: Update BRAND_LOGO in lib/brand-assets.ts when the final
     // Mercian Wealth asset is ready — this <Image> will automatically pick it up.
     <Image
-      {...imageDimensions}
+      {...(hasFill ? {} : { width: imgWidth, height: imgHeight })}
       {...props}
       src={src}
       alt={alt}

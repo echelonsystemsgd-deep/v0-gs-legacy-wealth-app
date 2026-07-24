@@ -76,7 +76,7 @@ export const SITE_COPY = {
       items: [
         "99.98% System Throughput Uptime",
         "Sub-60s Intent Capture Capability",
-        "Q3 Cohort: 1 Allocation Slot Remaining",
+        "Q3 Cohort: 2 Allocation Slots Remaining",
         "Direct Founder SLA < 12 Hours",
         "Bespoke Digital Infrastructure",
       ]

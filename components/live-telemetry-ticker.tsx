@@ -5,7 +5,7 @@ import { SITE_COPY } from "@/lib/site-copy"
 import { createClient } from "@/lib/supabase/client"
 
 export function LiveTelemetryTicker() {
-  const [remainingSlots, setRemainingSlots] = useState<number>(3)
+  const [remainingSlots, setRemainingSlots] = useState<number>(2)
   const supabase = createClient()
 
   useEffect(() => {
@@ -17,14 +17,14 @@ export function LiveTelemetryTicker() {
           .in("status", ["Won", "Closed", "Client", "won", "closed", "client"])
 
         if (!error && typeof count === "number") {
-          // Total cohort allocation quota is 5 slots.
+          // Total cohort allocation quota is 2 slots.
           // Slots decrement ONLY when a lead's status is changed to Won/Closed in the admin backend.
-          const totalQuota = 5
+          const totalQuota = 2
           const available = Math.max(1, totalQuota - count)
           setRemainingSlots(available)
         }
       } catch (err) {
-        // Fallback to 3 if DB unresolvable
+        // Fallback to 2 if DB unresolvable
       }
     }
 
