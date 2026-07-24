@@ -95,17 +95,17 @@ export function StickyCTAButton() {
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] right-6 z-50 md:bottom-10 md:right-10"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-4 z-50 sm:bottom-8 sm:right-8"
         >
           <Link
             href="/book"
             className="group flex items-center border-none bg-transparent outline-none cursor-pointer decoration-none"
           >
-            <div className="flex items-center gap-3 bg-foreground border border-accent/40 hover:border-primary/40 p-2 md:p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden relative">
-              <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center shadow-sm">
-                <span className="font-serif font-bold text-lg">MW</span>
+            <div className="flex items-center gap-2.5 bg-foreground border border-accent-gold/40 hover:border-accent-gold/60 p-2 sm:p-2.5 rounded-full shadow-2xl transition-all duration-300 relative group-hover:scale-105">
+              <div className="bg-accent-purple text-accent-gold w-10 h-10 rounded-full flex items-center justify-center shadow-sm shrink-0 border border-accent-gold/30">
+                <span className="font-serif font-bold text-sm sm:text-base">MW</span>
               </div>
-              <span className="font-medium text-xs sm:text-sm text-background pr-3 sm:pr-4 whitespace-nowrap">
+              <span className="hidden sm:inline font-bold text-xs sm:text-sm text-background pr-3 whitespace-nowrap">
                 Apply for Audit
               </span>
             </div>

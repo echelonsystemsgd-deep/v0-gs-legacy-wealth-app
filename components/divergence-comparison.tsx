@@ -10,7 +10,7 @@ export function DivergenceComparison() {
   const data = SITE_COPY.homepage.divergenceComparison
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden bg-[#07050B]">
+    <section className="relative pt-4 pb-20 sm:py-24 lg:py-32 overflow-hidden bg-[#07050B]">
       {/* Ambient Lighting Background */}
       <div 
         className="absolute inset-0 pointer-events-none z-0 opacity-40"
@@ -50,7 +50,7 @@ export function DivergenceComparison() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="font-sans text-base sm:text-lg text-text-primary opacity-80 max-w-2xl mx-auto leading-relaxed mb-16"
+          className="font-sans text-base sm:text-lg text-text-primary opacity-80 max-w-2xl mx-auto leading-relaxed mb-12 sm:mb-16"
         >
           {data.subheadline}
         </motion.p>
@@ -64,7 +64,7 @@ export function DivergenceComparison() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col justify-between p-8 sm:p-10 rounded-2xl border border-red-500/20 bg-red-950/10 backdrop-blur-sm relative overflow-hidden"
+            className="flex flex-col justify-between p-6 sm:p-10 rounded-2xl border border-red-500/20 bg-red-950/10 backdrop-blur-sm relative overflow-hidden"
           >
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -76,7 +76,7 @@ export function DivergenceComparison() {
               </div>
 
               <div>
-                <h3 className="font-serif text-2xl font-bold text-white/90 mb-2">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white/90 mb-2 leading-tight">
                   {data.pathConventional.title}
                 </h3>
                 <p className="font-sans text-xs text-text-primary opacity-70 leading-relaxed">
@@ -104,13 +104,13 @@ export function DivergenceComparison() {
             </div>
           </motion.div>
 
-          {/* Path B: The Mercian Autonomic Engine */}
+          {/* Path B: The Mercian Automated Growth Engine */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col justify-between p-8 sm:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-accent-purple/20 via-[#130B24] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(109,40,217,0.2)] hover:border-accent-gold transition-all duration-300 group"
+            className="flex flex-col justify-between p-6 sm:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-accent-purple/20 via-[#130B24] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(109,40,217,0.2)] hover:border-accent-gold transition-all duration-300 group"
           >
             {/* Subtle corner watermark badge */}
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 font-serif text-6xl text-accent-gold">
@@ -127,9 +127,9 @@ export function DivergenceComparison() {
               </div>
 
               <div>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-2 flex items-center gap-2">
+                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 flex items-center gap-2 leading-tight">
                   {data.pathMercian.title}
-                  <span className="text-accent-gold text-lg">✦</span>
+                  <span className="text-accent-gold text-lg shrink-0">✦</span>
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-text-primary opacity-90 leading-relaxed">
                   {data.pathMercian.subtitle}
@@ -150,17 +150,17 @@ export function DivergenceComparison() {
               </ul>
 
               {/* Architectural Schema Visual Anchor */}
-              <div className="mt-6 p-4 rounded-xl border border-accent-gold/20 bg-bg-primary/80 font-mono text-[11px] space-y-2 text-accent-gold/90">
+              <div className="mt-6 p-4 rounded-xl border border-accent-gold/20 bg-bg-primary/90 font-mono text-[11px] space-y-3 text-accent-gold/90">
                 <div className="flex items-center justify-between text-[10px] text-text-secondary uppercase">
                   <span className="flex items-center gap-1"><Cpu size={12} /> System Schema</span>
                   <span className="text-emerald-400 font-bold">Active Engine</span>
                 </div>
-                <div className="flex items-center justify-between gap-2 pt-1 font-bold text-[10px] sm:text-xs">
-                  <span className="px-2 py-1 bg-white/5 rounded border border-white/10 text-white">Lead Intent</span>
-                  <span className="text-accent-gold">──▶</span>
-                  <span className="px-2 py-1 bg-accent-purple/30 rounded border border-accent-gold/40 text-accent-gold">Sub-60s AI Triage</span>
-                  <span className="text-accent-gold">──▶</span>
-                  <span className="px-2 py-1 bg-emerald-500/10 rounded border border-emerald-500/30 text-emerald-400">CRM Dispatch</span>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 font-bold text-xs">
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/5 rounded border border-white/10 text-white">Lead Intent</span>
+                  <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-accent-purple/30 rounded border border-accent-gold/40 text-accent-gold">Sub-60s AI Triage</span>
+                  <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-emerald-500/10 rounded border border-emerald-500/30 text-emerald-400">CRM Dispatch</span>
                 </div>
               </div>
             </div>
@@ -170,11 +170,11 @@ export function DivergenceComparison() {
               <Button
                 asChild
                 size="lg"
-                className="w-full py-7 font-bold text-base flex items-center justify-center gap-2 shadow-lg hover:shadow-accent-gold/20"
+                className="w-full py-6 sm:py-7 font-bold text-sm md:text-base flex items-center justify-center shadow-lg hover:shadow-accent-gold/20 text-center tracking-normal px-2 sm:px-4"
               >
-                <Link href="/book">
-                  {data.pathMercian.ctaText}
-                  <ArrowRight size={18} />
+                <Link href="/book" className="flex items-center justify-center gap-2">
+                  <span>{data.pathMercian.ctaText.replace(" →", "")}</span>
+                  <ArrowRight size={18} className="shrink-0" />
                 </Link>
               </Button>
             </div>

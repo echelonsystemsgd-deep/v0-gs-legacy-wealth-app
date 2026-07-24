@@ -124,7 +124,7 @@ export const SITE_COPY = {
           "Sub-1-second mobile load speeds projecting instant category authority.",
           "Dedicated 28-day execution protocol backed by ongoing telemetry support.",
         ],
-        ctaText: "Secure Your Cohort Alignment →",
+        ctaText: "Secure Cohort Alignment →",
       }
     },
 

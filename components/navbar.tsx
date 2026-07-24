@@ -382,9 +382,21 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 bottom-0 sm:top-20 bg-[#0D0716] z-40 lg:hidden overflow-y-auto flex flex-col border-t border-accent-gold/20 shadow-2xl"
+            className="fixed inset-0 bg-[#0D0716] z-50 lg:hidden overflow-y-auto flex flex-col justify-between shadow-2xl"
           >
-            <div className="flex-1 px-6 py-8 space-y-6 flex flex-col justify-start">
+            {/* Mobile Drawer Top Header Bar */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-accent-gold/20 bg-[#090410] shrink-0">
+              <BrandLogo size="sm" />
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-white/10 transition-colors"
+                aria-label="Close menu"
+              >
+                <X size={22} className="text-accent-gold" />
+              </button>
+            </div>
+
+            <div className="flex-1 px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-5 flex flex-col justify-start">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -443,7 +455,7 @@ export function Navbar() {
                   </Link>
                 </Button>
               </div>
-              <div className="flex justify-center pt-6 border-t border-white/10">
+              <div className="flex justify-center pt-6 pb-6 border-t border-white/10">
                 <SocialMediaLinks />
               </div>
             </div>

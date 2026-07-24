@@ -596,18 +596,18 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
         </div>
 
         {/* Detailed Comparison Matrix */}
-        <div className="mb-20 relative z-10 max-w-4xl mx-auto">
+        <div className="mb-20 relative z-10 max-w-6xl mx-auto">
           <div className="text-center">
             <button
               onClick={() => setIsMatrixOpen(!isMatrixOpen)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-primary/20 bg-secondary/30 text-xs font-bold uppercase tracking-wider text-white hover:text-accent-gold hover:border-accent-gold/45 hover:bg-secondary/50 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-accent-gold/30 bg-accent-purple/30 text-xs font-bold uppercase tracking-wider text-white hover:text-accent-gold hover:border-accent-gold hover:bg-accent-purple/50 transition-all duration-300 shadow-lg"
             >
-              <span>{isMatrixOpen ? "Hide Detailed Features" : "Compare Features in Detail"}</span>
+              <span>{isMatrixOpen ? "Hide Detailed Feature Comparison" : "Compare Features in Detail"}</span>
               <motion.div
                 animate={{ rotate: isMatrixOpen ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <ChevronDown size={14} />
+                <ChevronDown size={14} className="text-accent-gold" />
               </motion.div>
             </button>
           </div>
@@ -623,12 +623,12 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 <div className="relative group">
                   {/* Mobile Tab Switcher (< 768px) */}
                   <div className="md:hidden space-y-4">
-                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-semibold text-center">
+                    <div className="flex bg-white/5 p-1.5 rounded-xl border border-white/10 text-xs font-semibold text-center">
                       <button
                         onClick={() => setActiveMobileTier("authoritySuite")}
                         className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
                           activeMobileTier === "authoritySuite"
-                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            ? "bg-accent-purple text-white font-bold shadow-md border border-accent-gold/30"
                             : "text-white/60 hover:text-white"
                         }`}
                       >
@@ -638,7 +638,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         onClick={() => setActiveMobileTier("operationsMachine")}
                         className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
                           activeMobileTier === "operationsMachine"
-                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            ? "bg-accent-purple text-white font-bold shadow-md border border-accent-gold/30"
                             : "text-white/60 hover:text-white"
                         }`}
                       >
@@ -648,7 +648,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         onClick={() => setActiveMobileTier("revenueEngine")}
                         className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
                           activeMobileTier === "revenueEngine"
-                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            ? "bg-accent-purple text-white font-bold shadow-md border border-accent-gold/30"
                             : "text-white/60 hover:text-white"
                         }`}
                       >
@@ -656,17 +656,20 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       </button>
                     </div>
 
-                    <div className="glass rounded-xl p-4 space-y-6">
+                    <div className="bg-[#0D0716] border border-white/10 rounded-2xl p-5 space-y-6 shadow-xl">
                       {comparisonCategories.map((cat, idx) => (
                         <div key={idx} className="space-y-3">
-                          <div className="text-xs font-mono font-bold uppercase tracking-widest text-accent-gold border-b border-accent-gold/20 pb-1.5">
-                            {cat.category}
+                          <div className="text-xs font-mono font-bold uppercase tracking-widest text-accent-gold border-b border-accent-gold/20 pb-2 flex items-center justify-between">
+                            <span>{cat.category}</span>
+                            <span className="text-[10px] text-white/40 font-normal">
+                              {activeMobileTier === "authoritySuite" ? "Authority Suite" : activeMobileTier === "operationsMachine" ? "Operations Machine" : "Revenue Engine"}
+                            </span>
                           </div>
                           <div className="space-y-2.5">
                             {cat.items.map((item, itemIdx) => (
-                              <div key={itemIdx} className="flex justify-between items-start text-xs p-2 rounded-lg bg-white/[0.02] border border-white/5 gap-3">
-                                <span className="font-medium text-white/90 shrink-0 max-w-[45%]">{item.name}</span>
-                                <span className="text-right text-accent-gold font-semibold leading-relaxed">
+                              <div key={itemIdx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs p-3 rounded-xl bg-white/[0.03] border border-white/5 gap-1.5">
+                                <span className="font-medium text-white/90">{item.name}</span>
+                                <span className="text-accent-gold font-semibold leading-relaxed">
                                   {item[activeMobileTier]}
                                 </span>
                               </div>
@@ -678,30 +681,30 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   </div>
 
                   {/* Desktop Comparison Table (>= 768px) */}
-                  <div className="hidden md:block glass rounded-2xl p-6 overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-[600px]">
+                  <div className="hidden md:block bg-[#0D0716] border border-white/10 rounded-2xl p-6 overflow-x-auto shadow-2xl">
+                    <table className="w-full text-left border-collapse min-w-[700px]">
                       <thead>
-                        <tr className="border-b border-border">
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-bg-primary z-20 border-r border-border">Feature Category</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Authority Suite</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-accent font-bold text-center w-1/6">Operations Machine</th>
-                          <th className="py-4 text-xs uppercase tracking-widest text-muted-foreground font-bold text-center w-1/6">Revenue Engine</th>
+                        <tr className="border-b border-white/10">
+                          <th className="py-4 px-5 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-[#0D0716] z-20 border-r border-white/10">Feature Category</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Authority Suite</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold text-center w-1/6 bg-accent-purple/10 border-x border-accent-gold/20">Operations Machine</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Revenue Engine</th>
                         </tr>
                       </thead>
                       <tbody>
                         {comparisonCategories.map((cat, idx) => (
                           <React.Fragment key={idx}>
-                            <tr className="bg-primary/5">
-                              <td colSpan={4} className="py-3 px-4 text-xs font-bold uppercase text-accent-gold tracking-widest sticky left-0 bg-bg-primary z-10">
+                            <tr className="bg-white/[0.02]">
+                              <td colSpan={4} className="py-3.5 px-5 text-xs font-mono font-bold uppercase text-accent-gold tracking-widest sticky left-0 bg-[#0D0716] z-10 border-r border-white/10">
                                 {cat.category}
                               </td>
                             </tr>
                             {cat.items.map((item, itemIdx) => (
-                              <tr key={itemIdx} className="border-b border-border hover:bg-secondary/10 transition-colors">
-                                <td className="py-4 px-4 text-sm font-medium text-white sticky left-0 bg-bg-primary z-10 border-r border-border">{item.name}</td>
-                                <td className="py-4 text-sm text-muted-foreground text-center">{item.authoritySuite}</td>
-                                <td className="py-4 text-sm text-accent-gold font-semibold text-center">{item.operationsMachine}</td>
-                                <td className="py-4 text-sm text-muted-foreground text-center">{item.revenueEngine}</td>
+                              <tr key={itemIdx} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                                <td className="py-4 px-5 text-sm font-medium text-white sticky left-0 bg-[#0D0716] z-10 border-r border-white/10">{item.name}</td>
+                                <td className="py-4 px-4 text-xs text-white/70 text-center leading-relaxed">{item.authoritySuite}</td>
+                                <td className="py-4 px-4 text-xs text-accent-gold font-semibold text-center leading-relaxed bg-accent-purple/10 border-x border-accent-gold/20">{item.operationsMachine}</td>
+                                <td className="py-4 px-4 text-xs text-white/70 text-center leading-relaxed">{item.revenueEngine}</td>
                               </tr>
                             ))}
                           </React.Fragment>
