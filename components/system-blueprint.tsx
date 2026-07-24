@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Cpu, Database, GitMerge, ShieldCheck, Zap, Server, Activity } from "lucide-react"
+import { Cpu, Database, GitMerge, ShieldCheck, Zap, Activity } from "lucide-react"
 
 interface NodeSpec {
   id: string
@@ -58,9 +58,63 @@ const nodes: NodeSpec[] = [
   }
 ]
 
+const CYCLE_DURATION = 3500 // ms per node
+
 export function SystemBlueprint() {
-  const [selectedNode, setSelectedNode] = useState<string>("ingestion")
-  const activeNode = nodes.find((n) => n.id === selectedNode) || nodes[0]
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const activeNode = nodes[selectedIndex]
+
+  const clearAll = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (progressRef.current) clearInterval(progressRef.current)
+  }, [])
+
+  const startCycle = useCallback(() => {
+    clearAll()
+    setProgress(0)
+
+    let elapsed = 0
+    progressRef.current = setInterval(() => {
+      elapsed += 50
+      setProgress(Math.min((elapsed / CYCLE_DURATION) * 100, 100))
+    }, 50)
+
+    intervalRef.current = setTimeout(() => {
+      setSelectedIndex((prev) => (prev + 1) % nodes.length)
+    }, CYCLE_DURATION)
+  }, [clearAll])
+
+  useEffect(() => {
+    if (!isPaused) {
+      startCycle()
+    }
+    return clearAll
+  }, [selectedIndex, isPaused, startCycle, clearAll])
+
+  const handleManualSelect = (index: number) => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+    clearAll()
+    setProgress(0)
+    setIsPaused(true)
+    setSelectedIndex(index)
+
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false)
+    }, 6000)
+  }
+
+  useEffect(() => {
+    return () => {
+      clearAll()
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
+    }
+  }, [clearAll])
 
   return (
     <div id="system-blueprint" className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
@@ -75,7 +129,7 @@ export function SystemBlueprint() {
             The <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Autonomic Protocol</span> Node Graph
           </h2>
           <p className="font-sans text-sm sm:text-base text-text-primary opacity-75 leading-relaxed mt-4">
-            Click any node below to inspect execution parameters and latency telemetry of our enterprise architecture.
+            The system cycles autonomously — each node executes in sequence, just as it does in production. Tap any node to inspect it directly.
           </p>
         </div>
 
@@ -84,13 +138,13 @@ export function SystemBlueprint() {
           
           {/* Node Selector Column (5 cols on md+) */}
           <div className="md:col-span-5 space-y-3">
-            {nodes.map((node) => {
+            {nodes.map((node, index) => {
               const IconComp = node.icon
-              const isSelected = selectedNode === node.id
+              const isSelected = selectedIndex === index
               return (
                 <button
                   key={node.id}
-                  onClick={() => setSelectedNode(node.id)}
+                  onClick={() => handleManualSelect(index)}
                   className={`w-full p-4 sm:p-5 rounded-xl border text-left transition-all duration-300 flex items-center justify-between group cursor-pointer focus:outline-none ${
                     isSelected 
                       ? "bg-bg-tertiary border-accent-gold shadow-[0_0_20px_rgba(212,175,55,0.15)]" 
@@ -108,14 +162,36 @@ export function SystemBlueprint() {
                       <p className="font-sans text-xs text-text-secondary opacity-70 mt-0.5 truncate">{node.subtitle}</p>
                     </div>
                   </div>
-                  <span className={`font-mono text-[10px] font-bold px-2 py-1 rounded ${
-                    isSelected ? "bg-accent-gold/20 text-accent-gold" : "bg-white/5 text-text-secondary"
-                  }`}>
-                    {node.latency}
-                  </span>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
+                    <span className={`font-mono text-[10px] font-bold px-2 py-1 rounded ${
+                      isSelected ? "bg-accent-gold/20 text-accent-gold" : "bg-white/5 text-text-secondary"
+                    }`}>
+                      {node.latency}
+                    </span>
+                    {isSelected && !isPaused && (
+                      <div className="w-full h-0.5 bg-white/10 rounded-full overflow-hidden" style={{ width: "60px" }}>
+                        <motion.div
+                          className="h-full bg-accent-gold rounded-full"
+                          style={{ width: `${progress}%` }}
+                          transition={{ duration: 0 }}
+                        />
+                      </div>
+                    )}
+                    {isSelected && isPaused && (
+                      <span className="text-[8px] font-mono text-white/30 uppercase tracking-wider">manual</span>
+                    )}
+                  </div>
                 </button>
               )
             })}
+
+            {/* Auto-cycle status indicator */}
+            <div className="flex items-center gap-2 px-1 pt-1">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaused ? "bg-white/20" : "bg-accent-gold animate-pulse"}`} />
+              <span className="text-[10px] font-mono text-text-secondary/50 uppercase tracking-wider">
+                {isPaused ? "Paused — resuming in a moment" : "Autonomic sequence running"}
+              </span>
+            </div>
           </div>
 
           {/* Active Node Detail Card (7 cols on md+) */}
@@ -156,7 +232,7 @@ export function SystemBlueprint() {
                   </div>
                   <div>
                     <span className="text-[10px] text-text-secondary uppercase block">Throughput Capacity</span>
-                    <span className="text-white font-bold text-base mt-0.5 block">{activeNode.throughput}</span>
+                    <span className="text-accent-gold font-bold text-base mt-0.5 block">{activeNode.throughput}</span>
                   </div>
                 </div>
 
