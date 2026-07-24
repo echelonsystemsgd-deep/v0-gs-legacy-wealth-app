@@ -101,7 +101,7 @@ export const SITE_COPY = {
     // Divergence Comparison (The Two-Path Mechanic)
     divergenceComparison: {
       eyebrow: "THE STRUCTURAL REALITY",
-      headline: "THE DIVERGENCE: Manual Operational Drag vs. The Autonomic Engine",
+      headline: "THE DIVERGENCE: Manual Operational Drag vs. The Automated Growth Engine",
       subheadline: "Every high-margin business reaches a fork: continue paying the cumulative tax of fragmented manual systems, or deploy automated infrastructure engineered for category supremacy.",
       pathConventional: {
         badge: "CONVENTIONAL PATH",
@@ -115,8 +115,8 @@ export const SITE_COPY = {
         ]
       },
       pathMercian: {
-        badge: "MERCIAN AUTONOMIC PATH",
-        title: "The Autonomic Engine",
+        badge: "MERCIAN AUTOMATED PATH",
+        title: "The Automated Growth Engine",
         subtitle: "Bespoke digital assets, 0-second AI triage, and direct CRM data conduits.",
         points: [
           "Sub-60-second intent capture & automated qualification firing 24/7/365.",
@@ -319,7 +319,7 @@ export const SITE_COPY = {
       {
         title: "Cloud Data Architecture & Pipelines",
         description: "High-throughput storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.",
-        outcome: "100% Data Sovereignty",
+        outcome: "Complete Data Sovereignty & Isolation",
         tagline: "High-Throughput Storage Engines.",
         overview: "Scalable backend infrastructure structured on Supabase to manage complex business state, files, and users. Engineered for latency reduction and absolute data sovereignty.",
         features: [

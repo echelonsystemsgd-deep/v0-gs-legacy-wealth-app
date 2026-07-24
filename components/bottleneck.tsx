@@ -21,7 +21,7 @@ export function Bottleneck() {
   ]
 
   return (
-    <section id="bottleneck" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
+    <section id="bottleneck" className="relative py-12 sm:py-24 lg:py-32 overflow-hidden bg-bg-primary">
       {/* Background radial glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"
@@ -241,7 +241,7 @@ export function Bottleneck() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-16 text-center"
+          className="mt-10 sm:mt-16 text-center"
         >
           <Button
             asChild

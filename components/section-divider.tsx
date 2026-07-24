@@ -10,7 +10,7 @@ interface SectionDividerProps {
 
 export function SectionDivider({ chapter, title, className = "" }: SectionDividerProps) {
   return (
-    <div className={`relative w-full py-16 sm:py-24 flex items-center justify-center overflow-hidden z-20 ${className}`}>
+    <div className={`relative w-full py-8 sm:py-16 flex items-center justify-center overflow-hidden z-20 ${className}`}>
       {/* Background Ambient Radial Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0 opacity-50"

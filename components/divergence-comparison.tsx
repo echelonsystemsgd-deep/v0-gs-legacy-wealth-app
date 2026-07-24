@@ -41,7 +41,7 @@ export function DivergenceComparison() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance max-w-4xl mx-auto mb-6"
         >
-          THE DIVERGENCE: <span className="text-red-400 line-through opacity-70 decoration-red-500/60 mr-2">Manual Drag</span> vs. <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">The Autonomic Engine</span>
+          THE DIVERGENCE: <span className="text-red-400 line-through opacity-70 decoration-red-500/60 mr-2">Manual Drag</span> vs. <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">The Automated Growth Engine</span>
         </motion.h2>
 
         {/* Subheadline */}

@@ -55,6 +55,20 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+      document.body.classList.add("mobile-menu-open")
+    } else {
+      document.body.style.overflow = ""
+      document.body.classList.remove("mobile-menu-open")
+    }
+    return () => {
+      document.body.style.overflow = ""
+      document.body.classList.remove("mobile-menu-open")
+    }
+  }, [isMobileMenuOpen])
+
   const resolveAvatarUrl = async (pathOrUrl: string | null) => {
     if (!pathOrUrl) return ""
     if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://") || pathOrUrl.startsWith("data:")) {
@@ -368,10 +382,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-[6rem] bg-[#0D0716] z-40 lg:hidden overflow-y-auto flex flex-col border-t border-accent-gold/20 shadow-2xl"
-            style={{
-              height: "calc(100vh - 6rem)",
-            }}
+            className="fixed inset-x-0 top-16 bottom-0 sm:top-20 bg-[#0D0716] z-40 lg:hidden overflow-y-auto flex flex-col border-t border-accent-gold/20 shadow-2xl"
           >
             <div className="flex-1 px-6 py-8 space-y-6 flex flex-col justify-start">
               {navLinks.map((link) => (
@@ -387,9 +398,10 @@ export function Navbar() {
                 </Link>
               ))}
 
-              {user && (
-                <div className="py-3 border-b border-white/10">
-                  <div className="flex items-center gap-3 mb-2">
+              {/* Login / Dashboard Mobile Access */}
+              {user ? (
+                <div className="py-3 border-b border-white/10 space-y-3">
+                  <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border border-accent-gold/20">
                       <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
                       <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif">
@@ -401,10 +413,27 @@ export function Navbar() {
                       <span className="text-xs text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
                     </div>
                   </div>
+
+                  <Link
+                    href={profile?.role === "admin" ? "/admin" : profile?.role === "client" ? "/client" : "/dashboard"}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-2 text-base font-bold text-accent-gold hover:underline py-1.5"
+                  >
+                    <LayoutDashboard size={18} />
+                    <span>Access Dashboard</span>
+                  </Link>
                 </div>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-xl py-2 border-b border-white/10 text-white/80 hover:text-accent-gold transition-colors font-medium"
+                >
+                  Login / Portal Access
+                </Link>
               )}
 
-              <div className="pt-4">
+              <div className="pt-2">
                 <Button
                   asChild
                   className="w-full py-6 text-base font-bold bg-accent-gold text-black hover:bg-amber-300"

@@ -9,9 +9,20 @@ export function StickyCTAButton() {
   const pathname = usePathname()
   const [scrolledPastHero, setScrolledPastHero] = useState(false)
   const [footerVisible, setFooterVisible] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // Derived: show only when past hero AND footer isn't encroaching
-  const isVisible = scrolledPastHero && !footerVisible
+  // Derived: show only when past hero AND footer isn't encroaching AND mobile menu is closed
+  const isVisible = scrolledPastHero && !footerVisible && !isMobileMenuOpen
+
+  useEffect(() => {
+    const checkMenu = () => {
+      setIsMobileMenuOpen(document.body.classList.contains("mobile-menu-open"))
+    }
+    checkMenu()
+    const observer = new MutationObserver(checkMenu)
+    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] })
+    return () => observer.disconnect()
+  }, [])
 
   // Do not render the Sticky CTA Button on admin, client, dashboard, auth, or booking pages
   const excludedPrefixes = [

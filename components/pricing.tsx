@@ -95,6 +95,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
   const [isMatrixOpen, setIsMatrixOpen] = useState(false)
+  const [activeMobileTier, setActiveMobileTier] = useState<"authoritySuite" | "operationsMachine" | "revenueEngine">("operationsMachine")
 
   // Use props from server fetch when available; fall back to hardcoded module-level arrays
   const resolvedSetupTiers = propSetupTiers && propSetupTiers.length > 0 ? propSetupTiers : setupTiers
@@ -620,7 +621,64 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 className="overflow-hidden mt-8"
               >
                 <div className="relative group">
-                  <div className="glass rounded-2xl p-6 overflow-x-auto">
+                  {/* Mobile Tab Switcher (< 768px) */}
+                  <div className="md:hidden space-y-4">
+                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-semibold text-center">
+                      <button
+                        onClick={() => setActiveMobileTier("authoritySuite")}
+                        className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
+                          activeMobileTier === "authoritySuite"
+                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            : "text-white/60 hover:text-white"
+                        }`}
+                      >
+                        Authority
+                      </button>
+                      <button
+                        onClick={() => setActiveMobileTier("operationsMachine")}
+                        className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
+                          activeMobileTier === "operationsMachine"
+                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            : "text-white/60 hover:text-white"
+                        }`}
+                      >
+                        Operations
+                      </button>
+                      <button
+                        onClick={() => setActiveMobileTier("revenueEngine")}
+                        className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
+                          activeMobileTier === "revenueEngine"
+                            ? "bg-accent-purple text-white font-bold shadow-md"
+                            : "text-white/60 hover:text-white"
+                        }`}
+                      >
+                        Revenue
+                      </button>
+                    </div>
+
+                    <div className="glass rounded-xl p-4 space-y-6">
+                      {comparisonCategories.map((cat, idx) => (
+                        <div key={idx} className="space-y-3">
+                          <div className="text-xs font-mono font-bold uppercase tracking-widest text-accent-gold border-b border-accent-gold/20 pb-1.5">
+                            {cat.category}
+                          </div>
+                          <div className="space-y-2.5">
+                            {cat.items.map((item, itemIdx) => (
+                              <div key={itemIdx} className="flex justify-between items-start text-xs p-2 rounded-lg bg-white/[0.02] border border-white/5 gap-3">
+                                <span className="font-medium text-white/90 shrink-0 max-w-[45%]">{item.name}</span>
+                                <span className="text-right text-accent-gold font-semibold leading-relaxed">
+                                  {item[activeMobileTier]}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Desktop Comparison Table (>= 768px) */}
+                  <div className="hidden md:block glass rounded-2xl p-6 overflow-x-auto">
                     <table className="w-full text-left border-collapse min-w-[600px]">
                       <thead>
                         <tr className="border-b border-border">
