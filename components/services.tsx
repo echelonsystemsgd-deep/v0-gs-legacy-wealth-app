@@ -82,7 +82,7 @@ export function Services({ limit }: { limit?: number }) {
                 className="w-full"
               >
                 <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-xl group">
-                  <CardContent className="p-8 flex flex-col justify-between h-full space-y-6">
+                  <CardContent className="p-6 sm:p-8 flex flex-col justify-between h-full space-y-6">
                     <div className="space-y-4">
                       {/* Gold icon */}
                       <div className="inline-flex items-center justify-center p-3 border border-accent-gold/30 bg-transparent text-accent-gold rounded-lg">
@@ -220,15 +220,23 @@ export function Services({ limit }: { limit?: number }) {
                     <span className="text-[10px] text-accent-gold uppercase tracking-wider font-semibold">
                       vetted alignments only • 28-day delivery guarantee
                     </span>
-                    <Button
-                      asChild
-                      className="w-full sm:w-auto font-bold bg-accent-purple text-white hover:bg-accent-purple/90 border-0"
-                      onClick={() => setActiveService(null)}
-                    >
-                      <Link href={detail.ctaHref}>
-                        <span>{detail.ctaText}</span>
-                      </Link>
-                    </Button>
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <button
+                        onClick={() => setActiveService(null)}
+                        className="flex-1 sm:flex-none px-4 py-2.5 rounded-lg border border-white/15 text-xs text-white/60 hover:text-white hover:border-white/30 transition-colors"
+                      >
+                        Close
+                      </button>
+                      <Button
+                        asChild
+                        className="flex-1 sm:flex-none font-bold bg-accent-purple text-white hover:bg-accent-purple/90 border-0"
+                        onClick={() => setActiveService(null)}
+                      >
+                        <Link href={detail.ctaHref}>
+                          <span>{detail.ctaText}</span>
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
 

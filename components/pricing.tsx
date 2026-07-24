@@ -134,12 +134,11 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </div>
 
           {/* Billing Switcher Header */}
-          <div className="text-center mb-12">
-            {/* Billing Toggle */}
-            <div className="inline-flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative">
+          <div className="flex justify-center">
+            <div className="flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative">
               <button
                 onClick={() => setBillingCycle("setup")}
-                className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
                   billingCycle === "setup" ? "text-white font-bold" : "text-white/40"
                 }`}
               >
@@ -154,7 +153,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               </button>
               <button
                 onClick={() => setBillingCycle("retainer")}
-                className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
                   billingCycle === "retainer" ? "text-white font-bold" : "text-white/40"
                 }`}
               >
@@ -180,7 +179,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
+                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <div
                     className={`relative h-full bg-bg-tertiary/40 backdrop-blur-md border rounded-xl transition-all duration-300 flex flex-col justify-between ${
@@ -311,7 +310,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
             {/* Output Panel — appears FIRST on mobile, right column on desktop */}
             <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-xl p-6 border border-white/5 space-y-6 order-first lg:order-last">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                     <Clock size={12} className="text-accent" />
@@ -463,37 +462,39 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             We don't build websites. We build automated client acquisition machines designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
           </p>
           
-          <div className="inline-flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
-            <button
-              onClick={() => setBillingCycle("setup")}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                billingCycle === "setup" ? "text-white font-bold" : "text-muted-foreground"
-              }`}
-            >
-              {billingCycle === "setup" && (
-                <motion.div
-                  layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                />
-              )}
-              One-Time Setup
-            </button>
-            <button
-              onClick={() => setBillingCycle("retainer")}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                billingCycle === "retainer" ? "text-white font-bold" : "text-muted-foreground"
-              }`}
-            >
-              {billingCycle === "retainer" && (
-                <motion.div
-                  layoutId="activeBillingCycleBg"
-                  className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                />
-              )}
-              Continuous Growth Support
-            </button>
+          <div className="flex justify-center">
+            <div className="flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
+              <button
+                onClick={() => setBillingCycle("setup")}
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                  billingCycle === "setup" ? "text-white font-bold" : "text-muted-foreground"
+                }`}
+              >
+                {billingCycle === "setup" && (
+                  <motion.div
+                    layoutId="activeBillingCycleBg"
+                    className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                One-Time Setup
+              </button>
+              <button
+                onClick={() => setBillingCycle("retainer")}
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
+                  billingCycle === "retainer" ? "text-white font-bold" : "text-muted-foreground"
+                }`}
+              >
+                {billingCycle === "retainer" && (
+                  <motion.div
+                    layoutId="activeBillingCycleBg"
+                    className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                Growth Retainer
+              </button>
+            </div>
           </div>
         </div>
 
@@ -509,11 +510,11 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -40 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 max-w-md mx-auto w-full lg:max-w-none" : ""}`}
+                  className={`flex flex-col h-full ${index === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto w-full lg:max-w-none" : ""}`}
                 >
                   <div
                     className={`relative h-full bg-bg-tertiary border border-border hover:border-accent-gold/45 rounded-xl transition-all duration-300 ${
-                      tier.featured ? "border-accent-gold md:scale-105 z-10 bg-bg-tertiary" : ""
+                      tier.featured ? "border-accent-gold lg:scale-105 z-10 bg-bg-tertiary" : ""
                     }`}
                   >
                     <CardContent className="p-8 flex flex-col h-full justify-between">

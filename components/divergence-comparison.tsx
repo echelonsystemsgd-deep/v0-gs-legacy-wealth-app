@@ -56,7 +56,7 @@ export function DivergenceComparison() {
         </motion.p>
 
         {/* Two-Column Comparison Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 text-left items-stretch max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 text-left items-stretch max-w-6xl mx-auto">
           
           {/* Path A: Conventional Manual Drag */}
           <motion.div

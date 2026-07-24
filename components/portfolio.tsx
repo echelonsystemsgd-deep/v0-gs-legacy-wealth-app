@@ -57,7 +57,7 @@ const DEFAULT_PORTFOLIO: PortfolioItem[] = [
 function PremiumMockup({ item }: { item: PortfolioItem }) {
   if (item.title === "Elite Fitness Studio") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
         <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -99,7 +99,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
 
   if (item.title === "Sterling Direct Purchases") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
         <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -139,7 +139,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
 
   if (item.title === "Strategic Growth Co.") {
     return (
-      <div className="absolute inset-4 lg:inset-6 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
+      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
         <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
           <div className="flex gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
@@ -508,7 +508,7 @@ export function Portfolio({ limit }: { limit?: number }) {
           </div>
 
           {/* 2-Column Grid */}
-          <div className="grid sm:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-16">
             {displayItems.map((item, index) => (
               <motion.div
                 key={index}
@@ -516,12 +516,12 @@ export function Portfolio({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-xl border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10]"
+                className="group relative overflow-hidden rounded-xl border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10] sm:aspect-[16/10]"
               >
                 {/* Visual Image / Mockup background */}
                 <div className="w-full h-full relative z-10">
                   {item.image ? (
-                    <div className="absolute inset-4 lg:inset-6 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
+                    <div className="absolute inset-2 sm:inset-4 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
                       <div className="flex items-center gap-2 px-3 py-2 bg-bg-secondary border-b border-border/50 shrink-0">
                         <div className="flex gap-1">
                           <div className="w-2 h-2 rounded-full bg-red-500/70" />

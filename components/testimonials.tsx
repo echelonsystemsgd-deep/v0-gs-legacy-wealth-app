@@ -79,7 +79,7 @@ export function Testimonials() {
               <p className="text-xs sm:text-sm text-text-primary opacity-90 leading-relaxed font-medium">
                 {data.cohortCard.enquiryCtaText}
               </p>
-              <Button asChild size="sm" className="shrink-0 px-6 py-2.5 text-xs font-semibold">
+              <Button asChild size="sm" className="shrink-0 px-6 py-3 text-xs font-semibold min-h-[44px]">
                 <Link href="/book" className="flex items-center gap-2">
                   Request Alignment <ArrowRight size={14} />
                 </Link>

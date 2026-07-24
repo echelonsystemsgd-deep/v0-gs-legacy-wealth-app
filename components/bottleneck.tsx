@@ -158,7 +158,7 @@ export function Bottleneck() {
                   onClick={() => setIsOrdered(!isOrdered)}
                   size="sm"
                   variant={isOrdered ? "default" : "outline"}
-                  className={`w-full sm:w-auto text-[10px] px-4 py-2 border transition-all shrink-0 ${
+                  className={`w-full sm:w-auto text-xs sm:text-sm px-5 py-3 border transition-all shrink-0 ${
                     isOrdered 
                       ? "" 
                       : "bg-transparent border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"

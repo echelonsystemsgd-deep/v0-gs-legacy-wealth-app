@@ -79,17 +79,17 @@ export function Footer() {
             <div className="space-y-3 font-sans text-sm text-text-primary opacity-70">
               <a 
                 href={`mailto:${data.email}`} 
-                className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors"
+                className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"
               >
-                <Mail size={16} className="text-accent-gold" />
-                <span>{data.email}</span>
+                <Mail size={16} className="text-accent-gold shrink-0" />
+                <span className="truncate">{data.email}</span>
               </a>
               <a 
                 href={`tel:${data.phone.replace(/\s+/g, '')}`} 
-                className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors"
+                className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"
               >
-                <Phone size={16} className="text-accent-gold" />
-                <span>{data.phone}</span>
+                <Phone size={16} className="text-accent-gold shrink-0" />
+                <span className="truncate">{data.phone}</span>
               </a>
               {data.whatsappLink && (
                 <a 

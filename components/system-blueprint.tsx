@@ -80,10 +80,10 @@ export function SystemBlueprint() {
         </div>
 
         {/* Node Blueprint Grid */}
-        <div className="grid lg:grid-cols-12 gap-8 items-start">
+        <div className="grid md:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* Node Selector Column (5 cols) */}
-          <div className="lg:col-span-5 space-y-3">
+          {/* Node Selector Column (5 cols on md+) */}
+          <div className="md:col-span-5 space-y-3">
             {nodes.map((node) => {
               const IconComp = node.icon
               const isSelected = selectedNode === node.id
@@ -97,15 +97,15 @@ export function SystemBlueprint() {
                       : "bg-bg-tertiary/20 border-white/5 hover:border-white/20 hover:bg-bg-tertiary/40"
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-lg border transition-colors ${
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`p-2.5 rounded-lg border transition-colors shrink-0 ${
                       isSelected ? "bg-accent-gold/15 border-accent-gold text-accent-gold" : "bg-white/5 border-white/10 text-white/60"
                     }`}>
                       <IconComp size={20} />
                     </div>
-                    <div>
-                      <h4 className="font-sans font-bold text-sm text-white">{node.title}</h4>
-                      <p className="font-sans text-xs text-text-secondary opacity-70 mt-0.5">{node.subtitle}</p>
+                    <div className="min-w-0">
+                      <h4 className="font-sans font-bold text-sm text-white truncate">{node.title}</h4>
+                      <p className="font-sans text-xs text-text-secondary opacity-70 mt-0.5 truncate">{node.subtitle}</p>
                     </div>
                   </div>
                   <span className={`font-mono text-[10px] font-bold px-2 py-1 rounded ${
@@ -118,8 +118,8 @@ export function SystemBlueprint() {
             })}
           </div>
 
-          {/* Active Node Detail Card (7 cols) */}
-          <div className="lg:col-span-7">
+          {/* Active Node Detail Card (7 cols on md+) */}
+          <div className="md:col-span-7">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeNode.id}

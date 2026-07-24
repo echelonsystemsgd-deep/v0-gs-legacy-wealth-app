@@ -107,11 +107,11 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-3 text-xs sm:text-sm text-text-secondary border-t border-white/10 pt-8 w-full max-w-3xl font-mono"
+          className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-8 gap-y-2 sm:gap-y-3 text-[11px] sm:text-sm text-text-secondary border-t border-white/10 pt-6 sm:pt-8 w-full max-w-3xl font-mono"
         >
           {Array.isArray(data.trustItems) && data.trustItems.map((item: string, idx: number) => (
-            <span key={idx} className="flex items-center gap-2">
-              <span className="text-accent-gold text-[10px]">✦</span>
+            <span key={idx} className="flex items-center gap-1.5 sm:gap-2">
+              <span className="text-accent-gold text-[9px] sm:text-[10px]">✦</span>
               <span className="text-white/80">{item}</span>
             </span>
           ))}

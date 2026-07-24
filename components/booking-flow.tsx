@@ -260,7 +260,7 @@ function FieldInput({ id, label, icon, type = "text", placeholder, value, onChan
 /** Calendly skeleton */
 function CalendlySkeleton() {
   return (
-    <div className="calendly-skeleton rounded-2xl" style={{ minHeight: "700px" }} aria-label="Loading booking calendar…">
+    <div className="calendly-skeleton rounded-2xl" style={{ minHeight: "clamp(500px, 75vh, 700px)" }} aria-label="Loading booking calendar…">
       <div className="flex flex-col items-center justify-center h-full gap-4 py-32 opacity-60">
         <Loader2 size={28} className="animate-spin text-accent-gold/60" />
         <p className="text-xs text-muted-foreground tracking-wide">Loading your booking calendar…</p>

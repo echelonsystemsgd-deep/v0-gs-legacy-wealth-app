@@ -323,7 +323,7 @@ input[type="range"]::-moz-range-thumb:active {
   );
   background-size: 200% 100%;
   animation: calendly-shimmer 1.6s ease-in-out infinite;
-  min-height: 700px;
+  min-height: clamp(500px, 75vh, 700px);
 }
 
 /**
