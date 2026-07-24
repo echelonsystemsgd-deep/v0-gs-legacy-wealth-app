@@ -247,7 +247,7 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Custom styles for range slider hit targets (min 44px hit box via transparent border) */
+/* Custom styles for range slider hit targets */
 input[type="range"] {
   touch-action: none;
 }
@@ -255,39 +255,39 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--primary);
-  border: 12px solid transparent;
-  background-clip: padding-box;
+  background-color: #D4AF37;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
   cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.1s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  background-color: #8B5CF6;
+  transform: scale(1.2);
+  background-color: #F59E0B;
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
-  transform: scale(0.95);
+  transform: scale(1.05);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--primary);
-  border: 12px solid transparent;
-  background-clip: padding-box;
+  background-color: #D4AF37;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
   cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.1s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 input[type="range"]::-moz-range-thumb:hover {
-  transform: scale(1.1);
-  background-color: #8B5CF6;
+  transform: scale(1.2);
+  background-color: #F59E0B;
 }
 
 input[type="range"]::-moz-range-thumb:active {
