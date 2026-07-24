@@ -1,9 +1,43 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { SITE_COPY } from "@/lib/site-copy"
+import { createClient } from "@/lib/supabase/client"
 
 export function LiveTelemetryTicker() {
-  const items = SITE_COPY.homepage.telemetryTicker.items
+  const [remainingSlots, setRemainingSlots] = useState<number>(3)
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function fetchWonLeadsCount() {
+      try {
+        const { count, error } = await supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .in("status", ["Won", "Closed", "Client", "won", "closed", "client"])
+
+        if (!error && typeof count === "number") {
+          // Total cohort allocation quota is 5 slots.
+          // Slots decrement ONLY when a lead's status is changed to Won/Closed in the admin backend.
+          const totalQuota = 5
+          const available = Math.max(1, totalQuota - count)
+          setRemainingSlots(available)
+        }
+      } catch (err) {
+        // Fallback to 3 if DB unresolvable
+      }
+    }
+
+    fetchWonLeadsCount()
+  }, [])
+
+  const baseItems = SITE_COPY.homepage.telemetryTicker.items
+  const items = baseItems.map((item) =>
+    item.includes("Allocation Slot")
+      ? `Q3 Cohort: ${remainingSlots} Allocation ${remainingSlots === 1 ? "Slot" : "Slots"} Remaining`
+      : item
+  )
+
   // Duplicate array 3x for 360-degree seamless infinite marquee loop across wide monitors
   const duplicatedItems = [...items, ...items, ...items]
 
