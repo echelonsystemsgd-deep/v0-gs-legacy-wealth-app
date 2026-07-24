@@ -9,6 +9,9 @@ import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { SectionDivider } from "@/components/section-divider"
 import { LiveTelemetryTicker } from "@/components/live-telemetry-ticker"
+import { ChapterTracker } from "@/components/chapter-tracker"
+import { SystemBlueprint } from "@/components/system-blueprint"
+import { LatencyCalculator } from "@/components/latency-calculator"
 import { getPricingTiers } from "@/lib/pricing"
 
 export const revalidate = 60
@@ -70,13 +73,16 @@ export default async function Home() {
         }}
       />
       <Navbar />
+      <ChapterTracker />
       <Hero />
       <SectionDivider chapter="I" title="Operational Friction" />
       <Bottleneck />
+      <LatencyCalculator />
       <SectionDivider chapter="II" title="The Structural Divergence" />
       <DivergenceComparison />
       <SectionDivider chapter="III" title="System Architecture" />
       <WhyMercianWealth />
+      <SystemBlueprint />
       <SectionDivider chapter="IV" title="Cohort Telemetry & Allocation" />
       <Testimonials />
       <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
