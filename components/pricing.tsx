@@ -349,6 +349,17 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   {recommendedTier} System Tier
                 </span>
               </div>
+
+              <Button
+                asChild
+                size="lg"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-5 text-xs sm:text-sm"
+              >
+                <Link href="/book" className="flex items-center justify-center gap-2">
+                  <span>Claim Unlocked Revenue — Select {recommendedTier} Tier</span>
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
             </div>
 
             {/* Inputs — appears SECOND on mobile, left column on desktop */}
@@ -361,7 +372,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Current Monthly Revenue</span>
-                  <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
+                  <span className="text-accent font-bold font-serif text-base text-accent-gold">
                     £{revenue.toLocaleString()}
                   </span>
                 </div>
@@ -406,7 +417,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
-                  <span className="text-accent font-bold font-serif text-base text-accent-gold hidden md:block">
+                  <span className="text-accent font-bold font-serif text-base text-accent-gold">
                     {manualHours} Hours
                   </span>
                 </div>
