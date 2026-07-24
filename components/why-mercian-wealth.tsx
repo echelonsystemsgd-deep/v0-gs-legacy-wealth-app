@@ -30,7 +30,7 @@ export function WhyMercianWealth() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6 }}
             className="space-y-6 text-left"
           >
@@ -49,7 +49,7 @@ export function WhyMercianWealth() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6 }}
             className="space-y-4"
           >
@@ -58,7 +58,7 @@ export function WhyMercianWealth() {
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="flex items-start gap-4 p-5 rounded-xl border border-white/10 bg-white/[0.03] hover:border-accent-gold/50 hover:bg-white/[0.06] transition-all duration-300 text-left shadow-lg"
               >
@@ -78,7 +78,7 @@ export function WhyMercianWealth() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-16 pt-16 border-t border-white/10 grid md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left"
         >

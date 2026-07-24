@@ -16,7 +16,7 @@ export function SocialProofStrip() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2"
           >
@@ -29,7 +29,7 @@ export function SocialProofStrip() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex items-center gap-2"
           >
@@ -42,7 +42,7 @@ export function SocialProofStrip() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center gap-2"
           >

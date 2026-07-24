@@ -7,7 +7,7 @@ import { motion, useInView } from "framer-motion"
 function CountUp({ end, duration = 1.5, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const isInView = useInView(ref, { once: false, amount: 0.5 })
 
   useEffect(() => {
     if (!isInView) return
