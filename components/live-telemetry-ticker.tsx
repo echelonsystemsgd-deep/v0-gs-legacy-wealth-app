@@ -2,33 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { SITE_COPY } from "@/lib/site-copy"
-import { createClient } from "@/lib/supabase/client"
+import { getCohortStatus } from "@/lib/cohort-status"
 
 export function LiveTelemetryTicker() {
   const [remainingSlots, setRemainingSlots] = useState<number>(2)
-  const supabase = createClient()
 
   useEffect(() => {
-    async function fetchWonLeadsCount() {
-      try {
-        const { count, error } = await supabase
-          .from("leads")
-          .select("*", { count: "exact", head: true })
-          .in("status", ["Won", "Closed", "Client", "won", "closed", "client"])
-
-        if (!error && typeof count === "number") {
-          // Total cohort allocation quota is 2 slots.
-          // Slots decrement ONLY when a lead's status is changed to Won/Closed in the admin backend.
-          const totalQuota = 2
-          const available = Math.max(1, totalQuota - count)
-          setRemainingSlots(available)
-        }
-      } catch (err) {
-        // Fallback to 2 if DB unresolvable
-      }
+    async function fetchCohort() {
+      const status = await getCohortStatus()
+      setRemainingSlots(status.remainingSlots)
     }
 
-    fetchWonLeadsCount()
+    fetchCohort()
   }, [])
 
   const baseItems = SITE_COPY.homepage.telemetryTicker.items

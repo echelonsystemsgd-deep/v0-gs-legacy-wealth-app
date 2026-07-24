@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { CalendlyInit } from '@/components/calendly-init'
 import './globals.css'
 import { StickyCTAButton } from '@/components/sticky-cta-button'
+import { ScrollToTop } from '@/components/scroll-to-top'
 import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
@@ -112,6 +113,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
           {children}
           <StickyCTAButton />
+          <ScrollToTop />
         <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />
         <TabRetention />

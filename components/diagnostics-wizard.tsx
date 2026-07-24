@@ -95,7 +95,7 @@ export function DiagnosticsWizard() {
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-accent-gold flex items-center gap-2">
               <Sparkles size={14} />
-              SYSTEM DIAGNOSTIC AUDIT · STEP {currentStep + 1} OF {questions.length}
+              DIAGNOSTIC HEURISTIC AUDIT · STEP {currentStep + 1} OF {questions.length}
             </span>
             <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div 

@@ -41,8 +41,8 @@ export const SITE_COPY = {
       description: "Transparent capital requirements for high-yield digital assets. Choose Authority Suite, Operations Machine, or Revenue Engine alignment.",
     },
     testimonials: {
-      title: "Client Testimonials | Mercian Wealth",
-      description: "Real results from ambitious businesses we have partnered with. Hear directly from our elite clientele about the impact of our premium digital solutions.",
+      title: "Active Cohort Status | Mercian Wealth",
+      description: "Live system telemetry, deployment standards, and inaugural UK integration cohort updates.",
     },
     contact: {
       title: "Concierge Assessment | Mercian Wealth",
@@ -62,7 +62,7 @@ export const SITE_COPY = {
       { label: "Portfolio", href: "/portfolio" },
       { label: "Process", href: "/process" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Testimonials", href: "/testimonials" },
+      { label: "Cohort Status", href: "/cohort-status" },
       { label: "Contact", href: "/contact" },
     ],
     ctaText: "Request Alignment",
@@ -74,8 +74,8 @@ export const SITE_COPY = {
     // 0. Live Telemetry Ticker
     telemetryTicker: {
       items: [
-        "99.98% System Throughput Uptime",
-        "Sub-60s Intent Capture Capability",
+        "Engineered for 99.9% Infrastructure Uptime",
+        "Sub-60s Intent Capture Architecture",
         "Q3 Cohort: 2 Allocation Slots Remaining",
         "Direct Founder SLA < 12 Hours",
         "Bespoke Digital Infrastructure",
@@ -222,7 +222,7 @@ export const SITE_COPY = {
       eyebrow: "ACTIVE DEPLOYMENT COHORT",
       headline: "Active Deployment Cohort",
       subheadline: "Independent System Telemetry Under Verification",
-      guarantee: "100% Authentic Telemetry · Zero Fabricated Claims Policy",
+      guarantee: "Transparent Build Telemetry · Zero Fabricated Claims Policy",
       
       cohortCard: {
         badge: "COHORT INTAKE UNDER DEPLOYMENT",
@@ -236,14 +236,14 @@ export const SITE_COPY = {
       trustPoints: [
         "Zero Fabricated Claims Policy",
         "Sub-60-Second System Capability",
-        "100% Verified Production Telemetry",
+        "Verified System Architecture Benchmarks",
       ],
     },
 
     // 9. FOMO Close & CTA Section
     cta: {
       headline: "Ready to Assert Market Control?",
-      subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting only 2 new integration partnerships this month (Cohort capacity at 80%).",
+      subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting strictly 2 new integration partnerships per deployment cohort.",
       buttonText: "Initiate Operational Audit",
     },
 
@@ -555,11 +555,11 @@ export const SITE_COPY = {
     ],
   },
 
-  // 6. Testimonials Page Copy (`/testimonials`)
+  // 6. Cohort Status Page Copy (`/cohort-status`)
   testimonialsPage: {
-    headerTitle: "What Our Clients",
-    headerHighlight: "Say",
-    headerSubtitle: "Real results from ambitious businesses we have partnered with. Every word is from a founder who trusted us to build their legacy.",
+    headerTitle: "Active Cohort",
+    headerHighlight: "Status",
+    headerSubtitle: "Live system telemetry, deployment standards, and inaugural UK integration cohort updates.",
   },
 
   // 9. Vetting Application Copy (`/book`)
@@ -573,7 +573,7 @@ export const SITE_COPY = {
       "Candid operational analysis",
       "Strictly limited allocations"
     ],
-    socialProofQuote: "The clinical evaluation alone identified conversion gaps we had missed for two years.",
-    socialProofAuthor: "Daniel K., Founder, Kensington Advisory",
+    socialProofQuote: "Our clinical evaluation maps your exact operational friction before a single line of code is written.",
+    socialProofAuthor: "Mercian System Benchmark Standard",
   },
 }

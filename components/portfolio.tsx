@@ -22,35 +22,35 @@ type PortfolioItem = {
 const DEFAULT_PORTFOLIO: PortfolioItem[] = [
   {
     title: "Stamp Valuation App",
-    category: "AI Web App · Collector",
+    category: "AI Web App · Prototype",
     gradient: "from-blue-500/20 to-cyan-500/20",
     href: "https://v0-stamp-valuation-app.vercel.app",
     image: "/stamp-app-preview.png",
-    underConstruction: true,
-    metric: "840ms Valuation Speed",
+    underConstruction: false,
+    metric: "Target Latency: < 1s",
   },
   {
     title: "Elite Fitness Studio",
-    category: "AI Website · Fitness",
+    category: "AI Website · Concept Build",
     gradient: "from-amber-500/20 to-orange-500/20",
     underConstruction: true,
-    metric: "94% Booking Rate",
+    metric: "Target 90%+ Booking Flow",
   },
   {
     title: "Sterling Direct Purchases",
-    category: "Lead System · Real Estate",
+    category: "Lead System · Prototype",
     gradient: "from-emerald-500/20 to-teal-500/20",
     href: "https://real-estate-application-build.vercel.app/",
     image: "/sterling-direct-purchases-preview.png",
     underConstruction: false,
-    metric: "£4.2M Pipeline Sync",
+    metric: "Pipeline Architecture",
   },
   {
     title: "Strategic Growth Co.",
-    category: "Landing Page · Consulting",
+    category: "Landing Page · Concept Build",
     gradient: "from-blue-500/20 to-indigo-500/20",
     underConstruction: true,
-    metric: "+238% Conversion Increase",
+    metric: "Growth Analytics Framework",
   },
 ]
 
@@ -80,16 +80,16 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">Daily Active</span>
-              <span className="text-[9px] font-bold text-amber-500">142</span>
+              <span className="text-[7px] text-white/40 block font-mono">Build Status</span>
+              <span className="text-[9px] font-bold text-amber-500">Concept</span>
             </div>
             <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">Booking Rate</span>
-              <span className="text-[9px] font-bold text-amber-500">94%</span>
+              <span className="text-[7px] text-white/40 block font-mono">Target Flow</span>
+              <span className="text-[9px] font-bold text-amber-500">90%+</span>
             </div>
             <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">Retention</span>
-              <span className="text-[9px] font-bold text-amber-500">98%</span>
+              <span className="text-[7px] text-white/40 block font-mono">System Target</span>
+              <span className="text-[9px] font-bold text-amber-500">99.9%</span>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
           </div>
           <div className="space-y-1">
             <span className="text-[6px] text-blue-400 block font-bold tracking-wider font-mono">ANNUAL METRICS</span>
-            <h4 className="text-[11px] font-bold text-white leading-tight">+238% Conversion Increase</h4>
+            <h4 className="text-[11px] font-bold text-white leading-tight">Growth Analytics Framework</h4>
           </div>
           <div className="h-10 flex items-end gap-1 px-1 bg-white/5 rounded border border-white/5 py-1">
             <div className="bg-blue-500/20 w-full h-[30%] rounded-sm" />
@@ -279,10 +279,10 @@ function RequestSystemSchemaModal({ item, onClose }: { item: PortfolioItem; onCl
           </div>
 
           <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
-            {SITE_COPY.portfolioPage.constructionTitle}
+            Request Architecture Blueprint & Case Study
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            {SITE_COPY.portfolioPage.constructionDescription}
+            This portfolio entry is a Mercian Wealth system concept build. Submitting your details will transmit the sanitized architectural blueprint, system schema, and walkthrough breakdown directly to your inbox.
           </p>
 
           {errorMsg && (
@@ -552,9 +552,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <p className="text-xs uppercase tracking-widest text-accent-gold font-semibold">
                         {item.category}
                       </p>
-                      {item.href && !item.underConstruction && (
+                      {item.href && !item.underConstruction ? (
                         <span className="text-[9px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">
                           Prototype
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded-full font-mono">
+                          Concept Build
                         </span>
                       )}
                     </div>
@@ -563,7 +567,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                     </h3>
                     {item.metric && (
                       <p className="text-xs font-mono font-bold text-accent-gold uppercase tracking-wider">
-                        Outcome: {item.metric}
+                        Benchmark: {item.metric}
                       </p>
                     )}
                     <div className="pt-2">
@@ -599,9 +603,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none truncate">
                         {item.category} {item.metric ? `· ${item.metric}` : ''}
                       </p>
-                      {item.href && !item.underConstruction && (
+                      {item.href && !item.underConstruction ? (
                         <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-full font-mono">
                           Prototype
+                        </span>
+                      ) : (
+                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 rounded-full font-mono">
+                          Concept
                         </span>
                       )}
                     </div>

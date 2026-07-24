@@ -27,7 +27,7 @@ export function Footer() {
     { name: "Process", href: "/process" },
     { name: "Portfolio", href: "/portfolio" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Testimonials", href: "/testimonials" },
+    { name: "Cohort Status", href: "/cohort-status" },
     { name: "Contact", href: "/contact" },
   ]
 

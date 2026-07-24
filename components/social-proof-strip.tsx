@@ -21,7 +21,7 @@ export function SocialProofStrip() {
             className="flex items-center gap-2"
           >
             <span className="text-accent-gold text-lg font-serif">100%</span>
-            <span className="text-xs uppercase tracking-wider text-text-secondary">Successful Integrations</span>
+            <span className="text-xs uppercase tracking-wider text-text-secondary">Bespoke Next.js Codebase</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>
@@ -33,8 +33,8 @@ export function SocialProofStrip() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex items-center gap-2"
           >
-            <span className="text-accent-gold text-lg font-serif">97%</span>
-            <span className="text-xs uppercase tracking-wider text-text-secondary">Latency Reduction</span>
+            <span className="text-accent-gold text-lg font-serif">&lt; 1s</span>
+            <span className="text-xs uppercase tracking-wider text-text-secondary">Lead Qualification Target</span>
           </motion.div>
 
           <span className="hidden sm:inline text-white/10 text-xl">|</span>

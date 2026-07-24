@@ -813,7 +813,7 @@ export default function DashboardClientContainer({
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
                               <h4 className="text-xs font-bold text-foreground">Step 3: Secure Priority Briefing</h4>
-                              <p className="text-[10px] text-muted-foreground mt-0.5">Strictly restricted to 3 priority cohort build allocations monthly.</p>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">Strictly restricted to 2 priority cohort build allocations per cohort.</p>
                             </div>
                             {lead?.status !== 'Call Booked' && (
                               <Link href="/dashboard/book"

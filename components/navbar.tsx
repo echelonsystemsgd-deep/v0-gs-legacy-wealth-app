@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Menu, X, User, LogOut, LayoutDashboard, Globe } from "lucide-react"
+import { Menu, X, User, LogOut, LayoutDashboard, Globe, ChevronRight, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { BrandLogo } from "@/components/brand-logo"
 import { usePathname, useRouter } from "next/navigation"
@@ -24,10 +24,9 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/process", label: "Process" },
-  { href: "/diagnostics", label: "Diagnostics" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/testimonials", label: "Testimonials" },
+  { href: "/cohort-status", label: "Cohort Status" },
   { href: "/contact", label: "Contact" },
 ]
 
@@ -382,83 +381,133 @@ export function Navbar() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-[#0D0716] z-50 lg:hidden overflow-y-auto flex flex-col justify-between shadow-2xl"
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="fixed inset-0 bg-[#07050B]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto flex flex-col justify-between"
           >
+            {/* Background Ambient Glow */}
+            <div 
+              className="absolute inset-0 pointer-events-none z-0 opacity-40"
+              style={{
+                background: "radial-gradient(circle at 50% 20%, rgba(109, 40, 217, 0.25) 0%, rgba(7, 5, 11, 0) 75%)"
+              }}
+            />
+
             {/* Mobile Drawer Top Header Bar */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-accent-gold/20 bg-[#090410] shrink-0">
+            <div className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0">
               <BrandLogo />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-white/10 transition-colors"
+                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer"
                 aria-label="Close menu"
               >
-                <X size={22} className="text-accent-gold" />
+                <X size={20} className="text-accent-gold" />
               </button>
             </div>
 
-            <div className="flex-1 px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-5 flex flex-col justify-start">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block text-xl py-2 border-b border-white/10 transition-colors duration-200 hover:text-accent-gold ${
-                    isActive(link.href) ? "text-accent-gold font-bold" : "text-white/80"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            {/* Content Container */}
+            <div className="relative z-10 flex-1 px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between">
+              
+              {/* Telemetry Status Pill */}
+              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-accent-gold/5 border border-accent-gold/20 font-mono text-[10px] sm:text-xs">
+                <span className="flex items-center gap-2 text-accent-gold font-bold uppercase tracking-wider">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  COHORT INTAKE ACTIVE
+                </span>
+                <span className="text-white/40 uppercase tracking-widest font-medium">Q3 PIPELINE</span>
+              </div>
 
-              {/* Login / Dashboard Mobile Access */}
-              {user ? (
-                <div className="py-3 border-b border-white/10 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10 border border-accent-gold/20">
-                      <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                      <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif">
-                        {getInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col min-w-0 text-left">
-                      <span className="text-sm font-bold text-white font-serif truncate">{getFullName()}</span>
-                      <span className="text-xs text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
-                    </div>
-                  </div>
+              {/* Styled Navigation Links */}
+              <div className="space-y-1.5 flex-1">
+                {navLinks.map((link, idx) => {
+                  const active = isActive(link.href)
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 group ${
+                        active
+                          ? "bg-accent-gold/10 border-accent-gold/40 text-accent-gold font-bold shadow-[0_0_15px_rgba(212,175,55,0.1)]"
+                          : "bg-white/[0.02] border-white/5 text-white/80 hover:text-white hover:bg-white/[0.05] hover:border-white/15"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`font-mono text-xs ${active ? "text-accent-gold" : "text-white/30"}`}>
+                          0{idx + 1}.
+                        </span>
+                        <span className="font-serif text-lg font-bold tracking-tight">{link.label}</span>
+                      </div>
+                      <ChevronRight size={16} className={`transition-transform duration-200 ${active ? "text-accent-gold translate-x-1" : "text-white/30 group-hover:text-white group-hover:translate-x-1"}`} />
+                    </Link>
+                  )
+                })}
+              </div>
 
-                  <Link
-                    href={profile?.role === "admin" ? "/admin" : profile?.role === "client" ? "/client" : "/dashboard"}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 text-base font-bold text-accent-gold hover:underline py-1.5"
-                  >
-                    <LayoutDashboard size={18} />
-                    <span>Access Dashboard</span>
-                  </Link>
-                </div>
-              ) : (
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-xl py-2 border-b border-white/10 text-white/80 hover:text-accent-gold transition-colors font-medium"
-                >
-                  Login / Portal Access
-                </Link>
-              )}
-
+              {/* Login / Dashboard Access Box */}
               <div className="pt-2">
+                {user ? (
+                  <div className="p-4 rounded-xl border border-accent-gold/25 bg-black/40 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10 border border-accent-gold/30">
+                        <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                        <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif text-xs">
+                          {getInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col min-w-0 text-left">
+                        <span className="text-xs font-bold text-white font-serif truncate">{getFullName()}</span>
+                        <span className="text-[10px] text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={profile?.role === "admin" ? "/admin" : profile?.role === "client" ? "/client" : "/dashboard"}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-between w-full p-2.5 rounded-lg bg-accent-gold/10 border border-accent-gold/20 text-xs font-bold text-accent-gold hover:bg-accent-gold/20 transition-all"
+                    >
+                      <div className="flex items-center gap-2">
+                        <LayoutDashboard size={14} />
+                        <span>Access Dashboard Portal</span>
+                      </div>
+                      <ChevronRight size={14} />
+                    </Link>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between p-3.5 rounded-xl border border-white/10 bg-white/[0.03] text-sm text-white/80 hover:text-accent-gold hover:border-accent-gold/30 transition-all font-medium"
+                  >
+                    <span>Login / Client Portal Access</span>
+                    <ChevronRight size={16} className="text-white/40" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Primary CTA Button */}
+              <div>
                 <Button
                   asChild
-                  className="w-full py-6 text-base font-bold bg-accent-gold text-black hover:bg-amber-300"
+                  className="w-full py-6 text-sm font-bold bg-accent-gold text-bg-primary hover:bg-accent-gold/90 shadow-[0_0_25px_rgba(212,175,55,0.25)] rounded-xl transition-all"
                 >
-                  <Link href="/book" onClick={() => setIsMobileMenuOpen(false)}>
-                    Apply for System Audit
+                  <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
+                    <span>Apply for System Audit</span>
+                    <ArrowRight size={16} />
                   </Link>
                 </Button>
               </div>
-              <div className="flex justify-center pt-6 pb-6 border-t border-white/10">
+
+              {/* Footer Row */}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between shrink-0">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider">
+                  © 2026 Mercian Wealth
+                </span>
                 <SocialMediaLinks />
               </div>
+
             </div>
           </motion.div>
         )}

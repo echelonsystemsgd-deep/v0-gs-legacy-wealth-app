@@ -189,7 +189,7 @@ export function LatencyCalculator() {
                   <ArrowRight size={16} />
                 </Link>
               </Button>
-              <p className="text-[10px] text-text-secondary/70">Zero commitment • 15-minute diagnostic session</p>
+              <p className="text-[10px] text-text-secondary/70">Zero commitment • 30-minute diagnostic session</p>
             </div>
 
           </div>

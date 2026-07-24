@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
-import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck } from "lucide-react"
+import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import type { PricingTier } from "@/lib/pricing"
 import { SITE_COPY } from "@/lib/site-copy"
@@ -337,8 +337,8 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 <div className="text-3xl font-bold font-serif text-accent-gold">
                   <RollingNumber value={totalValueUnlocked} prefix="£" />
                 </div>
-                <p className="text-xxs text-muted-foreground mt-2 leading-tight">
-                  Value computed by applying 15% website conversion lift and valuation of manual hours saved at £75/hr.
+                <p className="text-xxs text-muted-foreground mt-2 leading-tight opacity-75">
+                  Interactive projection model based on estimated benchmark averages (£75/hr admin labor value & 15% conversion lift).
                 </p>
               </div>
 

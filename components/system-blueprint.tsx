@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useInView } from "framer-motion"
 import { Cpu, Database, GitMerge, ShieldCheck, Zap, Activity } from "lucide-react"
 
 interface NodeSpec {
@@ -61,6 +61,9 @@ const nodes: NodeSpec[] = [
 const CYCLE_DURATION = 3500 // ms per node
 
 export function SystemBlueprint() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, { amount: 0.2 })
+  const [hasStartedView, setHasStartedView] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [progress, setProgress] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -69,6 +72,14 @@ export function SystemBlueprint() {
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const activeNode = nodes[selectedIndex]
+
+  // Reset to Node 1 when entering view for the first time
+  useEffect(() => {
+    if (isInView && !hasStartedView) {
+      setHasStartedView(true)
+      setSelectedIndex(0)
+    }
+  }, [isInView, hasStartedView])
 
   const clearAll = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current)
@@ -91,11 +102,13 @@ export function SystemBlueprint() {
   }, [clearAll])
 
   useEffect(() => {
-    if (!isPaused) {
+    if (hasStartedView && !isPaused) {
       startCycle()
+    } else {
+      clearAll()
     }
     return clearAll
-  }, [selectedIndex, isPaused, startCycle, clearAll])
+  }, [selectedIndex, isPaused, hasStartedView, startCycle, clearAll])
 
   const handleManualSelect = (index: number) => {
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
@@ -117,7 +130,7 @@ export function SystemBlueprint() {
   }, [clearAll])
 
   return (
-    <div id="system-blueprint" className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
+    <div id="system-blueprint" ref={containerRef} className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -145,6 +158,7 @@ export function SystemBlueprint() {
                 <button
                   key={node.id}
                   onClick={() => handleManualSelect(index)}
+                  suppressHydrationWarning
                   className={`w-full p-4 sm:p-5 rounded-xl border text-left transition-all duration-300 flex items-center justify-between group cursor-pointer focus:outline-none ${
                     isSelected 
                       ? "bg-bg-tertiary border-accent-gold shadow-[0_0_20px_rgba(212,175,55,0.15)]" 
