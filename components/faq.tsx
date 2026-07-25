@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "Are the prices one-time fees or monthly subscriptions?",
     answer:
-      "Our core builds (Authority Suite, Operations Machine, and Revenue Engine) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Pilot Support, Co-Pilot Growth, and Enterprise Autonomic Partner) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
+      "Our core builds (Launch Catalyst, System Leverage, and Enterprise Partner) are structured as one-time setup investments. You own 100% of the completed website and custom code upon launch. We also offer optional Monthly Growth Retainers (Launch Support, Leverage Growth, and Enterprise Alliance) for businesses wanting continuous high-speed hosting, advanced search engine optimization, priority design tweaks, and regular AI agent training.",
   },
   {
     question: "What is your standard payment structure?",
@@ -27,7 +27,7 @@ const faqs = [
   {
     question: "Do you build custom AI automations beyond chatbots?",
     answer:
-      "Yes, absolutely. Under our Operations Machine and Revenue Engine tiers (as well as Co-Pilot Growth and Enterprise Autonomic Partner retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
+      "Yes, absolutely. Under our System Leverage and Enterprise Partner tiers (as well as Leverage Growth and Enterprise Alliance retainers), we integrate multi-system AI automations. This includes capturing a lead on your site, automatically qualifying them, feeding their details to your CRM, scheduling appointments, drafting personalized client responses, and triggering automatic client onboarding sequences without you lifting a finger.",
   },
   {
     question: "Will the website work flawlessly on mobile?",

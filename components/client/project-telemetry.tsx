@@ -89,63 +89,69 @@ export function ProjectTelemetry({ project }: ProjectProps) {
 
   // Render Contract Selection Screen if not enrolled
   const serviceTypeLower = (project.service_type || '').toLowerCase()
-  const isAuthority = serviceTypeLower.includes('authority') || project.one_time_fee === 2750 || project.one_time_fee === 3500 || project.retainer_amount === 499
-  const isOperations = serviceTypeLower.includes('operations') || project.one_time_fee === 5500 || project.one_time_fee === 5800 || project.retainer_amount === 1290 || project.retainer_amount === 1450
-  const isRevenue = serviceTypeLower.includes('revenue') || project.one_time_fee === 9800 || project.retainer_amount === 2850 || project.retainer_amount === 2950
+  const isAuthority = serviceTypeLower.includes('catalyst') || serviceTypeLower.includes('authority') || project.one_time_fee === 1850 || project.one_time_fee === 2750 || project.one_time_fee === 3500 || project.retainer_amount === 395 || project.retainer_amount === 499
+  const isOperations = serviceTypeLower.includes('leverage') || serviceTypeLower.includes('operations') || project.one_time_fee === 3850 || project.one_time_fee === 5500 || project.one_time_fee === 5800 || project.retainer_amount === 750 || project.retainer_amount === 1290 || project.retainer_amount === 1450
+  const isRevenue = serviceTypeLower.includes('enterprise') || serviceTypeLower.includes('revenue') || project.one_time_fee === 7500 || project.one_time_fee === 9800 || project.retainer_amount === 1450 || project.retainer_amount === 2850 || project.retainer_amount === 2950
 
   const retainerPerks = isRevenue
     ? [
-        "Premium Enterprise Isolated Server",
-        "Real-Time Telemetry & Failover Protection",
-        "Unlimited Minor Modifications",
-        "Weekly AI Agent Fine-Tuning & Prompt Audits",
-        "Custom Workflow Automation Builds",
-        "Instant Direct Founder Slack Hotline"
+        "Everything in Leverage Growth",
+        "Weekly High-Level Growth Consulting Call",
+        "Unlimited Minor System & UI Adjustments",
+        "New AI Workflow Builds & Automations",
+        "100% White-Labeled & Unbranded Enterprise Infrastructure",
+        "Bespoke Cold Email/Marketing System setups",
+        "Direct Slack Hotline to Core Founders"
       ]
     : isOperations
     ? [
-        "Premium CDN Hosting + Cache Optimization",
-        "Weekly Audits + API Health Checks",
-        "10 Dedicated Developer/Designer Hours/mo",
-        "Monthly AI Agent Knowledge Base Updates",
+        "Everything in Launch Support",
+        "Continuous AI Agent Re-training & Updates",
         "1 Custom High-Converting Landing Page/mo",
-        "Slack Support (4h Response Time)"
+        "Advanced SEO Content & Competitor Strategy",
+        "Optional \"Built by Mercian Wealth\" Seal or Complimentary Removal",
+        "10 Dedicated Developer/Designer Hours/mo",
+        "Priority 4-Hour Urgent SLA Response"
       ]
     : isAuthority
     ? [
-        "Premium Dedicated CDN Hosting",
+        "Premium Dedicated Ultra-Fast CDN Hosting",
         "Weekly Security & Speed Audits",
-        "3 Dedicated Developer/Designer Hours/mo",
+        "3 Hours Design & Copywriting Updates/mo",
+        "Monthly Traffic & SEO Analytics Report",
+        "Discreet \"Built by Mercian Wealth\" Digital Seal Included",
         "24/7 Critical System Monitoring",
-        "Same-Day Urgent Edits Turnaround",
-        "Email/Portal Support (24h Response Time)"
+        "Same-Day Urgent Edits Turnaround"
       ]
     : [];
 
   const setupPerks = isRevenue
     ? [
-        "Everything in Operations Machine (Unlimited Pages)",
-        "Bespoke Cold Email Outreach System (Warm-up, sequencing, rotation)",
-        "Custom-Trained AI Agent Concierge (24/7 qualification & scheduling)",
-        "Full Brand Identity Suite (Logos, premium typography, slide decks)",
-        "Priority VIP Developer Slack Support (Instant response)",
-        "Weekly Growth & Scaling Roadmaps"
+        "Everything in System Leverage (Unlimited Pages)",
+        "Automated Cold Outreach Infrastructure",
+        "Custom-Trained AI Agent Concierge",
+        "Full Corporate Brand Identity Suite",
+        "100% White-Labeled & Proprietary Delivery (Zero Agency Branding)",
+        "Direct Slack Hotline to Principal Founders",
+        "Weekly Systems Scaling Strategy Roadmaps"
       ]
     : isOperations
     ? [
-        "Everything in Authority Suite (up to 10 Pages)",
-        "Custom Backend Admin Dashboard & Secure Client Portal",
-        "Autonomic Lead & CRM Automations (Under 5s response routing)",
-        "Automated Stripe Billing & Invoice Generation",
+        "Everything in Launch Catalyst (up to 10 Pages)",
+        "Custom Relational Database Integration (Supabase)",
+        "Autonomous Pipeline Routing & CRM Orchestration",
+        "Custom Secure Client Portal Integration",
+        "Automated Stripe Billing & Invoice Engine",
+        "Optional \"Built by Mercian Wealth\" Digital Seal or Complimentary White-Labeling",
         "90 Days Dedicated Post-Launch Support"
       ]
     : isAuthority
     ? [
-        "Bespoke Next.js Authority Platform (5 Custom Pages)",
-        "Calendly Scheduling Integration with Intake Routing",
-        "Stripe Gateway Integration (deposits, retainers)",
-        "Core SEO Blueprint & Schema Markup Setup",
-        "Supercharged Speed Profile (95+ Mobile PageSpeed)",
+        "Bespoke Next.js Authority Platform (5 Pages)",
+        "Autonomous Lead Capture & Calendly Setup",
+        "Core SEO Blueprint & Schema Setup",
+        "Supercharged Speed Profile (98+ Mobile)",
+        "Discreet \"Built by Mercian Wealth\" Digital Seal (White-Label upgrade available)",
         "30 Days Dedicated Post-Launch Support"
       ]
     : [];
@@ -153,9 +159,9 @@ export function ProjectTelemetry({ project }: ProjectProps) {
   const pryPerks = [
     "Unlimited System builds & updates at zero upfront cost",
     "Active CRM & Lead Capture maintenance for life",
-    "Continuous AI Agent updates & workflows optimization",
-    "Shared risk: we only succeed when your system generates revenue"
-  ];
+    "Sub-60s Triage & Lead Routing automation",
+    "Continuous AI fine-tuning & conversion optimization"
+  ]
 
   if (!hasContract) {
     return (

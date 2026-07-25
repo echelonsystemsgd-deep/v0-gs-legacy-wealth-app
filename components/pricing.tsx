@@ -113,7 +113,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
       ? "Launch Catalyst" 
       : revenue >= 15000 && revenue < 50000 
       ? "System Leverage" 
-      : "Autonomic Partner"
+      : "Enterprise Partner"
 
   if (isHomepage) {
     return (
@@ -644,7 +644,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                             : "text-white/60 hover:text-white"
                         }`}
                       >
-                        Authority
+                        Launch Catalyst
                       </button>
                       <button
                         onClick={() => setActiveMobileTier("operationsMachine")}
@@ -654,7 +654,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                             : "text-white/60 hover:text-white"
                         }`}
                       >
-                        Operations
+                        System Leverage
                       </button>
                       <button
                         onClick={() => setActiveMobileTier("revenueEngine")}
@@ -664,7 +664,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                             : "text-white/60 hover:text-white"
                         }`}
                       >
-                        Revenue
+                        Enterprise Partner
                       </button>
                     </div>
 
@@ -674,7 +674,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                           <div className="text-xs font-mono font-bold uppercase tracking-widest text-accent-gold border-b border-accent-gold/20 pb-2 flex items-center justify-between">
                             <span>{cat.category}</span>
                             <span className="text-[10px] text-white/40 font-normal">
-                              {activeMobileTier === "authoritySuite" ? "Authority Suite" : activeMobileTier === "operationsMachine" ? "Operations Machine" : "Revenue Engine"}
+                              {activeMobileTier === "authoritySuite" ? "Launch Catalyst" : activeMobileTier === "operationsMachine" ? "System Leverage" : "Enterprise Partner"}
                             </span>
                           </div>
                           <div className="space-y-2.5">
@@ -698,9 +698,9 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       <thead>
                         <tr className="border-b border-white/10">
                           <th className="py-4 px-5 text-xs uppercase tracking-widest text-accent-gold font-bold w-1/3 sticky left-0 bg-[#0D0716] z-20 border-r border-white/10">Feature Category</th>
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Authority Suite</th>
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold text-center w-1/6 bg-accent-purple/10 border-x border-accent-gold/20">Operations Machine</th>
-                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Revenue Engine</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Launch Catalyst</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-accent-gold font-bold text-center w-1/6 bg-accent-purple/10 border-x border-accent-gold/20">System Leverage</th>
+                          <th className="py-4 px-4 text-xs uppercase tracking-widest text-white/80 font-bold text-center w-1/6">Enterprise Partner</th>
                         </tr>
                       </thead>
                       <tbody>

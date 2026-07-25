@@ -55,10 +55,10 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
 
   const recommendedTier = 
     revenue < 15000 
-      ? "Authority Suite" 
+      ? "Launch Catalyst" 
       : revenue >= 15000 && revenue < 50000 
-      ? "Operations Machine" 
-      : "Revenue Engine"
+      ? "System Leverage" 
+      : "Enterprise Partner"
 
   // Handle escape key to close modal
   useEffect(() => {
