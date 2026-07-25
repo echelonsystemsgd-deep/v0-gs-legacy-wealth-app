@@ -117,11 +117,11 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
   if (isHomepage) {
     return (
-      <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary">
+      <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden bg-bg-primary scroll-mt-28 lg:scroll-mt-36">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
 
           {/* Section Header */}
-          <div className="text-center mb-16 max-w-3xl mx-auto">
+          <div className="text-center mb-10 lg:mb-12 max-w-3xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold font-mono">
               [ {SITE_COPY.homepage.modelHint.eyebrow} ]
             </span>
@@ -134,7 +134,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </div>
 
           {/* Billing Switcher Header */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-12 lg:mb-16 relative z-20">
             <div className="flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative">
               <button
                 onClick={() => setBillingCycle("setup")}
@@ -463,7 +463,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
         </motion.div>
 
         {/* Switcher */}
-        <div className="text-center mb-12 relative z-10">
+        <div className="text-center mb-16 relative z-10">
           <p className="text-xs uppercase tracking-widest text-accent-gold font-bold mb-3">Tailored Options</p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-white">Strategic </span>
@@ -473,7 +473,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             We don't build websites. We build automated client acquisition machines designed to return their implementation cost through direct throughput. If a system cannot demonstrate clear leverage, we will not build it.
           </p>
           
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-8 relative z-20">
             <div className="flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
               <button
                 onClick={() => setBillingCycle("setup")}
