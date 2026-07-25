@@ -47,29 +47,29 @@ export function SpeedGapVisualizer() {
   }, [loopKey])
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-bg-tertiary/10 border border-white/5 p-6 rounded-xl glass space-y-6 text-left relative overflow-hidden">
+    <div className="w-full max-w-lg mx-auto bg-bg-tertiary/10 border border-white/5 p-4 sm:p-6 rounded-xl glass space-y-6 text-left relative overflow-hidden min-w-0 max-w-full">
       
       {/* Background Radial Glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-accent-purple/5 to-transparent pointer-events-none" />
 
-      <div className="relative z-10 space-y-5">
+      <div className="relative z-10 space-y-5 min-w-0">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-gold">System Simulation</span>
           <h4 className="font-serif text-lg font-bold text-white mt-1">The Cost of Manual Delay</h4>
         </div>
 
         {/* Comparison Stack */}
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           
           {/* Card 1: Manual Process */}
-          <div className="p-4 bg-black/40 border border-white/5 rounded-lg space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-bold text-red-500 uppercase tracking-wider flex items-center gap-1.5">
-                <AlertCircle size={12} />
-                Manual Lead Pipeline
+          <div className="p-3.5 sm:p-4 bg-black/40 border border-white/5 rounded-lg space-y-3 min-w-0">
+            <div className="flex justify-between items-center text-xs gap-2 flex-wrap sm:flex-nowrap min-w-0">
+              <span className="font-bold text-red-500 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                <AlertCircle size={12} className="shrink-0" />
+                <span className="truncate">Manual Lead Pipeline</span>
               </span>
-              <span className="text-xxs text-text-secondary/60 flex items-center gap-1">
-                <Clock size={10} />
+              <span className="text-xxs text-text-secondary/60 flex items-center gap-1 shrink-0 whitespace-nowrap">
+                <Clock size={10} className="shrink-0" />
                 Elapsed: {manualStep === 0 ? "0s" : manualStep === 1 ? "15m" : manualStep === 2 ? "2h" : "12h+"}
               </span>
             </div>

@@ -33,7 +33,7 @@ export function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto p-8 sm:p-12 rounded-2xl border border-accent-gold/30 bg-bg-tertiary/40 backdrop-blur-md shadow-2xl space-y-8 text-left relative overflow-hidden"
+          className="max-w-4xl mx-auto p-4 sm:p-8 lg:p-12 rounded-2xl border border-accent-gold/30 bg-bg-tertiary/40 backdrop-blur-md shadow-2xl space-y-8 text-left relative overflow-hidden min-w-0 max-w-full"
         >
           {/* Background Ambient Glow */}
           <div 

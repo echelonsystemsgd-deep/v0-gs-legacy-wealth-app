@@ -130,11 +130,11 @@ export function SystemBlueprint() {
   }, [clearAll])
 
   return (
-    <div id="system-blueprint" ref={containerRef} className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div id="system-blueprint" ref={containerRef} className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden max-w-full min-w-0">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 min-w-0 max-w-full">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16 min-w-0">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-accent-gold">
             [ ARCHITECTURAL BLUEPRINT ]
           </span>
@@ -147,7 +147,7 @@ export function SystemBlueprint() {
         </div>
 
         {/* Node Blueprint Grid */}
-        <div className="grid md:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <div className="grid md:grid-cols-12 gap-6 lg:gap-8 items-start min-w-0 max-w-full">
           
           {/* Node Selector Column (5 cols on md+) */}
           <div className="md:col-span-5 space-y-3">

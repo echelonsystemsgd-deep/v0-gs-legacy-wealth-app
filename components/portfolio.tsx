@@ -597,10 +597,10 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </div>
 
                 {/* Mobile Bottom Bar — always visible, hidden on desktop */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-4 py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none truncate">
+                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm min-w-0 max-w-full">
+                  <div className="min-w-0 flex-1 pr-2">
+                    <div className="flex items-center gap-1.5 mb-0.5 min-w-0 flex-wrap">
+                      <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none truncate max-w-full">
                         {item.category} {item.metric ? `· ${item.metric}` : ''}
                       </p>
                       {item.href && !item.underConstruction ? (
@@ -613,7 +613,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                         </span>
                       )}
                     </div>
-                    <h3 className="font-serif text-sm font-bold text-white truncate">
+                    <h3 className="font-serif text-xs sm:text-sm font-bold text-white truncate">
                       {item.title}
                     </h3>
                   </div>

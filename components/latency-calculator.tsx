@@ -51,21 +51,21 @@ export function LatencyCalculator() {
         </div>
 
         {/* Calculator Grid */}
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-10 items-stretch min-w-0 max-w-full">
           
           {/* Sliders Area (7 cols on desktop) */}
-          <div className="lg:col-span-7 bg-bg-tertiary/40 border border-white/10 p-6 sm:p-8 rounded-2xl space-y-6 backdrop-blur-md flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-bg-tertiary/40 border border-white/10 p-4 sm:p-6 lg:p-8 rounded-2xl space-y-6 backdrop-blur-md flex flex-col justify-between min-w-0 max-w-full overflow-hidden">
             
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0 max-w-full">
               {/* Slider 1: Monthly Leads */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <label className="font-sans text-xs sm:text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Zap size={16} className="text-accent-gold" />
-                    Monthly Inbound Leads
+              <div className="space-y-3 min-w-0 max-w-full">
+                <div className="flex flex-row justify-between items-baseline gap-2 min-w-0 flex-wrap sm:flex-nowrap">
+                  <label className="font-sans text-xs sm:text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 min-w-0 flex-1">
+                    <Zap size={16} className="text-accent-gold shrink-0" />
+                    <span className="truncate">Monthly Inbound Leads</span>
                   </label>
-                  <span className="font-mono text-xl sm:text-2xl font-bold text-accent-gold">
-                    {monthlyLeads} <span className="text-xs text-text-secondary">leads/mo</span>
+                  <span className="font-mono text-lg sm:text-xl lg:text-2xl font-bold text-accent-gold whitespace-nowrap shrink-0">
+                    {monthlyLeads} <span className="text-xs text-text-secondary font-normal">leads/mo</span>
                   </span>
                 </div>
                 <input
@@ -75,7 +75,7 @@ export function LatencyCalculator() {
                   step="5"
                   value={monthlyLeads}
                   onChange={(e) => setMonthlyLeads(Number(e.target.value))}
-                  className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent-gold"
+                  className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent-gold min-w-0"
                 />
                 <div className="flex justify-between text-[10px] text-text-secondary font-mono">
                   <span>10 leads</span>
@@ -85,13 +85,13 @@ export function LatencyCalculator() {
               </div>
 
               {/* Slider 2: Average Deal Value */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <label className="font-sans text-xs sm:text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-                    <DollarSign size={16} className="text-accent-gold" />
-                    Average Deal / Client Value
+              <div className="space-y-3 min-w-0 max-w-full">
+                <div className="flex flex-row justify-between items-baseline gap-2 min-w-0 flex-wrap sm:flex-nowrap">
+                  <label className="font-sans text-xs sm:text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 min-w-0 flex-1">
+                    <DollarSign size={16} className="text-accent-gold shrink-0" />
+                    <span className="truncate">Average Deal / Client Value</span>
                   </label>
-                  <span className="font-mono text-xl sm:text-2xl font-bold text-accent-gold">
+                  <span className="font-mono text-lg sm:text-xl lg:text-2xl font-bold text-accent-gold whitespace-nowrap shrink-0">
                     {formatCurrency(avgDealValue)}
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export function LatencyCalculator() {
                   step="500"
                   value={avgDealValue}
                   onChange={(e) => setAvgDealValue(Number(e.target.value))}
-                  className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent-gold"
+                  className="w-full h-2.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent-gold min-w-0"
                 />
                 <div className="flex justify-between text-[10px] text-text-secondary font-mono">
                   <span>$1,000</span>
@@ -112,24 +112,26 @@ export function LatencyCalculator() {
               </div>
 
               {/* Live Output Banner inside slider card */}
-              <div className="p-4 sm:p-5 rounded-xl bg-accent-gold/10 border border-accent-gold/30 flex items-center justify-between gap-4">
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-accent-gold block">
+              <div className="p-3.5 sm:p-5 rounded-xl bg-accent-gold/10 border border-accent-gold/30 flex flex-col xs:flex-row xs:items-center justify-between gap-2 sm:gap-4 min-w-0 max-w-full overflow-hidden">
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-accent-gold block leading-tight">
                     LIVE CALCULATED REVENUE LEAK
                   </span>
-                  <span className="text-xs text-text-secondary">Based on {monthlyLeads} leads @ {formatCurrency(avgDealValue)}</span>
+                  <span className="text-[11px] sm:text-xs text-text-secondary block mt-0.5 leading-tight truncate">
+                    Based on {monthlyLeads} leads @ {formatCurrency(avgDealValue)}
+                  </span>
                 </div>
-                <span className="font-serif text-2xl sm:text-3xl font-bold text-accent-gold shrink-0">
+                <span className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-accent-gold shrink-0 whitespace-nowrap">
                   {formatCurrency(estimatedAnnualLeak)}
                 </span>
               </div>
             </div>
 
             {/* Context Note + Action Button */}
-            <div className="space-y-4 pt-2">
-              <div className="p-4 rounded-xl bg-black/40 border border-white/5 text-xs text-text-secondary leading-relaxed flex items-start gap-3">
+            <div className="space-y-4 pt-2 min-w-0 max-w-full">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-black/40 border border-white/5 text-xs text-text-secondary leading-relaxed flex items-start gap-2.5 min-w-0 max-w-full">
                 <ShieldAlert size={16} className="text-amber-400 shrink-0 mt-0.5" />
-                <span>
+                <span className="min-w-0 flex-1 break-words">
                   Based on Harvard Business Review speed-to-lead benchmark data: responding within 60 seconds yields a <strong className="text-white">391% increase</strong> in conversion versus a 30-minute delay.
                 </span>
               </div>
@@ -138,11 +140,11 @@ export function LatencyCalculator() {
               <Button
                 asChild
                 size="lg"
-                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-5 text-sm"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 h-auto py-3.5 sm:py-4 px-3 sm:px-4 text-xs sm:text-sm whitespace-normal text-center leading-snug"
               >
                 <Link href="/book" className="flex items-center justify-center gap-2">
                   <span>Plug Revenue Leak — Apply for Alignment</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={16} className="shrink-0" />
                 </Link>
               </Button>
             </div>
@@ -150,43 +152,43 @@ export function LatencyCalculator() {
           </div>
 
           {/* Results Summary Box (5 cols on desktop) */}
-          <div className="lg:col-span-5 bg-gradient-to-b from-accent-purple/20 via-bg-tertiary/60 to-bg-tertiary border border-accent-gold/40 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-6 text-center flex flex-col justify-between">
+          <div className="lg:col-span-5 bg-gradient-to-b from-accent-purple/20 via-bg-tertiary/60 to-bg-tertiary border border-accent-gold/40 p-4 sm:p-6 lg:p-8 rounded-2xl shadow-2xl space-y-6 text-center flex flex-col justify-between min-w-0 max-w-full overflow-hidden">
             
-            <div className="space-y-3">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-gold">
+            <div className="space-y-3 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent-gold block">
                 PROJECTED REVENUE RECOVERY
               </span>
-              <div className="font-serif text-4xl sm:text-5xl font-bold text-accent-gold tracking-tight">
+              <div className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-accent-gold tracking-tight break-words min-w-0">
                 {formatCurrency(estimatedAnnualLeak)}
               </div>
-              <p className="text-xs text-text-primary/70">Estimated Annual Revenue Evaporating to Speed Latency</p>
+              <p className="text-xs text-text-primary/70 leading-relaxed">Estimated Annual Revenue Evaporating to Speed Latency</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 border-y border-white/10 py-5">
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-text-secondary block">Hours Reclaimed</span>
-                <span className="font-mono text-lg sm:text-xl font-bold text-white flex items-center justify-center gap-1">
-                  <Clock size={14} className="text-accent-gold" />
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 border-y border-white/10 py-4 sm:py-5 min-w-0">
+              <div className="space-y-1 min-w-0">
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase text-text-secondary block truncate">Hours Reclaimed</span>
+                <span className="font-mono text-base sm:text-lg lg:text-xl font-bold text-white flex items-center justify-center gap-1 min-w-0 truncate">
+                  <Clock size={14} className="text-accent-gold shrink-0" />
                   {hoursReclaimedPerYear} hrs/yr
                 </span>
               </div>
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase text-text-secondary block">Speed Multiple</span>
-                <span className="font-mono text-lg sm:text-xl font-bold text-green-400">
+              <div className="space-y-1 min-w-0">
+                <span className="text-[9px] sm:text-[10px] font-bold uppercase text-text-secondary block truncate">Speed Multiple</span>
+                <span className="font-mono text-base sm:text-lg lg:text-xl font-bold text-green-400 block truncate">
                   {speedToLeadIncrease}
                 </span>
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 min-w-0">
               <Button
                 asChild
                 size="lg"
-                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-6 text-sm"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 h-auto py-3.5 sm:py-4 px-3 text-xs sm:text-sm whitespace-normal text-center leading-snug"
               >
                 <Link href="/book" className="flex items-center justify-center gap-2">
                   <span>Schedule Autonomic Audit</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={16} className="shrink-0" />
                 </Link>
               </Button>
               <p className="text-[10px] text-text-secondary/70">Zero commitment • 30-minute diagnostic session</p>

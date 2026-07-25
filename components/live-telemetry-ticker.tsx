@@ -27,8 +27,8 @@ export function LiveTelemetryTicker() {
   const duplicatedItems = [...items, ...items, ...items]
 
   return (
-    <div className="w-full bg-[#090410] border-b border-accent-gold/20 py-1.5 overflow-hidden z-30 relative select-none">
-      <div className="w-full flex items-center justify-between gap-0 font-mono text-[10px] sm:text-[11px] px-3 sm:px-6">
+    <div className="w-full max-w-full min-w-0 bg-[#090410] border-b border-accent-gold/20 py-1.5 overflow-hidden z-30 relative select-none">
+      <div className="w-full max-w-full min-w-0 flex items-center justify-between gap-0 font-mono text-[10px] sm:text-[11px] px-3 sm:px-6">
         
         {/* Fixed Left Status Anchor */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 bg-[#090410] z-20 pr-3 sm:pr-5 py-0.5 border-r border-accent-gold/20 shadow-[5px_0_15px_rgba(9,4,16,0.9)]">

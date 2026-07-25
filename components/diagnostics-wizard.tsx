@@ -86,16 +86,16 @@ export function DiagnosticsWizard() {
   const frictionScore = Math.min(98, Math.max(12, totalPenalty + 12))
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-bg-tertiary/60 border border-accent-gold/30 p-6 sm:p-10 rounded-2xl shadow-2xl glass text-left">
+    <div className="w-full max-w-3xl mx-auto bg-bg-tertiary/60 border border-accent-gold/30 p-4 sm:p-8 lg:p-10 rounded-2xl shadow-2xl glass text-left min-w-0 max-w-full overflow-hidden">
       
       {!isCompleted ? (
-        <div className="space-y-8">
+        <div className="space-y-8 min-w-0">
           
           {/* Progress Bar Header */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-accent-gold flex items-center gap-2">
-              <Sparkles size={14} />
-              DIAGNOSTIC HEURISTIC AUDIT · STEP {currentStep + 1} OF {questions.length}
+          <div className="flex flex-row items-center justify-between gap-2 flex-wrap sm:flex-nowrap border-b border-white/10 pb-4 min-w-0">
+            <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider text-accent-gold flex items-center gap-2 min-w-0">
+              <Sparkles size={14} className="shrink-0" />
+              <span className="truncate">DIAGNOSTIC HEURISTIC AUDIT · STEP {currentStep + 1} OF {questions.length}</span>
             </span>
             <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div 

@@ -241,16 +241,16 @@ export function Bottleneck() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.5 }}
-          className="mt-10 sm:mt-16 text-center"
+          className="mt-10 sm:mt-16 text-center min-w-0 max-w-full"
         >
           <Button
             asChild
             size="lg"
-            className="px-8 py-7 text-sm sm:text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.15)] hover:shadow-accent-gold/25"
+            className="w-full sm:w-auto h-auto py-4 sm:py-5 px-4 sm:px-8 text-xs sm:text-sm md:text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.15)] hover:shadow-accent-gold/25 whitespace-normal leading-snug"
           >
-            <Link href="/book" className="flex items-center gap-2">
+            <Link href="/book" className="flex items-center justify-center gap-2">
               <span>Calculate Your Latency Deficit — Apply for System Alignment</span>
-              <span className="text-lg">→</span>
+              <span className="text-lg shrink-0">→</span>
             </Link>
           </Button>
         </motion.div>

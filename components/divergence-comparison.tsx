@@ -64,12 +64,12 @@ export function DivergenceComparison() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col justify-between p-6 sm:p-10 rounded-2xl border border-red-500/20 bg-red-950/10 backdrop-blur-sm relative overflow-hidden"
+            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border border-red-500/20 bg-red-950/10 backdrop-blur-sm relative overflow-hidden min-w-0 max-w-full"
           >
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
+            <div className="space-y-6 min-w-0">
+              <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap min-w-0">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-red-500/10 border border-red-500/20 font-mono text-[10px] font-bold text-red-400 uppercase tracking-wider">
-                  <ShieldAlert size={12} className="text-red-400" />
+                  <ShieldAlert size={12} className="text-red-400 shrink-0" />
                   {data.pathConventional.badge}
                 </span>
                 <span className="font-mono text-xs text-red-400/60 font-semibold">[ LATENCY TAX ]</span>
@@ -110,17 +110,17 @@ export function DivergenceComparison() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col justify-between p-6 sm:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-accent-purple/20 via-[#130B24] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(109,40,217,0.2)] hover:border-accent-gold transition-all duration-300 group"
+            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-accent-purple/20 via-[#130B24] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(109,40,217,0.2)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
           >
             {/* Subtle corner watermark badge */}
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 font-serif text-6xl text-accent-gold">
               ✦
             </div>
 
-            <div className="space-y-6 relative z-10">
-              <div className="flex items-center justify-between">
+            <div className="space-y-6 relative z-10 min-w-0">
+              <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap min-w-0">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-accent-gold/10 border border-accent-gold/30 font-mono text-[10px] font-bold text-accent-gold uppercase tracking-wider shadow-sm">
-                  <Zap size={12} className="text-accent-gold animate-pulse" />
+                  <Zap size={12} className="text-accent-gold animate-pulse shrink-0" />
                   {data.pathMercian.badge}
                 </span>
                 <span className="font-mono text-xs text-accent-gold font-semibold tracking-wider">[ 0-LATENCY ]</span>

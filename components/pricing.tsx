@@ -170,7 +170,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </div>
 
           {/* Pricing Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 items-stretch">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12 items-stretch min-w-0 max-w-full">
             <AnimatePresence>
               {activeTiers.map((tier, index) => (
                 <motion.div
@@ -179,14 +179,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto w-full lg:max-w-none" : ""}`}
+                  className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto w-full lg:max-w-none" : ""} min-w-0 max-w-full`}
                 >
                   <div
-                    className={`relative h-full bg-bg-tertiary/40 backdrop-blur-md border rounded-xl transition-all duration-300 flex flex-col justify-between ${
+                    className={`relative h-full bg-bg-tertiary/40 backdrop-blur-md border rounded-xl transition-all duration-300 flex flex-col justify-between min-w-0 max-w-full overflow-hidden ${
                       tier.featured ? "border-accent-gold shadow-2xl" : "border-white/10"
                     }`}
                   >
-                    <CardContent className="p-8 flex flex-col h-full justify-between space-y-8">
+                    <CardContent className="p-5 sm:p-6 lg:p-8 flex flex-col h-full justify-between space-y-6 sm:space-y-8 min-w-0 max-w-full">
                       <div>
                         {/* Header */}
                         <div className="flex justify-between items-start mb-4">

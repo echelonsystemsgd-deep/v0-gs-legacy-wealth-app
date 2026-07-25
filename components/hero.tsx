@@ -29,15 +29,15 @@ export function Hero() {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center gap-2.5 mb-8 text-center max-w-full px-2"
         >
-          <span className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-wider shadow-[0_0_15px_rgba(212,175,55,0.15)] text-center">
+          <span className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-wider shadow-[0_0_15px_rgba(212,175,55,0.15)] text-center whitespace-normal max-w-full leading-tight">
             <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span>COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS</span>
+            <span className="break-words min-w-0">COHORT ALLOCATION: STRICTLY LIMITED TO 2 PARTNERSHIPS</span>
           </span>
 
-          <span className="font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-accent-gold/80">
+          <span className="font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-accent-gold/80 break-words max-w-full">
             [ {data.eyebrow} ]
           </span>
         </motion.div>

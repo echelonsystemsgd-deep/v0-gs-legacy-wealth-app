@@ -382,22 +382,22 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#07050B]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto flex flex-col justify-between"
+            className="fixed inset-0 bg-[#07050B]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
           >
             {/* Background Ambient Glow */}
             <div 
-              className="absolute inset-0 pointer-events-none z-0 opacity-40"
+              className="absolute inset-0 pointer-events-none z-0 opacity-40 max-w-full"
               style={{
                 background: "radial-gradient(circle at 50% 20%, rgba(109, 40, 217, 0.25) 0%, rgba(7, 5, 11, 0) 75%)"
               }}
             />
 
             {/* Mobile Drawer Top Header Bar */}
-            <div className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0">
+            <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0 min-w-0 max-w-full">
               <BrandLogo />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer"
+                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer shrink-0"
                 aria-label="Close menu"
               >
                 <X size={20} className="text-accent-gold" />
@@ -405,7 +405,7 @@ export function Navbar() {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 flex-1 px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between">
+            <div className="relative z-10 flex-1 px-4 sm:px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between min-w-0 max-w-full">
               
               {/* Telemetry Status Pill */}
               <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-accent-gold/5 border border-accent-gold/20 font-mono text-[10px] sm:text-xs">

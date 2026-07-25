@@ -101,7 +101,7 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.4 }}
-            className="relative w-full max-w-4xl max-h-[calc(100vh-2rem)] md:max-h-[90vh] bg-bg-tertiary border border-border-brand/45 rounded-2xl overflow-hidden glass shadow-2xl z-10 text-text-primary flex flex-col"
+            className="relative w-full max-w-4xl max-h-[calc(100vh-2rem)] md:max-h-[90vh] bg-bg-tertiary border border-border-brand/45 rounded-2xl overflow-hidden glass shadow-2xl z-10 text-text-primary flex flex-col min-w-0 max-w-full"
           >
             {/* Close Button */}
             <button
@@ -113,7 +113,7 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
             </button>
 
             {/* Scrollable Content Wrapper */}
-            <div className="overflow-y-auto p-6 sm:p-8 md:p-10 flex-1">
+            <div className="overflow-y-auto p-4 sm:p-6 md:p-10 flex-1 min-w-0 max-w-full">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-10 w-10 rounded-lg bg-accent-purple/10 border border-accent-purple/20 flex items-center justify-center text-accent-gold">
