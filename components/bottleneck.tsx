@@ -46,7 +46,7 @@ export function Bottleneck() {
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 leading-[1.1] text-balance">
             {data.headline}
           </h2>
-          <p className="font-sans text-base text-text-primary opacity-75 leading-relaxed mt-6 max-w-2xl mx-auto">
+          <p className="font-sans text-base text-text-primary opacity-90 leading-relaxed mt-6 max-w-2xl mx-auto">
             {data.subheadline}
           </p>
           <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">

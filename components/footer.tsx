@@ -136,7 +136,7 @@ export function Footer() {
             <h4 className="font-sans font-bold text-xs uppercase tracking-widest text-accent-gold">
               Start a Project
             </h4>
-            <p className="font-sans text-xs text-text-primary opacity-60 leading-relaxed">
+            <p className="font-sans text-xs text-text-primary opacity-80 leading-relaxed">
               {data.ctaDescription}
             </p>
               <Button 
@@ -154,7 +154,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-65">
+        <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-85">
           <p>
             © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
           </p>

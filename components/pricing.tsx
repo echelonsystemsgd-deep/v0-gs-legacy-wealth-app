@@ -207,14 +207,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         </div>
 
                         {/* Description */}
-                        <p className="text-sm text-text-primary opacity-80 mb-6 min-h-12 leading-relaxed">
+                        <p className="text-sm text-text-primary opacity-90 mb-6 min-h-12 leading-relaxed">
                           {tier.description}
                         </p>
 
                         {/* Price */}
                         <div className="mb-6 border-y border-white/10 py-4">
                           <div className="flex items-baseline gap-1">
-                            <span className="text-sm text-text-primary opacity-70">From</span>
+                            <span className="text-sm text-text-primary opacity-80">From</span>
                             <span className="text-4xl font-bold font-serif text-white">
                               £{tier.price}
                             </span>
@@ -223,7 +223,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                             {tier.interval}
                           </span>
                           {billingCycle === "setup" && (tier as any).milestoneBreakdown && (
-                            <div className="mt-2.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-white/70 leading-relaxed flex items-center gap-2">
+                            <div className="mt-2.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-white/85 leading-relaxed flex items-center gap-2">
                               <span className="text-accent-gold font-bold font-sans text-xs shrink-0">％</span>
                               <span>{(tier as any).milestoneBreakdown}</span>
                             </div>
@@ -235,7 +235,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                           {tier.features.map((feature, i) => (
                             <div key={i} className="flex items-start gap-2.5">
                               <span className="text-accent-gold text-sm shrink-0 mt-0.5">✦</span>
-                              <span className="text-xs text-text-primary opacity-85 leading-normal">
+                              <span className="text-xs text-text-primary opacity-95 leading-normal font-medium">
                                 {feature}
                               </span>
                             </div>

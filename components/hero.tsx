@@ -112,7 +112,7 @@ export function Hero() {
           {Array.isArray(data.trustItems) && data.trustItems.map((item: string, idx: number) => (
             <span key={idx} className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-accent-gold text-[9px] sm:text-[10px]">✦</span>
-              <span className="text-white/80">{item}</span>
+              <span className="text-white/95 font-medium">{item}</span>
             </span>
           ))}
         </motion.div>

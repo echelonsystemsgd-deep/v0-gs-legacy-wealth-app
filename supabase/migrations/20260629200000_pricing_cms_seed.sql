@@ -6,61 +6,63 @@ VALUES (
   'pricing_setup_tiers',
   '[
     {
-      "id": "authority-suite",
-      "name": "Authority Suite",
-      "price": "3,500",
-      "interval": "£875 deposit to initiate",
-      "milestoneBreakdown": "4 milestone stages of 25% (£875) linked to build progress",
-      "description": "A luxury digital front-office that projects absolute authority. Engineered without templates to secure and convert elite clients.",
+      "id": "launch-catalyst",
+      "name": "Launch Catalyst",
+      "price": "1,850",
+      "interval": "£462 deposit to initiate",
+      "milestoneBreakdown": "4 milestone stages of 25% (£462) linked to build progress",
+      "description": "A high-performance visual presence and automated qualification routing. Built for early-stage scaleups looking to build immediate momentum.",
       "features": [
         "Bespoke Next.js Authority Platform (5 Pages)",
         "Autonomous Lead Capture & Calendly Setup",
-        "Stripe Payment Gateway Integration",
         "Core SEO Blueprint & Schema Setup",
         "Supercharged Speed Profile (98+ Mobile)",
+        "Discreet \"Built by Mercian Wealth\" Digital Seal (White-Label upgrade available)",
         "30 Days Dedicated Post-Launch Support"
       ],
       "cta": "Request Alignment",
       "featured": false,
-      "tag": "Authority Suite"
+      "tag": "Launch Catalyst"
     },
     {
-      "id": "operations-machine",
-      "name": "Operations Machine",
-      "price": "5,800",
-      "interval": "£1,450 deposit to initiate",
-      "milestoneBreakdown": "4 milestone stages of 25% (£1,450) linked to build progress",
-      "description": "Your complete digital systems layer. We replace manual administrative overhead with custom software leverage so your business runs on autopilot.",
+      "id": "system-leverage",
+      "name": "System Leverage",
+      "price": "3,850",
+      "interval": "£962 deposit to initiate",
+      "milestoneBreakdown": "4 milestone stages of 25% (£962) linked to build progress",
+      "description": "Your complete digital systems layer. We replace manual administrative overhead with custom relational database and CRM routing pipelines.",
       "features": [
-        "Everything in Authority Suite (up to 10 Pages)",
+        "Everything in Launch Catalyst (up to 10 Pages)",
         "Custom Relational Database Integration (Supabase)",
         "Autonomous Pipeline Routing & CRM Orchestration",
         "Custom Secure Client Portal Integration",
         "Automated Stripe Billing & Invoice Engine",
+        "Optional \"Built by Mercian Wealth\" Digital Seal or Complimentary White-Labeling",
         "90 Days Dedicated Post-Launch Support"
       ],
       "cta": "Initiate Audit",
       "featured": true,
-      "tag": "Operations Machine"
+      "tag": "System Leverage"
     },
     {
-      "id": "revenue-engine",
-      "name": "Revenue Engine",
-      "price": "9,800",
-      "interval": "£2,450 deposit to initiate",
-      "milestoneBreakdown": "4 milestone stages of 25% (£2,450) linked to build progress",
-      "description": "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch your automated cold email prospecting system, and engineer your AI lead triage.",
+      "id": "enterprise-partner",
+      "name": "Enterprise Partner",
+      "price": "7,500",
+      "interval": "£1,875 deposit to initiate",
+      "milestoneBreakdown": "4 milestone stages of 25% (£1,875) linked to build progress",
+      "description": "The ultimate growth and automation infrastructure. We build a high-performance brand platform, launch outbound email engines, and engineer custom AI triage agents.",
       "features": [
-        "Everything in Operations Machine (Unlimited Pages)",
-        "Autonomic Cold Outreach Infrastructure",
+        "Everything in System Leverage (Unlimited Pages)",
+        "Automated Cold Outreach Infrastructure",
         "Custom-Trained AI Agent Concierge",
         "Full Corporate Brand Identity Suite",
+        "100% White-Labeled & Proprietary Delivery (Zero Agency Branding)",
         "Direct Slack Hotline to Principal Founders",
         "Weekly Systems Scaling Strategy Roadmaps"
       ],
       "cta": "Initiate Audit",
       "featured": false,
-      "tag": "Revenue Engine"
+      "tag": "Enterprise Partner"
     }
   ]'::jsonb,
   now()
