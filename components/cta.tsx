@@ -27,7 +27,7 @@ export function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-[0.18em] sm:tracking-[0.2em] shadow-[0_0_20px_rgba(212,175,55,0.15)] text-center"
+          className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent-gold/10 border border-accent-gold/30 text-[10px] sm:text-[11px] font-mono font-bold text-accent-gold uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-[0_0_20px_rgba(212,175,55,0.15)] text-center max-w-full whitespace-normal leading-tight break-words"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
           <span>VETTED PARTNERSHIPS ONLY · STRICTLY LIMITED ALLOCATION</span>
