@@ -77,61 +77,64 @@ VALUES (
   'pricing_retainer_tiers',
   '[
     {
-      "id": "authority-suite",
-      "name": "Pilot Support",
-      "price": "499",
+      "id": "launch-support",
+      "name": "Launch Support",
+      "price": "395",
       "interval": "billed monthly",
       "milestoneBreakdown": "",
-      "description": "Continuous hosting, top-tier performance audits, and priority developer hours.",
+      "description": "Continuous hosting, speed audits, and priority updates to preserve your digital momentum.",
       "features": [
         "Premium Dedicated Ultra-Fast CDN Hosting",
         "Weekly Security & Speed Audits",
         "3 Hours Design & Copywriting Updates/mo",
         "Monthly Traffic & SEO Analytics Report",
+        "Discreet \"Built by Mercian Wealth\" Digital Seal Included",
         "24/7 Critical System Monitoring",
         "Same-Day Urgent Edits Turnaround"
       ],
       "cta": "Request Alignment",
       "featured": false,
-      "tag": "Authority Suite"
+      "tag": "Launch Catalyst"
     },
     {
-      "id": "operations-machine",
-      "name": "Co-Pilot Growth",
-      "price": "1,450",
+      "id": "leverage-growth",
+      "name": "Leverage Growth",
+      "price": "750",
       "interval": "billed monthly",
       "milestoneBreakdown": "",
-      "description": "Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.",
+      "description": "Custom growth campaigns, search engine optimization, and continuous AI model tuning.",
       "features": [
-        "Everything in Pilot Support",
+        "Everything in Launch Support",
         "Continuous AI Agent Re-training & Updates",
         "1 Custom High-Converting Landing Page/mo",
         "Advanced SEO Content & Competitor Strategy",
-        "Weekly Lead Funnel Optimisation",
-        "10 Dedicated Developer/Designer Hours/mo"
+        "Optional \"Built by Mercian Wealth\" Seal or Complimentary Removal",
+        "10 Dedicated Developer/Designer Hours/mo",
+        "Priority 4-Hour Urgent SLA Response"
       ],
       "cta": "Initiate Audit",
       "featured": true,
-      "tag": "Operations Machine"
+      "tag": "System Leverage"
     },
     {
-      "id": "revenue-engine",
-      "name": "Enterprise Autonomic Partner",
-      "price": "2,950",
+      "id": "enterprise-alliance",
+      "name": "Enterprise Alliance",
+      "price": "1,450",
       "interval": "billed monthly",
       "milestoneBreakdown": "",
-      "description": "Your complete external fractional Chief Technology & Marketing Team.",
+      "description": "Your complete external fractional Chief Technology & Marketing advisory partner.",
       "features": [
-        "Everything in Co-Pilot Growth",
+        "Everything in Leverage Growth",
         "Weekly High-Level Growth Consulting Call",
         "Unlimited Minor System & UI Adjustments",
         "New AI Workflow Builds & Automations",
+        "100% White-Labeled & Unbranded Enterprise Infrastructure",
         "Bespoke Cold Email/Marketing System setups",
         "Direct Slack Hotline to Core Founders"
       ],
       "cta": "Initiate Audit",
       "featured": false,
-      "tag": "Revenue Engine"
+      "tag": "Enterprise Alliance"
     }
   ]'::jsonb,
   now()
