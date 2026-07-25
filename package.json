@@ -6,7 +6,7 @@
     "dev": "npx next dev",
     "build": "next build",
     "start": "npx next start",
-    "lint": "eslint ."
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

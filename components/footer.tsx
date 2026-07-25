@@ -16,7 +16,7 @@ export function Footer() {
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929",
     instagramLink: "https://instagram.com/mercianwealth",
-    linkedinLink: "https://www.linkedin.com/company/mercian-wealth",
+    linkedinLink: "https://www.linkedin.com/in/gs-legacy-wealth",
     ctaDescription: "Request an alignment session. Strictly limited allocations each month.",
     ctaButtonText: "Initiate Clinical Audit"
   })

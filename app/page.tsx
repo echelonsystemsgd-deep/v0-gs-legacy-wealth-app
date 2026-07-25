@@ -42,7 +42,7 @@ export default async function Home() {
                 },
                 "sameAs": [
                   "https://instagram.com/mercianwealth",
-                  "https://www.linkedin.com/company/mercian-wealth"
+                  "https://www.linkedin.com/in/gs-legacy-wealth"
                 ]
               },
               {
