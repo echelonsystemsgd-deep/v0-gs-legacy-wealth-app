@@ -294,10 +294,10 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 glass rounded-xl p-6 sm:p-10 bg-bg-tertiary/10 border border-white/5"
+          className="mb-20 glass rounded-xl p-4 sm:p-6 lg:p-10 bg-bg-tertiary/10 border border-white/5 min-w-0 max-w-full overflow-hidden"
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-accent shrink-0">
               <Calculator size={20} />
             </div>
             <div>
@@ -306,46 +306,46 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="grid lg:grid-cols-12 gap-8 items-center min-w-0 max-w-full">
 
             {/* Output Panel — appears FIRST on mobile, right column on desktop */}
-            <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-xl p-6 border border-white/5 space-y-6 order-first lg:order-last">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
+            <div className="lg:col-span-5 bg-bg-tertiary/40 rounded-xl p-4 sm:p-6 border border-white/5 space-y-4 sm:space-y-6 order-first lg:order-last min-w-0 max-w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 min-w-0">
+                <div className="p-3.5 sm:p-4 bg-bg-primary rounded-lg border border-white/5 min-w-0">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                    <Clock size={12} className="text-accent" />
-                    <span>Annual Time Reclaimed</span>
+                    <Clock size={12} className="text-accent shrink-0" />
+                    <span className="truncate">Annual Time Reclaimed</span>
                   </div>
-                  <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
+                  <div className="text-xl sm:text-2xl font-bold font-serif text-foreground truncate">
                     <RollingNumber value={annualHoursSaved} suffix=" Hrs" />
                   </div>
                 </div>
 
-                <div className="p-4 bg-bg-primary rounded-lg border border-white/5">
+                <div className="p-3.5 sm:p-4 bg-bg-primary rounded-lg border border-white/5 min-w-0">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                    <Zap size={12} className="text-accent" />
-                    <span>Est. Growth Lift (15%)</span>
+                    <Zap size={12} className="text-accent shrink-0" />
+                    <span className="truncate">Est. Growth Lift (15%)</span>
                   </div>
-                  <div className="text-xl sm:text-2xl font-bold font-serif text-foreground">
+                  <div className="text-xl sm:text-2xl font-bold font-serif text-foreground truncate">
                     <RollingNumber value={projectedRevenueGrowth} prefix="£" />
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-lg border border-accent-purple/20">
-                <div className="text-xs text-accent uppercase tracking-wider font-bold mb-1 text-accent-gold">Total Est. Annual Value Unlocked</div>
-                <div className="text-3xl font-bold font-serif text-accent-gold">
+              <div className="p-4 sm:p-5 bg-gradient-to-br from-accent-purple/10 to-transparent rounded-lg border border-accent-purple/20 min-w-0">
+                <div className="text-[11px] sm:text-xs text-accent uppercase tracking-wider font-bold mb-1 text-accent-gold break-words">Total Est. Annual Value Unlocked</div>
+                <div className="text-2xl sm:text-3xl font-bold font-serif text-accent-gold">
                   <RollingNumber value={totalValueUnlocked} prefix="£" />
                 </div>
-                <p className="text-xxs text-muted-foreground mt-2 leading-tight opacity-75">
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed opacity-75 break-words">
                   Interactive projection model based on estimated benchmark averages (£75/hr admin labor value & 15% conversion lift).
                 </p>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-lg text-xs">
-                <span className="text-muted-foreground">Recommended Alignment:</span>
-                <span className="flex items-center gap-1.5 font-bold text-accent text-accent-gold">
-                  <Crown size={12} />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 sm:gap-2 p-3 bg-secondary/40 rounded-lg text-xs min-w-0">
+                <span className="text-muted-foreground shrink-0">Recommended Alignment:</span>
+                <span className="flex items-center gap-1.5 font-bold text-accent text-accent-gold min-w-0 truncate">
+                  <Crown size={12} className="shrink-0" />
                   {recommendedTier} System Tier
                 </span>
               </div>
@@ -353,23 +353,23 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               <Button
                 asChild
                 size="lg"
-                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-5 text-xs sm:text-sm"
+                className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-4 sm:py-5 text-xs sm:text-sm h-auto whitespace-normal"
               >
-                <Link href="/book" className="flex items-center justify-center gap-2">
-                  <span>Claim Unlocked Revenue — Select {recommendedTier} Tier</span>
-                  <ArrowRight size={16} />
+                <Link href="/book" className="flex items-center justify-center gap-2 text-center py-1">
+                  <span className="leading-snug">Claim Unlocked Revenue — Select {recommendedTier} Tier</span>
+                  <ArrowRight size={16} className="shrink-0" />
                 </Link>
               </Button>
             </div>
 
             {/* Inputs — appears SECOND on mobile, left column on desktop */}
-            <div className="lg:col-span-7 space-y-8 order-last lg:order-first">
+            <div className="lg:col-span-7 space-y-6 sm:space-y-8 order-last lg:order-first min-w-0 max-w-full">
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Plug in your monthly revenue and weekly manual admin hours. The math is simple: manual operations cost your business £75/hour in lost productivity and leak up to 15% of your potential pipeline conversion. Adjust the sliders to see what is currently slipping through the cracks.
               </p>
 
               {/* Revenue Input */}
-              <div className="space-y-3">
+              <div className="space-y-3 min-w-0">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Current Monthly Revenue</span>
                   <span className="text-accent font-bold font-serif text-base text-accent-gold">
@@ -378,21 +378,21 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 </div>
 
                 {/* Mobile Stepper */}
-                <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                <div className="flex md:hidden items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-xl p-1.5 min-w-0 w-full">
                   <button
                     onClick={() => setRevenue(Math.max(5000, revenue - 5000))}
                     aria-label="Decrease revenue"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    className="w-11 h-11 shrink-0 flex items-center justify-center text-xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     −
                   </button>
-                  <span className="font-bold font-serif text-xl text-white tracking-tight">
+                  <span className="font-bold font-serif text-lg sm:text-xl text-white tracking-tight text-center flex-1 min-w-0 truncate px-1">
                     £{revenue.toLocaleString()}
                   </span>
                   <button
                     onClick={() => setRevenue(Math.min(100000, revenue + 5000))}
                     aria-label="Increase revenue"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    className="w-11 h-11 shrink-0 flex items-center justify-center text-xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     +
                   </button>
@@ -414,7 +414,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               </div>
 
               {/* Manual Hours Input */}
-              <div className="space-y-3">
+              <div className="space-y-3 min-w-0">
                 <div className="flex justify-between items-center text-sm font-medium">
                   <span className="text-foreground">Weekly Hours Spent on Manual Admin</span>
                   <span className="text-accent font-bold font-serif text-base text-accent-gold">
@@ -423,21 +423,21 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 </div>
 
                 {/* Mobile Stepper */}
-                <div className="flex md:hidden items-center justify-between gap-3 bg-white/5 border border-white/10 rounded-xl p-1">
+                <div className="flex md:hidden items-center justify-between gap-2 bg-white/5 border border-white/10 rounded-xl p-1.5 min-w-0 w-full">
                   <button
                     onClick={() => setManualHours(Math.max(2, manualHours - 1))}
                     aria-label="Decrease hours"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    className="w-11 h-11 shrink-0 flex items-center justify-center text-xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     −
                   </button>
-                  <span className="font-bold font-serif text-xl text-white tracking-tight">
+                  <span className="font-bold font-serif text-lg sm:text-xl text-white tracking-tight text-center flex-1 min-w-0 truncate px-1">
                     {manualHours} hrs/wk
                   </span>
                   <button
                     onClick={() => setManualHours(Math.min(40, manualHours + 1))}
                     aria-label="Increase hours"
-                    className="w-14 h-14 flex items-center justify-center text-2xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
+                    className="w-11 h-11 shrink-0 flex items-center justify-center text-xl font-bold text-accent-gold border border-accent-gold/30 rounded-lg active:bg-accent-gold/20 transition-colors"
                   >
                     +
                   </button>
