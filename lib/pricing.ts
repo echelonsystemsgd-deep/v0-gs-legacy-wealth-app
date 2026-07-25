@@ -88,8 +88,12 @@ export async function getPricingTiers(): Promise<{
     fetchSection('pricing_retainer_tiers'),
   ])
 
+  // Validate DB content against current brand tier names; fall back to site-copy if stale
+  const isSetupValid = setup && setup.length > 0 && setup[0]?.name === FALLBACK_SETUP_TIERS[0]?.name
+  const isRetainerValid = retainer && retainer.length > 0 && retainer[0]?.name === FALLBACK_RETAINER_TIERS[0]?.name
+
   return {
-    setupTiers: setup ?? FALLBACK_SETUP_TIERS,
-    retainerTiers: retainer ?? FALLBACK_RETAINER_TIERS,
+    setupTiers: isSetupValid ? setup : FALLBACK_SETUP_TIERS,
+    retainerTiers: isRetainerValid ? retainer : FALLBACK_RETAINER_TIERS,
   }
 }
