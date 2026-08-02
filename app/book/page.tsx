@@ -34,10 +34,10 @@ export default function BookPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 min-h-16 flex items-center justify-between py-4">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-12 w-12 transition-transform group-hover:scale-105 duration-300">
-              <BrandLogo variant="logo" alt="LocalEngine AI" fill className="object-contain mix-blend-screen" priority />
+              <BrandLogo variant="logo" alt="Mercian Wealth" fill className="object-contain mix-blend-screen" priority />
             </div>
             <span className="font-serif text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-accent-gold hidden sm:block">
-              LocalEngine AI
+              Mercian Wealth
             </span>
           </Link>
 

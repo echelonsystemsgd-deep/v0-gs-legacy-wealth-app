@@ -15,7 +15,7 @@ export function Footer() {
     tagline: "Automated Storefronts & AI Engines for Bakeries, Food Artisans & Local Services.",
     email: "mercianwealthgs@gmail.com",
     phone: "+44 7851 055929",
-    whatsappLink: "https://wa.me/447851055929",
+    whatsappLink: "https://wa.me/447851055929?text=Hi%20Mercian%20Wealth,%20I'd%20like%20to%20inquire%20about%20your%20services.",
     instagramLink: "https://instagram.com",
     linkedinLink: "https://linkedin.com",
     ctaDescription: "Book a 15-minute quick audit to see how much manual admin time we can eliminate for your business.",
@@ -149,7 +149,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-85">
           <p>
-            © {new Date().getFullYear()} LocalEngine AI. All Rights Reserved.
+            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
           </p>
           <div className="flex justify-center gap-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-accent-gold transition-colors">

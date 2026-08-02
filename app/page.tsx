@@ -33,39 +33,39 @@ export default async function Home() {
             "@graph": [
               {
                 "@type": "Organization",
-                "@id": "https://localengine.ai/#organization",
-                "name": "LocalEngine AI",
-                "url": "https://localengine.ai",
+                "@id": "https://mercianwealth.co.uk/#organization",
+                "name": "Mercian Wealth",
+                "url": "https://mercianwealth.co.uk",
                 "logo": {
                   "@type": "ImageObject",
-                  "@id": "https://localengine.ai/#logo",
-                  "url": "https://localengine.ai/logo.png",
-                  "caption": "LocalEngine AI"
+                  "@id": "https://mercianwealth.co.uk/#logo",
+                  "url": "https://mercianwealth.co.uk/logo.png",
+                  "caption": "Mercian Wealth"
                 },
                 "image": {
-                  "@id": "https://localengine.ai/#logo"
+                  "@id": "https://mercianwealth.co.uk/#logo"
                 }
               },
               {
                 "@type": "WebSite",
-                "@id": "https://localengine.ai/#website",
-                "url": "https://localengine.ai",
-                "name": "LocalEngine AI",
+                "@id": "https://mercianwealth.co.uk/#website",
+                "url": "https://mercianwealth.co.uk",
+                "name": "Mercian Wealth",
                 "description": "Custom digital storefronts and automated AI engines for bakeries, food artisans, and local services.",
                 "publisher": {
-                  "@id": "https://localengine.ai/#organization"
+                  "@id": "https://mercianwealth.co.uk/#organization"
                 }
               },
               {
                 "@type": "WebPage",
-                "@id": "https://localengine.ai/#webpage",
-                "url": "https://localengine.ai",
-                "name": "LocalEngine AI | Automation & Mobile Storefronts for Bakeries & Local Services",
+                "@id": "https://mercianwealth.co.uk/#webpage",
+                "url": "https://mercianwealth.co.uk",
+                "name": "Mercian Wealth | Automation & Mobile Storefronts for Bakeries & Local Services",
                 "isPartOf": {
-                  "@id": "https://localengine.ai/#website"
+                  "@id": "https://mercianwealth.co.uk/#website"
                 },
                 "about": {
-                  "@id": "https://localengine.ai/#organization"
+                  "@id": "https://mercianwealth.co.uk/#organization"
                 },
                 "description": "Custom digital storefronts, 3-tap order builders, WhatsApp phone alerts, and automated 5-star Google review engines for bakeries and local services."
               }

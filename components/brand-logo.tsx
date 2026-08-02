@@ -28,7 +28,7 @@ function WordmarkLogo({ className }: { className?: string }) {
   return (
     <span
       className={className}
-      aria-label="LocalEngine AI"
+      aria-label="Mercian Wealth"
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -46,7 +46,7 @@ function WordmarkLogo({ className }: { className?: string }) {
           fontSize: "inherit",
         }}
       >
-        LocalEngine
+        Mercian
       </span>
       <span
         style={{
@@ -58,7 +58,7 @@ function WordmarkLogo({ className }: { className?: string }) {
           border: "1px solid rgba(245, 158, 11, 0.3)",
         }}
       >
-        AI
+        Wealth
       </span>
     </span>
   )

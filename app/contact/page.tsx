@@ -60,7 +60,7 @@ export default function ContactPage() {
                     <a href="tel:+447851055929" className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono">
                       +44 7851 055929
                     </a>
-                    <a href="https://wa.me/447851055929" target="_blank" rel="noopener noreferrer" className="block text-xs text-accent-gold hover:underline mt-1">
+                    <a href="https://wa.me/447851055929?text=Hi%20Mercian%20Wealth,%20I'd%20like%20to%20inquire%20about%20your%20services." target="_blank" rel="noopener noreferrer" className="block text-xs text-accent-gold hover:underline mt-1">
                       Chat on WhatsApp →
                     </a>
                   </div>

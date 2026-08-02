@@ -16,47 +16,47 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "LocalEngine AI | Mobile Storefronts & Automation for Bakeries, Catering & Local Services",
-      titleTemplate: "%s | LocalEngine AI",
+      defaultTitle: "Mercian Wealth | Mobile Storefronts & Automation for Bakeries, Catering & Local Services",
+      titleTemplate: "%s | Mercian Wealth",
       description: "Custom mobile storefronts, 3-tap order builders, WhatsApp alerts, and automated Google review engines for cake bakeries, catering businesses, food artisans, and local services across Berkshire & the UK."
     },
     home: {
-      title: "LocalEngine AI | Mobile Storefronts & Order Automation for Bakeries & Local Services",
+      title: "Mercian Wealth | Mobile Storefronts & Order Automation for Bakeries & Local Services",
       description: "We eliminate manual admin for cake bakeries, catering businesses, food artisans, and local service providers. Sub-second mobile storefronts, instant WhatsApp order alerts, automated deposits & 5-star Google review engines.",
     },
     services: {
-      title: "Our Services | LocalEngine AI — Web Design, Order Builders & WhatsApp Alerts",
+      title: "Our Services | Mercian Wealth — Web Design, Order Builders & WhatsApp Alerts",
       description: "Custom order engines, instant WhatsApp notifications, automated 5-star Google review systems, and sub-second mobile storefronts for bakeries, catering, artisans, and local services.",
     },
     process: {
-      title: "Our 7-Day Launch Protocol | LocalEngine AI",
+      title: "Our 7-Day Launch Protocol | Mercian Wealth",
       description: "15-minute operational audit, custom mobile storefront build, WhatsApp alert setup, and 7-day launch protocol for local service providers and food businesses.",
     },
     portfolio: {
-      title: "Deployed Systems | LocalEngine AI",
+      title: "Deployed Systems | Mercian Wealth",
       description: "A showcase of high-converting mobile storefronts and automated order engines built for cake bakeries, catering brands, food artisans, and local services.",
     },
     pricing: {
-      title: "Pricing | LocalEngine AI — One-Time Setup, Monthly Retainer or % Revenue Share",
+      title: "Pricing | Mercian Wealth — One-Time Setup, Monthly Retainer or % Revenue Share",
       description: "Transparent pricing for bakeries, catering businesses, artisans, and local service providers. One-time setup from £495, flat monthly retainer, or % revenue share options.",
     },
     testimonials: {
-      title: "Pricing Models | LocalEngine AI",
+      title: "Pricing Models | Mercian Wealth",
       description: "Flexible setup, monthly retainer, and % revenue share models for bakeries, catering operators, food artisans, and local service providers.",
     },
     contact: {
-      title: "Get In Touch | LocalEngine AI",
-      description: "Connect with LocalEngine AI. Let's discuss your cake bakery, catering business, food artisan, or local service automation needs.",
+      title: "Get In Touch | Mercian Wealth",
+      description: "Connect with Mercian Wealth. Let's discuss your cake bakery, catering business, food artisan, or local service automation needs.",
     },
     book: {
-      title: "Book a 15-Min Operational Audit | LocalEngine AI",
+      title: "Book a 15-Min Operational Audit | Mercian Wealth",
       description: "Book a quick 15-minute operational audit to see how much manual admin time we can eliminate for your bakery, catering, artisan, or local service business.",
     },
   },
 
   // Navbar Component
   navbar: {
-    logo: "LocalEngine AI",
+    logo: "Mercian Wealth",
     links: [
       { label: "Solutions", href: "/services" },
       { label: "Interactive Demo", href: "/#demo" },
@@ -164,7 +164,7 @@ export const SITE_COPY = {
       description: "Generic DIY site builders look cheap until you realize how many custom orders they bleed. 10-second mobile load times, clunky contact forms, and missing deposit payment links cost you thousands in lost business. We build sub-second mobile storefronts engineered to capture deposits and ping your phone instantly.",
     },
 
-    // 4. LocalEngine AI Difference
+    // 4. Mercian Wealth Difference
     whyMercianWealth: {
       headline: "Built Specifically for Local Services, Cake Bakeries, Food Artisans & Catering",
       description: "Traditional agencies charge thousands for static, slow websites that sit idle. We build complete automated storefronts and 24/7 lead engines powered by Supabase backend infrastructure and Stripe payment deposits.",
@@ -186,7 +186,7 @@ export const SITE_COPY = {
         ],
       },
       mercianWealth: {
-        title: "LocalEngine Automated Engine",
+        title: "Mercian Wealth Automated Engine",
         items: [
           "Custom sub-second mobile storefront built in 7 to 14 days.",
           "Full Supabase backend database & Stripe payment integration.",
@@ -641,7 +641,7 @@ export const SITE_COPY = {
       "Strictly 2 onboarding slots per month"
     ],
     socialProofQuote: "Our 15-minute quick audit pinpoints your exact manual order friction so you can start taking automated deposits in 7 days.",
-    socialProofAuthor: "LocalEngine AI Standard",
+    socialProofAuthor: "Mercian Wealth Standard",
   },
 }
 

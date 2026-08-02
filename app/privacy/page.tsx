@@ -19,7 +19,7 @@ export default function PrivacyPage() {
             "@type": "WebPage",
             "name": "Privacy Policy",
             "description": "Our privacy policy outlines how we handle and protect your personal information.",
-            "url": "https://localengine.ai/privacy"
+            "url": "https://mercianwealth.co.uk/privacy"
           })
         }}
       />

@@ -9,6 +9,7 @@ import { Watermark } from '@/components/watermark'
 import { TabRetention } from '@/components/tab-retention'
 import { Toaster } from '@/components/ui/sonner'
 import { SITE_COPY } from '@/lib/site-copy'
+import { WhatsAppButton } from '@/components/whatsapp-button'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -35,13 +36,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://localengine.ai'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mercianwealth.co.uk'),
   title: {
     default: SITE_COPY.metadata.layout.defaultTitle,
     template: SITE_COPY.metadata.layout.titleTemplate,
   },
   description: SITE_COPY.metadata.layout.description,
-  applicationName: 'LocalEngine AI',
+  applicationName: 'Mercian Wealth',
   keywords: [
     "mobile storefronts",
     "bakery web design",
@@ -55,9 +56,9 @@ export const metadata: Metadata = {
     "Reading web developer",
     "food business software"
   ],
-  authors: [{ name: 'LocalEngine AI' }],
-  creator: 'LocalEngine AI',
-  publisher: 'LocalEngine AI',
+  authors: [{ name: 'Mercian Wealth' }],
+  creator: 'Mercian Wealth',
+  publisher: 'Mercian Wealth',
   formatDetection: {
     email: false,
     address: false,
@@ -66,14 +67,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: SITE_COPY.metadata.layout.defaultTitle,
     description: SITE_COPY.metadata.layout.description,
-    url: 'https://localengine.ai',
-    siteName: 'LocalEngine AI',
+    url: 'https://mercianwealth.co.uk',
+    siteName: 'Mercian Wealth',
     images: [
       {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'LocalEngine AI — Mobile Storefronts & Automation for Local Businesses',
+        alt: 'Mercian Wealth — Mobile Storefronts & Automation for Local Businesses',
       },
     ],
     locale: 'en_GB',
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
     title: SITE_COPY.metadata.layout.defaultTitle,
     description: SITE_COPY.metadata.layout.description,
     images: ['/twitter-image.png'],
-    creator: '@localengineai',
+    creator: '@mercianwealth',
   },
   robots: {
     index: true,
@@ -129,6 +130,7 @@ export default function RootLayout({
         <Toaster position="top-right" theme="dark" richColors closeButton />
         <Watermark position="center" opacity={0.06} />
         <TabRetention />
+        <WhatsAppButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}
         {/*
           Calendly widget.js — loaded at root so it is available for both:

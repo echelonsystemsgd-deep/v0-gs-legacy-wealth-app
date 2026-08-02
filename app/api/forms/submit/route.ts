@@ -8,7 +8,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
-  const prodUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localengine.ai'
+  const prodUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mercianwealth.co.uk'
   return `${prodUrl}/MercianWealthlogo.jpeg`
 }
 
@@ -176,7 +176,7 @@ export async function POST(request: Request) {
       const ownerEmailHtml = `
         <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1px; font-weight: bold;">LOCALENGINE AI</h2>
+            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1px; font-weight: bold;">MERCIAN WEALTH</h2>
             <p style="color: #8E8E93; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0;">New Lead Submission</p>
           </div>
           
@@ -263,7 +263,7 @@ export async function POST(request: Request) {
         <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
           <div style="text-align: center; margin-bottom: 35px;">
             <img src="${getLogoUrl()}" alt="Mercian Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block;" />
-            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1px;">LOCALENGINE AI</h2>
+            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1px;">MERCIAN WEALTH</h2>
             <p style="color: #8E8E93; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin: 0;">Mobile Storefronts & Order Automation</p>
           </div>
 
@@ -278,7 +278,7 @@ export async function POST(request: Request) {
           </div>
 
           <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #8E8E93;">
-            <p style="margin: 0 0 8px 0; font-weight: bold; color: #38bdf8;">LOCALENGINE AI</p>
+            <p style="margin: 0 0 8px 0; font-weight: bold; color: #38bdf8;">MERCIAN WEALTH</p>
             <p style="margin: 0 0 15px 0; font-style: italic;">Mobile Storefronts & Order Automation for Local Businesses.</p>
             <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.4);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
           </div>
