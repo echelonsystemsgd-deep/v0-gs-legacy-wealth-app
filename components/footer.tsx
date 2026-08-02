@@ -77,8 +77,6 @@ export function Footer() {
             <div className="space-y-3 font-sans text-sm text-text-primary opacity-70">
               <a 
                 href={`mailto:${data.email}`} 
-                target="_blank"
-                rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"
               >
                 <Mail size={16} className="text-accent-gold shrink-0" />
