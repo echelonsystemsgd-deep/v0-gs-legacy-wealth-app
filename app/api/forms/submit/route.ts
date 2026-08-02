@@ -8,7 +8,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
-  const prodUrl = 'https://mercianwealth.com'
+  const prodUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localengine.ai'
   return `${prodUrl}/MercianWealthlogo.jpeg`
 }
 

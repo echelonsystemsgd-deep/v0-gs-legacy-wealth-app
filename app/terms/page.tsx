@@ -19,7 +19,7 @@ export default function TermsPage() {
             "@type": "WebPage",
             "name": "Terms of Service",
             "description": "Read our Terms of Service to understand your rights and obligations when using our solutions.",
-            "url": "https://mercianwealth.com/terms"
+            "url": "https://localengine.ai/terms"
           })
         }}
       />

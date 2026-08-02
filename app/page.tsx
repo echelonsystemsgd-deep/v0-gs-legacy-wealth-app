@@ -19,7 +19,7 @@ import { StickmanWorkflow } from "@/components/stickman-workflow"
 import { getPricingTiers } from "@/lib/pricing"
 import { Suspense } from "react"
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function Home() {
   const { setupTiers, retainerTiers } = await getPricingTiers()

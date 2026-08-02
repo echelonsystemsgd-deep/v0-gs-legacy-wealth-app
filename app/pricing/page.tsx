@@ -8,7 +8,7 @@ import { getPricingTiers } from "@/lib/pricing"
 import { SITE_COPY } from "@/lib/site-copy"
 import { Suspense } from "react"
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: SITE_COPY.metadata.pricing.title,

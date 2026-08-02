@@ -53,7 +53,12 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{data.emailLabel}</p>
-                    <a href="mailto:mercianwealthgs@gmail.com" className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono">
+                    <a 
+                      href="mailto:mercianwealthgs@gmail.com" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono"
+                    >
                       mercianwealthgs@gmail.com
                     </a>
                   </div>

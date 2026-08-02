@@ -77,6 +77,8 @@ export function Footer() {
             <div className="space-y-3 font-sans text-sm text-text-primary opacity-70">
               <a 
                 href={`mailto:${data.email}`} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"
               >
                 <Mail size={16} className="text-accent-gold shrink-0" />
@@ -154,7 +156,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 text-center md:flex md:justify-between md:items-center text-xs text-text-primary opacity-85">
           <p>
-            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
+            © {new Date().getFullYear()} LocalEngine AI. All Rights Reserved.
           </p>
           <div className="flex justify-center gap-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-accent-gold transition-colors">

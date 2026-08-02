@@ -8,7 +8,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
-  const prodUrl = 'https://mercianwealth.com'
+  const prodUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localengine.ai'
   return `${prodUrl}/MercianWealthlogo.jpeg`
 }
 
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
             <p style="font-size: 14px; line-height: 1.7; color: #8E8E93; margin: 0 0 30px 0;">We work only with a limited number of high-performing brands each month to guarantee founder-level engineering for every project.</p>
             
             <div style="text-align: center; margin: 35px 0;">
-              <a href="https://mercianwealth.com/book" style="display: inline-block; background-color: #6d28d9; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 14px 28px; border: 1px solid #C9A227; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease;">Book Systems Audit</a>
+              <a href={`${prodUrl}/book`} style="display: inline-block; background-color: #0284c7; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 14px 28px; border: 1px solid #38bdf8; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease;">Book Systems Audit</a>
             </div>
           </div>
 

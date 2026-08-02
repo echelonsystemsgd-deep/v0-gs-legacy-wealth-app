@@ -35,17 +35,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mercianwealth.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://localengine.ai'),
   title: {
     default: SITE_COPY.metadata.layout.defaultTitle,
-    template: SITE_COPY.metadata.layout.titleTemplate
+    template: SITE_COPY.metadata.layout.titleTemplate,
   },
   description: SITE_COPY.metadata.layout.description,
   applicationName: 'LocalEngine AI',
   keywords: [
-    'bakery website', 'cake order system', 'local business automation',
-    'catering website', 'food artisan storefront', 'WhatsApp order alerts',
-    'local service website', 'automated bookings', 'Stripe deposit', 'Google review automation'
+    "mobile storefronts",
+    "bakery web design",
+    "cake ordering system",
+    "catering order builder",
+    "WhatsApp order alerts",
+    "food artisan website",
+    "local business automation",
+    "Google review engine",
+    "Berkshire web design",
+    "Reading web developer",
+    "food business software"
   ],
   authors: [{ name: 'LocalEngine AI' }],
   creator: 'LocalEngine AI',
@@ -58,7 +66,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: SITE_COPY.metadata.layout.defaultTitle,
     description: SITE_COPY.metadata.layout.description,
-    url: 'https://mercianwealth.com',
+    url: 'https://localengine.ai',
     siteName: 'LocalEngine AI',
     images: [
       {
