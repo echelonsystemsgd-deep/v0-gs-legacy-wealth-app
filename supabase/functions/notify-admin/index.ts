@@ -42,18 +42,21 @@ Deno.serve(async (req) => {
     let embeds = []
 
     if (table === 'leads' && type === 'INSERT') {
-      message = `✨ **New Inbound Lead Received!**`
+      const isLocal = record.lead_type === 'local_business'
+      message = isLocal ? `🍞 **[NEW LOCAL BUSINESS LEAD]**` : `✨ **New Inbound Lead Received!**`
       embeds = [
         {
-          title: `Project Inquiry Application: ${record.name}`,
-          color: 13938487, // Gold #D4AF37
+          title: isLocal ? `🍞 Local Storefront Inquiry: ${record.business_name || record.name}` : `Project Inquiry Application: ${record.name}`,
+          color: isLocal ? 16753920 : 13938487, // Orange/Amber for local vs Gold for enterprise
           fields: [
+            { name: 'Lead Type', value: record.lead_type || 'enterprise', inline: true },
+            { name: 'Local Niche', value: record.local_business_niche || '—', inline: true },
             { name: 'Business Name', value: record.business_name || '—', inline: true },
-            { name: 'Email Address', value: record.email || '—', inline: true },
+            { name: 'Contact Email', value: record.email || '—', inline: true },
+            { name: 'Phone / WhatsApp', value: record.phone || '—', inline: true },
             { name: 'Service Interested', value: record.service_interested || '—', inline: false },
-            { name: 'Source', value: record.source || 'website', inline: true },
-            { name: 'Website', value: record.website || '—', inline: true },
-            { name: 'Message Notes', value: record.notes || 'No message provided', inline: false }
+            { name: 'Source URL', value: record.source_url || record.source || 'website', inline: false },
+            { name: 'Notes', value: record.notes || 'No message provided', inline: false }
           ],
           timestamp: new Date().toISOString()
         }

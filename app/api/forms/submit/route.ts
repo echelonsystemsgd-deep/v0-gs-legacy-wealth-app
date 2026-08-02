@@ -127,6 +127,24 @@ export async function POST(request: Request) {
 
           dbError = error
           insertedLead = data
+        } else if (source === 'local_business_form') {
+          // Insert for local business form
+          const { data, error } = await supabaseAdmin.from('leads').insert({
+            name: name || 'Anonymous Local Lead',
+            email: email,
+            business_name: business_name || 'N/A (Local Business Form)',
+            phone: phone || null,
+            service_interested: service_interested || null,
+            notes: notes || 'Local Business Form Submission',
+            status: 'New',
+            source: 'local_business_form',
+            lead_type: 'local_business',
+            source_url: payload.source_url || 'https://mercianwealth.com/local',
+            local_business_niche: payload.local_business_niche || null,
+          }).select().single()
+
+          dbError = error
+          insertedLead = data
         } else {
           return NextResponse.json({ error: `Unsupported form source: ${source}` }, { status: 400 })
         }
@@ -292,13 +310,16 @@ export async function POST(request: Request) {
 
     // 3. Dispatch to n8n Webhook
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
-    const shouldDispatchN8n = source === 'contact_form' || source === 'portfolio_waitlist'
+    const shouldDispatchN8n = source === 'contact_form' || source === 'portfolio_waitlist' || source === 'local_business_form'
     if (n8nWebhookUrl && shouldDispatchN8n) {
       try {
         const { utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, user_agent } = payload
         const webhookPayload = {
           lead_id: insertedLead?.id || null,
           source,
+          lead_type: payload.lead_type || (source === 'local_business_form' ? 'local_business' : 'enterprise'),
+          source_url: payload.source_url || null,
+          local_business_niche: payload.local_business_niche || null,
           name,
           email,
           business_name,

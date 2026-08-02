@@ -7,6 +7,8 @@ import { motion } from "framer-motion"
 import { SpeedGapVisualizer } from "@/components/speed-gap-visualizer"
 import { SITE_COPY } from "@/lib/site-copy"
 
+import { AnnouncementBar } from "@/components/announcement-bar"
+
 export function Hero() {
   const data = SITE_COPY.homepage.hero
 
@@ -21,6 +23,8 @@ export function Hero() {
       />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">
+        {/* Top Announcement Bar */}
+        <AnnouncementBar />
         
         {/* Unified Centered Eyebrow & Scarcity Indicator */}
         <motion.div

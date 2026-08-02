@@ -13,6 +13,7 @@ import { ChapterTracker } from "@/components/chapter-tracker"
 import { SystemBlueprint } from "@/components/system-blueprint"
 import { LatencyCalculator } from "@/components/latency-calculator"
 import { getPricingTiers } from "@/lib/pricing"
+import { Suspense } from "react"
 
 export const revalidate = 60
 
@@ -85,7 +86,9 @@ export default async function Home() {
       <SystemBlueprint />
       <SectionDivider id="chapter-divider-IV" chapter="IV" title="Cohort Telemetry & Allocation" />
       <Testimonials />
-      <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
+      <Suspense fallback={<div className="py-20 text-center text-accent-gold font-mono text-sm">Loading Systems Pricing...</div>}>
+        <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
+      </Suspense>
       <SectionDivider id="chapter-divider-V" chapter="V" title="Initiate Integration" />
       <CTA />
       <Footer />

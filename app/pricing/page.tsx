@@ -5,8 +5,8 @@ import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 import { getPricingTiers } from "@/lib/pricing"
-
 import { SITE_COPY } from "@/lib/site-copy"
+import { Suspense } from "react"
 
 export const revalidate = 60
 
@@ -27,7 +27,9 @@ export default async function PricingPage() {
         highlight={data.headerHighlight}
         subtitle={data.headerSubtitle}
       />
-      <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} />
+      <Suspense fallback={<div className="py-20 text-center text-accent-gold font-mono text-sm">Loading Pricing Systems...</div>}>
+        <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} />
+      </Suspense>
       
       {/* SLA & Throughput Guarantees Section */}
       <section className="relative py-16 bg-bg-secondary border-y border-white/5">

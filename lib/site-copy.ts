@@ -59,6 +59,7 @@ export const SITE_COPY = {
     logo: "Mercian Wealth",
     links: [
       { label: "Services", href: "/services" },
+      { label: "Local Business", href: "/local" },
       { label: "Portfolio", href: "/portfolio" },
       { label: "Process", href: "/process" },
       { label: "Pricing", href: "/pricing" },
