@@ -3,6 +3,7 @@ import { ContactForm } from "@/components/contact-form"
 import { Footer } from "@/components/footer"
 import { PageHeader } from "@/components/page-header"
 import { Mail, Phone, Clock, ArrowRight } from "lucide-react"
+import { CopyEmailButton } from "@/components/copy-email-button"
 
 import { SITE_COPY } from "@/lib/site-copy"
 
@@ -47,20 +48,7 @@ export default function ContactPage() {
               {/* Contact Cards */}
               <div className="space-y-4">
                 {/* Email */}
-                <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">
-                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-accent-gold shrink-0 mt-0.5">
-                    <Mail size={18} />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{data.emailLabel}</p>
-                    <a 
-                      href="mailto:mercianwealthgs@gmail.com" 
-                      className="text-sm font-semibold text-white hover:text-accent-gold transition-colors font-mono"
-                    >
-                      mercianwealthgs@gmail.com
-                    </a>
-                  </div>
-                </div>
+                <CopyEmailButton email="mercianwealthgs@gmail.com" variant="card" />
 
                 {/* Phone */}
                 <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">

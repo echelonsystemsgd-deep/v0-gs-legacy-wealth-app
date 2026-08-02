@@ -7,6 +7,7 @@ import Image from "next/image"
 import { Mail, Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useWebsiteContent } from "@/hooks/use-website-content"
+import { CopyEmailButton } from "@/components/copy-email-button"
 
 export function Footer() {
   const { getSection } = useWebsiteContent()
@@ -75,13 +76,7 @@ export function Footer() {
               Contact Us
             </h4>
             <div className="space-y-3 font-sans text-sm text-text-primary opacity-70">
-              <a 
-                href={`mailto:${data.email}`} 
-                className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"
-              >
-                <Mail size={16} className="text-accent-gold shrink-0" />
-                <span className="truncate">{data.email}</span>
-              </a>
+              <CopyEmailButton email={data.email} variant="footer" />
               <a 
                 href={`tel:${data.phone.replace(/\s+/g, '')}`} 
                 className="flex items-center gap-2 hover:text-accent-gold hover:opacity-100 transition-colors min-w-0"

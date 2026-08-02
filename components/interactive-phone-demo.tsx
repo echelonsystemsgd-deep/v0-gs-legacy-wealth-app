@@ -56,7 +56,7 @@ export function InteractivePhoneDemo() {
   }
 
   return (
-    <section id="demo" className="relative py-24 bg-[#090D16] overflow-hidden border-t border-slate-800/60">
+    <section id="demo" suppressHydrationWarning className="relative py-24 bg-[#090D16] overflow-hidden border-t border-slate-800/60">
       {/* Background Radial Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -78,6 +78,7 @@ export function InteractivePhoneDemo() {
         {/* Niche Selector Switcher */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
           <button
+            suppressHydrationWarning
             onClick={() => {
               setActiveNiche("bakery")
               setSelectedOption(bakeryOptions[0].name)
@@ -93,6 +94,7 @@ export function InteractivePhoneDemo() {
           </button>
 
           <button
+            suppressHydrationWarning
             onClick={() => {
               setActiveNiche("service")
               setSelectedOption(serviceOptions[0].name)
