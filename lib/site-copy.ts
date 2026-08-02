@@ -85,74 +85,74 @@ export const SITE_COPY = {
     // 1. Hero Section
     hero: {
       eyebrow: "AI AUTOMATION & DIGITAL STOREFRONTS FOR LOCAL BUSINESSES",
-      headline: "We Build Fast Websites & AI Automations That Capture Leads, Take Orders, and Scale Your Business — On Autopilot.",
-      subheadline: "We eliminate manual admin for bakeries, food artisans, local services, and estate operators across Berkshire & the UK. From sub-second mobile sites to automated WhatsApp order alerts and 5-star Google review engines.",
+      headline: "We Diagnose Inefficiencies & Deploy Custom AI Automations That Scale Your Operations — On Autopilot.",
+      subheadline: "We eliminate manual admin for bakeries, food artisans, local services, and growing operators across Berkshire & the UK. From sub-second mobile storefronts to automated WhatsApp order alerts and 5-star Google review engines.",
       primaryCtaText: "Test Interactive Demo",
       secondaryCtaText: "View Solutions & Pricing",
       trustItems: [
         "Sub-1-Second Mobile Storefront",
         "Instant WhatsApp & SMS Order Alerts",
         "Automated 5-Star Google Review Engine",
-        "Guaranteed Order Throughput",
+        "Guaranteed 30-Day Throughput",
       ],
       unsureText: "Want to see how it works live? Try our interactive 3-tap order builder →",
     },
 
     // Divergence Comparison (The Two-Path Mechanic)
     divergenceComparison: {
-      eyebrow: "THE STRUCTURAL REALITY",
-      headline: "THE DIVERGENCE: Manual Operational Drag vs. The Automated Growth Engine",
-      subheadline: "Every high-margin business reaches a fork: continue paying the cumulative tax of fragmented manual systems, or deploy automated infrastructure engineered for category supremacy.",
+      eyebrow: "THE DIVERGENCE",
+      headline: "Manual Admin Drag vs. The Automated Storefront Engine",
+      subheadline: "Every local business reaches a fork: continue scrawling order notes on paper receipts after 12-hour prep shifts, or deploy an automated storefront taking orders and deposits 24/7.",
       pathConventional: {
-        badge: "CONVENTIONAL PATH",
-        title: "Manual Operational Drag",
-        subtitle: "Fragmented systems, manual copy-pasting, and delayed response loops.",
+        badge: "MANUAL DRAG",
+        title: "The Paper & Scramble Method",
+        subtitle: "Scrawling notes on receipts, lost WhatsApp messages, and delayed replies.",
         points: [
-          "24–48 hour lead response lag causing high-intent drop-off and lost instructions.",
-          "Fee-earners wasting 15+ hours weekly copy-pasting form inputs into CRMs.",
-          "Static, slow-loading templates (6-10s) that project low-tier brand authority.",
-          "Recurring agency retainer overhead with zero performance throughput SLA.",
+          "Scrawling custom cake orders or catering specs on scrap paper during 6am prep rush.",
+          "Waiting until 9pm after a 12-hour shift to reply to email quote requests.",
+          "Chasing bank transfers via text for 50% deposits while managing foot traffic.",
+          "0 Google reviews because you forget to follow up with busy customers after pickup.",
         ]
       },
       pathMercian: {
-        badge: "MERCIAN AUTOMATED PATH",
-        title: "The Automated Growth Engine",
-        subtitle: "Bespoke digital assets, 0-second AI triage, and direct CRM data conduits.",
+        badge: "AUTOMATED ENGINE",
+        title: "The Mercian Growth Engine",
+        subtitle: "Sub-second mobile storefront, 3-tap order builder, and instant phone alerts.",
         points: [
-          "Sub-60-second intent capture & automated qualification firing 24/7/365.",
-          "Direct pipeline webhooks routing prospect data instantly to your CRM.",
-          "Sub-1-second mobile load speeds projecting instant category authority.",
-          "Dedicated 28-day execution protocol backed by ongoing telemetry support.",
+          "3-tap online order builder collecting custom specs & deposit payments 24/7.",
+          "Instant WhatsApp phone alert arriving with complete order details as soon as a deposit is paid.",
+          "Sub-1-second mobile load speeds projecting instant artisan quality & market authority.",
+          "Automated text sent 2 hours after pickup asking for a 5-star Google review.",
         ],
-        ctaText: "Secure Cohort Alignment →",
+        ctaText: "Explore Order Engine Demo →",
       }
     },
 
     // 2. Deficit Diagnostic
     bottleneck: {
-      eyebrow: "UNSEEN REVENUE DECAY",
-      headline: "You Are Contracting While Faster Operators Scale.",
-      subheadline: "High-ticket clients do not wait 3 hours for a response. When an instruction inquiry reaches your inbox, the clock starts. If you take 30 minutes to reply, a competitor with automated lead triage has already booked the session.",
-      goldSlogan: "Speed is the ultimate unfair advantage. While you wait to automate, your competitors are buying speed. They aren't smarter; they simply have more leverage.",
+      eyebrow: "THE 6 AM REALITY",
+      headline: "While You're Baking at 6 AM, Orders Are Slipping Away.",
+      subheadline: "When a customer wants a custom birthday cake or a £300 catering platter for Saturday, they won't wait 3 hours for a reply. If you don't take the order instantly, a supermarket chain or faster competitor takes the deposit.",
+      goldSlogan: "Speed & convenience win every time. While competitors scramble with paper notes, an automated storefront captures orders and collects deposits while you sleep.",
       systemMode: "System Mode: ",
-      modeAutomated: "Automated & Connected",
-      modeManual: "Manual Drag",
+      modeAutomated: "Automated Storefront",
+      modeManual: "Manual Scramble",
       triggerBtnActive: "Deactivate Automated Engine",
       triggerBtnInactive: "Activate Automated Engine",
-      diagnosticLink: "Quantify Your Operational Deficit →",
+      diagnosticLink: "Test Interactive Order Builder →",
       
       cards: [
         {
-          title: "Deals Going Cold",
-          description: "Unqualified inquiries sitting in email inboxes for hours cause immediate competitive lead drop-off.",
+          title: "Flour-Dusted Order Notes",
+          description: "Scrawling custom cake orders or catering specs on scrap paper while busy serving customers in-store.",
         },
         {
-          title: "Wasted Agency Hours",
-          description: "Fee-earners wasting hours copy-pasting form inputs into CRM dashboards instead of closing instructions.",
+          title: "Chasing WhatsApp Deposits",
+          description: "Spending your evenings sending bank details back and forth trying to get 50% deposits paid.",
         },
         {
-          title: "Manual Follow-Up Failure",
-          description: "Warm vendor inquiries forgotten after initial contact due to disconnected follow-up sequences.",
+          title: "Invisible on Google Maps",
+          description: "Baking the best artisan breads or cakes, but losing local searches to chains with 150+ Google reviews.",
         },
       ],
     },
@@ -160,118 +160,117 @@ export const SITE_COPY = {
     // 3. Commodity Trap
     commodityTrap: {
       eyebrow: "The Commodity Trap",
-      headline: "A Cheap Website Is the Most Expensive Asset You Will Ever Own.",
-      description: "Budget web builders look economical until you calculate lost instructions. 10-second mobile load times, clunky lead forms, and manual copy-pasting into CRMs quietly bleed your margins. Commodity agencies sell you graphics. We build high-converting infrastructure engineered for market dominance.",
+      headline: "A Slow, Clunky Website Costs More Than Building It Right.",
+      description: "Generic DIY site builders look cheap until you realize how many custom orders they bleed. 10-second mobile load times, clunky contact forms, and missing deposit payment links cost you thousands in lost business. We build sub-second mobile storefronts engineered to capture deposits and ping your phone instantly.",
     },
 
     // 4. Mercian Wealth Difference
     whyMercianWealth: {
-      headline: "We Build Leverage. The Rest Build Overhead.",
-      description: "Traditional agencies bill you by the hour to push pixels and stretch deadlines. We build autonomous sales infrastructure designed to eliminate administrative drag.",
+      headline: "Built Specifically for Bakeries, Food Artisans & Local Services",
+      description: "Traditional agencies charge thousands for static, slow websites that sit idle. We build automated storefronts engineered to capture custom orders, collect deposits, and text your phone.",
       differentiators: [
-        "Sub-60-Second Triage Capability — Automated engagement funnels engineered to capture and qualify prospect intent instantly.",
-        "Zero-Drag CRM Routing — Direct pipeline webhooks that route intake data directly into your CRM without manual input.",
-        "Category-Dominant Authority — Pixel-perfect custom platforms that project immediate prestige and load in under 1 second on mobile.",
-        "28-Day Execution Protocol — Rapid deployment path designed to eliminate build lag.",
-        "Continuous Telemetry Support — Ongoing optimization retention to preserve system throughput.",
+        "Sub-1-Second Mobile Storefront — Lightning-fast custom mobile pages that showcase your artisan creations in full luxury resolution.",
+        "3-Tap Custom Order & Catering Builder — Let customers pick cake sizes, flavors, dietary options, event dates, and pay deposits in 30 seconds.",
+        "Instant WhatsApp Phone Alerts — Immediate notification on your phone with full order details (name, date, deposit paid) when a booking goes through.",
+        "Automated 5-Star Google Review Engine — Text happy customers after pickup to build 5-star Google Maps dominance on autopilot.",
       ],
       structuralRealityHeadline: "The Structural Reality",
       standardAgency: {
         title: "Standard Agency Model",
         items: [
-          "Boilerplate templates and generic layout setups.",
-          "Delayed deployment paths taking 2 to 3 months.",
-          "Disconnected lead qualifiers and manual CRM copying.",
-          "Ongoing hourly overhead without performance guarantees.",
+          "Generic templates taking 2 to 3 months to launch.",
+          "No order customization or instant deposit collection.",
+          "No automated phone alerts or WhatsApp notifications.",
+          "Ongoing monthly fees with zero order performance guarantee.",
         ],
       },
       mercianWealth: {
-        title: "Automated Systems Lab",
+        title: "Mercian Automated Storefront",
         items: [
-          "Bespoke authority platforms built from the ground up.",
-          "Rapid execution protocol delivering assets in under 28 days.",
-          "Autonomous capture funnels with direct CRM data pipelines.",
-          "Clear capital investment aligned with guaranteed throughput.",
+          "Custom sub-second mobile storefront built in 7 to 14 days.",
+          "3-tap order builder with instant Stripe deposit collection.",
+          "Instant WhatsApp & SMS phone notifications on every order.",
+          "Backed by our 30-day 10-order / 20-review performance guarantee.",
         ],
       },
     },
 
     // 5. Trend Adaptation Statement
     trendAdaptation: {
-      eyebrow: "Continuous Telemetry",
-      headline: "Our Systems Evolve While Your Competitors Stagnate.",
-      description: "We monitor market trends, security updates, and performance telemetry continuously, optimizing your systems in the background. Your digital infrastructure remains permanently state-of-the-art without your team lifting a finger. It is an unfair advantage your competitors are acquiring right now.",
+      eyebrow: "Continuous Optimization",
+      headline: "Your Storefront Upgrades Automatically While You Focus on Baking.",
+      description: "We handle hosting, SSL security, speed optimizations, and seasonal menu updates in the background. Your mobile storefront stays fast, secure, and ready to take orders 365 days a year without you touching a line of code.",
     },
 
     // 6. Model Hint
     modelHint: {
-      eyebrow: "TRANSPARENT CAPITAL ALLOCATION",
-      headline: "Capital Allocations Aligned with System Leverage.",
-      description: "We do not charge hourly rates for design tweaks. Our setup investments are linked directly to operational leverage and reclaimed bandwidth. Specific infrastructure parameters are reviewed during your clinical audit.",
+      eyebrow: "TRANSPARENT PRICING",
+      headline: "Simple Setup Fee + Flat Monthly Retainer.",
+      description: "No hidden hourly fees. One upfront setup investment to build your custom storefront and order engine, plus a flat monthly retainer for hosting, WhatsApp alerts, and edits.",
     },
 
     // 7. Exclusivity Lock
     exclusivityLock: {
-      eyebrow: "Selective Vetting",
-      headline: "We Do Not Partner With Everyone.",
-      description: "To preserve absolute founder-level code quality and execution speed, we limit new client intake strictly to 2 integrations per cohort. We assess fit before we commit. Requesting an audit is an application, not a sales call. If there is mutual alignment, we initiate the build.",
+      eyebrow: "Regional Exclusivity",
+      headline: "We Limit New Onboarding to 2 Local Businesses Per Month.",
+      description: "To ensure absolute custom quality and 7-day launch speeds, we onboard strictly 2 local businesses per month per region. We partner with dedicated artisans and local operators who want to lead their category.",
     },
 
     // 8. Outcome Telemetry (Testimonials / Social Proof - Broadened)
     testimonials: {
-      eyebrow: "ACTIVE DEPLOYMENT COHORT",
-      headline: "Active Deployment Cohort",
-      subheadline: "Independent System Telemetry Under Verification",
-      guarantee: "Transparent Build Telemetry · Zero Fabricated Claims Policy",
+      eyebrow: "OUR LOCAL GUARANTEE",
+      headline: "100% Risk-Free Performance Guarantee",
+      subheadline: "Tested & Proven Results for Independent Operators",
+      guarantee: "Transparent Build Guarantee · Zero Risk Policy",
       
       cohortCard: {
-        badge: "COHORT INTAKE UNDER DEPLOYMENT",
-        title: "Selective Cohort Onboarding · Live System Telemetry",
-        paragraph1: "Mercian Wealth is currently engineering digital infrastructure for our inaugural UK agency cohort. While you read this, operators already inside this cohort are deploying sub-60-second lead routing engines, eliminating administrative drag, and securing high-value instructions around the clock.",
-        paragraph2: "To preserve absolute market authority, verified case study blueprints, latency audits, and pipeline telemetry will be published directly to this registry upon deployment sign-off.",
-        paragraph3: "The question is not whether your agency requires automated leverage — it is whether you will secure your infrastructure before your direct competitors do.",
-        enquiryCtaText: "To enquire about current cohort deployment availability or review system architecture during a clinical evaluation session, request alignment below.",
+        badge: "30-DAY PERFORMANCE GUARANTEE",
+        title: "Guaranteed Results for Berkshire & UK Local Businesses",
+        paragraph1: "If your new digital storefront and order engine does not generate at least 10 new custom orders or 20 new 5-star Google reviews in your first 30 days, we refund 100% of your setup fee. No questions asked.",
+        paragraph2: "We build high-performance systems for bakeries, food artisans, specialty food shops, and local service operators who want to eliminate manual admin drag and capture orders on autopilot.",
+        paragraph3: "Your competitors are still taking orders on scrap paper and chasing bank transfers via email. Give your business the ultimate digital unfair advantage today.",
+        enquiryCtaText: "To claim your regional onboarding slot or test the live demo, request a 15-minute quick call below.",
       },
 
       trustPoints: [
-        "Zero Fabricated Claims Policy",
-        "Sub-60-Second System Capability",
-        "Verified System Architecture Benchmarks",
+        "100% Setup Refund Guarantee",
+        "Sub-1-Second Mobile PageSpeed",
+        "Instant WhatsApp Order Alerts",
       ],
     },
 
     // 9. FOMO Close & CTA Section
     cta: {
-      headline: "Ready to Assert Market Control?",
-      subheadline: "We operate under tight bandwidth restrictions to maintain system quality. We only partner with enterprises prepared for absolute alignment. Currently accepting strictly 2 new integration partnerships per deployment cohort.",
-      buttonText: "Initiate Operational Audit",
+      headline: "Ready to Automate Your Orders & Reviews?",
+      subheadline: "We only onboard 2 new local businesses per region each month to maintain 7-day launch speeds. Claim your setup slot today and start capturing automated orders.",
+      buttonText: "Claim Your Onboarding Slot",
     },
 
     // 10. FAQ Section
     faq: {
       eyebrow: "FAQ",
-      headline: "System FAQs",
-      description: "Everything you need to know about our custom build models, timelines, and integration pipeline.",
+      headline: "Frequently Asked Questions",
+      description: "Everything you need to know about our storefront build, order engine, and 30-day guarantee.",
       faqs: [
         {
-          question: "How do custom AI automations actually save my business time?",
-          answer: "We replace manual repetitive workflows (like copying data from lead forms to CRMs, scheduling calls, drafting standard emails, or formatting customer reports) with fully automated pipelines. When a prospect submits a form, an AI qualifies them, syncs their profile to your CRM, books the call, and alerts your team via Slack—all in under a second. This typically reclaims 20 to 40 hours of admin time per week.",
+          question: "Do I need to be tech-savvy to manage this?",
+          answer: "Not at all. Orders and catering requests arrive directly on your phone via WhatsApp or SMS. You manage everything from the phone you already use every day, without touching any code or complex dashboards.",
         },
         {
-          question: "What is the timeline for a custom platform and system build?",
-          answer: "A custom high-performance authority platform with core CRM integrations and automated lead routing is fully built, tested, and launched within 28 days under our strict Execution Protocol. High-ticket custom multi-system architectures under the Enterprise tier may require up to 6 weeks.",
+          question: "How do custom cake and catering deposits work?",
+          answer: "Customers select their items, event date, and options on your website. They pay a 50% (or 100%) deposit via Stripe before the order goes through, so you never buy ingredients or reserve calendar dates for an unpaid order.",
         },
         {
-          question: "Are your pricing tiers one-time setups or recurring contracts?",
-          answer: "Our core builds are structured as one-time setup capital allocations. You own 100% of the completed custom code, assets, and website layout upon sign-off. We also offer optional Monthly Growth Retainers for brands that want continuous SEO, priority design iterations, and regular AI model fine-tuning.",
+          question: "Can I update seasonal flavors or menu items?",
+          answer: "Yes! You get simple access to swap photos, update prices, or add seasonal specials (e.g., Easter, Christmas, Valentine's packs) in seconds. Our monthly retainer also includes complimentary edits handled by our team.",
         },
         {
-          question: "Will the custom website and dashboard run fast on mobile?",
-          answer: "Yes, absolutely. We prioritize high-speed architecture, responsive fluid layouts, and server-side optimization to guarantee a Mobile Speed Score of 90+ on Google PageSpeed Insights. Your clients will experience instant loading times on any screen size.",
+          question: "How fast can my new storefront be live?",
+          answer: "Your complete mobile storefront, 3-tap order builder, and review engine are custom built, tested, and launched within 7 to 14 days under our Execution Protocol.",
         },
         {
-          question: "Do you build custom integrations for existing platforms?",
-          answer: "Yes. We seamlessly connect your custom website and AI agents with existing CRM, calendar, and email software—including Salesforce, HubSpot, ActiveCampaign, Slack, Google Workspace, and Calendly. We construct custom webhooks to ensure flawless cross-platform data flow.",
+          question: "What is included in the 30-day money-back guarantee?",
+          answer: "If your new storefront and order engine does not generate at least 10 new custom orders or 20 new 5-star Google reviews within 30 days of launch, we will refund 100% of your setup fee instantly.",
         },
       ],
     },

@@ -53,7 +53,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="font-serif text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.14] text-balance mb-8 max-w-5xl tracking-tight"
         >
-          While You Read This, Your Competitors Are <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Acquiring Speed.</span> You Are Paying the <span className="inline text-red-400 font-extrabold">Manual Tax.</span>
+          We Diagnose Inefficiencies & Deploy <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent font-extrabold italic">Custom AI Automations</span> That Scale Your Operations — <span className="inline text-emerald-400 font-extrabold">On Autopilot.</span>
         </motion.h1>
 
         {/* Subheadline with Elevated Weight & Readability */}
@@ -80,7 +80,7 @@ export function Hero() {
               size="lg"
               className="w-full sm:w-auto px-8 py-6 text-base font-bold bg-accent-gold text-black hover:bg-amber-300 transition-all duration-300 shadow-[0_0_25px_rgba(212,175,55,0.3)] border-0"
             >
-              <Link href="/book" className="flex items-center gap-2">
+              <Link href="/#demo" className="flex items-center gap-2">
                 <span>{data.primaryCtaText}</span>
                 <ArrowRight size={18} />
               </Link>
@@ -93,12 +93,12 @@ export function Hero() {
               variant="outline"
               className="w-full sm:w-auto px-8 py-6 text-base font-semibold border-white/20 text-white hover:bg-white/10"
             >
-              <Link href="/portfolio">{data.secondaryCtaText}</Link>
+              <Link href="/pricing">{data.secondaryCtaText}</Link>
             </Button>
           </div>
 
-          <Link href="/process" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-3 mb-6">
-            Unsure of your requirements? Review our 28-Day Execution Protocol →
+          <Link href="/#demo" className="text-xs text-text-secondary hover:text-accent-gold transition-colors underline underline-offset-4 mt-3 mb-6">
+            {data.unsureText}
           </Link>
 
           <div className="w-full max-w-md pt-4">
