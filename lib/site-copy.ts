@@ -16,41 +16,41 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "LocalEngine AI | Automation & Mobile Storefronts for Local Businesses",
+      defaultTitle: "LocalEngine AI | Mobile Storefronts & Automation for Bakeries, Catering & Local Services",
       titleTemplate: "%s | LocalEngine AI",
-      description: "Custom digital storefronts, WhatsApp order alerts, and automated review engines built specifically for bakeries, food artisans, and local services."
+      description: "Custom mobile storefronts, 3-tap order builders, WhatsApp alerts, and automated Google review engines for cake bakeries, catering businesses, food artisans, and local services across Berkshire & the UK."
     },
     home: {
-      title: "LocalEngine AI | Automation & Mobile Storefronts for Bakeries & Local Services",
-      description: "We eliminate manual admin for bakeries, food artisans, and local services. Sub-second mobile storefronts, instant WhatsApp order alerts, and 5-star Google review engines.",
+      title: "LocalEngine AI | Mobile Storefronts & Order Automation for Bakeries & Local Services",
+      description: "We eliminate manual admin for cake bakeries, catering businesses, food artisans, and local service providers. Sub-second mobile storefronts, instant WhatsApp order alerts, automated deposits & 5-star Google review engines.",
     },
     services: {
-      title: "Our Solutions | LocalEngine AI",
-      description: "Custom order engines, instant WhatsApp notifications, and automated 5-star Google review systems for local businesses.",
+      title: "Our Services | LocalEngine AI — Web Design, Order Builders & WhatsApp Alerts",
+      description: "Custom order engines, instant WhatsApp notifications, automated 5-star Google review systems, and sub-second mobile storefronts for bakeries, catering, artisans, and local services.",
     },
     process: {
-      title: "Our Process | LocalEngine AI",
-      description: "15-minute quick audit, custom build, thorough QA testing, and 7-day launch protocol.",
+      title: "Our 7-Day Launch Protocol | LocalEngine AI",
+      description: "15-minute operational audit, custom mobile storefront build, WhatsApp alert setup, and 7-day launch protocol for local service providers and food businesses.",
     },
     portfolio: {
       title: "Deployed Systems | LocalEngine AI",
-      description: "A showcase of high-converting mobile storefronts and automated order engines built for independent businesses.",
+      description: "A showcase of high-converting mobile storefronts and automated order engines built for cake bakeries, catering brands, food artisans, and local services.",
     },
     pricing: {
-      title: "Solutions & Pricing | LocalEngine AI",
-      description: "Transparent pricing for bakeries, artisans, and local service providers. Simple setup + flat monthly retainer.",
+      title: "Pricing | LocalEngine AI — One-Time Setup, Monthly Retainer or % Revenue Share",
+      description: "Transparent pricing for bakeries, catering businesses, artisans, and local service providers. One-time setup from £495, flat monthly retainer, or % revenue share options.",
     },
     testimonials: {
       title: "Pricing Models | LocalEngine AI",
-      description: "Our flexible setup, monthly, and % revenue share models for local operators.",
+      description: "Flexible setup, monthly retainer, and % revenue share models for bakeries, catering operators, food artisans, and local service providers.",
     },
     contact: {
       title: "Get In Touch | LocalEngine AI",
-      description: "Connect with LocalEngine AI. Let's discuss your bakery, food artisan, or local service automation needs.",
+      description: "Connect with LocalEngine AI. Let's discuss your cake bakery, catering business, food artisan, or local service automation needs.",
     },
     book: {
-      title: "Schedule a 15-Min Quick Audit | LocalEngine AI",
-      description: "Book a quick 15-minute operational audit to see how much manual admin time we can eliminate for your business.",
+      title: "Book a 15-Min Operational Audit | LocalEngine AI",
+      description: "Book a quick 15-minute operational audit to see how much manual admin time we can eliminate for your bakery, catering, artisan, or local service business.",
     },
   },
 

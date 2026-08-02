@@ -81,7 +81,7 @@ export function Services({ limit }: { limit?: number }) {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="w-full"
               >
-                <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(109,40,217,0.15)] transition-all duration-300 rounded-xl group">
+                <Card className="h-full bg-bg-tertiary border border-border-brand/40 hover:border-accent-gold hover:shadow-[0_0_30px_rgba(56,189,248,0.20)] transition-all duration-300 rounded-xl group">
                   <CardContent className="p-6 sm:p-8 flex flex-col justify-between h-full space-y-6">
                     <div className="space-y-4">
                       {/* Gold icon */}

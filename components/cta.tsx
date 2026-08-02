@@ -10,12 +10,12 @@ export function CTA() {
   const data = SITE_COPY.homepage.cta
 
   return (
-    <section id="cta" className="relative py-28 lg:py-36 overflow-hidden bg-[#07050B]">
+    <section id="cta" className="relative py-28 lg:py-36 overflow-hidden bg-[#090D16]">
       {/* Background Radial Gold Glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle at center, rgba(212, 175, 55, 0.12) 0%, rgba(109, 40, 217, 0.05) 45%, rgba(7, 5, 11, 0) 75%)"
+          background: "radial-gradient(circle at center, rgba(212, 175, 55, 0.12) 0%, rgba(56, 189, 248, 0.06) 45%, rgba(9, 13, 22, 0) 75%)"
         }}
       />
 

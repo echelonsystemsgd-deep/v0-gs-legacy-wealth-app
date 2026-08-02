@@ -378,13 +378,13 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#07050B]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
+            className="fixed inset-0 bg-[#090D16]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
           >
             {/* Background Ambient Glow */}
             <div 
               className="absolute inset-0 pointer-events-none z-0 opacity-40 max-w-full"
               style={{
-                background: "radial-gradient(circle at 50% 20%, rgba(109, 40, 217, 0.25) 0%, rgba(7, 5, 11, 0) 75%)"
+                background: "radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.14) 0%, rgba(9, 13, 22, 0) 75%)"
               }}
             />
 

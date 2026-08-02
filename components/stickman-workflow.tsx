@@ -72,6 +72,7 @@ export function StickmanWorkflow() {
             return (
               <button
                 key={step.id}
+                suppressHydrationWarning
                 onClick={() => setActiveStep(idx)}
                 className={`p-4 rounded-2xl text-left transition-all duration-300 border ${
                   isActive
@@ -133,6 +134,7 @@ export function StickmanWorkflow() {
                   </Button>
 
                   <button
+                    suppressHydrationWarning
                     onClick={() => setActiveStep((prev) => (prev + 1) % steps.length)}
                     className="text-xs text-sky-400 hover:text-sky-300 font-mono font-bold underline underline-offset-4"
                   >

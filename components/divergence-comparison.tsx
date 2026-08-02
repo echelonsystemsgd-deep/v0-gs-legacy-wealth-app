@@ -10,12 +10,12 @@ export function DivergenceComparison() {
   const data = SITE_COPY.homepage.divergenceComparison
 
   return (
-    <section id="divergence" className="relative pt-4 pb-20 sm:py-24 lg:py-32 overflow-hidden bg-[#07050B]">
+    <section id="divergence" className="relative pt-4 pb-20 sm:py-24 lg:py-32 overflow-hidden bg-[#090D16]">
       {/* Ambient Lighting Background */}
       <div 
         className="absolute inset-0 pointer-events-none z-0 opacity-40"
         style={{
-          background: "radial-gradient(circle at 50% 30%, rgba(109, 40, 217, 0.15) 0%, rgba(7, 5, 11, 0) 70%)"
+          background: "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.12) 0%, rgba(9, 13, 22, 0) 70%)"
         }}
       />
 
@@ -110,7 +110,7 @@ export function DivergenceComparison() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-accent-purple/20 via-[#130B24] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(109,40,217,0.2)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
+            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-sky-500/15 via-[#0F172A] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(56,189,248,0.15)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
           >
             {/* Subtle corner watermark badge */}
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 font-serif text-6xl text-accent-gold">
@@ -158,7 +158,7 @@ export function DivergenceComparison() {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 font-bold text-xs">
                   <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/5 rounded border border-white/10 text-white">Lead Intent</span>
                   <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-accent-purple/30 rounded border border-accent-gold/40 text-accent-gold">Sub-60s AI Triage</span>
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-sky-500/15 rounded border border-sky-400/40 text-sky-300">Sub-60s AI Triage</span>
                   <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
                   <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-emerald-500/10 rounded border border-emerald-500/30 text-emerald-400">CRM Dispatch</span>
                 </div>

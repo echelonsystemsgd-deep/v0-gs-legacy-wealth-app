@@ -39,7 +39,7 @@ export function Testimonials() {
           <div 
             className="absolute top-0 right-0 w-96 h-96 pointer-events-none z-0 opacity-40"
             style={{
-              background: "radial-gradient(circle at center, rgba(109, 40, 217, 0.25) 0%, rgba(0, 0, 0, 0) 70%)"
+              background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.12) 0%, rgba(0, 0, 0, 0) 70%)"
             }}
           />
 

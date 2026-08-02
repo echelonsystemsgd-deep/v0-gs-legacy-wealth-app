@@ -26,7 +26,7 @@ export function Bottleneck() {
       <div 
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle at 50% 30%, rgba(109, 40, 217, 0.08) 0%, rgba(10, 10, 10, 0) 60%)"
+          background: "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.07) 0%, rgba(9, 13, 22, 0) 60%)"
         }}
       />
 

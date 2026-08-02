@@ -124,5 +124,31 @@ On 2026-08-02, an audit of site interactive elements and niche positioning was c
 * **TypeScript Compiler**: `npx tsc --noEmit` passed with **0 errors**.
 * **Navigation Verification**: Verified all CTAs and smooth anchor scrolls across desktop & mobile viewports.
 
+---
 
+## SITE-WIDE CYAN & SLATE-NAVY BRAND UNIFICATION 2026-08-02
 
+### 1. Audit Summary
+On 2026-08-02, a full visual brand audit identified an inconsistency between the Hero section (Electric Sky Blue / Slate-Navy palette) and multiple lower components that still used legacy deep purple (`#130B24`, `rgba(109, 40, 217, ...)`) gradients and obsidian (`#07050B`) backgrounds.
+
+### 2. Issues Identified
+* **Legacy Purple Remnants**: `divergence-comparison.tsx`, `bottleneck.tsx`, `cta.tsx`, `testimonials.tsx`, `faq-home.tsx`, and `navbar.tsx` all contained `rgba(109, 40, 217, ...)` radial glows and `#07050B` / `#130B24` backgrounds.
+* **Incorrect Button Hover Colour**: `components/ui/button.tsx` default variant hover was hardcoded to deep purple `#5B21B6` which clashed with the new Electric Cyan primary.
+* **Card Hover Shadow**: `components/services.tsx` card hover shadow used `rgba(109, 40, 217, 0.15)` instead of Cyan.
+* **CSS Token Misalignment**: `--color-accent-purple` was already correct (`#38BDF8`) but a bad edit had temporarily set it to `#8B5CF6` — restored.
+
+### 3. Fixes Executed
+* **`app/globals.css`**: Confirmed and restored `--color-accent-purple: #38BDF8` (Electric Cyan) and `--color-accent-purple-glow: rgba(56, 189, 248, 0.15)`.
+* **`components/ui/button.tsx`**: Updated default variant hover from `hover:bg-[#5B21B6]` to `hover:bg-sky-300` + `text-slate-950`.
+* **`components/divergence-comparison.tsx`**: Section background `#07050B` → `#090D16`; card gradient `via-[#130B24]` → `via-[#0F172A]`; purple glow → cyan; schema badge → `bg-sky-500/15`.
+* **`components/bottleneck.tsx`**: Purple glow → cyan glow.
+* **`components/cta.tsx`**: Section background `#07050B` → `#090D16`; purple glow → cyan.
+* **`components/testimonials.tsx`**: Card ambient glow `rgba(109, 40, 217, 0.25)` → `rgba(56, 189, 248, 0.12)`.
+* **`components/faq-home.tsx`**: Purple glow → cyan glow.
+* **`components/services.tsx`**: Card hover shadow purple → cyan `rgba(56, 189, 248, 0.20)`.
+* **`components/navbar.tsx`**: Mobile drawer background `#07050B` → `#090D16`; ambient glow purple → cyan.
+
+### 4. Final Validation & Verification Results
+* **TypeScript Compiler**: `npx tsc --noEmit` passed with **0 errors**.
+* **Visual Consistency**: 100% of section backgrounds, card borders, active buttons, and glows now follow the unified Electric Sky Blue + Deep Slate-Navy + Amber Gold palette.
+* **Zero Legacy Purple**: All hardcoded `#07050B`, `#130B24`, and `rgba(109, 40, 217, ...)` values eliminated from public-facing components.
