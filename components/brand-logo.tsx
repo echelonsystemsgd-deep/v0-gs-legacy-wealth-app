@@ -28,34 +28,37 @@ function WordmarkLogo({ className }: { className?: string }) {
   return (
     <span
       className={className}
-      aria-label="Mercian Wealth"
+      aria-label="LocalEngine AI"
       style={{
         display: "inline-flex",
-        alignItems: "baseline",
-        gap: "0.2em",
-        fontFamily: "'Cormorant Garamond', 'Garamond', Georgia, serif",
-        letterSpacing: "0.06em",
+        alignItems: "center",
+        gap: "0.25em",
+        fontFamily: "'Inter', system-ui, sans-serif",
+        letterSpacing: "-0.02em",
         lineHeight: 1,
         userSelect: "none",
+        fontWeight: 800,
       }}
     >
       <span
         style={{
-          color: "#C5A059",            /* Antique Polished Gold — brand token */
-          fontWeight: 700,
+          color: "#38BDF8",            /* Electric Cyan Primary */
           fontSize: "inherit",
         }}
       >
-        Mercian
+        LocalEngine
       </span>
       <span
         style={{
-          color: "#A3A8B4",            /* Sterling Silver — brand token */
-          fontWeight: 400,
-          fontSize: "inherit",
+          color: "#F59E0B",            /* Warm Amber Accent */
+          fontSize: "0.85em",
+          background: "rgba(245, 158, 11, 0.15)",
+          padding: "0.15em 0.4em",
+          borderRadius: "0.3em",
+          border: "1px solid rgba(245, 158, 11, 0.3)",
         }}
       >
-        Wealth
+        AI
       </span>
     </span>
   )

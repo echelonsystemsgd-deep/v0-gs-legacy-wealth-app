@@ -220,37 +220,29 @@ export function Navbar() {
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-20 items-center justify-between">
             {/* Logo - Crest + Wordmark Combo */}
-            <button
-              suppressHydrationWarning
-              onClick={() => {
-                if (pathname === "/") {
-                  window.scrollTo({ top: 0, behavior: "smooth" })
-                } else {
-                  router.push("/")
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
-                }
-              }}
-              className="flex items-center gap-3 cursor-pointer group"
-              aria-label="Mercian Wealth Homepage"
-            >
-              <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-11 w-11"}`}>
-                <BrandLogo
-                  variant="logo"
-                  alt="Mercian Wealth Crest"
-                  fill
-                  className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="font-serif font-bold text-base sm:text-xl tracking-wide text-foreground group-hover:text-accent-gold transition-colors duration-200">
-                  <span className="text-accent-gold">Mercian</span> Wealth
-                </span>
-                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent-gold/70 -mt-1 hidden sm:block">
-                  Autonomic Systems Lab
-                </span>
-              </div>
-            </button>
+              <button
+                suppressHydrationWarning
+                onClick={() => {
+                  if (pathname === "/") {
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  } else {
+                    router.push("/")
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
+                  }
+                }}
+                className="flex items-center gap-3 cursor-pointer group"
+                aria-label="Homepage"
+              >
+                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-11 w-11"}`}>
+                  <BrandLogo
+                    variant="logo"
+                    alt="Logo"
+                    fill
+                    className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
+                    priority
+                  />
+                </div>
+              </button>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">

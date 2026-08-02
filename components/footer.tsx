@@ -11,14 +11,14 @@ import { useWebsiteContent } from "@/hooks/use-website-content"
 export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
-    tagline: "Align, Protect, Multiply, Legacy.",
-    email: "mercianwealthgs@gmail.com",
+    tagline: "Automated Storefronts & AI Engines for Bakeries, Food Artisans & Local Services.",
+    email: "support@localengine.ai",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929",
-    instagramLink: "https://instagram.com/mercianwealth",
-    linkedinLink: "https://www.linkedin.com/in/gs-legacy-wealth",
-    ctaDescription: "Request an alignment session. Strictly limited allocations each month.",
-    ctaButtonText: "Initiate Clinical Audit"
+    instagramLink: "https://instagram.com",
+    linkedinLink: "https://linkedin.com",
+    ctaDescription: "Book a 15-minute quick audit to see how much manual admin time we can eliminate for your business.",
+    ctaButtonText: "Book 15-Min Quick Audit"
   })
 
   const quickLinks = [
