@@ -290,7 +290,7 @@ export async function POST(request: Request) {
         // 1. Notify Owner
         await resend.emails.send({
           from: fromEmail,
-          to: 'mercianwealthgs@gmail.com',
+          to: process.env.ADMIN_NOTIFY_EMAIL || 'support@localengine.ai',
           subject: `✨ [New Lead] ${name || email} via ${cleanSource}`,
           html: ownerEmailHtml,
         })

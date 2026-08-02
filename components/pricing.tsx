@@ -94,7 +94,7 @@ interface PricingProps {
 
 export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
   const searchParams = useSearchParams()
-  const [billingCycle, setBillingCycle] = useState<"setup" | "retainer">("setup")
+  const [billingCycle, setBillingCycle] = useState<"oneTime" | "monthly" | "revenueShare">("oneTime")
   const [activeAudience, setActiveAudience] = useState<"enterprise" | "local">("enterprise")
   const [revenue, setRevenue] = useState(25000)
   const [manualHours, setManualHours] = useState(15)
@@ -129,10 +129,16 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
     } catch {}
   }
 
-  // Use props from server fetch when available; fall back to hardcoded module-level arrays
-  const resolvedSetupTiers = propSetupTiers && propSetupTiers.length > 0 ? propSetupTiers : setupTiers
-  const resolvedRetainerTiers = propRetainerTiers && propRetainerTiers.length > 0 ? propRetainerTiers : retainerTiers
-  const activeTiers = billingCycle === "setup" ? resolvedSetupTiers : resolvedRetainerTiers
+  const oneTimeTiers = (SITE_COPY.pricingPage as any).oneTimeTiers || []
+  const monthlyTiers = (SITE_COPY.pricingPage as any).monthlyTiers || []
+  const revenueShareTiers = (SITE_COPY.pricingPage as any).revenueShareTiers || []
+
+  const activeTiers = 
+    billingCycle === "oneTime"
+      ? (propSetupTiers && propSetupTiers.length > 0 ? propSetupTiers : oneTimeTiers)
+      : billingCycle === "monthly"
+      ? (propRetainerTiers && propRetainerTiers.length > 0 ? propRetainerTiers : monthlyTiers)
+      : revenueShareTiers
 
   // Calculators
   const annualHoursSaved = Math.round(manualHours * 0.75 * 52)
@@ -165,17 +171,17 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             </p>
           </div>
 
-          {/* Billing Switcher Header */}
+          {/* Billing Switcher Header (3 Tabs) */}
           <div className="flex justify-center mb-12 lg:mb-16 relative z-20">
-            <div className="flex items-center bg-white/5 p-1.5 rounded-full border border-white/10 relative">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 bg-white/5 p-1.5 rounded-2xl sm:rounded-full border border-white/10 relative">
               <button
                 suppressHydrationWarning
-                onClick={() => setBillingCycle("setup")}
-                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                  billingCycle === "setup" ? "text-white font-bold" : "text-white/40"
+                onClick={() => setBillingCycle("oneTime")}
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+                  billingCycle === "oneTime" ? "text-white font-bold" : "text-white/40 hover:text-white/70"
                 }`}
               >
-                {billingCycle === "setup" && (
+                {billingCycle === "oneTime" && (
                   <motion.div
                     layoutId="homepageBillingBg"
                     className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
@@ -186,12 +192,12 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               </button>
               <button
                 suppressHydrationWarning
-                onClick={() => setBillingCycle("retainer")}
-                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                  billingCycle === "retainer" ? "text-white font-bold" : "text-white/40"
+                onClick={() => setBillingCycle("monthly")}
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+                  billingCycle === "monthly" ? "text-white font-bold" : "text-white/40 hover:text-white/70"
                 }`}
               >
-                {billingCycle === "retainer" && (
+                {billingCycle === "monthly" && (
                   <motion.div
                     layoutId="homepageBillingBg"
                     className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
@@ -199,6 +205,22 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   />
                 )}
                 Monthly Retainer
+              </button>
+              <button
+                suppressHydrationWarning
+                onClick={() => setBillingCycle("revenueShare")}
+                className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+                  billingCycle === "revenueShare" ? "text-white font-bold" : "text-white/40 hover:text-white/70"
+                }`}
+              >
+                {billingCycle === "revenueShare" && (
+                  <motion.div
+                    layoutId="homepageBillingBg"
+                    className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                % Revenue Share
               </button>
             </div>
           </div>
@@ -507,7 +529,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </h2>
 
           <p className="font-sans text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Simple one-time setup + flat monthly retainer for hosting, instant WhatsApp/SMS order alerts, and automated Google review collection. No hidden fees or surprise agency charges.
+            Choose between One-Time Setup, Flat Monthly Retainer, or Performance % Revenue Share. Transparent pricing with zero hidden fees.
           </p>
         </div>
 

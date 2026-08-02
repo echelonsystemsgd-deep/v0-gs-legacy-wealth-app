@@ -24,10 +24,8 @@ export function Footer() {
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
-    { name: "Process", href: "/process" },
     { name: "Portfolio", href: "/portfolio" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Cohort Status", href: "/cohort-status" },
     { name: "Contact", href: "/contact" },
   ]
 
