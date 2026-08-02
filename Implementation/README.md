@@ -1,8 +1,29 @@
 # Implementation Folder Guide
 
-This directory holds the historical plans, branding specifications, database implementation details, and phase logs for the developer team. It is organized into subdirectories based on system components.
+This directory holds the active implementation plans, branding specifications, pricing models, and system component guides for the LocalEngine AI application.
 
-For the primary application documentation, setup guides, tech stack details, and Slack configuration, please refer directly to the root [README.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/README.md).
+> [!IMPORTANT]
+> **Active Implementation Plan**: See [implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/implementation_plan.md) for the active 6-service overhaul plan (Web Design, 24/7 Lead Capture, Bookings & Upfront Deposits, Secure CRM Database, Email Automations, and WhatsApp Phone Alerts), Stickman Character Suite integration, and the 3-tap interactive simulator.
+
+---
+
+## Active Business & Pricing Specifications
+
+1. **6 Core Pillars Offered**:
+   - **Custom Mobile Web Design**: Sub-second mobile storefronts.
+   - **24/7 Lead Capture**: Custom enquiry & order builders taking specs around the clock.
+   - **Automated Bookings**: Calendar slot locking + 50% upfront deposit collection.
+   - **Secure Cloud CRM**: Centralized customer records & lead management database.
+   - **Email Automations**: Instant confirmation receipts & order updates.
+   - **WhatsApp Phone Alerts**: Instant notification of incoming leads & paid deposits.
+
+2. **Transparent Pricing Models**:
+   - **One-Time Build (£495)**: Complete custom storefront & lead capture build (zero contract).
+   - **Flat Monthly Retainer (£195/mo)**: Full storefront, order engine, hosting, and active WhatsApp alerts.
+   - **Performance % Share (5% Revenue Share)**: Small setup deposit + % share of website sales for 100% skin-in-the-game security alignment.
+
+3. **Vendor Privacy Rule**:
+   - Technical vendor/tool names (*Supabase, Stripe, Make.com, Zapier, Twilio, Next.js*) are **never mentioned on public website copy**. Implementation details are shared exclusively with prospects during discovery calls.
 
 ---
 
