@@ -12,7 +12,7 @@ export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
     tagline: "Automated Storefronts & AI Engines for Bakeries, Food Artisans & Local Services.",
-    email: "support@localengine.ai",
+    email: "mercianwealthgs@gmail.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929",
     instagramLink: "https://instagram.com",

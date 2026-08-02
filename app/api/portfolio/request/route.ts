@@ -148,7 +148,7 @@ export async function POST(request: Request) {
         // 1. Notify Owner
         await resend.emails.send({
           from: fromEmail,
-          to: process.env.ADMIN_NOTIFY_EMAIL || 'support@localengine.ai',
+          to: process.env.ADMIN_NOTIFY_EMAIL || 'mercianwealthgs@gmail.com',
           subject: `✨ [Schema Request] ${name} requested ${project_name}`,
           html: ownerEmailHtml,
         })
