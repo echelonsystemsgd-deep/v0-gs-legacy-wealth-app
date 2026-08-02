@@ -12,6 +12,26 @@ import { AnnouncementBar } from "@/components/announcement-bar"
 export function Hero() {
   const data = SITE_COPY.homepage.hero
 
+  const handleDemoClick = (e: React.MouseEvent) => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      const el = document.getElementById("demo")
+      if (el) {
+        e.preventDefault()
+        el.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+  }
+
+  const handlePricingClick = (e: React.MouseEvent) => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      const el = document.getElementById("pricing")
+      if (el) {
+        e.preventDefault()
+        el.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+  }
+
   return (
     <section id="home" className="relative min-h-[90vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#090D16]">
       {/* Dynamic Background Radial Glows */}
@@ -118,7 +138,7 @@ export function Hero() {
               size="lg"
               className="w-full sm:w-auto px-8 py-6 text-base font-bold bg-gradient-to-r from-sky-400 to-blue-600 text-slate-950 hover:from-sky-300 hover:to-blue-500 transition-all duration-300 shadow-[0_0_30px_rgba(56,189,248,0.35)] border-0 rounded-xl"
             >
-              <Link href="/#demo" className="flex items-center gap-2">
+              <Link href="/#demo" onClick={handleDemoClick} className="flex items-center gap-2">
                 <span>{data.primaryCtaText}</span>
                 <ArrowRight size={18} />
               </Link>
@@ -130,11 +150,11 @@ export function Hero() {
               variant="outline"
               className="w-full sm:w-auto px-8 py-6 text-base font-semibold border-slate-700/80 text-white hover:bg-slate-800/80 rounded-xl"
             >
-              <Link href="/pricing">{data.secondaryCtaText}</Link>
+              <Link href="/pricing" onClick={handlePricingClick}>{data.secondaryCtaText}</Link>
             </Button>
           </div>
 
-          <Link href="/#demo" className="text-xs text-sky-400 hover:text-sky-300 transition-colors underline underline-offset-4 mt-3 mb-6 font-medium">
+          <Link href="/#demo" onClick={handleDemoClick} className="text-xs text-sky-400 hover:text-sky-300 transition-colors underline underline-offset-4 mt-3 mb-6 font-medium">
             {data.unsureText}
           </Link>
 

@@ -172,7 +172,19 @@ export function DivergenceComparison() {
                 size="lg"
                 className="w-full py-6 sm:py-7 font-bold text-sm md:text-base flex items-center justify-center shadow-lg hover:shadow-accent-gold/20 text-center tracking-normal px-2 sm:px-4"
               >
-                <Link href="/book" className="flex items-center justify-center gap-2">
+                <Link
+                  href="/#demo"
+                  onClick={(e) => {
+                    if (typeof window !== "undefined" && window.location.pathname === "/") {
+                      const el = document.getElementById("demo")
+                      if (el) {
+                        e.preventDefault()
+                        el.scrollIntoView({ behavior: "smooth" })
+                      }
+                    }
+                  }}
+                  className="flex items-center justify-center gap-2"
+                >
                   <span>{data.pathMercian.ctaText.replace(" →", "")}</span>
                   <ArrowRight size={18} className="shrink-0" />
                 </Link>

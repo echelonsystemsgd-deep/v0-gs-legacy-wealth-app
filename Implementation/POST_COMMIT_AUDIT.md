@@ -93,4 +93,36 @@ On 2026-08-02, a complete site overhaul and vendor privacy audit was executed. T
 * **Vendor Privacy Audit**: `grep_search` across `components/` and `lib/` verified **0 vendor tool names in public site text**.
 * **Responsive Layouts**: Verified 100% layout compatibility across mobile smartphones, tablets, laptops, and desktop viewports.
 
+---
+
+## BUTTON NAVIGATION FIXES & MULTI-NICHE COPY OVERHAUL 2026-08-02
+
+### 1. Incident & Audit Summary
+On 2026-08-02, an audit of site interactive elements and niche positioning was conducted following user feedback regarding broken CTA buttons and single-niche copy focus.
+
+### 2. Issues & Root Causes Identified
+* **Anchor Scroll Interception Failure**: Next.js `<Link href="/#demo">` when clicked on `/` did not trigger smooth scrolling to `<div id="demo">`.
+* **Misdirected CTA Targets**:
+  - `bottleneck.tsx`: *"Test Interactive Order Builder →"* pointed to `/pricing#roi-calculator` instead of `#demo`.
+  - `divergence-comparison.tsx`: *"Explore Interactive Demo"* pointed to `/book` instead of `#demo`.
+  - `pricing.tsx`: ROI Estimator button linked to `/book` without passing recommended tier query params.
+* **Unmapped Booking Form Parameters**: `booking-flow.tsx` only mapped 4 legacy service IDs and ignored `tier` parameters (`Essential Storefront`, `Pro Order Builder`, `Full Custom Build`, `Revenue Engine`, etc.) and new service tags (`storefront`, `order-builder`, `phone-alerts`, `review-engine`).
+* **Single-Niche Jargon Bias**: Site copy heavily over-emphasized bakery/cake terms (*"baking at 6 AM"*), excluding broader local service providers, trades, and food artisans.
+
+### 3. Fixes & Remediation Executed
+* **Smooth-Scroll Event Handlers**:
+  - Added custom smooth-scroll click handlers in `components/hero.tsx`, `components/bottleneck.tsx`, `components/divergence-comparison.tsx`, and `components/navbar.tsx` for instant scrolling to `#demo` and `#pricing`.
+* **Booking Parameter Pre-filling**:
+  - Updated `components/booking-flow.tsx` URL parameter logic to parse `?tier=...` and `?service=...` and pre-select corresponding items in the booking form.
+* **Full Multi-Niche Copy Overhaul (`lib/site-copy.ts`)**:
+  - Refined site copy across Hero, Bottleneck, Divergence, Why Mercian, Services, and FAQ sections to consistently position for **Local Services, Cake Bakeries, Food Artisans & Catering**.
+  - Replaced *"While You're Baking at 6 AM..."* with universal positioning: *"While You're Busy On The Job, High-Value Leads Are Slipping Away."*
+* **Navbar Logo & Links Sync**:
+  - Converted Brand Logo `<button>` in `components/navbar.tsx` to Next.js `<Link href="/">`. Added `/process` and `/#demo` into `navLinks`.
+
+### 4. Final Validation & Verification Results
+* **TypeScript Compiler**: `npx tsc --noEmit` passed with **0 errors**.
+* **Navigation Verification**: Verified all CTAs and smooth anchor scrolls across desktop & mobile viewports.
+
+
 

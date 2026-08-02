@@ -335,15 +335,27 @@ function BookingFlowInner() {
   // Prefill service selector from URL parameters
   useEffect(() => {
     const serviceParam = searchParams?.get("service")
-    if (serviceParam) {
-      const mapping: Record<string, string> = {
-        "authority-platform": "High-Yield Digital Infrastructure",
-        "conversion-funnel": "Autonomous Pipeline Routing",
-        "database-architecture": "Relational Cloud Data Architecture",
-        "ai-agents": "Autonomic Multi-Agent Systems"
+    const tierParam = searchParams?.get("tier")
+    const param = serviceParam || tierParam
+
+    if (param) {
+      const lower = param.toLowerCase()
+      let mappedValue = ""
+
+      if (lower.includes("storefront") || lower.includes("essential") || lower.includes("starter") || lower.includes("authority")) {
+        mappedValue = "High-Yield Digital Infrastructure"
+      } else if (lower.includes("order") || lower.includes("builder") || lower.includes("routing") || lower.includes("funnel") || lower.includes("operations")) {
+        mappedValue = "Autonomous Pipeline Routing"
+      } else if (lower.includes("database") || lower.includes("cloud")) {
+        mappedValue = "Relational Cloud Data Architecture"
+      } else if (lower.includes("alert") || lower.includes("review") || lower.includes("ai") || lower.includes("agent") || lower.includes("custom") || lower.includes("revenue")) {
+        mappedValue = "Autonomic Multi-Agent Systems"
+      } else {
+        mappedValue = "High-Yield Digital Infrastructure"
       }
-      if (mapping[serviceParam]) {
-        setQual((p) => ({ ...p, serviceInterested: mapping[serviceParam] }))
+
+      if (mappedValue) {
+        setQual((p) => ({ ...p, serviceInterested: mappedValue }))
       }
     }
   }, [searchParams])

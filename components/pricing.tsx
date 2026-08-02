@@ -228,7 +228,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           {/* Pricing Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12 items-stretch min-w-0 max-w-full">
             <AnimatePresence>
-              {activeTiers.map((tier, index) => (
+              {activeTiers.map((tier: any, index: number) => (
                 <motion.div
                   key={`homepage-${billingCycle}-${tier.name}`}
                   initial={{ opacity: 0, y: 20 }}
@@ -251,7 +251,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                               {tier.name}
                             </h3>
                             <p className="text-[10px] text-accent-gold font-bold uppercase tracking-wider font-mono">
-                              {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
+                              {billingCycle === "oneTime" ? "System Build" : "Growth Retainer"}
                             </p>
                           </div>
 
@@ -278,7 +278,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                           <span className="text-[10px] text-accent-gold uppercase tracking-wider font-semibold block mt-1 font-mono">
                             {tier.interval}
                           </span>
-                          {billingCycle === "setup" && (tier as any).milestoneBreakdown && (
+                          {billingCycle === "oneTime" && (tier as any).milestoneBreakdown && (
                             <div className="mt-2.5 p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[10px] text-white/85 leading-relaxed flex items-center gap-2">
                               <span className="text-accent-gold font-bold font-sans text-xs shrink-0">％</span>
                               <span>{(tier as any).milestoneBreakdown}</span>
@@ -288,7 +288,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
                         {/* Features */}
                         <div className="space-y-3">
-                          {tier.features.map((feature, i) => (
+                          {tier.features.map((feature: string, i: number) => (
                             <div key={i} className="flex items-start gap-2.5">
                               <span className="text-accent-gold text-sm shrink-0 mt-0.5">✦</span>
                               <span className="text-xs text-text-primary opacity-95 leading-normal font-medium">
@@ -411,7 +411,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 size="lg"
                 className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-4 sm:py-5 text-xs sm:text-sm h-auto whitespace-normal"
               >
-                <Link href="/book" className="flex items-center justify-center gap-2 text-center py-1">
+                <Link href={`/book?tier=${encodeURIComponent(recommendedTier)}`} className="flex items-center justify-center gap-2 text-center py-1">
                   <span className="leading-snug">Claim Unlocked Revenue — Select {recommendedTier} Tier</span>
                   <ArrowRight size={16} className="shrink-0" />
                 </Link>
@@ -536,7 +536,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
         {/* Pricing Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
           <AnimatePresence mode="wait">
-            {activeTiers.map((tier, index) => {
+            {activeTiers.map((tier: any, index: number) => {
               const isRecommended = recommendedTier === tier.tag
               return (
                 <motion.div
@@ -588,7 +588,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         </div>
 
                         <div className="space-y-4 mb-10">
-                          {tier.features.map((feature, i) => (
+                          {tier.features.map((feature: string, i: number) => (
                             <div key={i} className="flex items-start gap-3">
                               <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 border border-primary/20">
                                 <ShieldCheck size={12} className="text-accent-gold" />

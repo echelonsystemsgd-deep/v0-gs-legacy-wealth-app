@@ -148,7 +148,16 @@ export function Bottleneck() {
                     {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
                   </span>
                   <Link
-                    href="/pricing#roi-calculator"
+                    href="/#demo"
+                    onClick={(e) => {
+                      if (typeof window !== "undefined" && window.location.pathname === "/") {
+                        const el = document.getElementById("demo")
+                        if (el) {
+                          e.preventDefault()
+                          el.scrollIntoView({ behavior: "smooth" })
+                        }
+                      }
+                    }}
                     className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block text-center sm:text-left focus:outline-none"
                   >
                     {data.diagnosticLink}

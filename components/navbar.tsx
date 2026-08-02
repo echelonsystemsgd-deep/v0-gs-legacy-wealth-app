@@ -23,7 +23,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
+  { href: "/#demo", label: "Interactive Demo" },
   { href: "/portfolio", label: "Portfolio" },
+  { href: "/process", label: "Process" },
   { href: "/pricing", label: "Pricing" },
   { href: "/contact", label: "Contact" },
 ]
@@ -217,14 +219,12 @@ export function Navbar() {
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-20 items-center justify-between">
             {/* Logo - Crest + Wordmark Combo */}
-              <button
-                suppressHydrationWarning
-                onClick={() => {
+              <Link
+                href="/"
+                onClick={(e) => {
                   if (pathname === "/") {
+                    e.preventDefault()
                     window.scrollTo({ top: 0, behavior: "smooth" })
-                  } else {
-                    router.push("/")
-                    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100)
                   }
                 }}
                 className="flex items-center gap-3 cursor-pointer group"
@@ -239,7 +239,7 @@ export function Navbar() {
                     priority
                   />
                 </div>
-              </button>
+              </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">
@@ -247,6 +247,12 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={(e) => {
+                    if (link.href === "/#demo" && pathname === "/") {
+                      e.preventDefault()
+                      document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
+                    }
+                  }}
                   className={`text-sm transition-colors duration-200 hover:text-accent-gold ${
                     isActive(link.href) 
                       ? "text-accent-gold font-semibold" 
@@ -417,7 +423,14 @@ export function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false)
+                        if (link.href === "/#demo" && pathname === "/") {
+                          setTimeout(() => {
+                            document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
+                          }, 100)
+                        }
+                      }}
                       className={`flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 group ${
                         active
                           ? "bg-accent-gold/10 border-accent-gold/40 text-accent-gold font-bold shadow-[0_0_15px_rgba(212,175,55,0.1)]"

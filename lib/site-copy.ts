@@ -86,14 +86,14 @@ export const SITE_COPY = {
     hero: {
       eyebrow: "WEB DESIGN, LEAD CAPTURE & WORKFLOW AUTOMATION FOR LOCAL BUSINESSES",
       headline: "Custom Web Design, Lead Capture & Automated CRM Systems Built for Local Growth.",
-      subheadline: "We eliminate manual admin for bakeries, food artisans, and local service providers across Berkshire & the UK. From custom web design and 24/7 lead capture to automated WhatsApp order alerts and secure CRM customer database sync.",
+      subheadline: "We eliminate manual admin drag for local service providers, trades, bakeries, and independent businesses across Berkshire & the UK. From sub-second mobile web design and 24/7 lead capture to instant WhatsApp order alerts and secure CRM customer database sync.",
       primaryCtaText: "Test Interactive Demo",
       secondaryCtaText: "View Solutions & Pricing",
       trustItems: [
         "Custom Mobile Web Design",
-        "24/7 Lead Capture Builder",
+        "24/7 Lead & Booking Capture",
         "Automated Bookings & Stripe Deposits",
-        "Make.com WhatsApp & Email Alerts",
+        "Instant WhatsApp & Email Alerts",
       ],
       unsureText: "Want to see how it works live? Try our interactive 3-tap order builder →",
     },
@@ -102,38 +102,38 @@ export const SITE_COPY = {
     divergenceComparison: {
       eyebrow: "THE DIVERGENCE",
       headline: "Manual Admin Drag vs. The Automated Storefront Engine",
-      subheadline: "Every local business reaches a fork: continue scrawling order notes on paper receipts after 12-hour prep shifts, or deploy an automated storefront taking orders and deposits 24/7.",
+      subheadline: "Every local business reaches a fork: continue scrawling customer notes on scrap paper and chasing quotes after 12-hour workdays, or deploy an automated growth engine capturing inquiries, bookings, and deposits 24/7.",
       pathConventional: {
         badge: "MANUAL DRAG",
         title: "The Paper & Scramble Method",
-        subtitle: "Scrawling notes on receipts, lost WhatsApp messages, and delayed replies.",
+        subtitle: "Scrawling notes on paper, lost WhatsApp messages, and delayed email replies.",
         points: [
-          "Scrawling custom cake orders or catering specs on scrap paper during 6am prep rush.",
-          "Waiting until 9pm after a 12-hour shift to reply to email quote requests.",
-          "Chasing bank transfers via text for 50% deposits while managing foot traffic.",
-          "0 Google reviews because you forget to follow up with busy customers after pickup.",
+          "Scrawling custom orders, service quotes, or booking specs on scrap paper during busy work shifts.",
+          "Waiting until late in the evening after a 12-hour day to reply to email quote requests.",
+          "Chasing bank transfers via text message for upfront deposits while managing daily operations.",
+          "0 automated Google reviews because you forget to follow up with busy customers after service.",
         ]
       },
       pathMercian: {
         badge: "AUTOMATED ENGINE",
         title: "The Mercian Growth Engine",
-        subtitle: "Sub-second mobile storefront, 3-tap order builder, and instant phone alerts.",
+        subtitle: "Sub-second mobile storefront, 3-tap booking builder, and instant phone alerts.",
         points: [
-          "3-tap online order builder collecting custom specs & deposit payments 24/7.",
-          "Instant WhatsApp phone alert arriving with complete order details as soon as a deposit is paid.",
-          "Sub-1-second mobile load speeds projecting instant artisan quality & market authority.",
-          "Automated text sent 2 hours after pickup asking for a 5-star Google review.",
+          "3-tap online booking & order builder collecting custom specs & deposit payments 24/7.",
+          "Instant WhatsApp phone alert arriving with complete job details as soon as a deposit is paid.",
+          "Sub-1-second mobile load speeds projecting instant professional authority & high quality.",
+          "Automated review text sent after service completion asking for a 5-star Google review.",
         ],
-        ctaText: "Explore Order Engine Demo →",
+        ctaText: "Explore Interactive Demo →",
       }
     },
 
     // 2. Deficit Diagnostic
     bottleneck: {
-      eyebrow: "THE 6 AM REALITY",
-      headline: "While You're Baking at 6 AM, Orders Are Slipping Away.",
-      subheadline: "When a customer wants a custom birthday cake or a £300 catering platter for Saturday, they won't wait 3 hours for a reply. If you don't take the order instantly, a supermarket chain or faster competitor takes the deposit.",
-      goldSlogan: "Speed & convenience win every time. While competitors scramble with paper notes, an automated storefront captures orders and collects deposits while you sleep.",
+      eyebrow: "THE DAILY REALITY",
+      headline: "While You're Busy On The Job, High-Value Leads Are Slipping Away.",
+      subheadline: "When a customer wants a service quote, custom order, or weekend booking, they won't wait 3 hours for a reply. If you don't capture the lead instantly, a faster local competitor or national chain takes the deposit.",
+      goldSlogan: "Speed & convenience win every time. While competitors scramble with paper notes, an automated system captures inquiries and collects deposits while you focus on your work.",
       systemMode: "System Mode: ",
       modeAutomated: "Automated Storefront",
       modeManual: "Manual Scramble",
@@ -143,16 +143,16 @@ export const SITE_COPY = {
       
       cards: [
         {
-          title: "Flour-Dusted Order Notes",
-          description: "Scrawling custom cake orders or catering specs on scrap paper while busy serving customers in-store.",
+          title: "Scattered Paper Notes & Messages",
+          description: "Scrawling customer specs or service details on scrap paper while busy serving clients or managing jobs on-site.",
         },
         {
-          title: "Chasing WhatsApp Deposits",
-          description: "Spending your evenings sending bank details back and forth trying to get 50% deposits paid.",
+          title: "Chasing Manual Deposits & Invoices",
+          description: "Spending your evenings sending bank details back and forth trying to get upfront deposits paid.",
         },
         {
-          title: "Invisible on Google Maps",
-          description: "Baking the best artisan breads or cakes, but losing local searches to chains with 150+ Google reviews.",
+          title: "Invisible on Google Search & Maps",
+          description: "Delivering top-tier local service or artisan quality, but losing search leads to competitors with 150+ Google reviews.",
         },
       ],
     },
@@ -166,14 +166,14 @@ export const SITE_COPY = {
 
     // 4. LocalEngine AI Difference
     whyMercianWealth: {
-      headline: "Built Specifically for Bakeries, Food Artisans & Local Services",
-      description: "Traditional agencies charge thousands for static, slow websites that sit idle. We build complete automated storefronts powered by Supabase backend infrastructure and Stripe payments.",
+      headline: "Built Specifically for Local Services, Cake Bakeries, Food Artisans & Catering",
+      description: "Traditional agencies charge thousands for static, slow websites that sit idle. We build complete automated storefronts and 24/7 lead engines powered by Supabase backend infrastructure and Stripe payment deposits.",
       differentiators: [
-        "Sub-1-Second Mobile Storefront — Lightning-fast custom mobile pages that showcase your artisan creations or services in full high resolution.",
-        "Supabase Backend Infrastructure — Full cloud database integration securing customer orders, lead triage, and 100% data sovereignty.",
-        "Stripe Payment & Deposit Collection — Collect 50% or 100% upfront deposits via Apple Pay, Google Pay, and cards before locking calendar slots.",
-        "Instant WhatsApp Phone Alerts — Immediate notification on your phone with full order details (name, date, deposit paid) the second an enquiry arrives.",
-        "Automated 5-Star Google Review Engine — Text happy customers after pickup or service completion to build 5-star Google Maps dominance on autopilot.",
+        "Sub-1-Second Mobile Storefront — Lightning-fast custom mobile pages that showcase your service packages, custom cakes, catering platters, or artisan creations in full resolution.",
+        "Supabase Backend Infrastructure — Full cloud database integration securing customer bookings, custom orders, lead triage, and 100% data sovereignty.",
+        "Stripe Payment & Deposit Collection — Collect upfront deposits via Apple Pay, Google Pay, and cards before reserving calendar dates or preparing orders.",
+        "Instant WhatsApp Phone Alerts — Immediate notification on your phone with full client details (name, date, deposit paid) the instant a booking or inquiry arrives.",
+        "Automated 5-Star Google Review Engine — Text happy clients after service completion or pickup to build 5-star Google Maps dominance on autopilot.",
       ],
       structuralRealityHeadline: "The Structural Reality",
       standardAgency: {
@@ -182,25 +182,25 @@ export const SITE_COPY = {
           "Generic templates taking 2 to 3 months to launch.",
           "No backend database integration or instant deposit collection.",
           "No automated phone alerts or WhatsApp notifications.",
-          "Ongoing monthly fees with zero order performance guarantee.",
+          "Ongoing monthly fees with zero booking performance guarantee.",
         ],
       },
       mercianWealth: {
-        title: "LocalEngine Automated Storefront",
+        title: "LocalEngine Automated Engine",
         items: [
           "Custom sub-second mobile storefront built in 7 to 14 days.",
           "Full Supabase backend database & Stripe payment integration.",
-          "Instant WhatsApp & SMS phone notifications on every order.",
-          "Backed by our 30-day 10-order / 20-review performance guarantee.",
+          "Instant WhatsApp & SMS phone notifications on every lead & order.",
+          "Backed by our 30-day performance guarantee.",
         ],
       },
-      },
+    },
 
     // 5. Trend Adaptation Statement
     trendAdaptation: {
       eyebrow: "Continuous Optimization",
-      headline: "Your Storefront Upgrades Automatically While You Focus on Baking.",
-      description: "We handle hosting, SSL security, speed optimizations, and seasonal menu updates in the background. Your mobile storefront stays fast, secure, and ready to take orders 365 days a year without you touching a line of code.",
+      headline: "Your Storefront Upgrades Automatically While You Focus on Your Work.",
+      description: "We handle hosting, SSL security, speed optimizations, and seasonal service or menu updates in the background. Your mobile storefront stays fast, secure, and ready to capture clients 365 days a year without you touching a line of code.",
     },
 
     // 6. Model Hint
