@@ -496,171 +496,25 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </div>
         </motion.div>
 
-        {/* Segmented Audience Switcher (Mercian Gold Brand Style) */}
+        {/* Section Header & Subtitle */}
         <div className="text-center mb-16 relative z-10">
-          
-          <div className="flex justify-center mb-8 relative z-20">
-            <div className="inline-flex items-center bg-[#090410] border border-accent-gold/40 p-1.5 rounded-2xl shadow-[0_0_25px_rgba(212,175,55,0.15)] relative">
-              <button
-                type="button"
-                suppressHydrationWarning
-                onClick={() => handleAudienceChange("enterprise")}
-                className={`px-4 sm:px-7 py-3 rounded-xl text-xs sm:text-sm font-mono font-bold tracking-wider uppercase transition-all duration-300 relative z-10 flex items-center gap-2 cursor-pointer ${
-                  activeAudience === "enterprise"
-                    ? "bg-accent-gold text-black shadow-lg"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <Crown size={15} />
-                <span>Enterprise Infrastructure</span>
-              </button>
-
-              <button
-                type="button"
-                suppressHydrationWarning
-                onClick={() => handleAudienceChange("local")}
-                className={`px-4 sm:px-7 py-3 rounded-xl text-xs sm:text-sm font-mono font-bold tracking-wider uppercase transition-all duration-300 relative z-10 flex items-center gap-2 cursor-pointer ${
-                  activeAudience === "local"
-                    ? "bg-accent-gold text-black shadow-lg"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <Sparkles size={15} />
-                <span>Local Business Solutions</span>
-              </button>
-            </div>
-          </div>
-
           <p className="text-xs uppercase tracking-widest text-accent-gold font-bold mb-3 font-mono">
-            {activeAudience === "enterprise"
-              ? "[ TRANSPARENT CAPITAL ALLOCATION ]"
-              : "[ ACCESSIBLE LOCAL GROWTH PACKAGES ]"}
+            [ TRANSPARENT PRICING & PACKAGES ]
           </p>
 
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white">
-            {activeAudience === "enterprise" ? (
-              <>Capital Allocations for <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent italic">High-Yield Infrastructure</span></>
-            ) : (
-              <>Digital Storefronts & <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent italic">Automated Growth Packages</span></>
-            )}
+            Digital Storefronts & <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent italic">Automated Growth Engines</span>
           </h2>
 
           <p className="font-sans text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            {activeAudience === "enterprise"
-              ? "Transparent setup requirements for custom system assets. Choose the level of operational leverage that matches your growth path."
-              : "Accessible one-time setup + flat monthly retainer for hosting, instant WhatsApp order alerts, and automated Google reviews."}
+            Simple one-time setup + flat monthly retainer for hosting, instant WhatsApp/SMS order alerts, and automated Google review collection. No hidden fees or surprise agency charges.
           </p>
-          
-          {activeAudience === "enterprise" && (
-            <div className="flex justify-center mt-8 relative z-20">
-              <div className="flex items-center bg-secondary/60 p-1.5 rounded-full border border-border relative">
-                <button
-                  suppressHydrationWarning
-                  onClick={() => setBillingCycle("setup")}
-                  className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                    billingCycle === "setup" ? "text-white font-bold" : "text-muted-foreground"
-                  }`}
-                >
-                  {billingCycle === "setup" && (
-                    <motion.div
-                      layoutId="activeBillingCycleBg"
-                      className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
-                  )}
-                  One-Time Setup
-                </button>
-                <button
-                  suppressHydrationWarning
-                  onClick={() => setBillingCycle("retainer")}
-                  className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 relative z-10 ${
-                    billingCycle === "retainer" ? "text-white font-bold" : "text-muted-foreground"
-                  }`}
-                >
-                  {billingCycle === "retainer" && (
-                    <motion.div
-                      layoutId="activeBillingCycleBg"
-                      className="absolute inset-0 rounded-full bg-accent-purple z-[-1]"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
-                  )}
-                  Growth Retainer
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Pricing Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 relative z-10 items-stretch">
           <AnimatePresence mode="wait">
-            {activeAudience === "local" ? (
-              LOCAL_PRICING_TIERS.map((tier, idx) => (
-                <motion.div
-                  key={`local-${tier.name}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4, delay: idx * 0.1 }}
-                  className={`rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative transition-all duration-300 ${
-                    tier.featured
-                      ? "bg-gradient-to-b from-accent-gold/15 via-bg-tertiary to-bg-tertiary border-2 border-accent-gold shadow-[0_0_30px_rgba(212,175,55,0.2)] lg:scale-105"
-                      : "bg-bg-tertiary border border-border hover:border-accent-gold/40"
-                  }`}
-                >
-                  {tier.badge && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-accent-gold text-black text-[10px] font-mono font-bold uppercase tracking-wider shadow-md">
-                      {tier.badge}
-                    </div>
-                  )}
-
-                  <div>
-                    <div className="mb-6">
-                      <h3 className="font-serif text-2xl font-bold text-white mb-1">{tier.name}</h3>
-                      <p className="text-xs text-accent-gold font-mono uppercase tracking-wider">{tier.tagline}</p>
-                    </div>
-
-                    <div className="mb-6 pb-6 border-b border-white/10">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-3xl sm:text-4xl font-mono font-bold text-white">£{tier.setupPrice}</span>
-                        <span className="text-xs text-muted-foreground">one-time setup</span>
-                      </div>
-                      <div className="mt-2 text-xs text-accent-gold font-mono font-semibold">
-                        + £{tier.retainerPrice}/month retainer
-                      </div>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-6 font-sans">
-                      {tier.description}
-                    </p>
-
-                    <ul className="space-y-3 mb-8">
-                      {tier.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-2.5 text-xs text-white/90">
-                          <div className="p-0.5 rounded-full bg-accent-gold/20 text-accent-gold shrink-0 mt-0.5">
-                            <Check size={12} />
-                          </div>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link
-                    href={`/local#contact-local`}
-                    className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                      tier.featured
-                        ? "bg-accent-gold text-black hover:bg-amber-300 shadow-lg"
-                        : "bg-white/5 border border-accent-gold/30 text-white hover:bg-accent-gold/10 hover:border-accent-gold"
-                    }`}
-                  >
-                    <span>{tier.ctaText}</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                </motion.div>
-              ))
-            ) : (
-              activeTiers.map((tier, index) => {
+            {activeTiers.map((tier, index) => {
               const isRecommended = recommendedTier === tier.tag
               return (
                 <motion.div
@@ -683,20 +537,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                             <h3 className="font-serif text-2xl font-bold text-white mb-1">
                               {tier.name}
                             </h3>
-                            <p className="text-[10px] text-accent-gold font-bold uppercase tracking-wider">
-                              {billingCycle === "setup" ? "System Build" : "Growth Retainer"}
+                            <p className="text-[10px] text-accent-gold font-bold uppercase tracking-wider font-mono">
+                              System Package
                             </p>
                           </div>
                           
                           {tier.featured && (
-                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full">
+                            <span className="bg-accent-gold text-bg-primary px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full font-mono">
                               Most Popular
-                            </span>
-                          )}
-                          
-                          {!tier.featured && isRecommended && (
-                            <span className="border border-accent-gold/30 bg-accent-gold/5 text-accent-gold px-3 py-1 rounded-full text-xxs font-bold">
-                              Calculated Fit
                             </span>
                           )}
                         </div>
@@ -712,15 +560,9 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                               £{tier.price}
                             </span>
                           </div>
-                          <span className="text-xs text-accent uppercase tracking-widest font-semibold block mt-1">
+                          <span className="text-xs text-accent uppercase tracking-widest font-semibold block mt-1 font-mono">
                             {tier.interval}
                           </span>
-                          {billingCycle === "setup" && (tier as any).milestoneBreakdown && (
-                            <div className="mt-3 p-2.5 rounded-lg bg-white/[0.02] border border-white/5 text-[11px] text-muted-foreground leading-relaxed flex items-center gap-2">
-                              <span className="text-accent-gold font-bold font-sans text-xs shrink-0">％</span>
-                              <span>{(tier as any).milestoneBreakdown}</span>
-                            </div>
-                          )}
                         </div>
 
                         <div className="space-y-4 mb-10">
@@ -751,7 +593,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   </div>
                 </motion.div>
               )
-            }))}
+            })}
           </AnimatePresence>
         </div>
 

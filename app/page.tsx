@@ -12,6 +12,7 @@ import { LiveTelemetryTicker } from "@/components/live-telemetry-ticker"
 import { ChapterTracker } from "@/components/chapter-tracker"
 import { SystemBlueprint } from "@/components/system-blueprint"
 import { LatencyCalculator } from "@/components/latency-calculator"
+import { FieldSalesDemo } from "@/components/local/field-sales-demo"
 import { getPricingTiers } from "@/lib/pricing"
 import { Suspense } from "react"
 
@@ -60,14 +61,14 @@ export default async function Home() {
                 "@type": "WebPage",
                 "@id": "https://mercianwealth.com/#webpage",
                 "url": "https://mercianwealth.com",
-                "name": "Mercian Wealth | Luxury AI-Powered Websites",
+                "name": "Mercian Wealth | AI Automations & Fast Storefronts",
                 "isPartOf": {
                   "@id": "https://mercianwealth.com/#website"
                 },
                 "about": {
                   "@id": "https://mercianwealth.com/#organization"
                 },
-                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
+                "description": "Custom digital storefronts and automated AI engines for bakeries, food artisans, local services, and growing operators across Berkshire & the UK."
               }
             ]
           })
@@ -81,15 +82,18 @@ export default async function Home() {
       <LatencyCalculator />
       <SectionDivider id="chapter-divider-II" chapter="II" title="The Structural Divergence" />
       <DivergenceComparison />
-      <SectionDivider id="chapter-divider-III" chapter="III" title="System Architecture" />
+      <SectionDivider id="chapter-divider-III" chapter="III" title="Interactive System Demo" />
+      <div id="demo" className="scroll-mt-28">
+        <FieldSalesDemo />
+      </div>
+      <SectionDivider id="chapter-divider-IV" chapter="IV" title="System Architecture" />
       <WhyMercianWealth />
       <SystemBlueprint />
-      <SectionDivider id="chapter-divider-IV" chapter="IV" title="Cohort Telemetry & Allocation" />
-      <Testimonials />
+      <SectionDivider id="chapter-divider-V" chapter="V" title="Pricing & Packages" />
       <Suspense fallback={<div className="py-20 text-center text-accent-gold font-mono text-sm">Loading Systems Pricing...</div>}>
         <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
       </Suspense>
-      <SectionDivider id="chapter-divider-V" chapter="V" title="Initiate Integration" />
+      <SectionDivider id="chapter-divider-VI" chapter="VI" title="Initiate Integration" />
       <CTA />
       <Footer />
     </main>
