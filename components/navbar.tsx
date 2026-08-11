@@ -236,7 +236,7 @@ export function Navbar() {
                     variant="logo"
                     alt="Mercian Wealth"
                     fill
-                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
                     priority
                   />
                 </div>
