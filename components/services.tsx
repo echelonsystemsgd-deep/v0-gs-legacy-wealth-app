@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { Globe, FileText, Zap, X, ShieldCheck, Database, GitMerge } from "lucide-react"
+import { Globe, Zap, X, Database, GitMerge } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -23,8 +23,8 @@ const serviceDetails = SITE_COPY.servicesPage.list.map((item, idx) => ({
   tagline: item.tagline,
   overview: item.overview,
   features: item.features,
-  ctaText: item.ctaText,
-  ctaHref: item.ctaHref,
+  ctaText: "Book your free 15 minute audit",
+  ctaHref: "/book",
   icon: icons[idx],
 }))
 
@@ -64,7 +64,7 @@ export function Services({ limit }: { limit?: number }) {
             Our Services
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Custom Architectures Engineered for Leverage
+            Automated Systems Built for Local Growth
           </h2>
         </div>
 
@@ -102,7 +102,7 @@ export function Services({ limit }: { limit?: number }) {
                       {/* Distributed Outcome Stat */}
                       <div className="pt-2">
                         <span className="font-mono text-xs font-bold text-accent-gold uppercase tracking-wider block">
-                          Target Yield: {service.outcome}
+                          {service.outcome}
                         </span>
                       </div>
                     </div>
@@ -199,7 +199,7 @@ export function Services({ limit }: { limit?: number }) {
                   </div>
 
                   <div className="border-t border-white/5 pt-4">
-                    <h4 className="text-xs uppercase tracking-widest text-text-secondary font-bold mb-4">Clinical Capabilities</h4>
+                    <h4 className="text-xs uppercase tracking-widest text-text-secondary font-bold mb-4">Key Features</h4>
                     <div className="grid sm:grid-cols-2 gap-4">
                       {detail.features.map((feat, idx) => (
                         <div key={idx} className="p-3 bg-bg-primary/40 border border-white/5 rounded-lg space-y-1.5 hover:border-accent-gold/20 transition-all duration-300">
@@ -218,7 +218,7 @@ export function Services({ limit }: { limit?: number }) {
                   {/* Call to Action */}
                   <div className="pt-4 border-t border-white/5 flex flex-col sm:flex-row gap-4 items-center sm:justify-between">
                     <span className="text-[10px] text-accent-gold uppercase tracking-wider font-semibold">
-                      vetted alignments only • 28-day delivery guarantee
+                      7-day launch protocol
                     </span>
                     <div className="flex items-center gap-3 w-full sm:w-auto">
                       <button
@@ -229,11 +229,11 @@ export function Services({ limit }: { limit?: number }) {
                       </button>
                       <Button
                         asChild
-                        className="flex-1 sm:flex-none font-bold bg-accent-purple text-white hover:bg-accent-purple/90 border-0"
+                        className="flex-1 sm:flex-none font-bold bg-accent-gold text-slate-950 hover:bg-amber-300 border-0"
                         onClick={() => setActiveService(null)}
                       >
-                        <Link href={detail.ctaHref}>
-                          <span>{detail.ctaText}</span>
+                        <Link href="/book">
+                          <span>Book your free 15 minute audit</span>
                         </Link>
                       </Button>
                     </div>

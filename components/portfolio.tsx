@@ -279,10 +279,10 @@ function RequestSystemSchemaModal({ item, onClose }: { item: PortfolioItem; onCl
           </div>
 
           <h3 className="font-serif text-2xl font-bold text-text-primary mb-3">
-            Request Architecture Blueprint & Case Study
+            Book A Live Demonstration
           </h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            This portfolio entry is a Mercian Wealth system concept build. Submitting your details will transmit the sanitized architectural blueprint, system schema, and walkthrough breakdown directly to your inbox.
+            Every system is built to suit the exact workflow of a local business. Rather than browsing generic templates, book a 15-minute call to see a live demonstration tailored to your exact industry.
           </p>
 
           {errorMsg && (

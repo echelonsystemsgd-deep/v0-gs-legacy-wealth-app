@@ -10,7 +10,7 @@ export function Process() {
 
   const data = {
     eyebrow: "Our Process",
-    headline: "The Execution Protocol",
+    headline: "7-Day Launch Process",
     steps: SITE_COPY.processPage.steps
   }
 

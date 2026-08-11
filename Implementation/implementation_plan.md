@@ -1,11 +1,11 @@
-# Implementation Plan - Fix All Website Buttons & Refine Hybrid Niche Copy
+# Implementation Plan - Fix All Website Buttons & Refine Universal Copy
 
-Fix all non-functional buttons shown in user screenshots, ensure smooth scroll anchor navigation for demo links, map booking form URL parameters, and continuously reinforce the complete hybrid niche messaging across the entire site (**Local Services, Cake Bakeries, Food Artisans & Catering**).
+Fix all non-functional buttons shown in user screenshots, ensure smooth scroll anchor navigation for demo links, map booking form URL parameters, and continuously reinforce universal messaging across the entire site for **all local business sectors**.
 
 ## Overview & User Feedback
-- **Multi-Niche Copy Alignment**: 
-  - The copy throughout `lib/site-copy.ts` and all components constantly and explicitly refers to **local services, cake bakeries, food artisans, and catering businesses**.
-  - Examples of real-world scenarios across all four categories (e.g. custom birthday cake orders, catering platters, local service appointments, trade consultations) will be woven into every section.
+- **Universal Copy Standard**: 
+  - The copy throughout `lib/site-copy.ts` and all components refers strictly to **universal local business realities** (*being with clients, working on jobs, managing appointments, handling enquiries*).
+  - All niche-specific references (cakes, catering, bakeries, food artisans, prep shifts, sinks, roofs, vans, etc.) have been completely removed.
 - **Button Navigation Fixes**: 
   - Clicking **"TEST INTERACTIVE DEMO →"** and **"Try our interactive 3-tap order builder →"** will smoothly scroll straight to the Interactive 3-Tap Demo section (`#demo`) on the homepage.
   - Clicking **"VIEW SOLUTIONS & PRICING"** will smoothly scroll to `#pricing` on the homepage or navigate to `/pricing`.
@@ -16,14 +16,12 @@ Fix all non-functional buttons shown in user screenshots, ensure smooth scroll a
 
 ## Proposed Changes
 
-### 1. Site Copy Expansion (`lib/site-copy.ts`)
+### 1. Universal Copy Registry (`lib/site-copy.ts`)
 
 #### [MODIFY] [site-copy.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/lib/site-copy.ts)
-- Update **Homepage Hero**: Emphasize custom web design, lead capture, 24/7 online booking, and automated CRM engines for **local services, cake bakeries, food artisans, and catering brands**.
-- Update **Bottleneck / Daily Reality Section**:
-  - Headline: *"While You're Busy On The Job or In The Kitchen, High-Value Leads & Orders Are Slipping Away."*
-  - Subheadline & Cards: Include specific scenarios for **custom cake orders, catering platters, local service appointments, and trade consultations**.
-- Update **Divergence, Services, Why Mercian, and FAQ sections**: Consistently highlight the four pillars (**local services, cake bakeries, artisans, catering**).
+- Universal Hero Headline: *"AI-Powered Websites and Automation for Local Businesses. More Bookings. Fewer Missed Calls. Zero Extra Admin."*
+- Universal Subheadline: *"We replace missed phone calls, lost WhatsApp messages, and evening quote-chasing with an automated storefront that captures leads, collects deposits, and sends instant phone alerts 24/7."*
+- All section copy across Pages 1–7 updated to speak universally to any local business owner.
 
 ---
 
@@ -33,37 +31,31 @@ Fix all non-functional buttons shown in user screenshots, ensure smooth scroll a
 - Add explicit smooth scroll handler for `/#demo` links:
   - `TEST INTERACTIVE DEMO →`
   - `Want to see how it works live? Try our interactive 3-tap order builder →`
-- Ensure `VIEW SOLUTIONS & PRICING` handles scrolling to `#pricing` or navigating to `/pricing`.
-
-#### [MODIFY] [bottleneck.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/bottleneck.tsx)
-- Update link and button target to smoothly scroll down to `<div id="demo">` when clicking "Test Interactive Order Builder →".
 
 #### [MODIFY] [divergence-comparison.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/divergence-comparison.tsx)
-- Point "Explore Order Engine Demo →" CTA button to smooth scroll to `<div id="demo">`.
-
-#### [MODIFY] [navbar.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/navbar.tsx)
-- Convert Brand Logo `<button>` to Next.js `<Link href="/">`.
-- Include `/process` and `/#demo` in navigation links.
-
----
-
-### 3. Booking Flow Pre-filling (`components/booking-flow.tsx`)
+- Verified `Sub-1-second mobile load speed` is in the **Automated Storefront** column.
 
 #### [MODIFY] [booking-flow.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/booking-flow.tsx)
-- Map URL parameters `?tier=...` and `?service=...` so clicking ANY pricing or service CTA preselects the corresponding option in the booking form on `/book`.
+- Placed curiosity hook banner prominently above the calendar widget in Stage 3.
 
 ---
 
 ## Verification Plan
 
 ### Manual Verification
-1. **Hero Buttons (Shown in Screenshot)**:
-   - Click `TEST INTERACTIVE DEMO →` -> Verify smooth scroll straight to `Interactive 3-Tap Phone Demo` (`#demo`).
-   - Click `VIEW SOLUTIONS & PRICING` -> Verify smooth scroll to `#pricing` or navigation to `/pricing`.
-   - Click `Try our interactive 3-tap order builder →` -> Verify smooth scroll to `#demo`.
-2. **Bottleneck Section Button**:
-   - Click `Test Interactive Order Builder →` in the Bottleneck section -> Verify smooth scroll to `#demo`.
-3. **Copy Review**:
-   - Verify that the homepage headline and sections constantly refer to **local services, cake bakeries, artisans, and catering**.
-4. **Booking Pre-fill**:
-   - Click any pricing tier CTA -> Verify `/book` opens with the selected tier pre-filled in the form.
+1. **Universal Copy Review**:
+   - Verified that pages 1 through 7 contain zero niche-specific references.
+2. **Divergence Column Check**:
+   - `Sub-1-second mobile load speed` confirmed in Automated Storefront column.
+3. **Booking Curiosity Hook**:
+   - Curiosity hook banner displayed above calendar embed on `/book`.
+
+---
+
+## Completion Note: Full Universal Copy Rewrite & Commit Executed
+
+- **Universal Copy Implemented**: Complete site-wide copy rewrite executed across pages 1 through 7 (`/`, `/services`, `/process`, `/portfolio`, `/pricing`, `/contact`, `/book`).
+- **Divergence Column Correction**: `Sub-1-second mobile load speed` verified in Automated Storefront column.
+- **Booking Page Curiosity Hook**: Positioned prominently above the calendar widget in Stage 3.
+- **Typecheck**: `npx tsc --noEmit` executed — **0 compilation errors**.
+- **GitHub Commit**: Changes committed to git repository.

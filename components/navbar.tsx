@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { SocialMediaLinks } from "@/components/social-media-links"
 import { createClient } from "@/lib/supabase/client"
 import { LiveTelemetryTicker } from "@/components/live-telemetry-ticker"
+import { SITE_COPY } from "@/lib/site-copy"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -350,7 +351,7 @@ export function Navbar() {
                     size="sm"
                     className="px-5 py-2 font-bold bg-accent-gold text-black hover:bg-amber-300 shadow-md"
                   >
-                    <Link href="/book">Apply for Audit</Link>
+                    <Link href="/book">{SITE_COPY.navbar.ctaText}</Link>
                   </Button>
                 </>
               )}
@@ -504,7 +505,7 @@ export function Navbar() {
                   className="w-full py-6 text-sm font-bold bg-accent-gold text-bg-primary hover:bg-accent-gold/90 shadow-[0_0_25px_rgba(212,175,55,0.25)] rounded-xl transition-all"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
-                    <span>Apply for System Audit</span>
+                    <span>{SITE_COPY.navbar.ctaText}</span>
                     <ArrowRight size={16} />
                   </Link>
                 </Button>

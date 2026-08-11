@@ -306,8 +306,8 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                         variant={tier.featured ? "default" : "outline"}
                         className="w-full py-5 text-xs font-semibold"
                       >
-                        <Link href={`/book?tier=${tier.tag}`}>
-                          <span>Initiate System Audit</span>
+                        <Link href="/book">
+                          <span>Book your free 15 minute audit</span>
                         </Link>
                       </Button>
                     </CardContent>
@@ -411,8 +411,8 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 size="lg"
                 className="w-full font-bold shadow-[0_0_25px_rgba(212,175,55,0.2)] hover:shadow-accent-gold/30 py-4 sm:py-5 text-xs sm:text-sm h-auto whitespace-normal"
               >
-                <Link href={`/book?tier=${encodeURIComponent(recommendedTier)}`} className="flex items-center justify-center gap-2 text-center py-1">
-                  <span className="leading-snug">Claim Unlocked Revenue — Select {recommendedTier} Tier</span>
+                <Link href="/book" className="flex items-center justify-center gap-2 text-center py-1">
+                  <span className="leading-snug">Book your free 15 minute audit</span>
                   <ArrowRight size={16} className="shrink-0" />
                 </Link>
               </Button>

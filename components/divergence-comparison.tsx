@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight, CheckCircle2, XCircle, Zap, ShieldAlert, Cpu } from "lucide-react"
+import { ArrowRight, XCircle, ShieldAlert } from "lucide-react"
 import { SITE_COPY } from "@/lib/site-copy"
 
 export function DivergenceComparison() {
@@ -41,7 +41,7 @@ export function DivergenceComparison() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance max-w-4xl mx-auto mb-6"
         >
-          THE DIVERGENCE: <span className="text-red-400 line-through opacity-70 decoration-red-500/60 mr-2">Manual Drag</span> vs. <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">The Automated Growth Engine</span>
+          {data.headline}
         </motion.h2>
 
         {/* Subheadline */}
@@ -72,7 +72,6 @@ export function DivergenceComparison() {
                   <ShieldAlert size={12} className="text-red-400 shrink-0" />
                   {data.pathConventional.badge}
                 </span>
-                <span className="font-mono text-xs text-red-400/60 font-semibold">[ LATENCY TAX ]</span>
               </div>
 
               <div>
@@ -97,11 +96,6 @@ export function DivergenceComparison() {
                 ))}
               </ul>
             </div>
-
-            <div className="mt-10 pt-6 border-t border-red-500/15 flex items-center justify-between text-xs font-mono text-red-400/80">
-              <span>Cumulative Throughput Loss:</span>
-              <span className="font-bold text-red-400">HIGH LATENCY COST</span>
-            </div>
           </motion.div>
 
           {/* Path B: The Mercian Automated Growth Engine */}
@@ -112,24 +106,16 @@ export function DivergenceComparison() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-[#D9A74A]/10 via-[#0D1635] to-[#0A1128] backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(217,167,74,0.12)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
           >
-            {/* Subtle corner watermark badge */}
-            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 font-serif text-6xl text-accent-gold">
-              ✦
-            </div>
-
             <div className="space-y-6 relative z-10 min-w-0">
               <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap min-w-0">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-accent-gold/10 border border-accent-gold/30 font-mono text-[10px] font-bold text-accent-gold uppercase tracking-wider shadow-sm">
-                  <Zap size={12} className="text-accent-gold animate-pulse shrink-0" />
                   {data.pathMercian.badge}
                 </span>
-                <span className="font-mono text-xs text-accent-gold font-semibold tracking-wider">[ 0-LATENCY ]</span>
               </div>
 
               <div>
                 <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 flex items-center gap-2 leading-tight">
                   {data.pathMercian.title}
-                  <span className="text-accent-gold text-lg shrink-0">✦</span>
                 </h3>
                 <p className="font-sans text-xs sm:text-sm text-text-primary opacity-90 leading-relaxed">
                   {data.pathMercian.subtitle}
@@ -146,44 +132,20 @@ export function DivergenceComparison() {
                   </li>
                 ))}
               </ul>
-
-              {/* Architectural Schema Visual Anchor */}
-              <div className="mt-6 p-4 rounded-xl border border-accent-gold/20 bg-[#0A1128]/90 font-mono text-[11px] space-y-3 text-accent-gold/90">
-                <div className="flex items-center justify-between text-[10px] text-slate-400 uppercase">
-                  <span className="flex items-center gap-1"><Cpu size={12} /> System Schema</span>
-                  <span className="text-accent-gold font-bold">Active Engine</span>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 font-bold text-xs">
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/5 rounded border border-white/10 text-white">Lead Intent</span>
-                  <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-accent-gold/15 rounded border border-accent-gold/40 text-accent-gold">Sub-60s AI Triage</span>
-                  <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/10 rounded border border-amber-300/30 text-amber-200">CRM Dispatch</span>
-                </div>
-              </div>
             </div>
 
-            {/* CTA Button */}
+            {/* Single CTA Button */}
             <div className="mt-8 pt-6 border-t border-accent-gold/20 relative z-10">
               <Button
                 asChild
                 size="lg"
-                className="w-full py-6 sm:py-7 font-bold text-sm md:text-base flex items-center justify-center shadow-lg hover:shadow-accent-gold/20 text-center tracking-normal px-2 sm:px-4"
+                className="w-full py-6 sm:py-7 font-bold text-sm md:text-base flex items-center justify-center shadow-lg hover:shadow-accent-gold/20 text-center tracking-normal px-2 sm:px-4 bg-accent-gold text-slate-950 hover:bg-amber-300"
               >
                 <Link
-                  href="/#demo"
-                  onClick={(e) => {
-                    if (typeof window !== "undefined" && window.location.pathname === "/") {
-                      const el = document.getElementById("demo")
-                      if (el) {
-                        e.preventDefault()
-                        el.scrollIntoView({ behavior: "smooth" })
-                      }
-                    }
-                  }}
+                  href="/book"
                   className="flex items-center justify-center gap-2"
                 >
-                  <span>{data.pathMercian.ctaText.replace(" →", "")}</span>
+                  <span>Book your free 15 minute audit</span>
                   <ArrowRight size={18} className="shrink-0" />
                 </Link>
               </Button>

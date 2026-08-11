@@ -52,14 +52,6 @@ export function Bottleneck() {
           <p className="font-sans text-sm text-accent-gold font-medium mt-4 max-w-2xl mx-auto">
             {data.goldSlogan}
           </p>
-
-          {/* Commodity Trap Absorbed Callout Box */}
-          <div className="mt-8 p-4 rounded-xl border border-accent-gold/30 bg-accent-gold/5 max-w-2xl mx-auto text-left flex items-start gap-3">
-            <span className="text-accent-gold text-base shrink-0 mt-0.5">✦</span>
-            <p className="text-xs sm:text-sm text-text-primary opacity-90 leading-relaxed font-medium">
-              <strong className="text-accent-gold font-serif">A Note on Commodity Infrastructure:</strong> Off-the-shelf templates and budget web builders look economical until you calculate lost instructions. We build high-converting infrastructure engineered for absolute market leverage.
-            </p>
-          </div>
         </motion.div>
 
         {/* ── Visual + Cards side-by-side ── */}
@@ -145,23 +137,8 @@ export function Bottleneck() {
               <div className="w-full border-t border-white/10 pt-4 mt-4 flex flex-col sm:flex-row gap-4 items-center sm:justify-between bg-transparent relative z-20 shrink-0">
                 <div className="flex flex-col text-center sm:text-left">
                   <span className="text-xs font-semibold text-text-primary opacity-80 leading-relaxed">
-                    {isOrdered ? "Experience absolute system control" : "Experience disjointed operations"}
+                    {isOrdered ? "Automated Storefront Active" : "Manual Scramble Active"}
                   </span>
-                  <Link
-                    href="/#demo"
-                    onClick={(e) => {
-                      if (typeof window !== "undefined" && window.location.pathname === "/") {
-                        const el = document.getElementById("demo")
-                        if (el) {
-                          e.preventDefault()
-                          el.scrollIntoView({ behavior: "smooth" })
-                        }
-                      }
-                    }}
-                    className="text-[10px] text-accent-gold hover:underline mt-1 font-semibold block text-center sm:text-left focus:outline-none"
-                  >
-                    {data.diagnosticLink}
-                  </Link>
                 </div>
                 <Button
                   onClick={() => setIsOrdered(!isOrdered)}
@@ -197,7 +174,7 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">{data.cards[0].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We establish instant auto-engagement to capture leads. Benefit: Every lead engaged within 60 seconds of enquiry."
+                      ? "Instant mobile booking & deposit collection so customers lock in jobs even while you work."
                       : data.cards[0].description
                     }
                   </p>
@@ -215,7 +192,7 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">{data.cards[1].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We wire automated data pipelines from capture to CRM. Benefit: Reclaim significant administrative hours back every week."
+                      ? "Instant phone alert arrives the second a deposit is paid, so you know exactly what is booked."
                       : data.cards[1].description
                     }
                   </p>
@@ -233,7 +210,7 @@ export function Bottleneck() {
                   <h3 className="font-sans font-semibold text-lg text-white">{data.cards[2].title}</h3>
                   <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed">
                     {isOrdered 
-                      ? "Mechanism: We configure smart CRM follow-ups and lead-nurtures. Benefit: Recover pipeline revenue that is normally lost to silence."
+                      ? "Automated review follow-up texts collect 5-star Google reviews from happy clients on autopilot."
                       : data.cards[2].description
                     }
                   </p>
@@ -244,7 +221,7 @@ export function Bottleneck() {
 
         </div>
 
-        {/* Post-Bottleneck Intermediate CTA Bar */}
+        {/* Post-Bottleneck Single CTA Bar */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -255,10 +232,10 @@ export function Bottleneck() {
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto h-auto py-4 sm:py-5 px-4 sm:px-8 text-xs sm:text-sm md:text-base font-bold shadow-[0_0_25px_rgba(212,175,55,0.15)] hover:shadow-accent-gold/25 whitespace-normal leading-snug"
+            className="w-full sm:w-auto h-auto py-4 sm:py-5 px-6 sm:px-10 text-sm sm:text-base font-bold bg-accent-gold text-slate-950 hover:bg-amber-300 shadow-[0_0_25px_rgba(212,175,55,0.15)] hover:shadow-accent-gold/25"
           >
             <Link href="/book" className="flex items-center justify-center gap-2">
-              <span>Calculate Your Latency Deficit — Apply for System Alignment</span>
+              <span>Book your free 15 minute audit</span>
               <span className="text-lg shrink-0">→</span>
             </Link>
           </Button>

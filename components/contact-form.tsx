@@ -260,7 +260,7 @@ export function ContactForm() {
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2">
-                Send Inquiry
+                Book your free 15 minute audit
                 <ArrowRight size={16} />
               </span>
             )}

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { RefreshCw, Landmark, Cpu } from "lucide-react"
+import { RefreshCw, Landmark } from "lucide-react"
 import { SITE_COPY } from "@/lib/site-copy"
 import { BrandLogo } from "@/components/brand-logo"
 
@@ -12,7 +12,7 @@ export function WhyMercianWealth() {
 
   return (
     <section id="architecture" className="relative py-24 lg:py-32 overflow-hidden bg-[#130B24]">
-      {/* Background Crest Watermark (Scrolls with page, behind text) */}
+      {/* Background Crest Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden max-w-full">
         <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] max-w-full opacity-10">
           <BrandLogo 
@@ -36,10 +36,10 @@ export function WhyMercianWealth() {
             className="space-y-6 text-left"
           >
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-accent-gold">
-              [ SYSTEM ARCHITECTURE ]
+              [ THE DIFFERENCE ]
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              We Build <span className="inline bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Leverage.</span> The Rest Build Overhead.
+              {data.headline}
             </h2>
             <p className="font-sans text-base sm:text-lg text-white/80 leading-relaxed max-w-xl font-normal">
               {data.description}
@@ -75,7 +75,7 @@ export function WhyMercianWealth() {
           </motion.div>
         </div>
 
-        {/* Trend Adaptation & Model Hint (Exclusivity Sections) */}
+        {/* Trend Adaptation & Model Hint */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

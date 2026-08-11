@@ -62,11 +62,11 @@ interface QualData {
 // Options
 // ---------------------------------------------------------------------------
 const serviceOptions: { value: string; label: string; description: string }[] = [
-  { value: "High-Yield Digital Infrastructure",    label: "Web Infrastructure",  description: "Bespoke luxury web presence" },
-  { value: "Autonomous Pipeline Routing",          label: "Pipeline Routing",    description: "CRM bookings and lead triage" },
-  { value: "Relational Cloud Data Architecture",   label: "Database Design",     description: "Supabase relational backend state" },
-  { value: "Autonomic Multi-Agent Systems",        label: "AI & Automation",     description: "Autonomous lead qualifiers and sync" },
-  { value: "Unsure / Consultation",                label: "Unsure / Consultation",description: "Discuss best strategy and fit" },
+  { value: "Instant Mobile Storefront",            label: "Mobile Storefront",           description: "Fast mobile page engineered for local booking" },
+  { value: "Instant Booking & Deposit Collection", label: "Booking & Deposits",         description: "Online calendar booking & deposit capture" },
+  { value: "Instant Phone Notifications",          label: "Instant Phone Alerts",        description: "Order alerts sent directly to your phone" },
+  { value: "Automated 5-Star Review Engine",       label: "5-Star Review Automation",    description: "Automated Google review collection after jobs" },
+  { value: "Free 15-Minute Audit",                 label: "Free 15-Minute Audit",        description: "Review your process and explore options" },
 ]
 
 const challengeOptions: { value: Challenge; label: string; description: string }[] = [
@@ -881,6 +881,16 @@ function BookingFlowInner() {
               )}
             </div>
 
+            {/* Curiosity Hook Banner */}
+            <div className="p-4 rounded-xl border border-accent-gold/30 bg-accent-gold/10 space-y-1 text-left">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-accent-gold block">
+                What We Will Cover On Your Call:
+              </span>
+              <p className="text-xs text-white leading-relaxed font-medium">
+                On this 15-minute call, we will reveal the exact 3 adjustments that allow local service businesses in your area to capture deposits and 5-star reviews on autopilot without taking time away from their daily work.
+              </p>
+            </div>
+
             {/* Calendly embed */}
             <div className="relative rounded-2xl overflow-hidden border border-border-brand/20 shadow-2xl calendly-widget-wrapper"
               role="region" aria-label="Calendly booking calendar" style={{ background: "#0A0A0A" }}>
@@ -943,20 +953,20 @@ function BookingFlowInner() {
               
               <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1">
                 <div>
-                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">High-Yield Digital Infrastructure</h4>
-                  <p className="text-xs text-text-secondary mt-1">Bespoke Next.js platforms designed to project absolute category dominance. Built without templates, engineered for prestige.</p>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Instant Mobile Storefront</h4>
+                  <p className="text-xs text-text-secondary mt-1">High-speed mobile storefront designed for local customers on their phones. Loads under 1 second.</p>
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Autonomous Pipeline Routing</h4>
-                  <p className="text-xs text-text-secondary mt-1">Custom CRM bookings and synchronized lead orchestration that triages, captures, and schedules prospects in under 1 second.</p>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Instant Booking & Deposit Collection</h4>
+                  <p className="text-xs text-text-secondary mt-1">Online booking builder allowing clients to select service options and pay upfront deposits 24/7.</p>
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Relational Cloud Data Architecture</h4>
-                  <p className="text-xs text-text-secondary mt-1">High-throughput cloud storage engines and database schemas engineered for sub-millisecond querying and complete data sovereignty.</p>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Instant Phone Notifications</h4>
+                  <p className="text-xs text-text-secondary mt-1">Immediate text and WhatsApp notifications sent straight to your phone as soon as an order is booked.</p>
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Autonomic Multi-Agent Systems</h4>
-                  <p className="text-xs text-text-secondary mt-1">Automated pipelines that qualify, capture, and nurture leads 24/7/365. Replacing manual drag with software leverage.</p>
+                  <h4 className="text-xs font-bold text-accent-gold uppercase tracking-wider">Automated 5-Star Google Review Engine</h4>
+                  <p className="text-xs text-text-secondary mt-1">Automated review follow-up texts sent right after job completion to build your 5-star Google rating.</p>
                 </div>
               </div>
               
