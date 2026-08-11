@@ -88,9 +88,13 @@ export function BrandLogo({
     setImgError(false)
   }, [primary])
 
-  // Always show wordmark if explicitly requested or asset unavailable
-  if (wordmarkOnly || imgError) {
+  // Show text wordmark only for logo variant, never for watermark background containers
+  if (wordmarkOnly || (imgError && variant !== "watermark")) {
     return <WordmarkLogo className={className as string | undefined} />
+  }
+
+  if (imgError && variant === "watermark") {
+    return null
   }
 
   const hasFill = (props as any).fill
@@ -98,21 +102,15 @@ export function BrandLogo({
   const imgHeight = hasFill ? undefined : (props as any).height || 40
 
   return (
-    // LOGO_SWAP: Update BRAND_LOGO in lib/brand-assets.ts when the final
-    // Mercian Wealth asset is ready — this <Image> will automatically pick it up.
     <Image
+      unoptimized
       {...(hasFill ? {} : { width: imgWidth, height: imgHeight })}
       {...props}
       src={src}
       alt={alt}
       className={className}
       onError={() => {
-        // Fall through to wordmark if both primary and fallback fail
-        if (src !== BRAND_LOGO_FALLBACK) {
-          setSrc(BRAND_LOGO_FALLBACK)
-        } else {
-          setImgError(true)
-        }
+        setImgError(true)
       }}
     />
   )
