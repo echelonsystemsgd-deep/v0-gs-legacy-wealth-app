@@ -10,7 +10,7 @@ export function DivergenceComparison() {
   const data = SITE_COPY.homepage.divergenceComparison
 
   return (
-    <section id="divergence" className="relative pt-4 pb-20 sm:py-24 lg:py-32 overflow-hidden bg-[#090D16]">
+    <section id="divergence" className="relative pt-4 sm:pt-12 lg:pt-20 pb-12 sm:pb-20 lg:pb-24 overflow-hidden bg-[#090D16]">
       {/* Ambient Lighting Background */}
       <div 
         className="absolute inset-0 pointer-events-none z-0 opacity-40"

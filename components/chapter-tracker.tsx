@@ -11,11 +11,13 @@ interface Chapter {
 }
 
 const chapters: Chapter[] = [
-  { id: "bottleneck", label: "I", title: "Friction", selectors: ["#chapter-divider-I", "#bottleneck", "#roi-calculator"] },
-  { id: "divergence", label: "II", title: "Divergence", selectors: ["#chapter-divider-II", "#divergence"] },
-  { id: "architecture", label: "III", title: "Architecture", selectors: ["#chapter-divider-III", "#architecture", "#system-blueprint"] },
-  { id: "telemetry", label: "IV", title: "Telemetry", selectors: ["#chapter-divider-IV", "#telemetry", "#pricing"] },
-  { id: "cta", label: "V", title: "Integration", selectors: ["#chapter-divider-V", "#cta"] },
+  { id: "bottleneck", label: "I", title: "Friction", selectors: ["#chapter-divider-I", "#bottleneck"] },
+  { id: "workflow", label: "II", title: "Automation", selectors: ["#chapter-divider-II", "#workflow"] },
+  { id: "demo", label: "III", title: "Interactive", selectors: ["#chapter-divider-III", "#demo"] },
+  { id: "divergence", label: "IV", title: "Divergence", selectors: ["#chapter-divider-IV", "#divergence"] },
+  { id: "roi", label: "V", title: "Saved Hours", selectors: ["#chapter-divider-V", "#roi-calculator"] },
+  { id: "architecture", label: "VI", title: "Architecture", selectors: ["#chapter-divider-VI", "#architecture", "#system-blueprint"] },
+  { id: "pricing", label: "VII", title: "Pricing", selectors: ["#chapter-divider-VII", "#pricing"] },
 ]
 
 export function ChapterTracker() {

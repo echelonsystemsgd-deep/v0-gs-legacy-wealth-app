@@ -112,7 +112,7 @@ export function InteractivePhoneDemo() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left Column: Interactive 3-Tap Form Controls */}
-          <div className="lg:col-span-6 p-8 rounded-3xl bg-slate-900/90 border border-slate-800 backdrop-blur-xl shadow-2xl space-y-6">
+          <div className="lg:col-span-6 p-4 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 backdrop-blur-xl shadow-2xl space-y-6 min-w-0 max-w-full">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <span>Customer Order Form Widget</span>

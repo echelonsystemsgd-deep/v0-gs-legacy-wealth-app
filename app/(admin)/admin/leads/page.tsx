@@ -998,7 +998,7 @@ export default function LeadsPage() {
                   <input
                     value={leadForm.business_name}
                     onChange={(e) => setLeadForm({ ...leadForm, business_name: e.target.value })}
-                    placeholder="Acme Corp"
+                    placeholder="Sterling Artisan Bakery"
                     className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
                   />
                 </div>

@@ -99,7 +99,7 @@ export function StickyCTAButton() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="sm:hidden fixed bottom-0 inset-x-0 z-[90] bg-[#0A1128]/95 backdrop-blur-xl border-t border-[#D9A74A]/30 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] pointer-events-auto"
+            className="sm:hidden fixed bottom-0 inset-x-0 z-[90] bg-[#0A1128]/95 backdrop-blur-xl border-t border-[#D9A74A]/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] flex items-center justify-between gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] pointer-events-auto"
           >
             <a
               href="tel:+447851055929"

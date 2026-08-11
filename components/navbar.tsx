@@ -229,17 +229,21 @@ export function Navbar() {
                   }
                 }}
                 className="flex items-center gap-3 cursor-pointer group"
-                aria-label="Homepage"
+                aria-label="Mercian Wealth Homepage"
               >
-                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-11 w-11"}`}>
+                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-10 w-10"} shrink-0`}>
                   <BrandLogo
                     variant="logo"
-                    alt="Logo"
+                    alt="Mercian Wealth"
                     fill
-                    className="object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-105"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
                     priority
                   />
                 </div>
+                <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
+                  <span className="text-[#38BDF8]">Mercian</span>
+                  <span className="text-[#F59E0B]">Wealth</span>
+                </span>
               </Link>
 
             {/* Desktop Navigation */}
@@ -379,7 +383,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#090D16]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
+            className="fixed inset-0 h-[100dvh] bg-[#090D16]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
           >
             {/* Background Ambient Glow */}
             <div 
@@ -391,14 +395,20 @@ export function Navbar() {
 
             {/* Mobile Drawer Top Header Bar */}
             <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0 min-w-0 max-w-full">
-              <div className="relative h-9 w-9">
-                <BrandLogo
-                  variant="logo"
-                  alt="Mercian Wealth"
-                  fill
-                  className="object-contain mix-blend-screen"
-                />
-              </div>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2.5">
+                <div className="relative h-8 w-8 shrink-0">
+                  <BrandLogo
+                    variant="logo"
+                    alt="Mercian Wealth"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span className="font-sans text-base font-extrabold text-white flex items-center gap-1">
+                  <span className="text-[#38BDF8]">Mercian</span>
+                  <span className="text-[#F59E0B]">Wealth</span>
+                </span>
+              </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer shrink-0"
@@ -409,7 +419,7 @@ export function Navbar() {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 flex-1 px-4 sm:px-6 pt-6 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between min-w-0 max-w-full">
+            <div className="relative z-10 flex-1 px-4 sm:px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between min-w-0 max-w-full">
               
               {/* Telemetry Status Pill */}
               <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-accent-gold/5 border border-accent-gold/20 font-mono text-[10px] sm:text-xs">

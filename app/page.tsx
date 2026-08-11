@@ -88,17 +88,17 @@ export default async function Home() {
         <InteractivePhoneDemo />
       </div>
 
-      <SectionDivider id="chapter-divider-III" chapter="III" title="Order Engine vs Manual Drag" />
+      <SectionDivider id="chapter-divider-IV" chapter="IV" title="Order Engine vs Manual Drag" />
       <DivergenceComparison />
 
-      <SectionDivider id="chapter-divider-IV" chapter="IV" title="Calculate Saved Hours & Revenue" />
+      <SectionDivider id="chapter-divider-V" chapter="V" title="Calculate Saved Hours & Revenue" />
       <InteractiveRoiCalculator />
 
-      <SectionDivider id="chapter-divider-V" chapter="V" title="Built for Bakeries & Local Services" />
+      <SectionDivider id="chapter-divider-VI" chapter="VI" title="Built for Bakeries & Local Services" />
       <WhyMercianWealth />
       <SystemBlueprint />
 
-      <SectionDivider id="chapter-divider-VI" chapter="VI" title="Transparent Pricing & Packages" />
+      <SectionDivider id="chapter-divider-VII" chapter="VII" title="Transparent Pricing & Packages" />
       <Suspense fallback={<div className="py-20 text-center text-sky-400 font-mono text-sm">Loading Solutions & Pricing...</div>}>
         <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
       </Suspense>
