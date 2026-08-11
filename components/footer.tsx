@@ -12,14 +12,14 @@ import { CopyEmailButton } from "@/components/copy-email-button"
 export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
-    tagline: "Automated Storefronts & AI Engines for Bakeries, Food Artisans & Local Services.",
+    tagline: "Automated Storefronts & AI Engines for Local Businesses.",
     email: "mercianwealthgs@gmail.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929?text=Hi%20Mercian%20Wealth,%20I'd%20like%20to%20inquire%20about%20your%20services.",
-    instagramLink: "https://instagram.com",
-    linkedinLink: "https://linkedin.com",
+    instagramLink: "https://instagram.com/mercianwealth",
+    linkedinLink: "https://www.linkedin.com/company/mercianwealth",
     ctaDescription: "Book a 15-minute quick audit to see how much manual admin time we can eliminate for your business.",
-    ctaButtonText: "Book 15-Min Quick Audit"
+    ctaButtonText: "Book your free 15 minute audit"
   })
 
   const quickLinks = [

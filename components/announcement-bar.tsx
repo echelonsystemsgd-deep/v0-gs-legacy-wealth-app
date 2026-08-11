@@ -13,7 +13,7 @@ export function AnnouncementBar() {
       className="w-full flex justify-center px-4 mb-6 z-20"
     >
       <Link
-        href="/#demo"
+        href="/local"
         className="inline-flex items-center gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full bg-accent-gold/10 border border-accent-gold/30 hover:border-accent-gold/60 text-xs sm:text-sm font-medium text-accent-gold transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] group text-center max-w-full"
       >
         <Sparkles size={14} className="text-accent-gold shrink-0 animate-pulse hidden sm:inline-block" />

@@ -1,61 +1,55 @@
-# Implementation Plan - Fix All Website Buttons & Refine Universal Copy
+# Implementation Plan - Interactive Audit & Fixes
 
-Fix all non-functional buttons shown in user screenshots, ensure smooth scroll anchor navigation for demo links, map booking form URL parameters, and continuously reinforce universal messaging across the entire site for **all local business sectors**.
+Comprehensive audit of all clickable elements across the entire website and resolution of identified link and copy inconsistencies.
 
-## Overview & User Feedback
-- **Universal Copy Standard**: 
-  - The copy throughout `lib/site-copy.ts` and all components refers strictly to **universal local business realities** (*being with clients, working on jobs, managing appointments, handling enquiries*).
-  - All niche-specific references (cakes, catering, bakeries, food artisans, prep shifts, sinks, roofs, vans, etc.) have been completely removed.
-- **Button Navigation Fixes**: 
-  - Clicking **"TEST INTERACTIVE DEMO →"** and **"Try our interactive 3-tap order builder →"** will smoothly scroll straight to the Interactive 3-Tap Demo section (`#demo`) on the homepage.
-  - Clicking **"VIEW SOLUTIONS & PRICING"** will smoothly scroll to `#pricing` on the homepage or navigate to `/pricing`.
-  - The sticky **"Apply for Audit"** button and scroll-to-top button will be fully functional.
-  - Selecting any pricing tier or service package will carry that pre-filled selection straight into the booking form on `/book`.
+## Audit Summary & Approved Fixes
 
----
+The exhaustive audit of 73 interactive elements identified 3 minor link/copy inconsistencies across the codebase, all approved for implementation:
 
-## Proposed Changes
+### 1. [HIGH] Announcement Bar Target (`components/announcement-bar.tsx`)
+- **Issue**: Announcement bar link currently routes to `/#demo`.
+- **Fix**: Update `href="/#demo"` to `href="/local"`.
 
-### 1. Universal Copy Registry (`lib/site-copy.ts`)
+### 2. [HIGH] Footer Social Media Links (`components/footer.tsx`)
+- **Issue**: Default social links point to generic domains (`https://instagram.com`, `https://linkedin.com`).
+- **Fix**: Update `instagramLink` to `"https://instagram.com/mercianwealth"` and `linkedinLink` to `"https://www.linkedin.com/company/mercianwealth"`.
 
-#### [MODIFY] [site-copy.ts](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/lib/site-copy.ts)
-- Universal Hero Headline: *"AI-Powered Websites and Automation for Local Businesses. More Bookings. Fewer Missed Calls. Zero Extra Admin."*
-- Universal Subheadline: *"We replace missed phone calls, lost WhatsApp messages, and evening quote-chasing with an automated storefront that captures leads, collects deposits, and sends instant phone alerts 24/7."*
-- All section copy across Pages 1–7 updated to speak universally to any local business owner.
+### 3. [LOW] Footer CTA Button Text (`components/footer.tsx`)
+- **Issue**: Default button text reads `"Book 15-Min Quick Audit"`.
+- **Fix**: Update `ctaButtonText` to `"Book your free 15 minute audit"`.
 
 ---
 
-### 2. Button Navigation & Smooth Scroll Handlers
+## Proposed File Modifications
 
-#### [MODIFY] [hero.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/hero.tsx)
-- Add explicit smooth scroll handler for `/#demo` links:
-  - `TEST INTERACTIVE DEMO →`
-  - `Want to see how it works live? Try our interactive 3-tap order builder →`
+#### [MODIFY] [announcement-bar.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/announcement-bar.tsx)
+- Update `href="/#demo"` -> `href="/local"`.
 
-#### [MODIFY] [divergence-comparison.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/divergence-comparison.tsx)
-- Verified `Sub-1-second mobile load speed` is in the **Automated Storefront** column.
-
-#### [MODIFY] [booking-flow.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/booking-flow.tsx)
-- Placed curiosity hook banner prominently above the calendar widget in Stage 3.
+#### [MODIFY] [footer.tsx](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/components/footer.tsx)
+- Update default `instagramLink` -> `"https://instagram.com/mercianwealth"`.
+- Update default `linkedinLink` -> `"https://www.linkedin.com/company/mercianwealth"`.
+- Update default `ctaButtonText` -> `"Book your free 15 minute audit"`.
 
 ---
 
 ## Verification Plan
 
+### Automated Tests
+- Run `npx tsc --noEmit` to verify 0 compilation errors across all components.
+
 ### Manual Verification
-1. **Universal Copy Review**:
-   - Verified that pages 1 through 7 contain zero niche-specific references.
-2. **Divergence Column Check**:
-   - `Sub-1-second mobile load speed` confirmed in Automated Storefront column.
-3. **Booking Curiosity Hook**:
-   - Curiosity hook banner displayed above calendar embed on `/book`.
+1. Click announcement bar -> verify navigation to `/local`.
+2. Click footer Instagram icon -> verify opens `https://instagram.com/mercianwealth` in new tab.
+3. Click footer LinkedIn icon -> verify opens `https://www.linkedin.com/company/mercianwealth` in new tab.
+4. Verify footer CTA button text reads `"Book your free 15 minute audit"`.
 
 ---
 
-## Completion Note: Full Universal Copy Rewrite & Commit Executed
+## Completion Note: All 3 Audit Fixes Executed (Zero Errors)
 
-- **Universal Copy Implemented**: Complete site-wide copy rewrite executed across pages 1 through 7 (`/`, `/services`, `/process`, `/portfolio`, `/pricing`, `/contact`, `/book`).
-- **Divergence Column Correction**: `Sub-1-second mobile load speed` verified in Automated Storefront column.
-- **Booking Page Curiosity Hook**: Positioned prominently above the calendar widget in Stage 3.
-- **Typecheck**: `npx tsc --noEmit` executed — **0 compilation errors**.
-- **GitHub Commit**: Changes committed to git repository.
+- **Completed**: Applied all 3 approved audit fixes across `components/announcement-bar.tsx` and `components/footer.tsx`.
+- **Announcement Bar Link**: Updated `href` from `/#demo` to `/local`.
+- **Footer Social Links**: Updated fallback links to `https://instagram.com/mercianwealth` and `https://www.linkedin.com/company/mercianwealth`.
+- **Footer CTA Text**: Standardized default CTA button text to `"Book your free 15 minute audit"`.
+- **Typecheck Verified**: `npx tsc --noEmit` returned **0 compilation errors**.
+- **GitHub Commit**: Staged, committed, and pushed changes to `main`.
