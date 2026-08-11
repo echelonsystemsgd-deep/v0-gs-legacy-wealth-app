@@ -231,7 +231,7 @@ export function Navbar() {
                 className="flex items-center gap-3 cursor-pointer group"
                 aria-label="Mercian Wealth Homepage"
               >
-                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9" : "h-10 w-10"} shrink-0`}>
+                <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-11 w-11 sm:h-12 sm:w-12"} shrink-0`}>
                   <BrandLogo
                     variant="logo"
                     alt="Mercian Wealth"

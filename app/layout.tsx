@@ -129,7 +129,7 @@ export default function RootLayout({
           <StickyCTAButton />
           <ScrollToTop />
         <Toaster position="top-right" theme="dark" richColors closeButton />
-        <Watermark position="center" opacity={0.06} />
+        <Watermark position="center" opacity={0.20} />
         <TabRetention />
         <WhatsAppButton />
         {process.env.NODE_ENV === 'production' && <Analytics />}

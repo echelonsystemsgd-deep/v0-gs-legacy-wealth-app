@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#0A1128]">
       {/* Ambient Brand Watermark Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] opacity-10 pointer-events-none mix-blend-screen z-0">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-25 sm:opacity-30 pointer-events-none mix-blend-screen z-0">
         <BrandLogo variant="watermark" fill className="object-contain" priority />
       </div>
 

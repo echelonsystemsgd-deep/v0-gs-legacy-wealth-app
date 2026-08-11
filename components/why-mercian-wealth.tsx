@@ -14,7 +14,7 @@ export function WhyMercianWealth() {
     <section id="architecture" className="relative py-24 lg:py-32 overflow-hidden bg-[#130B24]">
       {/* Background Crest Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden max-w-full">
-        <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] max-w-full opacity-10">
+        <div className="relative w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] max-w-full opacity-25">
           <BrandLogo 
             variant="watermark"
             alt=""
