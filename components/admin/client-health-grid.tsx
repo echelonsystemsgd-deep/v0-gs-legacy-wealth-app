@@ -88,23 +88,15 @@ export function getHealthLabel(project: ProjectWithHealth): 'Blocked' | 'Awaitin
     return 'On Track'
   }
 
-  // 1. Red Check (Blocked / Stale)
-  const isMessageUnreadAndOver24h = project.unreadMessageCount > 0 && project.daysSinceLastMessage !== null && project.daysSinceLastMessage >= 1
-  
-  // Stage-aware thresholds (in days)
-  let threshold = 7
-  if (project.status === 'Discovery' || project.status === 'Design') {
-    threshold = 3
-  } else if (project.status === 'Development') {
-    threshold = 14
-  } else if (project.status === 'Revision') {
-    threshold = 7
-  }
+  // 1. Red Check (Blocked / Stale Unread Messages)
+  // A project is Blocked ONLY if there are unread client messages pending past 24h/threshold.
+  const hasUnreadMessages = project.unreadMessageCount > 0
+  const isMessageUnreadOver24h =
+    hasUnreadMessages &&
+    project.daysSinceLastMessage !== null &&
+    project.daysSinceLastMessage >= 1
 
-  const daysSinceLastUpdate = Math.floor((Date.now() - new Date(project.updated_at).getTime()) / (1000 * 60 * 60 * 24))
-  const isInactiveOverThreshold = (project.daysSinceLastMessage === null || project.daysSinceLastMessage >= threshold) && daysSinceLastUpdate >= threshold
-
-  if (isMessageUnreadAndOver24h || isInactiveOverThreshold) {
+  if (isMessageUnreadOver24h) {
     return 'Blocked'
   }
 
