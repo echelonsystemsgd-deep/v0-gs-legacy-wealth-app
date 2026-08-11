@@ -2,9 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { useState, useEffect } from "react"
 import { BRAND_WATERMARK } from "@/lib/brand-assets"
-import { useWebsiteContent } from "@/hooks/use-website-content"
 
 interface WatermarkProps {
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center" | "custom";
@@ -13,16 +11,9 @@ interface WatermarkProps {
 }
 
 export function Watermark({ position = "center", className = "", opacity = 0.25 }: WatermarkProps) {
-  const { getSection } = useWebsiteContent()
-  const data = getSection('branding', {
-    watermarkUrl: BRAND_WATERMARK,
-  })
-
-  const [src, setSrc] = useState(data.watermarkUrl)
-
-  useEffect(() => {
-    setSrc(data.watermarkUrl)
-  }, [data.watermarkUrl])
+  // Always use static public/ path directly — no Supabase CMS dependency.
+  // This ensures Vercel and localhost render identically.
+  const src = BRAND_WATERMARK
 
   const getPositionClasses = () => {
     switch (position) {
@@ -45,7 +36,6 @@ export function Watermark({ position = "center", className = "", opacity = 0.25 
         className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] mix-blend-screen"
       >
         <Image
-          unoptimized
           src={src}
           alt=""
           fill

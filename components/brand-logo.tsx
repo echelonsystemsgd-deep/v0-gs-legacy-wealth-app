@@ -1,13 +1,11 @@
 "use client"
 
 import Image, { type ImageProps } from "next/image"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
   BRAND_LOGO,
-  BRAND_LOGO_FALLBACK,
   BRAND_WATERMARK,
 } from "@/lib/brand-assets"
-import { useWebsiteContent } from "@/hooks/use-website-content"
 
 type BrandLogoProps = Omit<ImageProps, "src" | "alt"> & {
   variant?: "logo" | "watermark"
@@ -17,12 +15,7 @@ type BrandLogoProps = Omit<ImageProps, "src" | "alt"> & {
 }
 
 /**
- * WordmarkLogo — interim branded text treatment used until the final
- * Mercian Wealth logo file is available.
- *
- * LOGO_SWAP: Replace this component call with the <Image> tag once
- * the final asset is placed at /public/MercianWealthlogo.jpeg (or .png).
- * See lib/brand-assets.ts for the central path constants.
+ * WordmarkLogo — text fallback used when wordmarkOnly is explicitly requested.
  */
 function WordmarkLogo({ className }: { className?: string }) {
   return (
@@ -40,17 +33,10 @@ function WordmarkLogo({ className }: { className?: string }) {
         fontWeight: 800,
       }}
     >
+      <span style={{ color: "#38BDF8", fontSize: "inherit" }}>Mercian</span>
       <span
         style={{
-          color: "#38BDF8",            /* Electric Cyan Primary */
-          fontSize: "inherit",
-        }}
-      >
-        Mercian
-      </span>
-      <span
-        style={{
-          color: "#F59E0B",            /* Warm Amber Accent */
+          color: "#F59E0B",
           fontSize: "0.85em",
           background: "rgba(245, 158, 11, 0.15)",
           padding: "0.15em 0.4em",
@@ -71,29 +57,18 @@ export function BrandLogo({
   className,
   ...props
 }: BrandLogoProps) {
-  const { getSection } = useWebsiteContent()
-  const data = getSection("branding", {
-    logoUrl: BRAND_LOGO,
-    watermarkUrl: BRAND_WATERMARK,
-  })
+  // Always use static public/ paths directly — never fetched from Supabase CMS.
+  // This ensures localhost and Vercel behave identically.
+  const src = variant === "watermark" ? BRAND_WATERMARK : BRAND_LOGO
 
-  const primary = variant === "watermark" ? data.watermarkUrl : data.logoUrl
-
-  // Track whether the image failed to load — fall back to wordmark
   const [imgError, setImgError] = useState(false)
-  const [src, setSrc] = useState(primary)
 
-  useEffect(() => {
-    setSrc(primary)
-    setImgError(false)
-  }, [primary])
-
-  // Show text wordmark only if explicitly requested via wordmarkOnly prop
+  // Only show text wordmark when explicitly requested
   if (wordmarkOnly) {
     return <WordmarkLogo className={className as string | undefined} />
   }
 
-  // Return null if image asset fails to load, preventing text duplication beside wordmark headers
+  // If image fails, return null — the surrounding wordmark text handles branding display
   if (imgError) {
     return null
   }
@@ -104,16 +79,12 @@ export function BrandLogo({
 
   return (
     <Image
-      unoptimized
       {...(hasFill ? {} : { width: imgWidth, height: imgHeight })}
       {...props}
       src={src}
       alt={alt}
       className={className}
-      onError={() => {
-        setImgError(true)
-      }}
+      onError={() => setImgError(true)}
     />
   )
 }
-
