@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
+import { BrandLogo } from '@/components/brand-logo'
 
 export const metadata: Metadata = {
   title: 'Secure Access',
@@ -18,27 +18,28 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       <div className="relative z-10 w-full max-w-md space-y-8">
-        {/* Logo */}
-        <div className="flex flex-col items-center gap-4">
-          <Link href="/" className="group">
-            <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300 rounded-2xl overflow-hidden shadow-lg border border-gold/30">
-              <Image
-                src="/MercianWealthLogo.jpeg"
+        {/* Logo Header */}
+        <div className="flex flex-col items-center gap-3">
+          <Link href="/" className="group flex flex-col items-center gap-3 cursor-pointer" aria-label="Back to Homepage">
+            <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300 rounded-2xl bg-black/40 p-2.5 shadow-xl border border-gold/30 flex items-center justify-center">
+              <BrandLogo
+                variant="logo"
                 alt="Mercian Wealth"
                 fill
-                className="object-cover"
+                className="object-contain"
                 priority
               />
             </div>
+            <div className="text-center space-y-1">
+              <p className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-accent-gold">
+                SECURE GATEWAY
+              </p>
+              <h1 className="font-sans text-xl font-extrabold text-white flex items-center justify-center gap-1.5">
+                <span className="text-[#38BDF8]">Mercian</span>
+                <span className="text-[#F59E0B]">Wealth</span>
+              </h1>
+            </div>
           </Link>
-          <div className="text-center">
-            <p className="text-xxs font-bold uppercase tracking-[0.3em] text-gold/70">
-              Secure Gateway
-            </p>
-            <h1 className="font-serif text-xl font-bold text-foreground mt-1">
-              Mercian Wealth
-            </h1>
-          </div>
         </div>
 
         {children}
