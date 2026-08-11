@@ -88,12 +88,13 @@ export function BrandLogo({
     setImgError(false)
   }, [primary])
 
-  // Show text wordmark only for logo variant, never for watermark background containers
-  if (wordmarkOnly || (imgError && variant !== "watermark")) {
+  // Show text wordmark only if explicitly requested via wordmarkOnly prop
+  if (wordmarkOnly) {
     return <WordmarkLogo className={className as string | undefined} />
   }
 
-  if (imgError && variant === "watermark") {
+  // Return null if image asset fails to load, preventing text duplication beside wordmark headers
+  if (imgError) {
     return null
   }
 
