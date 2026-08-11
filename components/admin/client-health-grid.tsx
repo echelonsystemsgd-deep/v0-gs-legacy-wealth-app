@@ -145,33 +145,52 @@ export function ClientHealthGrid({
   const [selectedProject, setSelectedProject] = useState<ProjectWithHealth | null>(null)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [markingRead, setMarkingRead] = useState(false)
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const [localOverrides, setLocalOverrides] = useState<Record<string, Partial<ProjectWithHealth>>>({})
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        setCurrentUserId(data.user.id)
-      }
-    })
-  }, [supabase])
+  const activeClients = clients.map((c) => ({
+    ...c,
+    ...(localOverrides[c.id] || {}),
+  }))
 
   const handleMarkMessagesRead = async (projectId: string) => {
     setMarkingRead(true)
+    const now = new Date().toISOString()
+
+    // Apply immediate optimistic state update to clear red blocked status
+    setLocalOverrides((prev) => ({
+      ...prev,
+      [projectId]: {
+        unreadMessageCount: 0,
+        updated_at: now,
+        daysSinceLastMessage: 0,
+      },
+    }))
+
     try {
-      const { error } = await supabase
+      // 1. Mark unread client messages as read
+      const { error: msgError } = await supabase
         .from('messages')
         .update({ is_read: true })
         .eq('project_id', projectId)
-        .neq('sender_id', currentUserId || '')
 
-      if (error) throw error
+      if (msgError) console.error('Error marking messages read:', msgError)
 
-      toast.success('All client messages marked as read.')
+      // 2. Refresh project updated_at to reset stale threshold timer in Supabase
+      const { error: projError } = await supabase
+        .from('projects')
+        .update({ updated_at: now })
+        .eq('id', projectId)
+
+      if (projError) console.error('Error updating project timestamp:', projError)
+
+      toast.success('Client unblocked! Project health restored.')
       
       if (selectedProject) {
         setSelectedProject({
           ...selectedProject,
           unreadMessageCount: 0,
+          updated_at: now,
+          daysSinceLastMessage: 0,
         })
       }
 
@@ -183,14 +202,14 @@ export function ClientHealthGrid({
     }
   }
 
-  // Sort by urgency score
-  const sorted = [...clients].sort((a, b) => getUrgencyScore(b) - getUrgencyScore(a))
+  // Sort by urgency score using activeClients with overrides applied
+  const sorted = [...activeClients].sort((a, b) => getUrgencyScore(b) - getUrgencyScore(a))
   const displayed = maxItems ? sorted.slice(0, maxItems) : sorted
   const hiddenCount = maxItems ? Math.max(0, sorted.length - maxItems) : 0
 
-  const blockedCount = clients.filter((c) => getHealthLabel(c) === 'Blocked').length
-  const attentionCount = clients.filter((c) => getHealthLabel(c) === 'Awaiting Client').length
-  const suspendedCount = clients.filter((c) => getHealthLabel(c) === 'Suspended').length
+  const blockedCount = activeClients.filter((c) => getHealthLabel(c) === 'Blocked').length
+  const attentionCount = activeClients.filter((c) => getHealthLabel(c) === 'Awaiting Client').length
+  const suspendedCount = activeClients.filter((c) => getHealthLabel(c) === 'Suspended').length
 
   const handleMarkRequestComplete = async (requestId: string) => {
     setUpdatingId(requestId)
@@ -300,9 +319,17 @@ export function ClientHealthGrid({
           const tabParam = health === 'Blocked' ? 'chat' : health === 'Awaiting Client' ? 'actions' : 'config'
 
           return (
-            <button
+            <div
               key={project.id}
+              role="button"
+              tabIndex={0}
               onClick={() => setSelectedProject(project)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setSelectedProject(project)
+                }
+              }}
               className={`relative p-4 glass rounded-2xl border border-purple-500/15 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.08)] transition-all duration-300 border-l-[3px] ${healthBorder} group flex flex-col gap-3 text-left w-full cursor-pointer`}
             >
               {/* Avatar + Name */}
@@ -405,7 +432,7 @@ export function ClientHealthGrid({
                   )}
                 </div>
               </div>
-            </button>
+            </div>
           )
         })}
 
