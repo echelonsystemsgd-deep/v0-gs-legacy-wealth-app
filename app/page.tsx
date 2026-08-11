@@ -33,41 +33,41 @@ export default async function Home() {
             "@graph": [
               {
                 "@type": "Organization",
-                "@id": "https://mercianwealth.co.uk/#organization",
+                "@id": "https://mercianwealth.com/#organization",
                 "name": "Mercian Wealth",
-                "url": "https://mercianwealth.co.uk",
+                "url": "https://mercianwealth.com",
                 "logo": {
                   "@type": "ImageObject",
-                  "@id": "https://mercianwealth.co.uk/#logo",
-                  "url": "https://mercianwealth.co.uk/logo.png",
+                  "@id": "https://mercianwealth.com/#logo",
+                  "url": "https://mercianwealth.com/MercianWealthLogo.jpeg",
                   "caption": "Mercian Wealth"
                 },
                 "image": {
-                  "@id": "https://mercianwealth.co.uk/#logo"
+                  "@id": "https://mercianwealth.com/#logo"
                 }
               },
               {
                 "@type": "WebSite",
-                "@id": "https://mercianwealth.co.uk/#website",
-                "url": "https://mercianwealth.co.uk",
+                "@id": "https://mercianwealth.com/#website",
+                "url": "https://mercianwealth.com",
                 "name": "Mercian Wealth",
-                "description": "Custom digital storefronts and automated AI engines for bakeries, food artisans, and local services.",
+                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders.",
                 "publisher": {
-                  "@id": "https://mercianwealth.co.uk/#organization"
+                  "@id": "https://mercianwealth.com/#organization"
                 }
               },
               {
                 "@type": "WebPage",
-                "@id": "https://mercianwealth.co.uk/#webpage",
-                "url": "https://mercianwealth.co.uk",
-                "name": "Mercian Wealth | Automation & Mobile Storefronts for Bakeries & Local Services",
+                "@id": "https://mercianwealth.com/#webpage",
+                "url": "https://mercianwealth.com",
+                "name": "Mercian Wealth | Luxury AI-Powered Websites & Business Automation",
                 "isPartOf": {
-                  "@id": "https://mercianwealth.co.uk/#website"
+                  "@id": "https://mercianwealth.com/#website"
                 },
                 "about": {
-                  "@id": "https://mercianwealth.co.uk/#organization"
+                  "@id": "https://mercianwealth.com/#organization"
                 },
-                "description": "Custom digital storefronts, 3-tap order builders, WhatsApp phone alerts, and automated 5-star Google review engines for bakeries and local services."
+                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders."
               }
             ]
           })

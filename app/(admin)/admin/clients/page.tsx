@@ -338,6 +338,30 @@ export default function ClientsPage() {
     }
   }
 
+  // Unblock client messages handler
+  const handleMarkClientMessagesRead = async (clientId: string) => {
+    setLoading(true)
+    try {
+      const clientProjs = dbProjects.filter(p => p.client_id === clientId)
+      const projectIds = clientProjs.map(p => p.id)
+      if (projectIds.length > 0) {
+        const { error } = await supabase
+          .from('messages')
+          .update({ is_read: true })
+          .in('project_id', projectIds)
+          .neq('sender_id', currentUserId || '')
+
+        if (error) throw error
+        triggerToast('Client messages marked read and status unblocked.')
+        fetchData()
+      }
+    } catch (err: any) {
+      triggerToast(`Operation failed: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Reset onboarding tour
   const handleResetTour = async (client: ClientProfile) => {
     setLoading(true)
@@ -525,11 +549,15 @@ export default function ClientsPage() {
 
     // Unread = messages whose sender is not the current admin
     const unreadByProject: Record<string, number> = {}
+    const lastUnreadByProject: Record<string, string> = {}
     const lastMessageByProject: Record<string, string> = {}
     
     for (const msg of allMessages) {
       if (msg.sender_id !== currentUserId && !msg.is_read) {
         unreadByProject[msg.project_id] = (unreadByProject[msg.project_id] || 0) + 1
+        if (!lastUnreadByProject[msg.project_id] || msg.created_at < lastUnreadByProject[msg.project_id]) {
+          lastUnreadByProject[msg.project_id] = msg.created_at
+        }
       }
       if (!lastMessageByProject[msg.project_id] || msg.created_at > lastMessageByProject[msg.project_id]) {
         lastMessageByProject[msg.project_id] = msg.created_at
@@ -539,7 +567,10 @@ export default function ClientsPage() {
     return activeProjects.map(project => {
       const clientProfile = clientProfiles.find(c => c.id === project.client_id)
       const projRequests = dbActionRequests.filter(req => req.project_id === project.id)
-      const lastMsgDate = lastMessageByProject[project.id]
+      const unreadCount = unreadByProject[project.id] || 0
+      const lastMsgDate = unreadCount > 0 
+        ? lastUnreadByProject[project.id] 
+        : lastMessageByProject[project.id]
       const daysSinceLastMessage = lastMsgDate
         ? Math.floor((Date.now() - new Date(lastMsgDate).getTime()) / (1000 * 60 * 60 * 24))
         : null
@@ -829,6 +860,26 @@ export default function ClientsPage() {
                             </td>
                             <td className="py-4 px-5 text-right" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-end gap-2">
+                                {client.role === 'client' && (
+                                  (() => {
+                                    const clientProjs = dbProjects.filter(p => p.client_id === client.id)
+                                    const projIds = clientProjs.map(p => p.id)
+                                    const hasUnread = allMessages.some(m => projIds.includes(m.project_id) && m.sender_id !== currentUserId && !m.is_read)
+                                    if (hasUnread) {
+                                      return (
+                                        <button
+                                          onClick={() => handleMarkClientMessagesRead(client.id)}
+                                          className="px-2.5 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-sm"
+                                          title="Unblock Client (Mark Messages Read)"
+                                        >
+                                          <CheckCircle2 size={11} />
+                                          Unblock
+                                        </button>
+                                      )
+                                    }
+                                    return null
+                                  })()
+                                )}
                                 <button
                                   onClick={() => handleInspectClient(client.id)}
                                   className={`p-1.5 rounded-lg border transition-all cursor-pointer shadow-sm ${isInspected ? 'bg-gold/20 border-gold text-gold' : 'bg-white/5 border-white/10 text-muted-foreground hover:text-foreground hover:bg-gold/10 hover:border-gold/30'}`}

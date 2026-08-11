@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
 
   for (const msg of clientMessages || []) {
     unreadByProject[msg.project_id] = (unreadByProject[msg.project_id] || 0) + 1
-    if (!lastMessageByProject[msg.project_id] || msg.created_at > lastMessageByProject[msg.project_id]) {
+    if (!lastMessageByProject[msg.project_id] || msg.created_at < lastMessageByProject[msg.project_id]) {
       lastMessageByProject[msg.project_id] = msg.created_at
     }
   }

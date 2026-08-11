@@ -257,6 +257,22 @@ export default function AdminMessageDesk() {
         console.error('Send error:', error)
         setChatInput(text)
         toast.error('Message transmission failed.')
+      } else {
+        // Automatically mark client messages as read when admin replies
+        await supabase
+          .from('messages')
+          .update({ is_read: true })
+          .eq('project_id', selectedProjectId)
+          .neq('sender_id', adminUserId)
+          .eq('is_read', false)
+
+        setAllMessages((prev) =>
+          prev.map((m) =>
+            m.project_id === selectedProjectId && m.sender_id !== adminUserId
+              ? { ...m, is_read: true }
+              : m
+          )
+        )
       }
     } catch (err) {
       console.error('Send exception:', err)
@@ -288,13 +304,15 @@ export default function AdminMessageDesk() {
       const projMessages = allMessages.filter((m) => m.project_id === proj.id)
       const latestMsg = projMessages[projMessages.length - 1] || null
       
-      // A conversation is flagged "unread" if there is a message and the sender is not current admin
-      const isUnread = latestMsg ? latestMsg.sender_id !== adminUserId : false
+      // A conversation is flagged "unread" if there are unread messages from client
+      const unreadCount = projMessages.filter((m) => m.sender_id !== adminUserId && !m.is_read).length
+      const isUnread = unreadCount > 0
 
       return {
         ...proj,
         latestMsg,
         isUnread,
+        unreadCount,
         messageCount: projMessages.length,
       }
     })

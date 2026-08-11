@@ -36,7 +36,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mercianwealth.co.uk'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mercianwealth.com'),
   title: {
     default: SITE_COPY.metadata.layout.defaultTitle,
     template: SITE_COPY.metadata.layout.titleTemplate,
@@ -44,17 +44,14 @@ export const metadata: Metadata = {
   description: SITE_COPY.metadata.layout.description,
   applicationName: 'Mercian Wealth',
   keywords: [
-    "mobile storefronts",
-    "bakery web design",
-    "cake ordering system",
-    "catering order builder",
-    "WhatsApp order alerts",
-    "food artisan website",
-    "local business automation",
-    "Google review engine",
-    "Berkshire web design",
-    "Reading web developer",
-    "food business software"
+    "AI Automation",
+    "Luxury Websites",
+    "Digital Assets",
+    "Web Development",
+    "Business Growth",
+    "Mercian Wealth",
+    "Automated Systems",
+    "Enterprise AI Software"
   ],
   authors: [{ name: 'Mercian Wealth' }],
   creator: 'Mercian Wealth',
@@ -67,17 +64,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: SITE_COPY.metadata.layout.defaultTitle,
     description: SITE_COPY.metadata.layout.description,
-    url: 'https://mercianwealth.co.uk',
+    url: 'https://mercianwealth.com',
     siteName: 'Mercian Wealth',
     images: [
       {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'Mercian Wealth — Mobile Storefronts & Automation for Local Businesses',
+        alt: 'Mercian Wealth — Luxury AI-Powered Websites & Business Automation',
       },
     ],
-    locale: 'en_GB',
+    locale: 'en_US',
     type: 'website',
   },
   twitter: {
@@ -99,9 +96,13 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/MercianWealthLogo.jpeg?v=2',
-    shortcut: '/MercianWealthLogo.jpeg?v=2',
-    apple: '/MercianWealthLogo.jpeg?v=2',
+    icon: [
+      { url: '/MercianWealthLogo.jpeg', type: 'image/jpeg' },
+      { url: '/icon.jpeg', type: 'image/jpeg' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/MercianWealthLogo.jpeg',
+    apple: '/apple-icon.jpeg',
   },
   // DNS prefetch for Calendly embed (reduces first-load latency by ~150–200 ms)
   other: {

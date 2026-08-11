@@ -358,7 +358,23 @@ export function ClientHealthGrid({
                   {project.status}
                 </span>
 
-                {(health === 'Blocked' || health === 'Awaiting Client') && (
+                {health === 'Blocked' && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleMarkMessagesRead(project.id)
+                    }}
+                    disabled={markingRead}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-[9px] font-bold text-emerald-400 uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 flex items-center gap-1 shrink-0"
+                    title="Click to instantly unblock client by marking messages as read"
+                  >
+                    <CheckCircle2 size={10} />
+                    {markingRead ? 'Unblocking...' : 'Unblock Client'}
+                  </button>
+                )}
+
+                {health === 'Awaiting Client' && (
                   <span
                     onClick={(e) => {
                       e.stopPropagation()
@@ -484,9 +500,10 @@ export function ClientHealthGrid({
                       <button
                         onClick={() => handleMarkMessagesRead(selectedProject.id)}
                         disabled={markingRead}
-                        className="px-2.5 py-1 bg-gold/15 hover:bg-gold/25 border border-gold/30 rounded-lg text-[10px] font-bold uppercase tracking-wider text-gold hover:text-white transition-all cursor-pointer disabled:opacity-50"
+                        className="px-3 py-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 rounded-xl text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-300 transition-all cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
                       >
-                        {markingRead ? 'Marking...' : 'Mark Read'}
+                        <CheckCircle2 size={12} />
+                        {markingRead ? 'Unblocking...' : 'Unblock Client'}
                       </button>
                     </div>
                   ) : (

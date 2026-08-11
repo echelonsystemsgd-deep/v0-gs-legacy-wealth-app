@@ -21,12 +21,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="flex flex-col items-center gap-4">
           <Link href="/" className="group">
-            <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300">
+            <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300 rounded-2xl overflow-hidden shadow-lg border border-gold/30">
               <Image
                 src="/MercianWealthLogo.jpeg"
                 alt="Mercian Wealth"
                 fill
-                className="object-contain mix-blend-screen"
+                className="object-cover"
                 priority
               />
             </div>

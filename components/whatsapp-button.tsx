@@ -82,6 +82,7 @@ export function WhatsAppButton({
                 </div>
               </div>
               <button
+                suppressHydrationWarning
                 onClick={() => setIsOpen(false)}
                 className="text-text-secondary hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
                 aria-label="Close chat window"
@@ -114,6 +115,7 @@ export function WhatsAppButton({
                 <span className="text-[10px] text-accent-cyan font-mono">Editable</span>
               </div>
               <textarea
+                suppressHydrationWarning
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
                 placeholder={defaultMessage}
@@ -122,6 +124,7 @@ export function WhatsAppButton({
               />
 
               <a
+                suppressHydrationWarning
                 href={formattedUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -138,6 +141,7 @@ export function WhatsAppButton({
 
       {/* Floating Launcher Pill Button (Bottom-Left) */}
       <motion.button
+        suppressHydrationWarning
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen(!isOpen)}

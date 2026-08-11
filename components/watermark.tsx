@@ -12,7 +12,7 @@ interface WatermarkProps {
   opacity?: number;
 }
 
-export function Watermark({ position = "center", className = "", opacity = 0.03 }: WatermarkProps) {
+export function Watermark({ position = "center", className = "", opacity = 0.25 }: WatermarkProps) {
   const { getSection } = useWebsiteContent()
   const data = getSection('branding', {
     watermarkUrl: BRAND_WATERMARK,

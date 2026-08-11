@@ -10,13 +10,13 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "Mercian Wealth | AI-Powered Websites & Automation for Local Businesses",
+      defaultTitle: "Mercian Wealth | Luxury AI-Powered Websites & Automation",
       titleTemplate: "%s | Mercian Wealth",
-      description: "AI-Powered Websites and Automation for Local Businesses. More Bookings. Fewer Missed Calls. Zero Extra Admin."
+      description: "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only."
     },
     home: {
-      title: "Mercian Wealth | AI-Powered Websites & Automation for Local Businesses",
-      description: "We replace missed phone calls, lost WhatsApp messages, and evening quote-chasing with an automated storefront that captures leads, collects deposits, and sends instant phone alerts 24/7.",
+      title: "Mercian Wealth | Luxury AI-Powered Websites & Business Automation",
+      description: "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders. Vetted partnerships only.",
     },
     services: {
       title: "Services | Mercian Wealth — AI Websites, Booking & Deposit Systems",

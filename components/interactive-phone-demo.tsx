@@ -131,6 +131,7 @@ export function InteractivePhoneDemo() {
               <div className="space-y-2">
                 {(activeNiche === "bakery" ? bakeryOptions : serviceOptions).map((opt, idx) => (
                   <button
+                    suppressHydrationWarning
                     key={opt.name}
                     onClick={() => setSelectedOption(opt.name)}
                     className={`w-full p-3.5 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-all border ${
@@ -160,6 +161,7 @@ export function InteractivePhoneDemo() {
                 {/* Custom Date Input */}
                 <div className="relative">
                   <input
+                    suppressHydrationWarning
                     type="date"
                     value={selectedDate.startsWith("20") ? selectedDate : ""}
                     onChange={(e) => {
@@ -177,6 +179,7 @@ export function InteractivePhoneDemo() {
                 <div className="grid grid-cols-3 gap-2">
                   {["Tomorrow", "This Saturday", "Next Tuesday"].map((preset) => (
                     <button
+                      suppressHydrationWarning
                       key={preset}
                       type="button"
                       onClick={() => setSelectedDate(preset)}
@@ -203,6 +206,7 @@ export function InteractivePhoneDemo() {
             {/* Tap 3: Submit Order */}
             <div className="pt-2">
               <button
+                suppressHydrationWarning
                 onClick={triggerTestSubmit}
                 disabled={isSimulating}
                 className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-500 to-sky-500 hover:from-emerald-300 hover:to-sky-400 text-slate-950 font-black text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(52,211,153,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"

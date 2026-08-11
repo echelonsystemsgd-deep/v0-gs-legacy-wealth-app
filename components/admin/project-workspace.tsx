@@ -226,6 +226,21 @@ export function ProjectWorkspace({ id, isModal = false, onClose, initialTab }: P
   }, [id])
 
 
+  // Mark client messages as read when activeTab is chat or when opening project workspace chat
+  useEffect(() => {
+    if (activeTab === 'chat' && id && adminUserId) {
+      supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('project_id', id)
+        .neq('sender_id', adminUserId)
+        .eq('is_read', false)
+        .then(({ error }) => {
+          if (error) console.error('Failed to mark client messages as read:', error)
+        })
+    }
+  }, [activeTab, id, adminUserId, supabase])
+
   useEffect(() => {
     const channel = supabase
       .channel(`admin_workspace_messages_${id}`)
@@ -563,11 +578,19 @@ Important Notice: As stipulated in your service agreement, consistent delays in 
       content: text,
     })
 
-    setSendingMsg(false)
     if (error) {
       setChatInput(text)
       toast.error('Message transmission failed.')
+    } else {
+      // Mark client messages as read upon replying
+      await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('project_id', id)
+        .neq('sender_id', adminUserId)
+        .eq('is_read', false)
     }
+    setSendingMsg(false)
   }
 
   const handleDeleteMessage = async (messageId: string) => {
