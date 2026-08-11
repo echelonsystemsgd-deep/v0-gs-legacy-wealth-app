@@ -157,10 +157,10 @@ export function ClientSidebar() {
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 shrink-0">
               <Image
-                src="/MercianWealthlogo.jpeg"
+                src="/MercianWealthLogo.jpeg"
                 alt="Mercian Wealth"
                 fill
-                className="object-contain"
+                className="object-contain mix-blend-screen"
               />
             </div>
             <div>

@@ -99,9 +99,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/MercianWealthlogo.jpeg?v=2',
-    shortcut: '/MercianWealthlogo.jpeg?v=2',
-    apple: '/MercianWealthlogo.jpeg?v=2',
+    icon: '/MercianWealthLogo.jpeg?v=2',
+    shortcut: '/MercianWealthLogo.jpeg?v=2',
+    apple: '/MercianWealthLogo.jpeg?v=2',
   },
   // DNS prefetch for Calendly embed (reduces first-load latency by ~150–200 ms)
   other: {

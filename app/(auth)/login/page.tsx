@@ -74,22 +74,10 @@ export default function LoginPage() {
       return
     }
 
-    if (loginType === 'client' && role === 'admin') {
-      // Admins may use either tab — route to admin portal
-      router.refresh()
-      router.push('/admin')
-      return
-    }
+    const targetPath = role === 'admin' ? '/admin' : role === 'client' ? '/client' : '/dashboard'
 
-    router.refresh()
-
-    if (role === 'admin') {
-      router.push('/admin')
-    } else if (role === 'client') {
-      router.push('/client')
-    } else {
-      router.push('/dashboard')
-    }
+    // Force hard browser navigation on mobile/desktop to ensure session cookies flush to middleware headers
+    window.location.href = targetPath
   }
 
   return (

@@ -92,39 +92,64 @@ export function StickyCTAButton() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 40, scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-3 sm:right-6 sm:bottom-6 z-50 flex items-center gap-2 pointer-events-auto"
-        >
-          {/* CTA Pill Button (LEFT) */}
-          <motion.div whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.03 }}>
+        <>
+          {/* Mobile Unified Conversion Bar (Visible strictly on sm:hidden) */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="sm:hidden fixed bottom-0 inset-x-0 z-[90] bg-[#0A1128]/95 backdrop-blur-xl border-t border-[#D9A74A]/30 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] pointer-events-auto"
+          >
+            <a
+              href="tel:+447851055929"
+              className="flex-1 py-3 px-3 rounded-xl bg-slate-900 border border-[#D9A74A]/40 text-[#D9A74A] font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-transform"
+            >
+              <span>📞 Call Direct</span>
+            </a>
             <Link
               href="/book"
-              className="group flex items-center gap-2 bg-foreground border border-accent-gold/40 hover:border-accent-gold/70 p-1.5 sm:p-2 pr-3.5 sm:pr-4 rounded-full shadow-2xl transition-all duration-300 relative"
+              className="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1 shadow-md active:scale-95 transition-transform"
             >
-              <div className="bg-accent-purple text-accent-gold w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-sm shrink-0 border border-accent-gold/30">
-                <span className="font-serif font-bold text-xs">MW</span>
-              </div>
-              <span className="font-bold text-xs sm:text-sm text-background pr-1 whitespace-nowrap">
-                Apply for Audit
-              </span>
+              <span>Get Free Audit →</span>
             </Link>
           </motion.div>
 
-          {/* Scroll to Top Arrow Button (RIGHT) */}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.08 }}
-            onClick={scrollToTop}
-            aria-label="Scroll back to top"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0A0A0A] border border-accent-gold/40 hover:border-accent-gold text-accent-gold hover:text-bg-primary hover:bg-accent-gold flex items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-300 group cursor-pointer focus:outline-none shrink-0"
+          {/* Desktop Floating Pill CTA (Visible on sm:flex) */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="hidden sm:flex fixed bottom-6 right-6 z-50 items-center gap-2 pointer-events-auto"
           >
-            <ChevronUp size={18} className="transition-transform group-hover:-translate-y-0.5" />
-          </motion.button>
-        </motion.div>
+            {/* CTA Pill Button (LEFT) */}
+            <motion.div whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.03 }}>
+              <Link
+                href="/book"
+                className="group flex items-center gap-2.5 bg-[#0D1635] border border-[#D9A74A]/40 hover:border-[#D9A74A] p-2 pr-4 rounded-full shadow-2xl transition-all duration-300 relative text-white"
+              >
+                <div className="bg-[#D9A74A] text-slate-950 w-9 h-9 rounded-full flex items-center justify-center shadow-sm shrink-0 border border-amber-300/40">
+                  <span className="font-serif font-bold text-xs">MW</span>
+                </div>
+                <span className="font-bold text-xs sm:text-sm text-white pr-1 whitespace-nowrap">
+                  Apply for Audit
+                </span>
+              </Link>
+            </motion.div>
+
+            {/* Scroll to Top Arrow Button (RIGHT) */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.08 }}
+              onClick={scrollToTop}
+              className="w-10 h-10 rounded-full bg-[#0D1635] border border-[#D9A74A]/40 text-[#D9A74A] hover:bg-[#D9A74A] hover:text-slate-950 flex items-center justify-center transition-all duration-300 cursor-pointer shadow-lg"
+              aria-label="Scroll to top"
+            >
+              <ChevronUp size={18} />
+            </motion.button>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   )

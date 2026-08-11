@@ -390,7 +390,14 @@ export function Navbar() {
 
             {/* Mobile Drawer Top Header Bar */}
             <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0 min-w-0 max-w-full">
-              <BrandLogo />
+              <div className="relative h-9 w-9">
+                <BrandLogo
+                  variant="logo"
+                  alt="Mercian Wealth"
+                  fill
+                  className="object-contain mix-blend-screen"
+                />
+              </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer shrink-0"

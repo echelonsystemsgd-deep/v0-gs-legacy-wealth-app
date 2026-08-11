@@ -10,16 +10,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-accent-purple text-slate-950 border border-accent-gold rounded-lg hover:bg-sky-300 hover:shadow-[0_0_15px_rgba(56,189,248,0.45)] font-bold tracking-wider uppercase transition-all duration-300',
+          'bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 border border-amber-300/40 rounded-xl hover:from-[#E5A93C] hover:to-[#D9A74A] hover:shadow-[0_0_20px_rgba(217,167,74,0.35)] font-bold tracking-wider uppercase transition-all duration-300 shadow-lg',
         destructive:
-          'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 rounded-lg',
+          'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 rounded-xl',
         outline:
-          'bg-transparent border border-accent-gold text-text-primary hover:bg-accent-gold hover:text-bg-primary rounded-lg font-bold tracking-wider uppercase transition-all duration-300',
+          'bg-slate-900/80 border border-[#D9A74A]/40 text-white hover:bg-[#D9A74A]/10 hover:border-[#D9A74A] rounded-xl font-bold tracking-wider uppercase transition-all duration-300',
         secondary:
-          'bg-bg-tertiary text-text-secondary border border-border-brand/40 hover:bg-bg-secondary hover:text-text-primary rounded-lg transition-all duration-300',
+          'bg-[#0D1635] text-slate-300 border border-[#D9A74A]/20 hover:bg-[#131E42] hover:text-white rounded-xl transition-all duration-300',
         ghost:
-          'hover:bg-bg-secondary hover:text-accent-gold dark:hover:bg-bg-secondary/50 rounded-lg transition-all duration-300',
-        link: 'text-accent-gold underline-offset-4 hover:underline rounded-lg',
+          'hover:bg-[#0D1635] hover:text-[#D9A74A] rounded-xl transition-all duration-300',
+        link: 'text-[#D9A74A] underline-offset-4 hover:underline rounded-xl',
       },
       size: {
         default: 'h-10 px-5 py-2.5 has-[>svg]:px-3.5',

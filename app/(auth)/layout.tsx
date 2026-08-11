@@ -23,10 +23,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Link href="/" className="group">
             <div className="relative h-16 w-16 transition-transform group-hover:scale-105 duration-300">
               <Image
-                src="/MercianWealthlogo.jpeg"
+                src="/MercianWealthLogo.jpeg"
                 alt="Mercian Wealth"
                 fill
-                className="object-contain"
+                className="object-contain mix-blend-screen"
                 priority
               />
             </div>

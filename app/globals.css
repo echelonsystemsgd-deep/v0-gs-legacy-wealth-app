@@ -4,39 +4,39 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Design Tokens - LocalEngine AI Tech Suite */
-  --color-bg-primary: #090D16;      /* deep slate-navy background */
-  --color-bg-secondary: #0F172A;    /* section/card backgrounds */
-  --color-bg-tertiary: #1E293B;     /* card backgrounds */
-  --color-accent-purple: #38BDF8;   /* Electric Cyan Primary */
-  --color-accent-purple-glow: rgba(56, 189, 248, 0.15); /* background cyan glow */
-  --color-accent-gold: #F59E0B;     /* Warm Amber Artisan Accent */
-  --color-accent-gold-muted: rgba(245, 158, 11, 0.40); /* secondary amber border accent */
-  --color-text-primary: #F8FAFC;    /* headlines, primary text */
-  --color-text-secondary: #94A3B8;  /* Luminous Slate Silver */
-  --color-text-gold: #FBBF24;       /* highlighted amber text */
-  --color-border: rgba(56, 189, 248, 0.18); /* cyan-slate borders */
+  /* Design Tokens - Mercian Wealth Brand Suite */
+  --color-bg-primary: #0A1128;      /* Deep Midnight Navy Primary Background */
+  --color-bg-secondary: #0D1635;    /* Navy Card / Section Surface */
+  --color-bg-tertiary: #131E42;     /* Elevated Navy Card Surface */
+  --color-accent-purple: #D9A74A;   /* Primary Mercian Gold Accent */
+  --color-accent-purple-glow: rgba(217, 167, 74, 0.15); /* Background Gold Ambient Glow */
+  --color-accent-gold: #D9A74A;     /* Primary Gold Accent */
+  --color-accent-gold-muted: rgba(217, 167, 74, 0.35); /* Muted Gold Border */
+  --color-text-primary: #FFFFFF;    /* Pure White Body Text */
+  --color-text-secondary: #94A3B8;  /* Luminous Silver Accent */
+  --color-text-gold: #F5C042;       /* Highlighted Warm Gold Text */
+  --color-border: rgba(217, 167, 74, 0.20); /* Gold-Navy Border */
 
-  /* Modern High-Tech Theme - Always dark, mapped to our new brand variables */
+  /* Modern High-Tech Theme - Always dark, mapped to Mercian Wealth brand variables */
   --background: var(--color-bg-primary);
   --foreground: var(--color-text-primary);
   --card: var(--color-bg-secondary);
   --card-foreground: var(--color-text-primary);
   --popover: var(--color-bg-secondary);
   --popover-foreground: var(--color-text-primary);
-  --primary: var(--color-accent-purple);
-  --primary-foreground: #090D16;
+  --primary: var(--color-accent-gold);
+  --primary-foreground: #0A1128;
   --secondary: var(--color-bg-secondary);
   --secondary-foreground: var(--color-text-secondary);
   --muted: var(--color-bg-secondary);
   --muted-foreground: var(--color-text-secondary);
   --accent: var(--color-accent-gold);
-  --accent-foreground: #090D16;
+  --accent-foreground: #0A1128;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: var(--color-border);
   --input: var(--color-border);
-  --ring: var(--color-accent-purple);
+  --ring: var(--color-accent-gold);
   --radius: 0.75rem;
 }
 
@@ -155,12 +155,12 @@
   background-clip: text;
 }
 
-/* Glassmorphism with purple tint and mouse radial hover glow */
+/* Glassmorphism with navy backdrop and gold interactive hover glow */
 .glass {
-  background: rgba(15, 11, 26, 0.75);
+  background: rgba(13, 22, 53, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(109, 40, 217, 0.15);
+  border: 1px solid rgba(217, 167, 74, 0.20);
   position: relative;
   overflow: hidden;
 }

@@ -110,7 +110,7 @@ export function DivergenceComparison() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-sky-500/15 via-[#0F172A] to-bg-secondary backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(56,189,248,0.15)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
+            className="flex flex-col justify-between p-5 sm:p-8 lg:p-10 rounded-2xl border-2 border-accent-gold/40 bg-gradient-to-b from-[#D9A74A]/10 via-[#0D1635] to-[#0A1128] backdrop-blur-md relative overflow-hidden shadow-[0_0_50px_rgba(217,167,74,0.12)] hover:border-accent-gold transition-all duration-300 group min-w-0 max-w-full"
           >
             {/* Subtle corner watermark badge */}
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 font-serif text-6xl text-accent-gold">
@@ -139,28 +139,26 @@ export function DivergenceComparison() {
               <div className="h-[1px] w-full bg-accent-gold/25" />
 
               <ul className="space-y-4">
-                {data.pathMercian.points.map((point, idx) => (
+                {data.pathMercian.points.map((point: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 size={18} className="text-accent-gold shrink-0 mt-0.5" />
-                    <span className="font-sans text-xs sm:text-sm text-white opacity-95 leading-relaxed font-medium">
-                      {point}
-                    </span>
+                    <span className="w-5 h-5 rounded-full bg-accent-gold/20 text-accent-gold flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold border border-accent-gold/40">✓</span>
+                    <span className="text-xs sm:text-sm text-white font-medium">{point}</span>
                   </li>
                 ))}
               </ul>
 
               {/* Architectural Schema Visual Anchor */}
-              <div className="mt-6 p-4 rounded-xl border border-accent-gold/20 bg-bg-primary/90 font-mono text-[11px] space-y-3 text-accent-gold/90">
-                <div className="flex items-center justify-between text-[10px] text-text-secondary uppercase">
+              <div className="mt-6 p-4 rounded-xl border border-accent-gold/20 bg-[#0A1128]/90 font-mono text-[11px] space-y-3 text-accent-gold/90">
+                <div className="flex items-center justify-between text-[10px] text-slate-400 uppercase">
                   <span className="flex items-center gap-1"><Cpu size={12} /> System Schema</span>
-                  <span className="text-emerald-400 font-bold">Active Engine</span>
+                  <span className="text-accent-gold font-bold">Active Engine</span>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 font-bold text-xs">
                   <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/5 rounded border border-white/10 text-white">Lead Intent</span>
                   <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-sky-500/15 rounded border border-sky-400/40 text-sky-300">Sub-60s AI Triage</span>
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-accent-gold/15 rounded border border-accent-gold/40 text-accent-gold">Sub-60s AI Triage</span>
                   <span className="text-accent-gold shrink-0 sm:rotate-0 rotate-90 my-0.5 sm:my-0">▶</span>
-                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-emerald-500/10 rounded border border-emerald-500/30 text-emerald-400">CRM Dispatch</span>
+                  <span className="w-full sm:w-auto text-center px-3 py-1.5 bg-white/10 rounded border border-amber-300/30 text-amber-200">CRM Dispatch</span>
                 </div>
               </div>
             </div>

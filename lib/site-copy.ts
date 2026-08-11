@@ -16,13 +16,13 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "Mercian Wealth | Mobile Storefronts & Automation for Bakeries, Catering & Local Services",
+      defaultTitle: "Mercian Wealth | AI Automation & Digital Systems for Local Businesses",
       titleTemplate: "%s | Mercian Wealth",
-      description: "Custom mobile storefronts, 3-tap order builders, WhatsApp alerts, and automated Google review engines for cake bakeries, catering businesses, food artisans, and local services across Berkshire & the UK."
+      description: "We build high-converting web storefronts, 3-tap order engines, instant WhatsApp phone alerts, and automated 5-star Google review collection for local businesses in Slough, Berkshire, and across the UK."
     },
     home: {
-      title: "Mercian Wealth | Mobile Storefronts & Order Automation for Bakeries & Local Services",
-      description: "We eliminate manual admin for cake bakeries, catering businesses, food artisans, and local service providers. Sub-second mobile storefronts, instant WhatsApp order alerts, automated deposits & 5-star Google review engines.",
+      title: "Mercian Wealth | AI Automation & Digital Systems for Local Businesses",
+      description: "We eliminate manual admin for tradesmen, bakeries, catering businesses, and local service providers. Sub-second web storefronts, instant WhatsApp lead alerts, automated deposits & 5-star Google review engines.",
     },
     services: {
       title: "Our Services | Mercian Wealth — Web Design, Order Builders & WhatsApp Alerts",

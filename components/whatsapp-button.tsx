@@ -51,7 +51,7 @@ export function WhatsAppButton({
   const formattedUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(messageToSend)}`
 
   return (
-    <div className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-3 sm:left-6 sm:bottom-6 z-40 flex flex-col items-start gap-3 font-sans pointer-events-auto">
+    <div className="hidden sm:flex fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-3 sm:left-6 sm:bottom-6 z-40 flex-col items-start gap-3 font-sans pointer-events-auto">
       {/* Premium Luxury Popup Card */}
       <AnimatePresence>
         {isOpen && (

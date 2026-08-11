@@ -14,7 +14,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/gs-legacy-wealth",
+    href: "https://www.linkedin.com/company/mercianwealth",
     iconName: "Linkedin",
     ariaLabel: "Connect with Mercian Wealth on LinkedIn",
   },
