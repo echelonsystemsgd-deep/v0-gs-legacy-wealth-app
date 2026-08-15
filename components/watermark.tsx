@@ -40,6 +40,7 @@ export function Watermark({ position = "center", className = "", opacity = 0.25 
           alt=""
           fill
           className="object-contain"
+          unoptimized
         />
       </motion.div>
     </div>

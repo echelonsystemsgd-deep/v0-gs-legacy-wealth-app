@@ -57,19 +57,9 @@ export function BrandLogo({
   className,
   ...props
 }: BrandLogoProps) {
-  // Always use static public/ paths directly — never fetched from Supabase CMS.
-  // This ensures localhost and Vercel behave identically.
   const src = variant === "watermark" ? BRAND_WATERMARK : BRAND_LOGO
 
-  const [imgError, setImgError] = useState(false)
-
-  // Only show text wordmark when explicitly requested
   if (wordmarkOnly) {
-    return <WordmarkLogo className={className as string | undefined} />
-  }
-
-  // If image fails to load, gracefully fall back to WordmarkLogo so branding is ALWAYS visible
-  if (imgError) {
     return <WordmarkLogo className={className as string | undefined} />
   }
 
@@ -84,7 +74,7 @@ export function BrandLogo({
       src={src}
       alt={alt}
       className={className}
-      onError={() => setImgError(true)}
+      unoptimized
     />
   )
 }
