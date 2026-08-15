@@ -39,7 +39,7 @@ export default async function Home() {
                 "logo": {
                   "@type": "ImageObject",
                   "@id": "https://mercianwealth.com/#logo",
-                  "url": "https://mercianwealth.com/MercianWealthlogo.png",
+                  "url": "https://mercianwealth.com/MercianWealthLogo.jpeg",
                   "caption": "Mercian Wealth"
                 },
                 "image": {
