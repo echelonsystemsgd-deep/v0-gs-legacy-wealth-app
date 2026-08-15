@@ -39,7 +39,7 @@ export default async function Home() {
                 "logo": {
                   "@type": "ImageObject",
                   "@id": "https://mercianwealth.com/#logo",
-                  "url": "https://mercianwealth.com/MercianWealthlogo.jpeg",
+                  "url": "https://mercianwealth.com/MercianWealthlogo.png",
                   "caption": "Mercian Wealth"
                 },
                 "image": {
@@ -51,7 +51,7 @@ export default async function Home() {
                 "@id": "https://mercianwealth.com/#website",
                 "url": "https://mercianwealth.com",
                 "name": "Mercian Wealth",
-                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders.",
+                "description": "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls.",
                 "publisher": {
                   "@id": "https://mercianwealth.com/#organization"
                 }
@@ -60,14 +60,14 @@ export default async function Home() {
                 "@type": "WebPage",
                 "@id": "https://mercianwealth.com/#webpage",
                 "url": "https://mercianwealth.com",
-                "name": "Mercian Wealth | Luxury AI-Powered Websites & Business Automation",
+                "name": "Mercian Wealth | Websites & Automation for Bakeries & Local Businesses",
                 "isPartOf": {
                   "@id": "https://mercianwealth.com/#website"
                 },
                 "about": {
                   "@id": "https://mercianwealth.com/#organization"
                 },
-                "description": "Custom digital systems and automated AI architectures engineered to secure category dominance for market leaders."
+                "description": "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls."
               }
             ]
           })

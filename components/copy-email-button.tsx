@@ -10,7 +10,7 @@ interface CopyEmailButtonProps {
 }
 
 export function CopyEmailButton({
-  email = "contact@mercianwealth.com",
+  email = "mercianwealthgs@gmail.com",
   variant = "inline",
   className = "",
 }: CopyEmailButtonProps) {

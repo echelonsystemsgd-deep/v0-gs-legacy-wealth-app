@@ -48,7 +48,7 @@ export default function ContactPage() {
               {/* Contact Cards */}
               <div className="space-y-4">
                 {/* Email */}
-                <CopyEmailButton email="contact@mercianwealth.com" variant="card" />
+                <CopyEmailButton email="mercianwealthgs@gmail.com" variant="card" />
 
                 {/* Phone */}
                 <div className="p-5 bg-bg-tertiary/30 border border-white/5 hover:border-accent-gold/30 rounded-xl transition-all duration-300 flex items-start gap-4">
