@@ -38,7 +38,7 @@ export function InteractiveRoiCalculator() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Controls Column */}
-          <div className="lg:col-span-7 p-8 rounded-3xl bg-[#0D1635] border border-[#D9A74A]/25 backdrop-blur-xl flex flex-col justify-between">
+          <div className="lg:col-span-7 p-5 sm:p-8 rounded-3xl bg-[#0D1635] border border-[#D9A74A]/25 backdrop-blur-xl flex flex-col justify-between min-w-0 max-w-full">
             <div className="space-y-8">
               {/* Slider 1: Weekly Hours */}
               <div>
@@ -102,7 +102,7 @@ export function InteractiveRoiCalculator() {
           </div>
 
           {/* Results Column */}
-          <div className="lg:col-span-5 p-8 rounded-3xl bg-gradient-to-b from-[#131E42] via-[#0D1635] to-[#0A1128] border border-[#D9A74A]/30 backdrop-blur-xl flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          <div className="lg:col-span-5 p-5 sm:p-8 rounded-3xl bg-gradient-to-b from-[#131E42] via-[#0D1635] to-[#0A1128] border border-[#D9A74A]/30 backdrop-blur-xl flex flex-col justify-between shadow-2xl relative overflow-hidden min-w-0 max-w-full">
             <div className="absolute top-0 right-0 p-3 text-[10px] font-mono font-bold uppercase tracking-wider text-[#D9A74A] bg-[#D9A74A]/10 border-b border-l border-[#D9A74A]/25 rounded-bl-xl">
               Annual Telemetry Impact
             </div>
@@ -112,7 +112,7 @@ export function InteractiveRoiCalculator() {
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">
                   Annual Admin Time Saved
                 </span>
-                <div className="text-3xl font-extrabold text-white font-mono flex items-baseline gap-2">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono flex items-baseline gap-2 flex-wrap sm:flex-nowrap">
                   <span>{annualHoursSaved} Hours</span>
                   <span className="text-xs text-[#D9A74A] font-normal font-sans">(~{Math.round(annualHoursSaved / 8)} full work days)</span>
                 </div>
@@ -122,7 +122,7 @@ export function InteractiveRoiCalculator() {
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">
                   Est. Extra Revenue Captured (+18%)
                 </span>
-                <div className="text-2xl font-bold text-[#D9A74A] font-mono">
+                <div className="text-xl sm:text-2xl font-bold text-[#D9A74A] font-mono">
                   +£{annualRevenueCaptured.toLocaleString()} / year
                 </div>
               </div>
@@ -135,7 +135,7 @@ export function InteractiveRoiCalculator() {
                   key={totalAnnualValue}
                   initial={{ scale: 0.95, opacity: 0.8 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D9A74A] via-[#F5C042] to-[#E2E8F0] font-mono tracking-tight"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D9A74A] via-[#F5C042] to-[#E2E8F0] font-mono tracking-tight"
                 >
                   £{totalAnnualValue.toLocaleString()}
                 </motion.div>

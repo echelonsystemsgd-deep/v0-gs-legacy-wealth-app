@@ -68,9 +68,9 @@ export function BrandLogo({
     return <WordmarkLogo className={className as string | undefined} />
   }
 
-  // If image fails, return null — the surrounding wordmark text handles branding display
+  // If image fails to load, gracefully fall back to WordmarkLogo so branding is ALWAYS visible
   if (imgError) {
-    return null
+    return <WordmarkLogo className={className as string | undefined} />
   }
 
   const hasFill = (props as any).fill

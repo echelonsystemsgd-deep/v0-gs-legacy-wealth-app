@@ -76,20 +76,20 @@ export function InteractivePhoneDemo() {
         </div>
 
         {/* Niche Selector Switcher */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-10 sm:mb-12 min-w-0 max-w-full">
           <button
             suppressHydrationWarning
             onClick={() => {
               setActiveNiche("bakery")
               setSelectedOption(bakeryOptions[0].name)
             }}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
               activeNiche === "bakery"
                 ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-[0_0_25px_rgba(245,158,11,0.35)] scale-105"
                 : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/60"
             }`}
           >
-            <ShoppingBag size={18} />
+            <ShoppingBag size={16} className="shrink-0" />
             <span>Bakery & Food Artisan Demo</span>
           </button>
 
@@ -99,13 +99,13 @@ export function InteractivePhoneDemo() {
               setActiveNiche("service")
               setSelectedOption(serviceOptions[0].name)
             }}
-            className={`flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-300 ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
               activeNiche === "service"
                 ? "bg-gradient-to-r from-sky-400 to-blue-600 text-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.35)] scale-105"
                 : "bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/60"
             }`}
           >
-            <Wrench size={18} />
+            <Wrench size={16} className="shrink-0" />
             <span>Local Services Booking Demo</span>
           </button>
         </div>
@@ -222,8 +222,8 @@ export function InteractivePhoneDemo() {
           </div>
 
           {/* Right Column: Smartphone Mockup */}
-          <div className="lg:col-span-6 flex justify-center">
-            <div className="relative w-[320px] sm:w-[350px] h-[640px] bg-slate-950 rounded-[45px] p-4 border-[8px] border-slate-800 shadow-[0_0_50px_rgba(56,189,248,0.2)] flex flex-col justify-between overflow-hidden">
+          <div className="lg:col-span-6 flex justify-center min-w-0 max-w-full">
+            <div className="relative w-full max-w-[320px] sm:max-w-[350px] h-[640px] bg-slate-950 rounded-[45px] p-4 border-[8px] border-slate-800 shadow-[0_0_50px_rgba(56,189,248,0.2)] flex flex-col justify-between overflow-hidden shrink-0">
               {/* Phone Notch */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-6 bg-slate-800 rounded-b-2xl z-30 flex items-center justify-center">
                 <div className="w-12 h-1.5 bg-slate-900 rounded-full" />

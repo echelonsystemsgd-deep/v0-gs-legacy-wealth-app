@@ -177,11 +177,11 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
         {/* Billing Switcher Header (3 Tabs) */}
         <div className="flex justify-center mb-12 lg:mb-16 relative z-20">
-          <div className="flex flex-wrap items-center justify-center gap-1.5 bg-slate-900/80 p-1.5 rounded-full border border-slate-800 relative shadow-lg">
+          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 bg-slate-900/80 p-1 sm:p-1.5 rounded-full border border-slate-800 relative shadow-lg max-w-full min-w-0">
             <button
               suppressHydrationWarning
               onClick={() => setBillingCycle("oneTime")}
-              className={`px-5 sm:px-7 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+              className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
                 billingCycle === "oneTime" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
               }`}
             >
@@ -197,7 +197,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             <button
               suppressHydrationWarning
               onClick={() => setBillingCycle("monthly")}
-              className={`px-5 sm:px-7 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+              className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
                 billingCycle === "monthly" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
               }`}
             >
@@ -213,7 +213,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             <button
               suppressHydrationWarning
               onClick={() => setBillingCycle("revenueShare")}
-              className={`px-5 sm:px-7 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
+              className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
                 billingCycle === "revenueShare" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
               }`}
             >

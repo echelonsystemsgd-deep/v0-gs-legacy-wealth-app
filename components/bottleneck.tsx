@@ -63,9 +63,9 @@ export function Bottleneck() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 flex justify-center"
+            className="lg:col-span-5 flex justify-center min-w-0 max-w-full"
           >
-            <div className="relative w-full max-w-lg h-auto bg-bg-tertiary border border-border-brand/20 p-5 sm:p-6 rounded-xl shadow-2xl flex flex-col justify-start items-center overflow-visible">
+            <div className="relative w-full max-w-lg h-auto bg-bg-tertiary border border-border-brand/20 p-4 sm:p-6 rounded-xl shadow-2xl flex flex-col justify-start items-center overflow-hidden min-w-0 max-w-full">
               <div className="w-full flex items-center gap-2 mb-3 pb-3 border-b border-white/5">
                 <span className={`w-2.5 h-2.5 rounded-full ${isOrdered ? "bg-accent-gold animate-pulse" : "bg-red-500 animate-pulse"}`} />
                 <span className="text-[10px] font-bold uppercase tracking-widest text-text-primary opacity-70">
