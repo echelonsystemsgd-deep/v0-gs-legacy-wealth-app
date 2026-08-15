@@ -247,7 +247,7 @@ export function Navbar() {
               </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8">
+            <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8 hidden-on-mobile">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -270,7 +270,7 @@ export function Navbar() {
             </div>
 
             {/* CTA Button / User Profile Dropdown */}
-            <div className="hidden lg:flex lg:items-center lg:gap-6">
+            <div className="hidden lg:flex lg:items-center lg:gap-6 hidden-on-mobile">
               {loading ? (
                 <div className="h-10 w-10 rounded-full border border-accent-gold/15 bg-accent-gold/5 animate-pulse" />
               ) : user ? (
@@ -364,7 +364,7 @@ export function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden text-foreground p-2"
+              className="lg:hidden mobile-only text-foreground p-2"
               aria-label="Toggle menu"
               suppressHydrationWarning
             >

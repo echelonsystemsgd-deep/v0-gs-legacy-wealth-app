@@ -126,6 +126,21 @@
   }
 }
 
+/* Strict Mobile & Desktop Layout Safeguards for Tailwind v4 */
+@media (max-width: 1023px) {
+  .hidden-on-mobile,
+  .lg\:flex:not(.mobile-visible) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-only,
+  .lg\:hidden {
+    display: none !important;
+  }
+}
+
 @layer utilities {
   .text-xxs {
     font-size: 0.65rem;
