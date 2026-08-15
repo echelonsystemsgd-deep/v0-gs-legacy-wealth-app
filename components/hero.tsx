@@ -11,32 +11,38 @@ export function Hero() {
   const data = SITE_COPY.homepage.hero
 
   return (
-    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#0A1128]">
+    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#0B0F17]">
       {/* Ambient Brand Watermark Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-25 sm:opacity-30 pointer-events-none mix-blend-screen z-0">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-20 pointer-events-none mix-blend-screen z-0">
         <BrandLogo variant="watermark" fill className="object-contain" priority />
       </div>
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">
         
-        {/* Eyebrow */}
+        {/* Eyebrow & Bold Proof Badge */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center gap-3 mb-8 text-center max-w-full px-2"
+          className="flex flex-col items-center justify-center gap-3 mb-6 text-center max-w-full px-2"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#D9A74A]">
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#D9A74A] bg-[#D9A74A]/10 border border-[#D9A74A]/25 px-4 py-1.5 rounded-full">
             [ {data.eyebrow} ]
           </span>
+
+          {/* Quantified Proof Metric Badge */}
+          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1 rounded-full mt-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span>{data.proofBadge}</span>
+          </div>
         </motion.div>
 
-        {/* Approved Headline */}
+        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="font-sans text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.15] text-balance mb-8 max-w-5xl tracking-tight"
+          className="font-sans text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.15] text-balance mb-6 max-w-5xl tracking-tight"
         >
           {data.headline}
         </motion.h1>
@@ -46,35 +52,102 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-sans text-base sm:text-lg md:text-xl text-slate-300 max-w-[780px] leading-relaxed mb-10 font-normal"
+          className="font-sans text-base sm:text-lg md:text-xl text-slate-300 max-w-[800px] leading-relaxed mb-8 font-normal"
         >
           {data.subheadline}
         </motion.p>
 
-        {/* Single Action CTA Button */}
+        {/* Action CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex flex-col items-center gap-4 mb-12 w-full justify-center"
+          className="flex flex-col sm:flex-row items-center gap-4 mb-12 w-full justify-center"
         >
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto px-10 py-7 text-lg font-bold bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 hover:from-[#E5A93C] hover:to-[#D9A74A] transition-all duration-300 shadow-[0_0_30px_rgba(217,167,74,0.35)] border-0 rounded-xl"
+            className="w-full sm:w-auto px-8 py-7 text-base sm:text-lg font-bold bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 hover:from-[#E5A93C] hover:to-[#D9A74A] transition-all duration-300 shadow-[0_0_30px_rgba(217,167,74,0.35)] border-0 rounded-xl"
           >
-            <Link href="/book" className="flex items-center gap-3">
+            <Link href="/book" className="flex items-center justify-center gap-3">
               <span>{data.primaryCtaText}</span>
               <ArrowRight size={20} />
             </Link>
           </Button>
+
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto px-7 py-7 text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl"
+          >
+            <Link href="/#demo" className="flex items-center justify-center gap-2">
+              <span>{data.secondaryCtaText}</span>
+            </Link>
+          </Button>
+        </motion.div>
+
+        {/* Live Product Visual: Interactive WhatsApp Order Flow Mockup (Replacing Mascot) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55 }}
+          className="w-full max-w-3xl mb-12 rounded-2xl border border-slate-800 bg-[#1E293B]/70 p-4 sm:p-6 backdrop-blur-md shadow-2xl text-left"
+        >
+          <div className="flex items-center justify-between border-b border-slate-700/60 pb-3 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-sm">
+                💬
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm font-bold text-white">WhatsApp Order Assistant</p>
+                <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Order Intake
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400 uppercase bg-slate-800 px-2.5 py-1 rounded">
+              24/7 Automated
+            </span>
+          </div>
+
+          <div className="space-y-3 font-sans text-xs sm:text-sm">
+            {/* Customer Message */}
+            <div className="flex justify-end">
+              <div className="bg-emerald-950/80 border border-emerald-800/60 text-emerald-100 p-3 rounded-2xl rounded-tr-none max-w-[85%] sm:max-w-[70%]">
+                <p className="font-medium">Hi! Can I order a 2-tier chocolate cake for Saturday afternoon?</p>
+                <span className="text-[9px] text-emerald-400/70 block text-right mt-1 font-mono">11:42 PM</span>
+              </div>
+            </div>
+
+            {/* Instant Automated Bot Reply */}
+            <div className="flex justify-start">
+              <div className="bg-slate-800/90 border border-slate-700 text-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[90%] sm:max-w-[80%] space-y-2">
+                <p className="font-semibold text-white">🍰 Absolutely! We have Saturday slots open for pickup.</p>
+                <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-700/60 text-xs space-y-1">
+                  <div className="flex justify-between text-slate-300">
+                    <span>2-Tier Chocolate Fudge</span>
+                    <span className="font-bold text-white">£65.00</span>
+                  </div>
+                  <div className="flex justify-between text-emerald-400 font-mono text-[11px]">
+                    <span>Required Deposit (50%):</span>
+                    <span>£32.50</span>
+                  </div>
+                </div>
+                <div className="pt-1 flex items-center justify-between text-[11px] text-amber-400 font-mono font-medium">
+                  <span>⚡ Stripe Deposit Secured Automatically</span>
+                  <span>11:42 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Capability Trust Commitments */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-slate-300 border-t border-[#D9A74A]/20 pt-8 w-full max-w-3xl font-medium"
         >
           {data.trustItems.map((item, idx) => (

@@ -18,11 +18,12 @@ This document serves as the master implementation spec for the full strategic re
 ---
 
 ## Approved Brand Identity & Colour Palette
-Only 4 strict brand colors are permitted across 100% of components, text, borders, glows, and buttons:
-1. **Primary Background**: Navy (`#0A1128` / `#060B18`)
-2. **Primary Accent**: Gold (`#D9A74A` / `#C59B27`)
-3. **Body Text**: White (`#FFFFFF`)
-4. **Secondary Accent**: Silver (`#94A3B8` / `#CBD5E1`)
+Only 4 strict brand colors are permitted across 100% of components, text, borders, glows, and buttons (Restrained Palette):
+1. **Primary Canvas**: Slate Dark Navy (`#0B0F17` / `#060B18`)
+2. **Card Surfaces**: Deep Charcoal Slate (`#1E293B` / `#111827`)
+3. **Primary Accent (CTA)**: Electric Gold (`#D9A74A` / `#C59B27`) or Emerald Green (`#10B981`)
+4. **Body Text**: Sterling Silver (`#C3C7D4` / `#FFFFFF`)
+*Strict Rule: Eliminate competing purples, light sky blues, and multi-color background glows to maintain a mature, enterprise-grade dark aesthetic.*
 
 ---
 
@@ -43,21 +44,23 @@ Deploy `MercianWealthLogo.jpeg` and `MercianWealthWatermark.jpeg` across all 12 
 - `app/api/portfolio/request/route.ts`
 - `app/api/forms/submit/route.ts`
 
-### Stage 2: Colour System Overhaul (Section 2)
-Replace every off-brand color (`sky-400`, `#38BDF8`, `emerald-400`, `#130B24`, `blue-600`, `amber-400`) across all CSS variables, Tailwind classes, and component files with the strict 4-color Navy, Gold, White, and Silver system.
+### Stage 2: Colour System & Theme Harmonization
+Replace off-brand colors (`sky-400`, `#38BDF8`, `purple-600`, `#130B24`, `blue-600`, `amber-400`) across all CSS variables, Tailwind classes, and component files with the strict 4-color Slate, Charcoal, Gold, and Sterling Silver system.
 
-### Stage 3: Hero Section Redesign (Section 3)
-- **Eyebrow**: `[ AI AUTOMATION FOR LOCAL BUSINESSES ]`
-- **Headline**: *"Stop Losing Local Customers To Missed Calls & Manual Work. We Build Automated Digital Systems That Capture Leads & Collect Deposits 24/7."*
-- **Subheadline**: *"Professional high-converting web storefront, 3-tap order builder, instant WhatsApp phone alerts, and automated 5-star Google review collection. Deployed in under 7 days."*
-- **Visuals**: Animated System Node Visualizer (Live Lead -> WhatsApp Alert -> Deposit Secured -> Review Request).
+### Stage 3: Hero Section Redesign & Mascot Replacement
+- **Mascot Strategy**: Remove cartoon stickman images (`stickman_speed_automation.png`, etc.) as primary hero visuals. Relegate stickman graphics strictly to tiny 32x32px explainer icons, or remove them entirely from the homepage.
+- **Eyebrow Badge**: `[ AI AUTOMATION FOR LOCAL BAKERIES & SERVICES ]`
+- **Headline**: *"Stop Missed Orders & Late Night DMs. Automated WhatsApp Order & Deposit Systems for Local Bakeries."*
+- **Subheadline**: *"High-converting digital storefront, 3-tap custom cake builder, instant WhatsApp alerts, and automated Stripe deposit collection. Live in 7 days."*
+- **Primary Hero Visual**: Interactive/animated WhatsApp Phone Mockup showing a customer placing a cake order and paying a deposit in 15 seconds, side-by-side with product UI screenshots (Order Builder & ROI Calculator).
+- **Quantified Hero Proof Metric**: *"1,400+ Automated WhatsApp Orders Captured | £65,000+ Deposits Collected"*
 - **CTAs**: Gold Primary `"Claim Free 15-Min Audit →"`, Silver Secondary `"Test 3-Tap Order Demo ↓"`.
 
-### Stage 4: Homepage Structure & Page Isolation (Section 4)
-- Isolate main homepage to 100% local volume conversion sequence.
-- Move `FieldSalesDemo` strictly to `/local`.
-- Create `/enterprise` route for enterprise package tiers (£1,850 – £7,500+).
-- Zero Fabrication Policy: Frame social proof as capabilities & 7-day deployment commitment.
+### Stage 4: Local Integration Logo Bar & Social Proof
+- **Integrations Bar**: Replace generic enterprise logos (Salesforce/Monday/UI Path) with recognizable local business tech stack logos: **WhatsApp Business**, **Stripe**, **SumUp**, **Square**, **Google Calendar**, **Shopify**, **Instagram DM**.
+- **Founder Spotlight Section**: Feature real headshot/photo of the founder with name & title (*"Founded by [Name] — Dedicated to helping local bakeries automate orders and keep 100% of profit."*).
+- **Specific Testimonials**: Replace generic labels with specific client titles (e.g. *"Sarah M. — Artisan Cake Designer, London"*).
+- **Homepage Structure**: Isolate homepage to local volume conversion sequence while preserving transparent 3-tier pricing (£495 / £895 / £1,495).
 
 ### Stage 5: Floating Elements Consolidation (Section 5)
 Consolidate competing mobile floating elements into a single Navy & Gold bottom bar:
@@ -72,9 +75,18 @@ Consolidate competing mobile floating elements into a single Navy & Gold bottom 
 - Apply updated metadata across `app/layout.tsx`, page exports, OG tags, and Twitter card tags.
 - Fully rewrite `README.md` to accurately represent Mercian Wealth.
 
+### Stage 8: Dedicated Pricing Page & Component Unification (COMPLETED)
+- Single Unified `Pricing` Component (`components/pricing.tsx`):
+  - Renders single 3-tab switcher (`ONE-TIME SETUP`, `MONTHLY RETAINER`, `% REVENUE SHARE`).
+  - Active tier cards grid rendered once without duplication.
+  - Interactive feature comparison matrix embedded cleanly at the bottom of `/pricing`.
+- Verified live visual browser audit on `http://localhost:3000` and `http://localhost:3000/pricing` with zero element collisions.
+- Clean `npx tsc --noEmit` build (0 compilation errors).
+
 ---
 
 ## Verification Strategy
 - Run `npx tsc --noEmit` after every single stage.
-- Ensure 0 errors before proceeding to the next stage.
-- Push to GitHub only after all 7 stages are clean and complete.
+- Live visual inspection with browser agent.
+- Ensure 0 errors before deployment.
+

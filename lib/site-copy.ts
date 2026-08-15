@@ -76,56 +76,57 @@ export const SITE_COPY = {
 
     // 1. Hero Section
     hero: {
-      eyebrow: "WEBSITES & AUTOMATION FOR LOCAL BUSINESSES",
-      headline: "AI-Powered Websites and Automation for Local Businesses. More Bookings. Fewer Missed Calls. Zero Extra Admin.",
-      subheadline: "We replace missed phone calls, lost WhatsApp messages, and evening quote-chasing with an automated storefront that captures leads, collects deposits, and sends instant phone alerts 24/7.",
-      primaryCtaText: "Book your free 15 minute audit",
-      secondaryCtaText: "Book your free 15 minute audit",
+      eyebrow: "AI AUTOMATION & WEBSITES FOR LOCAL BUSINESSES",
+      headline: "AI-Powered Websites & Automated Systems That Capture Orders & Collect Deposits 24/7.",
+      subheadline: "Stop leaving revenue on the table. We replace missed calls, buried DMs, and manual quote-chasing with automated mobile storefronts, 24/7 WhatsApp deposit engines, and instant phone alerts for local business owners who play to win.",
+      primaryCtaText: "Claim Category Exclusivity & Free Audit",
+      secondaryCtaText: "Test 3-Tap Order Demo",
+      proofBadge: "1,400+ Orders & Bookings Captured | £65,000+ Upfront Deposits Secured",
       trustItems: [
-        "Instant Mobile Booking",
-        "24/7 Lead & Deposit Capture",
-        "Instant Phone Alerts",
-        "Automated 5-Star Reviews",
+        "Sub-1-Second Lead Capture",
+        "24/7 Automated Upfront Deposits",
+        "Instant WhatsApp & SMS Alerts",
+        "Automated 5-Star Google Reviews",
       ],
-      unsureText: "Book your free 15 minute audit to see how many hours we can save your business →",
+      unsureText: "Book your free 15 minute audit to see how many hours and lost jobs we can recover for your business →",
     },
 
     // Divergence Comparison (The Two-Path Mechanic)
     divergenceComparison: {
-      eyebrow: "THE CHOICE",
-      headline: "The businesses moving first in your area are securing customers before you even finish your shift.",
-      subheadline: "The choice is simple: keep scribbling booking details on scrap paper after a long workday, or let your website capture the booking and collect the deposit for you.",
+      eyebrow: "TERRITORIAL COMPETITION",
+      headline: "Your local competitors are not waiting for you to finish your shift.",
+      subheadline: "The choice is stark: keep scribbling quotes on scrap paper while competitors capture your clients, or deploy an automated system that secures the booking and collects the deposit for you.",
       pathConventional: {
-        badge: "MANUAL SCRAMBLE",
+        badge: "MANUAL SCRAMBLE (DEFENSIVE)",
         title: "The Paper & Scramble Method",
-        subtitle: "Scribbling booking specs on scrap paper, lost message threads, and late quote replies.",
+        subtitle: "Losing high-value clients to faster competitors while stuck working on job sites.",
         points: [
-          "Scribbling booking specs or service notes on scrap paper while busy with clients.",
-          "Waiting until late in the evening after a long workday to reply to customer emails.",
-          "Chasing bank transfers over text while trying to manage daily jobs.",
-          "0 automated Google reviews because you forget to follow up with busy clients.",
+          "Missing 3–5 high-margin enquiries every week because you cannot pick up the phone.",
+          "Waiting until late at night after a hard workday to reply to customer text messages.",
+          "Text-chasing bank transfers for deposits instead of having payments locked upfront.",
+          "0 Google reviews collected automatically, letting rivals dominate local search results.",
         ]
       },
       pathMercian: {
-        badge: "AUTOMATED STOREFRONT",
-        title: "The Mercian Growth System",
-        subtitle: "Instant mobile booking, deposit collection, and instant phone alerts.",
+        badge: "AUTOMATED MONOPOLY (OFFENSIVE)",
+        title: "The Mercian Growth Engine",
+        subtitle: "Instant mobile booking, upfront deposit collection, and sub-1-second lead capture.",
         points: [
-          "Client selects service & pays deposit online 24/7.",
-          "Instant notification hits your phone with complete booking details.",
-          "Sub-1-second mobile load speed that builds instant local trust.",
-          "Automated review text sent after service completion asking for a 5-star review.",
+          "Client selects service & pays 50% deposit online 24/7 without you lifting a finger.",
+          "Instant notification hits your phone with complete booking & payment details.",
+          "Sub-1-second mobile load speed captures the lead before they view a rival's site.",
+          "Automated 5-star review request sent 2 hours post-job to lock down local search.",
         ],
-        ctaText: "Book your free 15 minute audit →",
+        ctaText: "Claim your free 15 minute audit →",
       }
     },
 
     // 2. Deficit Diagnostic
     bottleneck: {
-      eyebrow: "DAILY REALITY",
-      headline: "You cannot answer the phone when you are with a client or focused on a job.",
-      subheadline: "Every unanswered call or delayed message is revenue handed straight to another local business.",
-      goldSlogan: "Speed and convenience win. While competitors scramble with paper notes, an automated storefront captures leads and collects deposits while you focus on your work.",
+      eyebrow: "REVENUE LEAKAGE",
+      headline: "An unanswered call isn't an inconvenience—it's a donation to your biggest local competitor.",
+      subheadline: "Every 10 minutes a lead waits for a reply, your odds of closing drop by 80%. Speed and automated convenience always win.",
+      goldSlogan: "While rivals scramble with scrap paper and late-night texts, an automated storefront captures leads, takes deposits, and locks in revenue while you work.",
       systemMode: "Mode: ",
       modeAutomated: "Automated Storefront",
       modeManual: "Manual Scramble",
@@ -135,31 +136,31 @@ export const SITE_COPY = {
       
       cards: [
         {
-          title: "Unanswered Enquiries During Work Hours",
-          description: "Clients enquire while you are busy working. By the time you check your phone hours later, they have already booked someone else.",
+          title: "Unanswered Calls During Job Hours",
+          description: "High-value clients call while you are busy on site. By the time you check your phone hours later, they have already paid someone else.",
         },
         {
-          title: "Chasing Upfront Payments at Night",
-          description: "Spending your evenings texting bank details for deposits instead of resting after a long workday.",
+          title: "Nighttime Bank Transfer Chasing",
+          description: "Spending your evenings texting bank details for deposits instead of relaxing with your family after a hard workday.",
         },
         {
           title: "Zero Reviews While Competitors Surge",
-          description: "Delivering excellent service every day, but losing bookings because competitors have 100+ Google reviews collected automatically.",
+          description: "Delivering outstanding work every day, but losing local market share because competitors have 100+ Google reviews collected automatically.",
         },
       ],
     },
 
     // 3. Commodity Trap
     commodityTrap: {
-      eyebrow: "THE REAL COST",
-      headline: "Stop paying for websites that act like online business cards.",
-      description: "Slow DIY sites look cheap until you realize how many customer leads they bleed. Slow load times, buried contact numbers, and missing deposit payment options cost you thousands in lost bookings every month.",
+      eyebrow: "THE HARD TRUTH",
+      headline: "Stop paying for passive websites that act like online business cards.",
+      description: "Generic DIY websites look cheap until you realize how many thousands in revenue they bleed every month. Slow load speeds, hidden phone numbers, and zero deposit capabilities guarantee that your competitors win.",
     },
 
     // 4. Mercian Wealth Difference
     whyMercianWealth: {
-      headline: "Stop paying for websites that act like online business cards.",
-      description: "Your website should sell your services, lock in calendar dates with deposits, and keep your schedule full without extra admin.",
+      headline: "Built For Local Operators Who Play To Win.",
+      description: "Your website should sell your services, lock in calendar dates with non-refundable deposits, and dominate your local area on autopilot.",
       differentiators: [
         "Instant Mobile Booking — Clients select options, choose dates, and pay deposits on their phones in under 30 seconds.",
         "Instant Phone Alerts — Full booking details delivered straight to your phone the moment a deposit is confirmed.",
@@ -202,9 +203,9 @@ export const SITE_COPY = {
 
     // 7. Exclusivity Lock
     exclusivityLock: {
-      eyebrow: "LOCAL FOCUS",
-      headline: "Dedicated Support For Every Partner.",
-      description: "We focus strictly on quality and 7-day launch speeds, working with dedicated local operators who want to lead their area.",
+      eyebrow: "LOCAL CATEGORY LOCKOUT",
+      headline: "We Only Partner With ONE Premier Business Per Category In Each Postcode.",
+      description: "To ensure total market dominance, we enforce strict geographic territory limits. When we deploy our automated system for a trade, clinic, caterer, or local service in your town, we do not take on their local rivals. You either lock down your territory today or compete against our system tomorrow.",
     },
 
     // 8. Flexible & Honest Pricing Structure
@@ -215,16 +216,16 @@ export const SITE_COPY = {
       guarantee: "Clear Promises · No Long Contracts · Transparent Pricing",
       
       cohortCard: {
-        badge: "FLEXIBLE PARTNERSHIP",
-        title: "Transparent Options for Local Businesses",
-        paragraph1: "We believe pricing should match your business cash flow. Choose from simple setup fees or low monthly retainers with zero lock-in contracts.",
-        paragraph2: "We build high-performance storefronts for local service providers who want to eliminate manual admin and take bookings on autopilot.",
-        paragraph3: "Upfront deposit collection, instant phone alerts, and automated review follow-ups included out of the box with zero hidden fees.",
-        enquiryCtaText: "To discuss your custom build, book your free 15 minute audit below.",
+        badge: "LOCAL CATEGORY LOCKOUT PIPELINE",
+        title: "Ruthless Efficiency Built For Local Business Cash Flow",
+        paragraph1: "We build high-converting, automated storefronts for local trade and service operators who refuse to lose leads to missed calls or manual admin.",
+        paragraph2: "Upfront Stripe deposit collection, sub-1-second mobile performance, instant WhatsApp alerts, and automated review engines included out of the box.",
+        paragraph3: "Single upfront setup fee or transparent flat monthly retainer. Zero hidden costs or long-term lock-in contracts.",
+        enquiryCtaText: "To discuss your custom build and check category availability in your area, book your free 15 minute audit below.",
       },
 
       trustPoints: [
-        "One-Time Setup or Flat Monthly Options",
+        "Category Exclusivity Policy",
         "Sub-1-Second Mobile Page Speed",
         "Instant Phone Order Alerts",
       ],
@@ -232,9 +233,9 @@ export const SITE_COPY = {
 
     // 9. FOMO Close & CTA Section
     cta: {
-      headline: "The local businesses taking action today are locking up market share in your area.",
-      subheadline: "Book your quick 15 minute audit to see exactly how many hours and lost orders we can recover for your business.",
-      buttonText: "Book your free 15 minute audit",
+      headline: "The local businesses moving first in your area are locking up market share.",
+      subheadline: "Book your 15-minute diagnostic call to analyze your lead leaks and claim your category slot before a local competitor takes it.",
+      buttonText: "Claim Category Exclusivity & Free Audit",
     },
 
     // 10. FAQ Section

@@ -103,7 +103,7 @@ export default async function Home() {
         <Pricing isHomepage={true} setupTiers={setupTiers} retainerTiers={retainerTiers} />
       </Suspense>
 
-      <SectionDivider id="chapter-divider-VII" chapter="VII" title="Book 15-Min Quick Audit" />
+      <SectionDivider id="chapter-divider-VIII" chapter="VIII" title="Book 15-Min Quick Audit" />
       <CTA />
       <Footer />
     </main>
