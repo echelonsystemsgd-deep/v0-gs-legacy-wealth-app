@@ -13,7 +13,7 @@ export function Footer() {
   const { getSection } = useWebsiteContent()
   const data = getSection('footer', {
     tagline: "Automated Storefronts & AI Engines for Local Businesses.",
-    email: "mercianwealthgs@gmail.com",
+    email: "contact@mercianwealth.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929?text=Hi%20Mercian%20Wealth,%20I'd%20like%20to%20inquire%20about%20your%20services.",
     instagramLink: "https://instagram.com/mercianwealth",

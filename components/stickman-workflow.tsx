@@ -7,6 +7,157 @@ import { Sparkles, MessageSquare, Zap, Database, Clock, ArrowRight, CheckCircle2
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+function StepGraphic({ step }: { step: number }) {
+  if (step === 0) {
+    return (
+      <div className="w-full max-w-[420px] rounded-2xl border border-sky-500/30 bg-slate-950 p-5 shadow-2xl space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-500/80" />
+            <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+            <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+            <span className="text-[11px] font-mono text-slate-400 ml-1">bakery.storefront.app</span>
+          </div>
+          <span className="text-[10px] font-mono font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded">
+            ⚡ SUB-1-SECOND
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span className="text-[10px] uppercase font-mono font-bold text-amber-400">Selected Package</span>
+            <p className="text-sm font-bold text-white">Custom 3-Tier Celebration Cake</p>
+            <p className="text-xs text-slate-400 font-sans">Vanilla Bean • Gold Leaf • Event Date: Sat 18 Oct</p>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-slate-400">Total Quote:</span>
+              <span className="text-white font-mono font-bold">£250.00</span>
+            </div>
+            <div className="flex justify-between text-xs font-bold text-emerald-400 pt-1 border-t border-slate-800">
+              <span>Upfront Deposit (50%):</span>
+              <span className="font-mono">£125.00</span>
+            </div>
+          </div>
+
+          <button className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-bold text-xs text-slate-950 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+            <CheckCircle2 className="w-4 h-4 text-slate-950" />
+            <span>Pay £125.00 Deposit & Lock Date</span>
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (step === 1) {
+    return (
+      <div className="w-full max-w-[420px] rounded-2xl border border-emerald-500/30 bg-slate-950 p-5 shadow-2xl space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xs font-bold font-mono">
+              WA
+            </div>
+            <div>
+              <p className="text-xs font-bold text-white">WhatsApp Webhook Alert</p>
+              <p className="text-[10px] text-emerald-400 font-mono">Instant Phone Alert</p>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono text-slate-500">Just Now</span>
+        </div>
+
+        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 space-y-2">
+          <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-xs font-bold">
+            <span>⚡ NEW ORDER & DEPOSIT CONFIRMED</span>
+          </div>
+          <div className="text-xs font-sans text-slate-200 space-y-1.5 pt-1">
+            <p><strong className="text-slate-400">Customer:</strong> Sarah Jenkins</p>
+            <p><strong className="text-slate-400">Phone:</strong> +44 7700 900123</p>
+            <p><strong className="text-slate-400">Order:</strong> 3-Tier Celebration Cake (£250)</p>
+            <p><strong className="text-slate-400">Deposit Paid:</strong> <span className="text-emerald-400 font-mono font-bold">£125.00 via Stripe</span></p>
+            <p><strong className="text-slate-400">Date:</strong> Sat 18 Oct 2026</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (step === 2) {
+    return (
+      <div className="w-full max-w-[420px] rounded-2xl border border-sky-500/30 bg-slate-950 p-5 shadow-2xl space-y-3">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span className="text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
+            CRM Autopilot Database Log
+          </span>
+          <span className="text-[10px] font-mono bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded border border-sky-500/30">
+            Live Feed
+          </span>
+        </div>
+
+        <div className="space-y-2 font-mono text-xs">
+          <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-white text-[11px]">Sarah Jenkins</p>
+              <p className="text-[10px] text-slate-400">Cake Order • Sat 18 Oct</p>
+            </div>
+            <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+              £125 Deposit Paid
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-white text-[11px]">David Miller</p>
+              <p className="text-[10px] text-slate-400">Catering • Fri 24 Oct</p>
+            </div>
+            <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+              £450 Deposit Paid
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-white text-[11px]">Elena Rostova</p>
+              <p className="text-[10px] text-slate-400">Pastry Box • Sun 26 Oct</p>
+            </div>
+            <span className="text-[10px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
+              Review Queued
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full max-w-[420px] rounded-2xl border border-amber-500/30 bg-slate-950 p-5 shadow-2xl space-y-4">
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+          Weekly Recovery Metric
+        </span>
+        <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+          +100% Upfront Deposits
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <p className="text-2xl font-extrabold text-white font-mono">10.5h</p>
+          <p className="text-[10px] text-slate-400 uppercase font-sans font-semibold">Admin Saved / Wk</p>
+        </div>
+        <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
+          <p className="text-2xl font-extrabold text-emerald-400 font-mono">£0</p>
+          <p className="text-[10px] text-slate-400 uppercase font-sans font-semibold">Unpaid Appointments</p>
+        </div>
+      </div>
+
+      <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center text-xs text-amber-300 font-sans font-medium">
+        ✨ Zero paper scrawls at 6 AM. Your automated storefront locks deposit revenue while you work or rest.
+      </div>
+    </div>
+  )
+}
+
 export function StickmanWorkflow() {
   const [activeStep, setActiveStep] = useState(0)
 
@@ -143,17 +294,9 @@ export function StickmanWorkflow() {
                 </div>
               </div>
 
-              {/* Stickman Character Illustration Display */}
+              {/* UI Mockup Graphic Display */}
               <div className="lg:col-span-6 flex justify-center">
-                <div className="relative w-full max-w-[420px] aspect-square rounded-2xl overflow-hidden border border-slate-800/80 bg-slate-950 p-4 shadow-2xl flex items-center justify-center">
-                  <Image
-                    src={steps[activeStep].image}
-                    alt={steps[activeStep].title}
-                    fill
-                    className="object-contain p-4 transition-transform duration-500 hover:scale-105"
-                    priority
-                  />
-                </div>
+                <StepGraphic step={activeStep} />
               </div>
             </motion.div>
           </AnimatePresence>

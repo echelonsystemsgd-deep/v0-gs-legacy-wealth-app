@@ -34,9 +34,13 @@ export function WhyMercianWealth() {
           transition={{ duration: 0.6 }}
           className="mb-20 p-6 sm:p-8 rounded-2xl border border-[#D9A74A]/30 bg-[#1E293B]/60 backdrop-blur-md shadow-xl flex flex-col md:flex-row items-center gap-6 md:gap-8 text-left max-w-5xl mx-auto"
         >
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#D9A74A] to-[#B8860B] p-1 shrink-0 shadow-lg">
-            <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-2xl sm:text-3xl font-serif font-bold text-[#D9A74A]">
-              MR
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#D9A74A] to-[#B8860B] p-1 shrink-0 shadow-lg relative">
+            <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center relative p-3.5 overflow-hidden">
+              <BrandLogo 
+                alt="Mercian Wealth Logo"
+                fill
+                className="object-contain p-1.5"
+              />
             </div>
           </div>
           <div className="space-y-2 flex-1">

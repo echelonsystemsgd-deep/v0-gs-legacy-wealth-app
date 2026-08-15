@@ -50,10 +50,15 @@ function WordmarkLogo({ className }: { className?: string }) {
   )
 }
 
-function CrestBadge({ className }: { className?: string }) {
+function ModernBrandBadge({ className }: { className?: string }) {
   return (
-    <div className={`h-full w-full rounded-xl bg-gradient-to-br from-[#D9A74A] via-[#E5A93C] to-[#B8860B] border border-amber-300/40 flex items-center justify-center text-slate-950 font-serif font-extrabold text-xs shadow-md ${className || ""}`}>
-      MW
+    <div className={`h-full w-full rounded-xl bg-slate-900 border border-amber-400/40 flex items-center justify-center gap-1.5 px-3 py-1.5 shadow-lg shadow-amber-500/10 ${className || ""}`}>
+      <svg className="w-5 h-5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Storefront Awning + Tech Grid lines */}
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span className="font-mono font-extrabold text-xs tracking-wider text-white">MW</span>
     </div>
   )
 }
@@ -73,7 +78,7 @@ export function BrandLogo({
   }
 
   if (imgError) {
-    return <CrestBadge className={className as string | undefined} />
+    return <ModernBrandBadge className={className as string | undefined} />
   }
 
   const hasFill = (props as any).fill
