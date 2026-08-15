@@ -223,7 +223,7 @@ export function InteractivePhoneDemo() {
 
           {/* Right Column: Smartphone Mockup */}
           <div className="lg:col-span-6 flex justify-center min-w-0 max-w-full">
-            <div className="relative w-full max-w-[320px] sm:max-w-[350px] h-[640px] bg-slate-950 rounded-[45px] p-4 border-[8px] border-slate-800 shadow-[0_0_50px_rgba(56,189,248,0.2)] flex flex-col justify-between overflow-hidden shrink-0">
+            <div className="relative w-full max-w-[320px] sm:max-w-[350px] min-h-[560px] h-[min(640px,80svh)] bg-slate-950 rounded-[45px] p-4 border-[8px] border-slate-800 shadow-[0_0_50px_rgba(56,189,248,0.2)] flex flex-col justify-between overflow-hidden shrink-0">
               {/* Phone Notch */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-6 bg-slate-800 rounded-b-2xl z-30 flex items-center justify-center">
                 <div className="w-12 h-1.5 bg-slate-900 rounded-full" />

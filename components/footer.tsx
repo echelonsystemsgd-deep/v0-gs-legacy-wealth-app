@@ -43,7 +43,7 @@ export function Footer() {
               <BrandLogo
                 alt="Mercian Wealth"
                 fill
-                className="object-contain mix-blend-screen"
+                className="object-contain"
               />
             </div>
             <p className="font-serif italic text-sm text-text-primary opacity-80 leading-relaxed max-w-[200px]">

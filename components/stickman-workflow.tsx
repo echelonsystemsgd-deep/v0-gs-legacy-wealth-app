@@ -212,7 +212,7 @@ export function StickmanWorkflow() {
         </div>
 
         {/* Interactive Step Navigator Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-12">
           {steps.map((step, idx) => {
             const Icon = step.icon
             const isActive = activeStep === idx
@@ -221,21 +221,21 @@ export function StickmanWorkflow() {
                 key={step.id}
                 suppressHydrationWarning
                 onClick={() => setActiveStep(idx)}
-                className={`p-4 rounded-2xl text-left transition-all duration-300 border ${
+                className={`p-3 sm:p-4 rounded-2xl text-left transition-all duration-300 border ${
                   isActive
                     ? "bg-slate-900 border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.25)] scale-[1.02]"
                     : "bg-slate-900/50 border-slate-800/80 hover:bg-slate-900/80 hover:border-slate-700"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <div className={`p-2 rounded-xl ${isActive ? "bg-sky-400/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
-                    <Icon className="w-5 h-5" />
+                  <div className={`p-1.5 sm:p-2 rounded-xl ${isActive ? "bg-sky-400/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <span className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${isActive ? "bg-amber-400/20 text-amber-400" : "bg-slate-800 text-slate-500"}`}>
+                  <span className={`text-[9px] sm:text-[10px] font-mono font-bold uppercase px-1.5 sm:px-2 py-0.5 rounded-full ${isActive ? "bg-amber-400/20 text-amber-400" : "bg-slate-800 text-slate-500"}`}>
                     Step 0{idx + 1}
                   </span>
                 </div>
-                <h4 className={`text-xs font-bold ${isActive ? "text-white" : "text-slate-400"}`}>
+                <h4 className={`text-[10px] sm:text-xs font-bold leading-snug line-clamp-2 ${isActive ? "text-white" : "text-slate-400"}`}>
                   {step.badge}
                 </h4>
               </button>

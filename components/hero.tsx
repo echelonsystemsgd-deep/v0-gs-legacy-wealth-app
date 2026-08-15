@@ -11,7 +11,7 @@ export function Hero() {
   const data = SITE_COPY.homepage.hero
 
   return (
-    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#0B0F17]">
+    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-36 sm:pt-40 pb-20 overflow-hidden bg-[#0B0F17]">
       {/* Ambient Brand Watermark Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-15 pointer-events-none z-0 rounded-full overflow-hidden blur-[1px]">
         <BrandLogo variant="watermark" fill className="object-cover rounded-full" priority />
@@ -148,7 +148,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-slate-300 border-t border-[#D9A74A]/20 pt-8 w-full max-w-3xl font-medium"
+          className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs sm:text-sm text-slate-300 border-t border-[#D9A74A]/20 pt-8 w-full max-w-3xl font-medium"
         >
           {data.trustItems.map((item, idx) => (
             <span key={idx} className="flex items-center gap-2">

@@ -28,12 +28,12 @@ export function Watermark({ position = "center", className = "", opacity = 0.25 
   }
 
   return (
-    <div className={`fixed pointer-events-none z-[-10] ${getPositionClasses()} ${className}`}>
+    <div className={`absolute pointer-events-none z-[-10] ${getPositionClasses()} ${className}`}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: opacity, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-        className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] rounded-full overflow-hidden blur-[2px]"
+        className="relative w-[600px] h-[600px] md:w-[900px] md:h-[900px] lg:w-[1100px] lg:h-[1100px] rounded-full overflow-hidden blur-[2px]"
       >
         <Image
           src={src}

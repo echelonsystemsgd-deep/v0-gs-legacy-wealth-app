@@ -247,7 +247,7 @@ export function Navbar() {
               </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-4 xl:gap-8 hidden-on-mobile">
+            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-6 2xl:gap-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -258,7 +258,7 @@ export function Navbar() {
                       document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
                     }
                   }}
-                  className={`text-sm transition-colors duration-200 hover:text-accent-gold ${
+                  className={`text-[11px] xl:text-sm whitespace-nowrap transition-colors duration-200 hover:text-accent-gold ${
                     isActive(link.href) 
                       ? "text-accent-gold font-semibold" 
                       : "text-text-secondary"
@@ -270,7 +270,7 @@ export function Navbar() {
             </div>
 
             {/* CTA Button / User Profile Dropdown */}
-            <div className="hidden lg:flex lg:items-center lg:gap-6 hidden-on-mobile">
+            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-6">
               {loading ? (
                 <div className="h-10 w-10 rounded-full border border-accent-gold/15 bg-accent-gold/5 animate-pulse" />
               ) : user ? (
@@ -353,9 +353,12 @@ export function Navbar() {
                   <Button
                     asChild
                     size="sm"
-                    className="px-5 py-2 font-bold bg-accent-gold text-black hover:bg-amber-300 shadow-md"
+                    className="px-3 xl:px-5 py-2 font-bold bg-accent-gold text-black hover:bg-amber-300 shadow-md text-xs xl:text-sm whitespace-nowrap"
                   >
-                    <Link href="/book">{SITE_COPY.navbar.ctaText}</Link>
+                    <Link href="/book">
+                      <span className="hidden xl:inline">{SITE_COPY.navbar.ctaText}</span>
+                      <span className="xl:hidden">Book Free Audit</span>
+                    </Link>
                   </Button>
                 </>
               )}

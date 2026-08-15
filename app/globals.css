@@ -126,17 +126,15 @@
   }
 }
 
-/* Strict Mobile & Desktop Layout Safeguards for Tailwind v4 */
+/* Mobile/Desktop visibility helpers — targeted classes only, no blanket overrides */
 @media (max-width: 1023px) {
-  .hidden-on-mobile,
-  .lg\:flex:not(.mobile-visible) {
+  .hidden-on-mobile {
     display: none !important;
   }
 }
 
 @media (min-width: 1024px) {
-  .mobile-only,
-  .lg\:hidden {
+  .mobile-only {
     display: none !important;
   }
 }
@@ -148,22 +146,32 @@
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Custom scrollbar — desktop (pointer: fine) only, hidden on touch devices */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-accent-gold-muted);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-gold);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: var(--color-bg-tertiary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-accent-gold-muted);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-gold);
+/* Hide scrollbar on touch devices for a cleaner mobile experience */
+@media (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
 }
 
 /* Gold gradient text utility */
@@ -561,7 +569,14 @@ input[type="range"]::-moz-range-thumb:active {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 35s linear infinite;
+  /* 50s default — scaled up on ultra-wide so loop doesn't reset visibly */
+  animation: marquee 50s linear infinite;
+}
+
+@media (min-width: 1920px) {
+  .animate-marquee {
+    animation-duration: 75s;
+  }
 }
 
 .animate-marquee:hover {
