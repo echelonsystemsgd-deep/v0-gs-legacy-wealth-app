@@ -24,16 +24,16 @@ export function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center gap-3 mb-6 text-center max-w-full px-2"
+          className="flex flex-col items-center justify-center gap-2.5 mb-6 text-center max-w-full px-2"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#D9A74A] bg-[#D9A74A]/10 border border-[#D9A74A]/25 px-4 py-1.5 rounded-full">
+          <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-[#D9A74A] bg-[#D9A74A]/10 border border-[#D9A74A]/25 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-center max-w-full">
             [ {data.eyebrow} ]
           </span>
 
           {/* Quantified Proof Metric Badge */}
-          <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1 rounded-full mt-1">
+          <div className="inline-flex items-center gap-2 text-[10px] sm:text-sm font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 sm:px-3.5 py-1 rounded-full mt-1 max-w-full text-center">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span>{data.proofBadge}</span>
+            <span className="leading-snug">{data.proofBadge}</span>
           </div>
         </motion.div>
 
@@ -42,7 +42,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="font-sans text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.15] text-balance mb-6 max-w-5xl tracking-tight"
+          className="font-sans text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.15] text-balance mb-5 sm:mb-6 max-w-5xl tracking-tight px-1 break-words"
         >
           {data.headline}
         </motion.h1>
@@ -52,7 +52,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-sans text-base sm:text-lg md:text-xl text-slate-300 max-w-[800px] leading-relaxed mb-8 font-normal"
+          className="font-sans text-sm sm:text-lg md:text-xl text-slate-300 max-w-[800px] leading-relaxed mb-6 sm:mb-8 font-normal px-2 break-words"
         >
           {data.subheadline}
         </motion.p>
@@ -62,16 +62,16 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mb-12 w-full justify-center"
+          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-10 sm:mb-12 w-full justify-center min-w-0 max-w-full"
         >
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto px-8 py-7 text-base sm:text-lg font-bold bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 hover:from-[#E5A93C] hover:to-[#D9A74A] transition-all duration-300 shadow-[0_0_30px_rgba(217,167,74,0.35)] border-0 rounded-xl"
+            className="w-full sm:w-auto px-5 sm:px-8 py-5 sm:py-7 text-xs sm:text-base md:text-lg font-bold bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 hover:from-[#E5A93C] hover:to-[#D9A74A] transition-all duration-300 shadow-[0_0_30px_rgba(217,167,74,0.35)] border-0 rounded-xl"
           >
-            <Link href="/book" className="flex items-center justify-center gap-3">
+            <Link href="/book" className="flex items-center justify-center gap-2 sm:gap-3 text-center">
               <span>{data.primaryCtaText}</span>
-              <ArrowRight size={20} />
+              <ArrowRight size={18} className="shrink-0" />
             </Link>
           </Button>
 
@@ -79,9 +79,9 @@ export function Hero() {
             asChild
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto px-7 py-7 text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl"
+            className="w-full sm:w-auto px-5 sm:px-7 py-5 sm:py-7 text-xs sm:text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl text-center"
           >
-            <Link href="/#demo" className="flex items-center justify-center gap-2">
+            <Link href="/#demo" className="flex items-center justify-center gap-2 text-center">
               <span>{data.secondaryCtaText}</span>
             </Link>
           </Button>

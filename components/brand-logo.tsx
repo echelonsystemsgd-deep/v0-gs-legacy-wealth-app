@@ -50,6 +50,14 @@ function WordmarkLogo({ className }: { className?: string }) {
   )
 }
 
+function CrestBadge({ className }: { className?: string }) {
+  return (
+    <div className={`h-full w-full rounded-xl bg-gradient-to-br from-[#D9A74A] via-[#E5A93C] to-[#B8860B] border border-amber-300/40 flex items-center justify-center text-slate-950 font-serif font-extrabold text-xs shadow-md ${className || ""}`}>
+      MW
+    </div>
+  )
+}
+
 export function BrandLogo({
   variant = "logo",
   alt = "Mercian Wealth",
@@ -57,10 +65,15 @@ export function BrandLogo({
   className,
   ...props
 }: BrandLogoProps) {
+  const [imgError, setImgError] = useState(false)
   const src = variant === "watermark" ? BRAND_WATERMARK : BRAND_LOGO
 
   if (wordmarkOnly) {
     return <WordmarkLogo className={className as string | undefined} />
+  }
+
+  if (imgError) {
+    return <CrestBadge className={className as string | undefined} />
   }
 
   const hasFill = (props as any).fill
@@ -74,6 +87,7 @@ export function BrandLogo({
       src={src}
       alt={alt}
       className={className}
+      onError={() => setImgError(true)}
       unoptimized
     />
   )
