@@ -16,8 +16,8 @@ export function Footer() {
     email: "contact@mercianwealth.com",
     phone: "+44 7851 055929",
     whatsappLink: "https://wa.me/447851055929?text=Hi%20Mercian%20Wealth,%20I'd%20like%20to%20inquire%20about%20your%20services.",
-    instagramLink: "https://instagram.com/mercianwealth",
-    linkedinLink: "https://www.linkedin.com/company/mercianwealth",
+    instagramLink: "https://www.instagram.com/mercianwealth/",
+    linkedinLink: "https://www.linkedin.com/in/gs-legacy-wealth/",
     ctaDescription: "Book a 15-minute quick audit to see how much manual admin time we can eliminate for your business.",
     ctaButtonText: "Book your free 15 minute audit"
   })

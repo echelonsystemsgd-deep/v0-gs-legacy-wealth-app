@@ -37,11 +37,11 @@ const DEFAULT_SECTIONS: Record<SectionKey, any> = {
   },
   footer: {
     copyright: '© 2026 Mercian Wealth. All Rights Reserved.',
-    email: 'mercianwealthgs@gmail.com',
-    phone: '+1 (555) 019-2831',
+    email: 'contact@mercianwealth.com',
+    phone: '+44 7851 055929',
     address: 'London, UK',
     twitter_url: 'https://twitter.com',
-    linkedin_url: 'https://linkedin.com',
+    linkedin_url: 'https://www.linkedin.com/in/gs-legacy-wealth/',
   },
   pricing_setup: [
     { id: 'authority-suite', name: 'Authority Suite', price: '2,750', interval: '£687.50 deposit to initiate', milestoneBreakdown: '4 milestone stages of 25% (£687.50) linked to build progress', description: 'A luxury digital front-office that projects absolute authority.', features: ['Bespoke Next.js Authority Platform (5 Pages)', 'Calendly Scheduling Integration', 'Stripe Payment Gateway Integration', 'Core SEO Blueprint & Schema Setup', 'Supercharged Speed Profile (95+ Mobile)', '30 Days Dedicated Post-Launch Support'], cta: 'Request Alignment', featured: false, tag: 'Authority Suite' },

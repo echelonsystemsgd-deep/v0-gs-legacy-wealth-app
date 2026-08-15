@@ -600,7 +600,7 @@ function BookingFlowInner() {
                 onChange={(v) => updateIdentity("websiteUrl", v)} error={identityErrors.websiteUrl} optional />
               <div className="sm:col-span-2">
                 <FieldInput id="linkedinUrl" label="LinkedIn Profile" icon={<Linkedin size={11} className="text-accent-gold" />}
-                  type="url" placeholder="e.g. https://linkedin.com/company/mercian-wealth" value={identity.linkedinUrl}
+                  type="url" placeholder="e.g. https://www.linkedin.com/in/gs-legacy-wealth/" value={identity.linkedinUrl}
                   onChange={(v) => updateIdentity("linkedinUrl", v)} error={identityErrors.linkedinUrl} optional
                   hint="Strongly encouraged — helps us prepare for your call" />
               </div>
