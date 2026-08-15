@@ -44,14 +44,14 @@ export const metadata: Metadata = {
   description: SITE_COPY.metadata.layout.description,
   applicationName: 'Mercian Wealth',
   keywords: [
-    "AI Automation",
-    "Luxury Websites",
-    "Digital Assets",
-    "Web Development",
-    "Business Growth",
+    "AI Automation for Local Business",
+    "Bakery Websites & Booking",
+    "Caterer Booking Systems",
+    "Local Service Automation",
+    "24/7 Deposit Capture",
     "Mercian Wealth",
-    "Automated Systems",
-    "Enterprise AI Software"
+    "Automated Storefronts",
+    "Instant Booking Systems"
   ],
   authors: [{ name: 'Mercian Wealth' }],
   creator: 'Mercian Wealth',
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image.png',
         width: 1200,
         height: 630,
-        alt: 'Mercian Wealth — Luxury AI-Powered Websites & Business Automation',
+        alt: 'Mercian Wealth — AI Websites & Business Automation for Local Service Businesses',
       },
     ],
     locale: 'en_US',
@@ -98,11 +98,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/MercianWealthLogo.jpeg', type: 'image/jpeg' },
-      { url: '/icon.jpeg', type: 'image/jpeg' },
       { url: '/favicon.ico' },
     ],
     shortcut: '/MercianWealthLogo.jpeg',
-    apple: '/apple-icon.jpeg',
+    apple: '/MercianWealthLogo.jpeg',
   },
   // DNS prefetch for Calendly embed (reduces first-load latency by ~150–200 ms)
   other: {

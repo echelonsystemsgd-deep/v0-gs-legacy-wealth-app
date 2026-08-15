@@ -471,17 +471,30 @@ export function Navbar() {
               <div className="pt-2">
                 {user ? (
                   <div className="p-4 rounded-xl border border-accent-gold/25 bg-black/40 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10 border border-accent-gold/30">
-                        <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif text-xs">
-                          {getInitials()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col min-w-0 text-left">
-                        <span className="text-xs font-bold text-white font-serif truncate">{getFullName()}</span>
-                        <span className="text-[10px] text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Avatar className="h-10 w-10 border border-accent-gold/30 shrink-0">
+                          <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
+                          <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif text-xs">
+                            {getInitials()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col min-w-0 text-left">
+                          <span className="text-xs font-bold text-white font-serif truncate">{getFullName()}</span>
+                          <span className="text-[10px] text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
+                        </div>
                       </div>
+                      <button
+                        onClick={async () => {
+                          await handleSignOut()
+                          setIsMobileMenuOpen(false)
+                        }}
+                        className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all text-xs flex items-center gap-1.5 shrink-0"
+                        title="Sign Out"
+                      >
+                        <LogOut size={14} />
+                        <span>Sign Out</span>
+                      </button>
                     </div>
 
                     <Link
