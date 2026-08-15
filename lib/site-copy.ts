@@ -81,7 +81,7 @@ export const SITE_COPY = {
       subheadline: "Stop leaving revenue on the table. We replace missed calls, buried DMs, and manual quote-chasing with automated mobile storefronts, 24/7 WhatsApp deposit engines, and instant phone alerts for local business owners who play to win.",
       primaryCtaText: "Claim Category Exclusivity & Free Audit",
       secondaryCtaText: "Test 3-Tap Order Demo",
-      proofBadge: "1,400+ Orders & Bookings Captured | £65,000+ Upfront Deposits Secured",
+      proofBadge: "24/7 Mobile Lead Capture & Automated Upfront Deposit Systems",
       trustItems: [
         "Sub-1-Second Lead Capture",
         "24/7 Automated Upfront Deposits",
