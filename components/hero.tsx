@@ -13,8 +13,8 @@ export function Hero() {
   return (
     <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 pb-20 overflow-hidden bg-[#0B0F17]">
       {/* Ambient Brand Watermark Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-20 pointer-events-none mix-blend-screen z-0">
-        <BrandLogo variant="watermark" fill className="object-contain" priority />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-15 pointer-events-none z-0 rounded-full overflow-hidden blur-[1px]">
+        <BrandLogo variant="watermark" fill className="object-cover rounded-full" priority />
       </div>
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 z-10 text-center flex flex-col items-center">

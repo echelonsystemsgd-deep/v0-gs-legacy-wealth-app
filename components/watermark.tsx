@@ -33,13 +33,13 @@ export function Watermark({ position = "center", className = "", opacity = 0.25 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: opacity, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-        className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] mix-blend-screen"
+        className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] lg:w-[1600px] lg:h-[1600px] rounded-full overflow-hidden blur-[2px]"
       >
         <Image
           src={src}
           alt=""
           fill
-          className="object-contain"
+          className="object-cover rounded-full"
           unoptimized
         />
       </motion.div>
