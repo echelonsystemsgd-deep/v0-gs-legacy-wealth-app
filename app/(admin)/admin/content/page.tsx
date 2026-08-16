@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles, CheckCircle2 } from 'lucide-react'
 import { SITE_COPY } from '@/lib/site-copy'
-import type { PricingTier } from '@/lib/pricing'
 
 type SectionKey = 'hero' | 'cta' | 'process' | 'faq' | 'footer'
 
@@ -60,14 +59,11 @@ export default function ContentPage() {
   const fetchSection = useCallback(async (key: SectionKey) => {
     setLoading(true)
     setJsonError(null)
-    const dbKey = key === 'pricing_setup' ? 'pricing_setup_tiers'
-      : key === 'pricing_retainer' ? 'pricing_retainer_tiers'
-      : key
 
     const { data, error } = await supabase
       .from('website_content')
       .select('*')
-      .eq('section_key', dbKey)
+      .eq('section_key', key)
       .maybeSingle()
 
     if (error || !data || !data.content) {
@@ -111,16 +107,11 @@ export default function ContentPage() {
     setSaving(true)
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Map UI tab keys to actual section_key values in the DB
-    const dbKey = activeTab === 'pricing_setup' ? 'pricing_setup_tiers'
-      : activeTab === 'pricing_retainer' ? 'pricing_retainer_tiers'
-      : activeTab
-
     const { error } = await supabase
       .from('website_content')
       .upsert(
         {
-          section_key: dbKey,
+          section_key: activeTab,
           content: sectionData,
           updated_at: new Date().toISOString(),
           updated_by: user?.id || null
@@ -133,17 +124,6 @@ export default function ContentPage() {
       showToast(`Error saving: ${error.message}`)
     } else {
       showToast(`Section "${activeTab}" saved successfully.`)
-      // Trigger on-demand cache revalidation for pricing pages
-      if (activeTab === 'pricing_setup' || activeTab === 'pricing_retainer') {
-        try {
-          await fetch('/api/revalidate-pricing', {
-            method: 'POST',
-            headers: { 'x-admin-key': 'mercian-wealth-admin-revalidate' },
-          })
-        } catch {
-          // Non-fatal — the 60s background revalidation will still pick it up
-        }
-      }
     }
   }
 
@@ -154,61 +134,6 @@ export default function ContentPage() {
       setJsonError(null)
       showToast('Reset to default template values.')
     }
-  }
-
-
-  const isPricingTab = false // Pricing is now managed at /admin/pricing
-
-
-  // Per-tier save for pricing mode
-  const handleSaveTier = async (tierIndex: number) => {
-    const { data: { user } } = await supabase.auth.getUser()
-    const tiers = Array.isArray(sectionData) ? [...sectionData] : []
-    const dbKey = activeTab === 'pricing_setup' ? 'pricing_setup_tiers' : 'pricing_retainer_tiers'
-    const { error } = await supabase
-      .from('website_content')
-      .upsert(
-        { section_key: dbKey, content: tiers, updated_at: new Date().toISOString(), updated_by: user?.id || null },
-        { onConflict: 'section_key' }
-      )
-    if (error) {
-      showToast(`Error saving tier: ${error.message}`)
-    } else {
-      showToast(`Tier "${tiers[tierIndex]?.name}" saved successfully.`)
-      try {
-        await fetch('/api/revalidate-pricing', {
-          method: 'POST',
-          headers: { 'x-admin-key': 'mercian-wealth-admin-revalidate' },
-        })
-      } catch { /* non-fatal */ }
-    }
-  }
-
-  const updateTierField = (tierIndex: number, field: string, value: any) => {
-    const tiers = Array.isArray(sectionData) ? [...sectionData] : []
-    tiers[tierIndex] = { ...tiers[tierIndex], [field]: value }
-    setSectionData(tiers)
-    setRawJson(JSON.stringify(tiers, null, 2))
-  }
-
-  const updateTierFeature = (tierIndex: number, featureIndex: number, value: string) => {
-    const tiers = Array.isArray(sectionData) ? [...sectionData] : []
-    const features = [...(tiers[tierIndex]?.features ?? [])]
-    features[featureIndex] = value
-    updateTierField(tierIndex, 'features', features)
-  }
-
-  const addTierFeature = (tierIndex: number) => {
-    const tiers = Array.isArray(sectionData) ? [...sectionData] : []
-    const features = [...(tiers[tierIndex]?.features ?? []), '']
-    updateTierField(tierIndex, 'features', features)
-  }
-
-  const removeTierFeature = (tierIndex: number, featureIndex: number) => {
-    const tiers = Array.isArray(sectionData) ? [...sectionData] : []
-    const features = [...(tiers[tierIndex]?.features ?? [])]
-    features.splice(featureIndex, 1)
-    updateTierField(tierIndex, 'features', features)
   }
 
   return (
@@ -568,174 +493,9 @@ export default function ContentPage() {
               </div>
             </div>
           )}
-
-          {/* â”€â”€ Pricing Tier Editor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-          {isPricingTab && sectionData && Array.isArray(sectionData) && editMode === 'form' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <DollarSign size={15} className="text-gold" />
-                <p className="text-xs font-bold uppercase tracking-widest text-gold/80">
-                  {activeTab === 'pricing_setup' ? 'One-Time Setup Fee Tiers' : 'Monthly Retainer Tiers'}
-                </p>
-                <span className="ml-auto text-[10px] text-muted-foreground bg-gold/5 border border-gold/10 px-2 py-1 rounded-lg">
-                  Changes saved per-tier — public page updates instantly
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                {(sectionData as PricingTier[]).map((tier, tierIdx) => (
-                  <div key={tier.id ?? tierIdx} className="rounded-2xl border border-gold/15 bg-white/[0.015] p-5 space-y-4 flex flex-col">
-
-                    {/* Tier header */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="space-y-1 flex-1 min-w-0">
-                        <p className="text-[9px] font-extrabold uppercase tracking-widest text-gold/60">Tier {tierIdx + 1}</p>
-                        <input
-                          value={tier.name ?? ''}
-                          onChange={(e) => updateTierField(tierIdx, 'name', e.target.value)}
-                          className="w-full bg-transparent border-b border-gold/20 focus:border-gold/50 py-1 text-sm font-bold text-foreground outline-none transition-all"
-                          placeholder="Tier Name"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        title={tier.featured ? 'Remove featured badge' : 'Mark as featured'}
-                        onClick={() => updateTierField(tierIdx, 'featured', !tier.featured)}
-                        className={`p-1.5 rounded-lg border transition-all shrink-0 mt-4 ${
-                          tier.featured
-                            ? 'bg-gold/15 border-gold/40 text-gold'
-                            : 'bg-white/5 border-gold/10 text-muted-foreground hover:text-gold'
-                        }`}
-                      >
-                        <Star size={13} fill={tier.featured ? 'currentColor' : 'none'} />
-                      </button>
-                    </div>
-
-                    {/* Price */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Price (£)</label>
-                        <div className="flex items-center border border-gold/15 hover:border-gold/30 rounded-xl bg-background/60 px-3 py-2 gap-1.5">
-                          <span className="text-xs text-gold font-bold">£</span>
-                          <input
-                            value={tier.price ?? ''}
-                            onChange={(e) => updateTierField(tierIdx, 'price', e.target.value)}
-                            className="w-full bg-transparent text-xs text-foreground outline-none font-mono"
-                            placeholder="0"
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Interval / Deposit</label>
-                        <input
-                          value={tier.interval ?? ''}
-                          onChange={(e) => updateTierField(tierIdx, 'interval', e.target.value)}
-                          className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
-                          placeholder="e.g. £687.50 deposit"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Milestone (only for setup) */}
-                    {activeTab === 'pricing_setup' && (
-                      <div className="space-y-1">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Milestone Breakdown</label>
-                        <input
-                          value={tier.milestoneBreakdown ?? ''}
-                          onChange={(e) => updateTierField(tierIdx, 'milestoneBreakdown', e.target.value)}
-                          className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
-                          placeholder="e.g. 4 stages of 25%..."
-                        />
-                      </div>
-                    )}
-
-                    {/* Description */}
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Description</label>
-                      <textarea
-                        value={tier.description ?? ''}
-                        onChange={(e) => updateTierField(tierIdx, 'description', e.target.value)}
-                        rows={3}
-                        className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all resize-none"
-                        placeholder="Tier description..."
-                      />
-                    </div>
-
-                    {/* CTA */}
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">CTA Button Text</label>
-                      <input
-                        value={tier.cta ?? ''}
-                        onChange={(e) => updateTierField(tierIdx, 'cta', e.target.value)}
-                        className="w-full bg-background/60 border border-gold/15 hover:border-gold/30 rounded-xl px-3 py-2 text-xs text-foreground outline-none transition-all"
-                        placeholder="e.g. Request Alignment"
-                      />
-                    </div>
-
-                    {/* Features */}
-                    <div className="space-y-2 flex-1">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Features ({tier.features?.length ?? 0})</label>
-                        <button
-                          type="button"
-                          onClick={() => addTierFeature(tierIdx)}
-                          className="flex items-center gap-1 text-[9px] font-bold text-gold hover:text-gold-light border border-gold/20 rounded-lg px-2 py-1 bg-white/5 transition-all"
-                        >
-                          <Plus size={10} /> Add
-                        </button>
-                      </div>
-                      <div className="space-y-1.5">
-                        {(tier.features ?? []).map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-center gap-1.5">
-                            <span className="text-gold text-[10px] shrink-0">✓</span>
-                            <input
-                              value={feat}
-                              onChange={(e) => updateTierFeature(tierIdx, fIdx, e.target.value)}
-                              className="flex-1 min-w-0 bg-background/40 border border-gold/10 hover:border-gold/25 rounded-lg px-2.5 py-1.5 text-xs text-foreground outline-none transition-all"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removeTierFeature(tierIdx, fIdx)}
-                              className="p-1 text-muted-foreground hover:text-red-400 transition-colors shrink-0"
-                            >
-                              <X size={10} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Preview strip */}
-                    <div className="rounded-xl border border-gold/8 bg-black/30 p-3 space-y-1">
-                      <p className="text-[8px] font-bold uppercase tracking-widest text-gold/40 mb-2">Live Preview</p>
-                      <p className="text-xs font-bold text-foreground">{tier.name || '—'}</p>
-                      <p className="text-xl font-mono font-black text-gold">£{tier.price || '0'}</p>
-                      <p className="text-[10px] text-muted-foreground">{tier.interval || '—'}</p>
-                      <div className="mt-1.5 space-y-0.5">
-                        {(tier.features ?? []).slice(0, 3).map((f, i) => (
-                          <p key={i} className="text-[9px] text-muted-foreground flex items-center gap-1"><span className="text-gold">✓</span>{f}</p>
-                        ))}
-                        {(tier.features?.length ?? 0) > 3 && (
-                          <p className="text-[9px] text-gold/50">+{(tier.features?.length ?? 0) - 3} more features</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Per-tier save */}
-                    <button
-                      type="button"
-                      onClick={() => handleSaveTier(tierIdx)}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-gold/80 to-gold text-background text-xs font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.35)] transition-all"
-                    >
-                      <Save size={12} /> Save {tier.name || 'Tier'}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
   )
 }
+
