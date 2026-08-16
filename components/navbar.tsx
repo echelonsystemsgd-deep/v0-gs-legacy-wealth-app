@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X, User, LogOut, LayoutDashboard, Globe, ChevronRight, ArrowRight } from "lucide-react"
@@ -185,6 +185,14 @@ export function Navbar() {
     router.refresh()
   }
 
+  // Logo click: smooth scroll to top on /, navigate home from other pages
+  const handleLogoClick = useCallback((e: React.MouseEvent) => {
+    if (pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [pathname])
+
   const getInitials = () => {
     if (profile?.first_name || profile?.last_name) {
       return `${profile.first_name?.[0] || ""}${profile.last_name?.[0] || ""}`.toUpperCase()
@@ -232,8 +240,8 @@ export function Navbar() {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group shrink-0">
+            {/* Logo — scrolls to top on homepage, navigates home from other pages */}
+            <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group shrink-0">
               <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-[#DAA640]/30 shadow-md">
                 <BrandLogo variant="logo" alt="Mercian Wealth" fill className="object-cover transition-transform group-hover:scale-105 duration-300" priority />
               </div>

@@ -97,7 +97,21 @@ export function AdminSidebar() {
 
   const handleSignOut = async () => {
     const supabase = createClient()
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+    } catch {}
+    // Clear all supabase auth tokens from localStorage
+    try {
+      const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)/)?.[1]
+      if (projectRef) {
+        localStorage.removeItem(`sb-${projectRef}-auth-token`)
+      }
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          localStorage.removeItem(key)
+        }
+      })
+    } catch {}
     window.location.href = '/login'
   }
 

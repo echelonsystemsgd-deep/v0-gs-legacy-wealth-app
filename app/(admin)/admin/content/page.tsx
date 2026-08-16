@@ -42,11 +42,11 @@ const DEFAULT_SECTIONS: Record<SectionKey, any> = {
     twitter_url: 'https://twitter.com',
     linkedin_url: 'https://www.linkedin.com/in/gs-legacy-wealth/',
   },
-  pricing_setup: SITE_COPY.pricingPage.setupTiers.map((t, idx) => ({
+  pricing_setup: SITE_COPY.pricingPage.oneTimeTiers.map((t, idx) => ({
     id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
     ...t,
   })),
-  pricing_retainer: SITE_COPY.pricingPage.retainerTiers.map((t, idx) => ({
+  pricing_retainer: SITE_COPY.pricingPage.monthlyTiers.map((t, idx) => ({
     id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
     ...t,
   })),
