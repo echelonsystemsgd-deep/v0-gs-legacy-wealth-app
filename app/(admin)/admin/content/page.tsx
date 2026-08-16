@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles, CheckCircle2, DollarSign, Plus, X, Star } from 'lucide-react'
+import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles, CheckCircle2 } from 'lucide-react'
 import { SITE_COPY } from '@/lib/site-copy'
 import type { PricingTier } from '@/lib/pricing'
 
-type SectionKey = 'hero' | 'cta' | 'process' | 'faq' | 'footer' | 'pricing_setup' | 'pricing_retainer'
+type SectionKey = 'hero' | 'cta' | 'process' | 'faq' | 'footer'
 
 const DEFAULT_SECTIONS: Record<SectionKey, any> = {
   hero: {
@@ -42,14 +42,6 @@ const DEFAULT_SECTIONS: Record<SectionKey, any> = {
     twitter_url: 'https://twitter.com',
     linkedin_url: 'https://www.linkedin.com/in/gs-legacy-wealth/',
   },
-  pricing_setup: SITE_COPY.pricingPage.oneTimeTiers.map((t, idx) => ({
-    id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
-    ...t,
-  })),
-  pricing_retainer: SITE_COPY.pricingPage.monthlyTiers.map((t, idx) => ({
-    id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
-    ...t,
-  })),
 }
 
 export default function ContentPage() {
@@ -164,7 +156,9 @@ export default function ContentPage() {
     }
   }
 
-  const isPricingTab = activeTab === 'pricing_setup' || activeTab === 'pricing_retainer'
+
+  const isPricingTab = false // Pricing is now managed at /admin/pricing
+
 
   // Per-tier save for pricing mode
   const handleSaveTier = async (tierIndex: number) => {
@@ -274,15 +268,13 @@ export default function ContentPage() {
 
       {/* Tabs */}
       <div className="flex border-b border-gold/10 overflow-x-auto scrollbar-none gap-2">
-        {(['hero', 'cta', 'process', 'faq', 'footer', 'pricing_setup', 'pricing_retainer'] as SectionKey[]).map((tab) => {
+        {(['hero', 'cta', 'process', 'faq', 'footer'] as SectionKey[]).map((tab) => {
           const labels: Record<SectionKey, string> = {
             hero: 'Hero',
             cta: 'CTA',
             process: 'Process',
             faq: 'FAQ',
             footer: 'Footer',
-            pricing_setup: 'Setup Tiers',
-            pricing_retainer: 'Retainer Tiers'
           }
           return (
             <button

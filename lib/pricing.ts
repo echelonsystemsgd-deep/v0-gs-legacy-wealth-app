@@ -2,9 +2,10 @@
  * lib/pricing.ts
  * Server-side pricing data fetcher for the public pricing page and homepage.
  *
- * Data lives in the `website_content` Supabase table under two section keys:
- *   - pricing_setup_tiers    → one-time setup fee tiers
- *   - pricing_retainer_tiers → monthly retainer tiers
+ * Data lives in the `website_content` Supabase table under three section keys:
+ *   - pricing_setup_tiers      → one-time setup fee tiers
+ *   - pricing_retainer_tiers   → monthly retainer tiers
+ *   - pricing_revshare_tiers   → % revenue share tiers
  *
  * Fallback guarantee: if the DB fetch fails for any reason, the hardcoded
  * arrays below are returned silently. The public page never breaks.
@@ -31,13 +32,18 @@ export type PricingTier = {
 
 import { SITE_COPY } from "./site-copy"
 
-const FALLBACK_SETUP_TIERS: PricingTier[] = SITE_COPY.pricingPage.setupTiers.map((t, idx) => ({
-  id: t.tag?.toLowerCase().replace(' ', '-') || `tier-${idx}`,
+const FALLBACK_SETUP_TIERS: PricingTier[] = SITE_COPY.pricingPage.oneTimeTiers.map((t, idx) => ({
+  id: t.name?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
   ...t
 }))
 
-const FALLBACK_RETAINER_TIERS: PricingTier[] = SITE_COPY.pricingPage.retainerTiers.map((t, idx) => ({
-  id: t.tag?.toLowerCase().replace(' ', '-') || `tier-${idx}`,
+const FALLBACK_RETAINER_TIERS: PricingTier[] = SITE_COPY.pricingPage.monthlyTiers.map((t, idx) => ({
+  id: t.name?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
+  ...t
+}))
+
+const FALLBACK_REVSHARE_TIERS: PricingTier[] = SITE_COPY.pricingPage.revenueShareTiers.map((t, idx) => ({
+  id: t.name?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
   ...t
 }))
 
@@ -75,25 +81,29 @@ async function fetchSection(sectionKey: string): Promise<PricingTier[] | null> {
 }
 
 /**
- * Fetches both setup and retainer pricing tiers from Supabase.
- * Falls back to hardcoded arrays if the DB is unreachable.
+ * Fetches all three pricing models from Supabase.
+ * Falls back to hardcoded site-copy arrays if the DB is unreachable or stale.
  * Safe to call from any server component — cached + tagged.
  */
 export async function getPricingTiers(): Promise<{
   setupTiers: PricingTier[]
   retainerTiers: PricingTier[]
+  revenueShareTiers: PricingTier[]
 }> {
-  const [setup, retainer] = await Promise.all([
+  const [setup, retainer, revshare] = await Promise.all([
     fetchSection('pricing_setup_tiers'),
     fetchSection('pricing_retainer_tiers'),
+    fetchSection('pricing_revshare_tiers'),
   ])
 
   // Validate DB content against current brand tier names; fall back to site-copy if stale
   const isSetupValid = setup && setup.length > 0 && setup[0]?.name === FALLBACK_SETUP_TIERS[0]?.name
   const isRetainerValid = retainer && retainer.length > 0 && retainer[0]?.name === FALLBACK_RETAINER_TIERS[0]?.name
+  const isRevshareValid = revshare && revshare.length > 0 && revshare[0]?.name === FALLBACK_REVSHARE_TIERS[0]?.name
 
   return {
-    setupTiers: isSetupValid ? setup : FALLBACK_SETUP_TIERS,
-    retainerTiers: isRetainerValid ? retainer : FALLBACK_RETAINER_TIERS,
+    setupTiers: isSetupValid ? setup! : FALLBACK_SETUP_TIERS,
+    retainerTiers: isRetainerValid ? retainer! : FALLBACK_RETAINER_TIERS,
+    revenueShareTiers: isRevshareValid ? revshare! : FALLBACK_REVSHARE_TIERS,
   }
 }

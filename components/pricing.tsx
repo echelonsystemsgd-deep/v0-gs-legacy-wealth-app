@@ -90,9 +90,10 @@ interface PricingProps {
   /** Optional: live tiers fetched server-side from Supabase. Falls back to hardcoded arrays if omitted. */
   setupTiers?: PricingTier[]
   retainerTiers?: PricingTier[]
+  revenueShareTiers?: PricingTier[]
 }
 
-export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers }: PricingProps) {
+export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers, revenueShareTiers: propRevenueShareTiers }: PricingProps) {
   const searchParams = useSearchParams()
   const [billingCycle, setBillingCycle] = useState<"oneTime" | "monthly" | "revenueShare">("oneTime")
   const [activeAudience, setActiveAudience] = useState<"enterprise" | "local">("enterprise")
@@ -138,7 +139,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
       ? (propSetupTiers && propSetupTiers.length > 0 ? propSetupTiers : oneTimeTiers)
       : billingCycle === "monthly"
       ? (propRetainerTiers && propRetainerTiers.length > 0 ? propRetainerTiers : monthlyTiers)
-      : revenueShareTiers
+      : (propRevenueShareTiers && propRevenueShareTiers.length > 0 ? propRevenueShareTiers : revenueShareTiers)
 
   // Calculators
   const annualHoursSaved = Math.round(manualHours * 0.75 * 52)

@@ -25,6 +25,7 @@ import {
   Briefcase,
   Terminal,
   ChevronDown,
+  DollarSign,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -60,6 +61,7 @@ const sidebarGroups = [
     items: [
       { href: '/admin/portfolio', label: 'Portfolio', icon: FolderKanban },
       { href: '/admin/testimonials', label: 'Testimonials', icon: Star },
+      { href: '/admin/pricing', label: 'Pricing', icon: DollarSign },
       { href: '/admin/content', label: 'Content', icon: ScrollText },
     ]
   },

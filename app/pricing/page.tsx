@@ -16,7 +16,7 @@ export const metadata = {
 }
 
 export default async function PricingPage() {
-  const { setupTiers, retainerTiers } = await getPricingTiers()
+  const { setupTiers, retainerTiers, revenueShareTiers } = await getPricingTiers()
   const data = SITE_COPY.pricingPage
 
   return (
@@ -28,7 +28,7 @@ export default async function PricingPage() {
         subtitle={data.headerSubtitle}
       />
       <Suspense fallback={<div className="py-20 text-center text-accent-gold font-mono text-sm">Loading Pricing Systems...</div>}>
-        <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} />
+        <Pricing setupTiers={setupTiers} retainerTiers={retainerTiers} revenueShareTiers={revenueShareTiers} />
       </Suspense>
       
       {/* SLA & Throughput Guarantees Section */}
@@ -52,4 +52,3 @@ export default async function PricingPage() {
     </main>
   )
 }
-
