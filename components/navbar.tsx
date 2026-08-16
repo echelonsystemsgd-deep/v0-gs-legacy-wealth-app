@@ -164,7 +164,21 @@ export function Navbar() {
   }, [supabase])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+    } catch {}
+    try {
+      const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)/)?.[1]
+      if (projectRef) {
+        localStorage.removeItem(`sb-${projectRef}-auth-token`)
+      }
+      // Also remove any generic auth keys
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          localStorage.removeItem(key)
+        }
+      })
+    } catch {}
     setUser(null)
     setProfile(null)
     router.push("/")
@@ -185,7 +199,7 @@ export function Navbar() {
     if (user?.email) {
       return user.email.split("@")[0]
     }
-    return "Mercian Wealth Admin"
+    return "Mercian Wealth Member"
   }
 
   // Outside click handler for mobile menu drawer
@@ -207,133 +221,112 @@ export function Navbar() {
   }, [isMobileMenuOpen])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-      {/* Top Telemetry Ticker Strip */}
+    <div className="fixed top-0 left-0 right-0 z-50 flex flex-col font-sans">
       <LiveTelemetryTicker />
-
-      {/* Main Navbar */}
-      <div
+      <header
         className={`w-full transition-all duration-300 ${
-          isScrolled ? "bg-bg-primary/95 border-b border-border-brand/25 backdrop-blur-md shadow-lg" : "bg-bg-primary/60 backdrop-blur-sm"
+          isScrolled
+            ? "bg-[#020E28]/95 backdrop-blur-md border-b border-[#DAA640]/20 shadow-2xl py-3"
+            : "bg-[#020E28]/80 backdrop-blur-sm border-b border-[#DAA640]/10 py-4"
         }`}
       >
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 sm:h-20 items-center justify-between">
-              <Link
-                href="/"
-                onClick={(e) => {
-                  if (pathname === "/") {
-                    e.preventDefault()
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                }}
-                className="flex items-center gap-3 cursor-pointer group shrink-0"
-                aria-label="Mercian Wealth Homepage"
-              >
-                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10 sm:h-11 sm:w-11"} shrink-0 rounded-xl overflow-hidden shadow-md shadow-[#DAA640]/10 border border-[#DAA640]/30`}>
-                  <BrandLogo
-                    variant="logo"
-                    alt="Mercian Wealth"
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    priority
-                  />
-                </div>
-                <span className="font-sans text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5 select-none">
-                  <span className="text-white">Mercian</span>
-                  <span className="text-[#DAA640]">Wealth</span>
-                </span>
-              </Link>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 group shrink-0">
+              <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-[#DAA640]/30 shadow-md">
+                <BrandLogo variant="logo" alt="Mercian Wealth" fill className="object-cover transition-transform group-hover:scale-105 duration-300" priority />
+              </div>
+              <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                <span>Mercian</span>
+                <span className="text-[#DAA640]">Wealth</span>
+              </span>
+            </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-6 2xl:gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    if (link.href === "/#demo" && pathname === "/") {
-                      e.preventDefault()
-                      document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
-                    }
-                  }}
-                  className={`text-[11px] xl:text-sm whitespace-nowrap transition-colors duration-200 hover:text-accent-gold ${
-                    isActive(link.href) 
-                      ? "text-accent-gold font-semibold" 
-                      : "text-text-secondary"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+              {navLinks.map((link) => {
+                const active = isActive(link.href)
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`px-3 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
+                      active
+                        ? "text-[#DAA640] bg-[#DAA640]/10 font-bold"
+                        : "text-slate-300 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+            </nav>
 
             {/* CTA Button / User Profile Dropdown */}
-            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-6">
-              {loading ? (
-                <div className="h-10 w-10 rounded-full border border-accent-gold/15 bg-accent-gold/5 animate-pulse" />
-              ) : user ? (
+            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-5">
+              {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-accent-gold/25 hover:border-accent-gold outline-none focus-visible:ring-0">
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-[#DAA640]/30 hover:border-[#DAA640] outline-none focus-visible:ring-0">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                        <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-accent-purple/30 text-accent-gold text-xs font-bold font-serif">
+                        <AvatarFallback className="bg-[#07153B] text-[#DAA640] text-xs font-bold font-mono">
                           {getInitials()}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 bg-bg-secondary border border-accent-gold/20 text-text-primary rounded-xl p-2 shadow-2xl" align="end">
+                  <DropdownMenuContent className="w-56 bg-[#07153B] border border-[#DAA640]/25 text-white rounded-2xl p-2 shadow-2xl" align="end">
                     <DropdownMenuLabel className="font-normal px-2 py-1.5">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-bold font-serif truncate text-foreground">{getFullName()}</p>
-                        <p className="text-xs text-muted-foreground truncate">{user.email || "info@mercianwealth.com"}</p>
+                        <p className="text-sm font-bold truncate text-white">{getFullName()}</p>
+                        <p className="text-xs text-slate-400 truncate">{user.email || "director@mercianwealth.com"}</p>
                         {profile?.role && (
-                          <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-accent-gold/10 border border-accent-gold/20 text-[9px] font-bold text-accent-gold uppercase tracking-wider">
+                          <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-[#DAA640]/10 border border-[#DAA640]/20 text-[9px] font-bold text-[#DAA640] uppercase tracking-wider font-mono">
                             {profile.role}
                           </span>
                         )}
                       </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator className="bg-accent-gold/10" />
+                    <DropdownMenuSeparator className="bg-[#DAA640]/15" />
                     {profile?.role === "admin" ? (
-                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
                         <Link href="/admin" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                           <LayoutDashboard size={14} />
                           Admin Panel
                         </Link>
                       </DropdownMenuItem>
                     ) : profile?.role === "client" ? (
-                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
                         <Link href="/client" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                           <LayoutDashboard size={14} />
                           Client Dashboard
                         </Link>
                       </DropdownMenuItem>
                     ) : (
-                      <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
                         <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                           <LayoutDashboard size={14} />
                           Dashboard
                         </Link>
                       </DropdownMenuItem>
                     )}
-                    <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                    <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
                       <Link href="/profile" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                         <User size={14} />
                         Profile Settings
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="focus:bg-accent-gold/10 focus:text-accent-gold cursor-pointer rounded-lg">
+                    <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
                       <Link href="/" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                         <Globe size={14} />
-                        Go to Website
+                        Public Website
                       </Link>
                     </DropdownMenuItem>
 
-                    <DropdownMenuSeparator className="bg-accent-gold/10" />
-                    <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-500 rounded-lg">
+                    <DropdownMenuSeparator className="bg-[#DAA640]/15" />
+                    <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-400 rounded-lg">
                       <div className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
                         <LogOut size={14} />
                         Log Out
@@ -345,14 +338,14 @@ export function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="text-sm font-medium text-text-secondary hover:text-accent-gold transition-colors duration-200"
+                    className="text-xs xl:text-sm font-semibold text-slate-300 hover:text-[#DAA640] transition-colors duration-200 px-2 py-1.5"
                   >
                     Login
                   </Link>
                   <Button
                     asChild
                     size="sm"
-                    className="px-3 xl:px-5 py-2 font-bold bg-accent-gold text-black hover:bg-amber-300 shadow-md text-xs xl:text-sm whitespace-nowrap"
+                    className="px-4 xl:px-5 py-2 font-bold bg-[#DAA640] text-[#020E28] hover:bg-[#EBB755] shadow-md text-xs xl:text-sm whitespace-nowrap rounded-xl transition-all"
                   >
                     <Link href="/book">
                       <span className="hidden xl:inline">{SITE_COPY.navbar.ctaText}</span>
@@ -366,15 +359,15 @@ export function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden mobile-only text-foreground p-2"
+              className="lg:hidden mobile-only text-white p-2"
               aria-label="Toggle menu"
               suppressHydrationWarning
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-        </nav>
-      </div>
+        </div>
+      </header>
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
@@ -548,6 +541,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </div>
   )
 }
