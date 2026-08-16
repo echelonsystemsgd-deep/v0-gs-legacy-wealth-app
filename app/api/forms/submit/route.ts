@@ -174,60 +174,65 @@ export async function POST(request: Request) {
 
       // Email A: Notification to business owner (mercianwealthgs@gmail.com)
       const ownerEmailHtml = `
-        <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
+        <div style="background-color: #0A1128; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1px; font-weight: bold;">MERCIAN WEALTH</h2>
-            <p style="color: #8E8E93; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0;">New Lead Submission</p>
+            <h2 style="color: #D4AF37; font-family: sans-serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1.5px; font-weight: bold;">MERCIAN WEALTH</h2>
+            <p style="color: #A0AEC0; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0;">New Inbound Lead Submission</p>
           </div>
           
-          <div style="border-top: 1px solid rgba(201, 162, 39, 0.2); padding-top: 20px; margin-bottom: 25px;">
+          <div style="border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 20px; margin-bottom: 25px;">
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; width: 140px; font-weight: bold;">Form Source:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px; font-weight: bold; color: #C9A227;">${cleanSource}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; width: 140px; font-weight: bold;">Form Source:</td>
+                <td style="padding: 8px 0; color: #D4AF37; font-size: 14px; font-weight: bold;">${cleanSource}</td>
               </tr>
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Name:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px;">${name || 'Not Provided'}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Name:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;">${name || 'Not Provided'}</td>
               </tr>
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Email Address:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px; font-family: monospace;">${email}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Email Address:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px; font-family: monospace;">${email}</td>
               </tr>
               ${business_name ? `
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Business/Brand:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px;">${business_name}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Business/Brand:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;">${business_name}</td>
               </tr>` : ''}
               ${phone ? `
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Phone Number:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px; font-family: monospace;">${phone}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Phone Number:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px; font-family: monospace;">${phone}</td>
+              </tr>` : ''}
+              ${service_interested ? `
+              <tr>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Service Interest:</td>
+                <td style="padding: 8px 0; color: #D4AF37; font-size: 14px;">${service_interested}</td>
               </tr>` : ''}
               ${linkedin_url ? `
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">LinkedIn URL:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px;"><a href="${linkedin_url}" style="color: #6d28d9; text-decoration: underline;">${linkedin_url}</a></td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">LinkedIn URL:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;"><a href="${linkedin_url}" style="color: #D4AF37; text-decoration: underline;">${linkedin_url}</a></td>
               </tr>` : ''}
               ${website ? `
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Website URL:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 14px;"><a href="${website}" style="color: #6d28d9; text-decoration: underline;">${website}</a></td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Website URL:</td>
+                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;"><a href="${website}" style="color: #D4AF37; text-decoration: underline;">${website}</a></td>
               </tr>` : ''}
               <tr>
-                <td style="padding: 8px 0; color: #8E8E93; font-size: 13px; font-weight: bold;">Timestamp:</td>
-                <td style="padding: 8px 0; color: #F0EDE6; font-size: 13px; color: #8E8E93;">${timestamp}</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Timestamp:</td>
+                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px;">${timestamp}</td>
               </tr>
             </table>
           </div>
 
-          <div style="background-color: #161616; padding: 20px; border-left: 3px solid #6d28d9; margin-bottom: 30px;">
-            <h4 style="color: #C9A227; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message / Inquiry Details</h4>
+          <div style="background-color: #101B3B; padding: 20px; border-left: 3px solid #D4AF37; border-radius: 4px; margin-bottom: 30px;">
+            <h4 style="color: #D4AF37; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message / Inquiry Details</h4>
             <p style="margin: 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; color: #F0EDE6;">${notes || 'No message details provided.'}</p>
           </div>
 
-          <div style="text-align: center; border-t: 1px solid rgba(201, 162, 39, 0.2); padding-top: 20px;">
-            <a href="https://supabase.com/dashboard/project/ladebhmyywkcqtyazxxk/editor" style="display: inline-block; background-color: #6d28d9; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #C9A227; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">View in CRM Dashboard</a>
+          <div style="text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 20px;">
+            <a href="https://supabase.com/dashboard/project/ladebhmyywkcqtyazxxk/editor" style="display: inline-block; background-color: #D4AF37; color: #0A1128; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #F5D77F; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">View in CRM Dashboard</a>
           </div>
         </div>
       `
@@ -236,7 +241,7 @@ export async function POST(request: Request) {
       let customerGreeting = name ? `Dear ${name.split(' ')[0]}` : 'Hello'
       let customerSubject = "Inquiry Received — Mercian Wealth"
       let customerBodyHeader = "We have received your details."
-      let customerBodyText = "A member of our digital strategy team is conducting an initial assessment of your brand and will contact you directly within 12 hours."
+      let customerBodyText = "A member of our team is conducting an initial assessment of your requirements and will contact you directly within 12 hours."
       let actionButtonText = "Book Strategy Call"
       let actionButtonUrl = "https://mercianwealth.com/book"
 
@@ -249,7 +254,7 @@ export async function POST(request: Request) {
         customerSubject = "Waitlist Registered — Mercian Wealth"
         customerBodyHeader = "You are in the queue."
         customerBodyText = "We have recorded your email request for early access. You will receive an immediate notification as soon as the platform goes live."
-        actionButtonText = "Explore Our Services"
+        actionButtonText = "Explore Our Systems"
         actionButtonUrl = "https://mercianwealth.com/portfolio"
       } else if (source === 'fast_track_audit') {
         customerSubject = "Fast-Track Audit Request Secured — Mercian Wealth"
@@ -260,27 +265,27 @@ export async function POST(request: Request) {
       }
 
       const customerEmailHtml = `
-        <div style="background-color: #0A0A0A; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #C9A227;">
+        <div style="background-color: #0A1128; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37; border-radius: 8px;">
           <div style="text-align: center; margin-bottom: 35px;">
-            <img src="${getLogoUrl()}" alt="Mercian Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block;" />
-            <h2 style="color: #38bdf8; font-family: sans-serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1px;">MERCIAN WEALTH</h2>
-            <p style="color: #8E8E93; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin: 0;">Mobile Storefronts & Order Automation</p>
+            <img src="${getLogoUrl()}" alt="Mercian Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block; border-radius: 4px;" />
+            <h2 style="color: #D4AF37; font-family: sans-serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1.5px;">MERCIAN WEALTH</h2>
+            <p style="color: #A0AEC0; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin: 0;">Bespoke Digital Systems & Automation</p>
           </div>
 
-          <div style="border-top: 1px solid rgba(201, 162, 39, 0.25); padding-top: 30px; margin-bottom: 30px;">
+          <div style="border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 30px; margin-bottom: 30px;">
             <p style="font-size: 16px; font-weight: bold; color: #FFFFFF; margin: 0 0 15px 0;">${customerGreeting},</p>
             <p style="font-size: 15px; line-height: 1.7; color: #F0EDE6; margin: 0 0 20px 0;">${customerBodyHeader} ${customerBodyText}</p>
-            <p style="font-size: 14px; line-height: 1.7; color: #8E8E93; margin: 0 0 30px 0;">We work only with a limited number of high-performing brands each month to guarantee founder-level engineering for every project.</p>
+            <p style="font-size: 14px; line-height: 1.7; color: #A0AEC0; margin: 0 0 30px 0;">We work with a limited client cohort each month to guarantee founder-level engineering and direct attention for every deployment.</p>
             
             <div style="text-align: center; margin: 35px 0;">
-              <a href="${actionButtonUrl}" style="display: inline-block; background-color: #6d28d9; color: #FFFFFF; font-weight: bold; text-decoration: none; padding: 14px 28px; border: 1px solid #C9A227; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease;">${actionButtonText}</a>
+              <a href="${actionButtonUrl}" style="display: inline-block; background-color: #D4AF37; color: #0A1128; font-weight: bold; text-decoration: none; padding: 14px 28px; border: 1px solid #F5D77F; border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px;">${actionButtonText}</a>
             </div>
           </div>
 
-          <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #8E8E93;">
-            <p style="margin: 0 0 8px 0; font-weight: bold; color: #38bdf8;">MERCIAN WEALTH</p>
-            <p style="margin: 0 0 15px 0; font-style: italic;">Mobile Storefronts & Order Automation for Local Businesses.</p>
-            <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.4);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
+          <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #A0AEC0;">
+            <p style="margin: 0 0 8px 0; font-weight: bold; color: #D4AF37;">MERCIAN WEALTH</p>
+            <p style="margin: 0 0 15px 0; font-style: italic;">Engineered for High-Performance Growth.</p>
+            <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.5);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
           </div>
         </div>
       `
@@ -308,45 +313,64 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Dispatch to n8n Webhook
+    // 3. Dispatch to n8n Webhook with Resilient Timeout & Single-Retry
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
-    const shouldDispatchN8n = source === 'contact_form' || source === 'portfolio_waitlist' || source === 'local_business_form'
-    if (n8nWebhookUrl && shouldDispatchN8n) {
-      try {
-        const { utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, user_agent } = payload
-        const webhookPayload = {
-          lead_id: insertedLead?.id || null,
-          source,
-          lead_type: payload.lead_type || (source === 'local_business_form' ? 'local_business' : 'enterprise'),
-          source_url: payload.source_url || null,
-          local_business_niche: payload.local_business_niche || null,
-          name,
-          email,
-          business_name,
-          phone: phone || null,
-          website: website || null,
-          notes,
-          utm_source: utm_source || null,
-          utm_medium: utm_medium || null,
-          utm_campaign: utm_campaign || null,
-          utm_term: utm_term || null,
-          utm_content: utm_content || null,
-          referrer: referrer || null,
-          user_agent: user_agent || null,
-          timestamp: new Date().toISOString(),
-        }
-
-        console.log('[API/Submit] Dispatching payload to n8n:', n8nWebhookUrl)
-        await fetch(n8nWebhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(webhookPayload),
-        })
-      } catch (err: any) {
-        console.error('[API/Submit] Error dispatching to n8n webhook:', err.message || err)
+    if (n8nWebhookUrl) {
+      const { utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, user_agent } = payload
+      const webhookPayload = {
+        lead_id: insertedLead?.id || null,
+        source,
+        lead_type: payload.lead_type || (source === 'local_business_form' ? 'local_business' : 'studio'),
+        source_url: payload.source_url || null,
+        local_business_niche: payload.local_business_niche || null,
+        service_interested: service_interested || null,
+        name: name || null,
+        email,
+        business_name: business_name || null,
+        phone: phone || null,
+        website: website || null,
+        notes: notes || null,
+        utm_source: utm_source || null,
+        utm_medium: utm_medium || null,
+        utm_campaign: utm_campaign || null,
+        utm_term: utm_term || null,
+        utm_content: utm_content || null,
+        referrer: referrer || null,
+        user_agent: user_agent || null,
+        timestamp: new Date().toISOString(),
       }
+
+      console.log(`[API/Submit] Dispatching payload to n8n (${source}):`, n8nWebhookUrl)
+
+      const dispatchN8n = async (attempt = 1) => {
+        try {
+          const res = await fetch(n8nWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(webhookPayload),
+            signal: AbortSignal.timeout(6000), // 6 second resilient timeout
+          })
+
+          if (!res.ok && attempt < 2) {
+            console.warn(`[API/Submit] n8n returned ${res.status}. Retrying once...`)
+            await new Promise(r => setTimeout(r, 600))
+            await dispatchN8n(attempt + 1)
+          }
+        } catch (err: any) {
+          if (attempt < 2) {
+            console.warn(`[API/Submit] n8n dispatch attempt ${attempt} failed (${err.name || err.message}). Retrying...`)
+            await new Promise(r => setTimeout(r, 600))
+            await dispatchN8n(attempt + 1)
+          } else {
+            console.error('[API/Submit] n8n webhook failed after retries:', err.message || err)
+          }
+        }
+      }
+
+      // Execute webhook dispatch non-blockingly for optimal client response time
+      dispatchN8n().catch(err => console.error('[API/Submit] n8n unhandled exception:', err))
     }
 
     return NextResponse.json({ success: true, lead: insertedLead })

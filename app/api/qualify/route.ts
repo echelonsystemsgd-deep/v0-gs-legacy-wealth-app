@@ -88,42 +88,54 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Dispatch updated payload to n8n Webhook
+    // 2. Dispatch updated payload to n8n Webhook with Resilient Timeout & Retry
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL
     let n8nDispatched = false
     let n8nError = null
 
     if (n8nWebhookUrl) {
-      try {
-        const webhookPayload = {
-          lead_id: updatedLead?.id || null,
-          email,
-          has_website,
-          monthly_revenue,
-          primary_interest,
-          tier,
-          source: 'audit_survey',
-          timestamp: new Date().toISOString(),
-          details: updatedLead || null,
-        }
+      const webhookPayload = {
+        lead_id: updatedLead?.id || null,
+        email,
+        has_website,
+        monthly_revenue,
+        primary_interest,
+        tier,
+        source: 'audit_survey',
+        timestamp: new Date().toISOString(),
+        details: updatedLead || null,
+      }
 
-        console.log('[API/Qualify] Dispatching updated payload to n8n:', n8nWebhookUrl)
-        const response = await fetch(n8nWebhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(webhookPayload),
-        })
+      console.log('[API/Qualify] Dispatching updated payload to n8n:', n8nWebhookUrl)
 
-        if (response.ok) {
-          n8nDispatched = true
-        } else {
-          const text = await response.text()
-          n8nError = `n8n returned status ${response.status}: ${text}`
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const response = await fetch(n8nWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(webhookPayload),
+            signal: AbortSignal.timeout(6000), // 6 second timeout
+          })
+
+          if (response.ok) {
+            n8nDispatched = true
+            n8nError = null
+            break
+          } else {
+            const text = await response.text().catch(() => '')
+            n8nError = `n8n returned status ${response.status}: ${text}`
+            if (attempt < 2) {
+              await new Promise((r) => setTimeout(r, 600))
+            }
+          }
+        } catch (err: any) {
+          n8nError = err.name === 'TimeoutError' ? 'n8n webhook timed out after 6s' : err.message || String(err)
+          if (attempt < 2) {
+            await new Promise((r) => setTimeout(r, 600))
+          }
         }
-      } catch (err: any) {
-        n8nError = err.message || String(err)
       }
     }
 
