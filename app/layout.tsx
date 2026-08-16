@@ -113,6 +113,45 @@ export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#020E28',
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Mercian Wealth',
+  image: 'https://mercianwealth.com/MercianWealthLogo.jpeg',
+  '@id': 'https://mercianwealth.com/#organization',
+  url: 'https://mercianwealth.com',
+  telephone: '+447851055929',
+  priceRange: '£495 - £2,495',
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'GB',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 52.4862,
+    longitude: -1.8904,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ],
+    opens: '00:00',
+    closes: '23:59'
+  },
+  description: 'AI-powered digital storefronts, automated deposit collection, and instant WhatsApp alerts for UK local service businesses and food artisans.',
+  sameAs: [
+    'https://wa.me/447851055929'
+  ]
 }
 
 export default function RootLayout({
@@ -121,8 +160,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-background`} suppressHydrationWarning>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${cinzel.variable} ${geistMono.variable} bg-[#020E28]`} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="font-sans antialiased bg-[#020E28] text-white">
           {children}
           <StickyCTAButton />
           <ScrollToTop />
@@ -135,24 +180,11 @@ export default function RootLayout({
           Calendly widget.js — loaded at root so it is available for both:
           1. The inline embed on /book (step 2)
           2. CalendlyPopupButton on any marketing page
-          afterInteractive loads right after hydration so window.Calendly is
-          ready before the user can reach the calendar step.
-        */}
-        {/*
-          Calendly popup CSS — REQUIRED for initPopupWidget() to render the
-          popup overlay correctly. Without this stylesheet the JS fires but
-          the modal is invisible (no backdrop, no frame). The inline embed
-          on /book does NOT need this; only the popup CTA does.
         */}
         <link
           rel="stylesheet"
           href="https://assets.calendly.com/assets/external/widget.css"
         />
-        {/*
-          CalendlyInit is a Client Component — it owns the <Script> tag so
-          the onReady event handler is legal (RSC cannot use event handlers).
-          It also initialises the brand-gold badge widget once the script loads.
-        */}
         <CalendlyInit />
       </body>
     </html>

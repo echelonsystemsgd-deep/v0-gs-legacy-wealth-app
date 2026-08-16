@@ -1,6 +1,7 @@
 {
-  "name": "my-project",
+  "name": "mercian-wealth",
   "version": "0.1.0",
+  "description": "Mercian Wealth — AI-Powered Websites & Automated Storefronts for UK Local Businesses",
   "private": true,
   "scripts": {
     "dev": "npx next dev",

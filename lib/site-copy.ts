@@ -10,41 +10,41 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "Mercian Wealth | Websites & Automation for Bakeries & Local Businesses",
+      defaultTitle: "Mercian Wealth | AI Websites & Automated Storefronts for UK Local Businesses",
       titleTemplate: "%s | Mercian Wealth",
       description: "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls. From £495."
     },
     home: {
-      title: "Mercian Wealth | Websites & Automation for Bakeries & Local Businesses",
+      title: "Mercian Wealth | AI Websites & Automated Storefronts for UK Local Businesses",
       description: "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls. From £495.",
     },
     services: {
-      title: "Services | Mercian Wealth — AI Websites, Booking & Deposit Systems",
+      title: "Automated Systems & Services | Mercian Wealth",
       description: "Mobile storefronts, 24/7 instant booking, deposit capture, phone notifications, and automated 5-star review collection.",
     },
     process: {
-      title: "7-Day Launch Process | Mercian Wealth",
-      description: "From our first 15-minute call to live automated deposits in 7 days. Zero hassle.",
+      title: "7-Day Launch Protocol | Mercian Wealth",
+      description: "From our first 15-minute diagnostic call to live automated deposit collection in 7 days. Zero operational hassle.",
     },
     portfolio: {
-      title: "Automated Systems | Mercian Wealth",
-      description: "See what an automated storefront looks like for local service businesses.",
+      title: "Interactive Prototypes & Case Studies | Mercian Wealth",
+      description: "Test drive live interactive sandbox builds and explore custom web automation architectures engineered for UK businesses.",
     },
     pricing: {
-      title: "Pricing | Mercian Wealth — Simple, Transparent Options",
-      description: "Simple, transparent options with zero hidden fees. One upfront setup fee or flat monthly retainer.",
+      title: "Transparent Pricing & Retainer Models | Mercian Wealth",
+      description: "Simple, transparent pricing with zero hidden fees. One upfront setup fee, flat monthly growth retainer, or revenue share.",
     },
     testimonials: {
-      title: "Pricing & Partnerships | Mercian Wealth",
-      description: "Simple setup fees and flat monthly retainer models for local businesses.",
+      title: "Client Case Studies & Verified Deliverables | Mercian Wealth",
+      description: "Verified performance metrics, client case studies, and quantifiable operational outcomes from automated storefront implementations across the UK.",
     },
     contact: {
-      title: "Get In Touch | Mercian Wealth",
-      description: "Stop letting missed calls and manual admin hold your business back. Request your quick 15-minute audit today.",
+      title: "Contact Our Engineering Team | Mercian Wealth",
+      description: "Stop letting missed calls and manual admin hold your business back. Request your free 15-minute diagnostic audit today.",
     },
     book: {
       title: "Book Your Free 15-Minute Audit | Mercian Wealth",
-      description: "Pick a 15-minute slot to find out exactly where your business is losing leads and time.",
+      description: "Pick a 15-minute slot with our founder to find out exactly where your business is losing leads and time.",
     },
   },
 
