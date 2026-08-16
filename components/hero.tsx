@@ -11,7 +11,7 @@ export function Hero() {
   const data = SITE_COPY.homepage.hero
 
   return (
-    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-36 sm:pt-40 pb-20 overflow-hidden bg-[#0B0F17]">
+    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-36 sm:pt-40 pb-20 overflow-hidden bg-[#020E28]">
       {/* Ambient Brand Watermark Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-15 pointer-events-none z-0 rounded-full overflow-hidden blur-[1px]">
         <BrandLogo variant="watermark" fill className="object-cover rounded-full" priority />
@@ -26,7 +26,7 @@ export function Hero() {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center gap-2.5 mb-6 text-center max-w-full px-2"
         >
-          <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-[#D9A74A] bg-[#D9A74A]/10 border border-[#D9A74A]/25 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-center max-w-full">
+          <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-[#DAA640] bg-[#DAA640]/10 border border-[#DAA640]/25 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-center max-w-full">
             [ {data.eyebrow} ]
           </span>
 
@@ -67,7 +67,7 @@ export function Hero() {
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto px-5 sm:px-8 py-5 sm:py-7 text-xs sm:text-base md:text-lg font-bold bg-gradient-to-r from-[#D9A74A] via-[#E5A93C] to-[#B8860B] text-slate-950 hover:from-[#E5A93C] hover:to-[#D9A74A] transition-all duration-300 shadow-[0_0_30px_rgba(217,167,74,0.35)] border-0 rounded-xl"
+            className="w-full sm:w-auto px-5 sm:px-8 py-5 sm:py-7 text-xs sm:text-base md:text-lg font-bold bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-slate-950 hover:from-[#EBB755] hover:to-[#DAA640] transition-all duration-300 shadow-[0_0_30px_rgba(218,166,64,0.35)] border-0 rounded-xl"
           >
             <Link href="/book" className="flex items-center justify-center gap-2 sm:gap-3 text-center">
               <span>{data.primaryCtaText}</span>
@@ -92,7 +92,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55 }}
-          className="w-full max-w-3xl mb-12 rounded-2xl border border-slate-800 bg-[#1E293B]/70 p-4 sm:p-6 backdrop-blur-md shadow-2xl text-left"
+          className="w-full max-w-3xl mb-12 rounded-2xl border border-slate-800 bg-[#07153B]/70 p-4 sm:p-6 backdrop-blur-md shadow-2xl text-left"
         >
           <div className="flex items-center justify-between border-b border-slate-700/60 pb-3 mb-4">
             <div className="flex items-center gap-3">
@@ -100,15 +100,11 @@ export function Hero() {
                 💬
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-white">WhatsApp Order Assistant</p>
-                <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Order Intake
-                </p>
+                <h2 className="text-xs sm:text-sm font-bold text-white leading-tight">Mercian Lead & Deposit Dispatch</h2>
+                <p className="text-[10px] text-emerald-400 font-mono">Live WhatsApp API Stream · Sub-1s Sync</p>
               </div>
             </div>
-            <span className="text-[10px] font-mono text-slate-400 uppercase bg-slate-800 px-2.5 py-1 rounded">
-              24/7 Automated
-            </span>
+            <span className="text-[10px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">Auto-Pilot Active</span>
           </div>
 
           <div className="space-y-3 font-sans text-xs sm:text-sm">

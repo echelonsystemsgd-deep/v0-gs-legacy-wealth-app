@@ -193,26 +193,26 @@ export function StickmanWorkflow() {
   ]
 
   return (
-    <section className="relative py-24 bg-[#090D16] overflow-hidden border-t border-slate-800/60">
+    <section className="relative py-20 lg:py-28 bg-[#020E28] overflow-hidden border-t border-[#DAA640]/15">
       {/* Background Radial Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-sky-500/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#DAA640]/5 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-semibold tracking-wider uppercase mb-4">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#DAA640]/10 border border-[#DAA640]/25 text-[#DAA640] text-xs font-mono font-semibold tracking-wider uppercase mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Speed & Automation Win Every Time</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+          <h2 className="font-sans text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
             How Your Business Runs On Autopilot
           </h2>
-          <p className="text-slate-400 text-base sm:text-lg">
+          <p className="text-slate-300 text-sm sm:text-base md:text-lg">
             Click through the steps below to watch how customer enquiries convert into paid deposits and WhatsApp alerts.
           </p>
         </div>
 
         {/* Interactive Step Navigator Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-10">
           {steps.map((step, idx) => {
             const Icon = step.icon
             const isActive = activeStep === idx
@@ -223,15 +223,15 @@ export function StickmanWorkflow() {
                 onClick={() => setActiveStep(idx)}
                 className={`p-3 sm:p-4 rounded-2xl text-left transition-all duration-300 border ${
                   isActive
-                    ? "bg-slate-900 border-sky-400 shadow-[0_0_25px_rgba(56,189,248,0.25)] scale-[1.02]"
-                    : "bg-slate-900/50 border-slate-800/80 hover:bg-slate-900/80 hover:border-slate-700"
+                    ? "bg-[#07153B] border-[#DAA640] shadow-[0_0_20px_rgba(218,166,64,0.2)] scale-[1.02]"
+                    : "bg-[#07153B]/50 border-slate-800 hover:bg-[#07153B] hover:border-slate-700"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <div className={`p-1.5 sm:p-2 rounded-xl ${isActive ? "bg-sky-400/20 text-sky-400" : "bg-slate-800 text-slate-400"}`}>
+                  <div className={`p-1.5 sm:p-2 rounded-xl ${isActive ? "bg-[#DAA640]/20 text-[#DAA640]" : "bg-slate-800 text-slate-400"}`}>
                     <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <span className={`text-[9px] sm:text-[10px] font-mono font-bold uppercase px-1.5 sm:px-2 py-0.5 rounded-full ${isActive ? "bg-amber-400/20 text-amber-400" : "bg-slate-800 text-slate-500"}`}>
+                  <span className={`text-[9px] sm:text-[10px] font-mono font-bold uppercase px-1.5 sm:px-2 py-0.5 rounded-full ${isActive ? "bg-[#DAA640]/20 text-[#DAA640]" : "bg-slate-800 text-slate-500"}`}>
                     Step 0{idx + 1}
                   </span>
                 </div>
@@ -244,7 +244,7 @@ export function StickmanWorkflow() {
         </div>
 
         {/* Active Step Showcase Card */}
-        <div className="p-8 lg:p-12 rounded-3xl bg-slate-900/90 border border-slate-800/90 backdrop-blur-xl shadow-2xl">
+        <div className="p-6 sm:p-8 lg:p-12 rounded-3xl bg-[#07153B] border border-[#DAA640]/20 backdrop-blur-xl shadow-2xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeStep}

@@ -15,18 +15,18 @@ export function Process() {
   }
 
   return (
-    <section id="process" className="relative py-24 lg:py-32 overflow-hidden bg-bg-secondary">
+    <section id="process" className="relative py-20 lg:py-28 overflow-hidden bg-[#020E28]">
       {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-border-brand/35 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#DAA640]/30 to-transparent" />
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent-gold">
-            {data.eyebrow}
+        <div className="text-center mb-14">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#DAA640] font-mono">
+            [ {data.eyebrow} ]
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
+          <h2 className="font-sans text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-3">
             {data.headline}
           </h2>
         </div>
@@ -38,24 +38,24 @@ export function Process() {
             return (
               <div 
                 key={index} 
-                className={`border transition-colors duration-300 ${
-                  isOpen ? "border-accent-gold bg-bg-tertiary/30" : "border-border-brand/20 bg-bg-tertiary/10 hover:border-border-brand/40"
+                className={`border rounded-2xl transition-colors duration-300 overflow-hidden ${
+                  isOpen ? "border-[#DAA640] bg-[#07153B] shadow-xl" : "border-slate-800 bg-[#07153B]/50 hover:border-slate-700"
                 }`}
               >
                 {/* Header */}
                 <button
                   onClick={() => setExpandedIndex(isOpen ? -1 : index)}
-                  className="w-full flex items-center justify-between p-6 sm:p-8 text-left"
+                  className="w-full flex items-center justify-between p-6 sm:p-7 text-left cursor-pointer"
                 >
-                  <div className="flex items-center gap-6">
-                    <span className={`font-serif text-2xl sm:text-3xl font-bold ${isOpen ? "text-accent-gold" : "text-accent-purple"}`}>
+                  <div className="flex items-center gap-5 sm:gap-6">
+                    <span className={`font-mono text-2xl sm:text-3xl font-extrabold ${isOpen ? "text-[#DAA640]" : "text-slate-500"}`}>
                       {step.number}
                     </span>
                     <div>
-                      <h3 className="font-sans font-semibold text-base sm:text-lg text-white">
+                      <h3 className="font-sans font-bold text-base sm:text-lg text-white">
                         {step.title}
                       </h3>
-                      <p className="text-xs text-text-primary opacity-60 mt-1 sm:mt-0.5">
+                      <p className="text-xs text-slate-400 mt-1 sm:mt-0.5">
                         {step.sub}
                       </p>
                     </div>
@@ -63,7 +63,7 @@ export function Process() {
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
-                    className="text-text-secondary"
+                    className="text-[#DAA640]"
                   >
                     <ChevronDown size={20} />
                   </motion.div>
@@ -79,20 +79,20 @@ export function Process() {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-8 sm:px-8 sm:pb-8 pt-0 border-t border-white/5 space-y-4">
-                        <p className="font-sans text-sm text-text-primary opacity-80 leading-relaxed pt-4">
+                      <div className="px-6 pb-6 sm:px-8 sm:pb-7 pt-0 border-t border-slate-700/60 space-y-4">
+                        <p className="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed pt-4">
                           {step.details}
                         </p>
                         
                         {/* Deliverables Box */}
-                        <div className="p-4 bg-bg-primary/60 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="p-4 bg-[#020E28] border border-[#DAA640]/20 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="flex items-center gap-2">
-                            <Sparkles size={14} className="text-accent-gold" />
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+                            <Sparkles size={14} className="text-[#DAA640]" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
                               DELIVERABLE:
                             </span>
                           </div>
-                          <span className="font-mono text-xs font-semibold text-accent-gold">
+                          <span className="font-mono text-xs font-bold text-[#DAA640]">
                             {step.deliverable}
                           </span>
                         </div>

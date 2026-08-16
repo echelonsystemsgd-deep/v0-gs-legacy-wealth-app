@@ -21,12 +21,12 @@ export function Bottleneck() {
   ]
 
   return (
-    <section id="bottleneck" className="relative py-12 sm:py-24 lg:py-32 overflow-hidden bg-bg-primary">
+    <section id="bottleneck" className="relative py-12 sm:py-24 lg:py-32 overflow-hidden bg-[#020E28]">
       {/* Background radial glow */}
       <div 
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.07) 0%, rgba(9, 13, 22, 0) 60%)"
+          background: "radial-gradient(circle at 50% 30%, rgba(218, 166, 64, 0.08) 0%, rgba(2, 14, 40, 0) 60%)"
         }}
       />
 

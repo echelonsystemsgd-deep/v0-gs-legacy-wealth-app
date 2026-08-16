@@ -33,15 +33,15 @@ function WordmarkLogo({ className }: { className?: string }) {
         fontWeight: 800,
       }}
     >
-      <span style={{ color: "#38BDF8", fontSize: "inherit" }}>Mercian</span>
+      <span style={{ color: "#FFFFFF", fontSize: "inherit" }}>Mercian</span>
       <span
         style={{
-          color: "#F59E0B",
+          color: "#DAA640",
           fontSize: "0.85em",
-          background: "rgba(245, 158, 11, 0.15)",
+          background: "rgba(218, 166, 64, 0.15)",
           padding: "0.15em 0.4em",
           borderRadius: "0.3em",
-          border: "1px solid rgba(245, 158, 11, 0.3)",
+          border: "1px solid rgba(218, 166, 64, 0.3)",
         }}
       >
         Wealth
@@ -52,8 +52,8 @@ function WordmarkLogo({ className }: { className?: string }) {
 
 function ModernBrandBadge({ className }: { className?: string }) {
   return (
-    <div className={`h-full w-full rounded-xl bg-slate-900 border border-amber-400/40 flex items-center justify-center gap-1.5 px-3 py-1.5 shadow-lg shadow-amber-500/10 ${className || ""}`}>
-      <svg className="w-5 h-5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <div className={`h-full w-full rounded-xl bg-[#020E28] border border-[#DAA640]/40 flex items-center justify-center gap-1.5 px-3 py-1.5 shadow-lg shadow-[#DAA640]/10 ${className || ""}`}>
+      <svg className="w-5 h-5 text-[#DAA640] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {/* Storefront Awning + Tech Grid lines */}
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>

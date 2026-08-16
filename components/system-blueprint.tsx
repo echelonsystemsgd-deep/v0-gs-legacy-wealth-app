@@ -130,18 +130,18 @@ export function SystemBlueprint() {
   }, [clearAll])
 
   return (
-    <div id="system-blueprint" ref={containerRef} className="relative py-24 bg-bg-primary border-t border-white/5 text-left overflow-hidden max-w-full min-w-0">
+    <div id="system-blueprint" ref={containerRef} className="relative py-20 lg:py-28 bg-[#020E28] border-t border-[#DAA640]/15 text-left overflow-hidden max-w-full min-w-0">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 min-w-0 max-w-full">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 min-w-0">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-accent-gold">
+        <div className="text-center max-w-3xl mx-auto mb-14 min-w-0">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#DAA640]">
             [ ARCHITECTURAL BLUEPRINT ]
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3">
-            The <span className="bg-gradient-to-r from-accent-gold via-amber-200 to-accent-gold bg-clip-text text-transparent">Autonomic Protocol</span> Node Graph
+          <h2 className="font-sans text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-3">
+            The <span className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-white bg-clip-text text-transparent">Autonomic Protocol</span> Node Graph
           </h2>
-          <p className="font-sans text-sm sm:text-base text-text-primary opacity-75 leading-relaxed mt-4">
+          <p className="font-sans text-sm sm:text-base text-slate-300 leading-relaxed mt-4">
             The system cycles autonomously — each node executes in sequence, just as it does in production. Tap any node to inspect it directly.
           </p>
         </div>
@@ -161,38 +161,38 @@ export function SystemBlueprint() {
                   suppressHydrationWarning
                   className={`w-full p-4 sm:p-5 rounded-xl border text-left transition-all duration-300 flex items-center justify-between group cursor-pointer focus:outline-none ${
                     isSelected 
-                      ? "bg-bg-tertiary border-accent-gold shadow-[0_0_20px_rgba(212,175,55,0.15)]" 
-                      : "bg-bg-tertiary/20 border-white/5 hover:border-white/20 hover:bg-bg-tertiary/40"
+                      ? "bg-[#07153B] border-[#DAA640] shadow-[0_0_20px_rgba(218,166,64,0.18)]" 
+                      : "bg-[#07153B]/50 border-slate-800 hover:border-slate-700 hover:bg-[#07153B]"
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className={`p-2.5 rounded-lg border transition-colors shrink-0 ${
-                      isSelected ? "bg-accent-gold/15 border-accent-gold text-accent-gold" : "bg-white/5 border-white/10 text-white/60"
+                      isSelected ? "bg-[#DAA640]/15 border-[#DAA640] text-[#DAA640]" : "bg-slate-800 border-slate-700 text-slate-300"
                     }`}>
                       <IconComp size={20} />
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-sans font-bold text-sm text-white truncate">{node.title}</h4>
-                      <p className="font-sans text-xs text-text-secondary opacity-70 mt-0.5 truncate">{node.subtitle}</p>
+                      <p className="font-sans text-xs text-slate-400 mt-0.5 truncate">{node.subtitle}</p>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
                     <span className={`font-mono text-[10px] font-bold px-2 py-1 rounded ${
-                      isSelected ? "bg-accent-gold/20 text-accent-gold" : "bg-white/5 text-text-secondary"
+                      isSelected ? "bg-[#DAA640]/20 text-[#DAA640]" : "bg-slate-800 text-slate-400"
                     }`}>
                       {node.latency}
                     </span>
                     {isSelected && !isPaused && (
-                      <div className="w-full h-0.5 bg-white/10 rounded-full overflow-hidden" style={{ width: "60px" }}>
+                      <div className="w-full h-0.5 bg-slate-800 rounded-full overflow-hidden" style={{ width: "60px" }}>
                         <motion.div
-                          className="h-full bg-accent-gold rounded-full"
+                          className="h-full bg-[#DAA640] rounded-full"
                           style={{ width: `${progress}%` }}
                           transition={{ duration: 0 }}
                         />
                       </div>
                     )}
                     {isSelected && isPaused && (
-                      <span className="text-[8px] font-mono text-white/30 uppercase tracking-wider">manual</span>
+                      <span className="text-[8px] font-mono text-slate-500 uppercase tracking-wider">manual</span>
                     )}
                   </div>
                 </button>
@@ -201,8 +201,8 @@ export function SystemBlueprint() {
 
             {/* Auto-cycle status indicator */}
             <div className="flex items-center gap-2 px-1 pt-1">
-              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaused ? "bg-white/20" : "bg-accent-gold animate-pulse"}`} />
-              <span className="text-[10px] font-mono text-text-secondary/50 uppercase tracking-wider">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaused ? "bg-slate-600" : "bg-[#DAA640] animate-pulse"}`} />
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
                 {isPaused ? "Paused — resuming in a moment" : "Autonomic sequence running"}
               </span>
             </div>
@@ -217,55 +217,55 @@ export function SystemBlueprint() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
-                className="bg-bg-tertiary border border-accent-gold/30 p-6 sm:p-8 rounded-2xl space-y-6 shadow-2xl glass"
+                className="bg-[#07153B] border border-[#DAA640]/30 p-6 sm:p-8 rounded-2xl space-y-6 shadow-2xl"
               >
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center justify-between border-b border-slate-700/60 pb-4">
                   <div className="flex items-center gap-3">
-                    <Activity size={20} className="text-accent-gold animate-pulse" />
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-accent-gold">
+                    <Activity size={20} className="text-[#DAA640] animate-pulse" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#DAA640]">
                       ACTIVE NODE SPECIFICATION
                     </span>
                   </div>
-                  <span className="font-mono text-xs text-green-400 font-bold bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full">
+                  <span className="font-mono text-xs text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
                     ● ONLINE
                   </span>
                 </div>
 
                 {/* Node Title */}
                 <div>
-                  <h3 className="font-serif text-2xl font-bold text-white">{activeNode.title}</h3>
-                  <p className="font-sans text-xs text-text-secondary mt-1">{activeNode.subtitle}</p>
+                  <h3 className="font-sans text-xl sm:text-2xl font-bold text-white">{activeNode.title}</h3>
+                  <p className="font-sans text-xs text-slate-300 mt-1">{activeNode.subtitle}</p>
                 </div>
 
                 {/* Telemetry Metrics */}
-                <div className="grid grid-cols-2 gap-4 bg-black/40 border border-white/5 p-4 rounded-xl font-mono text-xs">
+                <div className="grid grid-cols-2 gap-4 bg-[#020E28] border border-slate-700/60 p-4 rounded-xl font-mono text-xs">
                   <div>
-                    <span className="text-[10px] text-text-secondary uppercase block">Execution Latency</span>
-                    <span className="text-accent-gold font-bold text-base mt-0.5 block">{activeNode.latency}</span>
+                    <span className="text-[10px] text-slate-400 uppercase block">Execution Latency</span>
+                    <span className="text-[#DAA640] font-bold text-base mt-0.5 block">{activeNode.latency}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-text-secondary uppercase block">Throughput Capacity</span>
-                    <span className="text-accent-gold font-bold text-base mt-0.5 block">{activeNode.throughput}</span>
+                    <span className="text-[10px] text-slate-400 uppercase block">Throughput Capacity</span>
+                    <span className="text-[#DAA640] font-bold text-base mt-0.5 block">{activeNode.throughput}</span>
                   </div>
                 </div>
 
                 {/* Core Mechanism */}
                 <div>
-                  <h4 className="text-xs uppercase tracking-widest font-bold text-text-secondary mb-2">Core Mechanism</h4>
-                  <p className="text-sm text-text-primary opacity-90 leading-relaxed font-medium">
+                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Core Mechanism</h4>
+                  <p className="text-sm text-slate-200 leading-relaxed font-medium">
                     {activeNode.mechanism}
                   </p>
                 </div>
 
                 {/* Sub-Specs List */}
-                <div className="border-t border-white/10 pt-4">
-                  <h4 className="text-xs uppercase tracking-widest font-bold text-text-secondary mb-3">Enterprise Standards</h4>
+                <div className="border-t border-slate-700/60 pt-4">
+                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-3">Enterprise Standards</h4>
                   <div className="grid sm:grid-cols-3 gap-2">
                     {activeNode.specs.map((spec, i) => (
-                      <div key={i} className="p-2.5 bg-white/[0.02] border border-white/5 rounded-lg flex items-center gap-2">
-                        <ShieldCheck size={14} className="text-accent-gold shrink-0" />
-                        <span className="text-[11px] font-sans text-white/90 font-medium">{spec}</span>
+                      <div key={i} className="p-2.5 bg-[#020E28] border border-slate-800 rounded-lg flex items-center gap-2">
+                        <ShieldCheck size={14} className="text-[#DAA640] shrink-0" />
+                        <span className="text-[11px] font-sans text-slate-200 font-medium">{spec}</span>
                       </div>
                     ))}
                   </div>

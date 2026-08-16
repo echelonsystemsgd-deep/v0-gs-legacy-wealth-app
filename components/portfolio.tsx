@@ -516,13 +516,13 @@ export function Portfolio({ limit }: { limit?: number }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-xl border border-white/10 hover:border-accent-gold transition-all duration-300 bg-bg-tertiary aspect-[16/10] sm:aspect-[16/10]"
+                className="group relative overflow-hidden rounded-xl border border-[#DAA640]/20 hover:border-[#DAA640] transition-all duration-300 bg-[#07153B] aspect-[16/10] sm:aspect-[16/10]"
               >
                 {/* Visual Image / Mockup background */}
                 <div className="w-full h-full relative z-10">
                   {item.image ? (
-                    <div className="absolute inset-2 sm:inset-4 rounded-xl border border-border overflow-hidden shadow-2xl flex flex-col">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-bg-secondary border-b border-border/50 shrink-0">
+                    <div className="absolute inset-2 sm:inset-4 rounded-xl border border-slate-700/60 overflow-hidden shadow-2xl flex flex-col bg-[#020E28]">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-[#07153B] border-b border-slate-700/50 shrink-0">
                         <div className="flex gap-1">
                           <div className="w-2 h-2 rounded-full bg-red-500/70" />
                           <div className="w-2 h-2 rounded-full bg-yellow-500/70" />
@@ -546,27 +546,27 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </div>
 
                 {/* Hover Reveal Slide-Up Overlay — Desktop only */}
-                <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 hidden md:flex flex-col justify-center items-center p-8 text-center space-y-4">
+                <div className="absolute inset-0 bg-[#020E28]/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 hidden md:flex flex-col justify-center items-center p-8 text-center space-y-4">
                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300 space-y-3">
                     <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <p className="text-xs uppercase tracking-widest text-accent-gold font-semibold">
+                      <p className="text-xs uppercase tracking-widest text-[#DAA640] font-semibold">
                         {item.category}
                       </p>
                       {item.href && !item.underConstruction ? (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">
-                          Prototype
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-mono">
+                          Live Interactive Sandbox
                         </span>
                       ) : (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded-full font-mono">
-                          Concept Build
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#DAA640] bg-[#DAA640]/10 border border-[#DAA640]/30 px-2.5 py-0.5 rounded-full font-mono">
+                          Architecture Case Study
                         </span>
                       )}
                     </div>
-                    <h3 className="font-serif text-2xl font-bold text-white">
+                    <h3 className="font-sans text-2xl font-extrabold text-white">
                       {item.title}
                     </h3>
                     {item.metric && (
-                      <p className="text-xs font-mono font-bold text-accent-gold uppercase tracking-wider">
+                      <p className="text-xs font-mono font-bold text-[#DAA640] uppercase tracking-wider">
                         Benchmark: {item.metric}
                       </p>
                     )}
@@ -576,9 +576,10 @@ export function Portfolio({ limit }: { limit?: number }) {
                           size="sm"
                           variant="outline"
                           onClick={() => setPreviewPrototype(item)}
+                          className="border-[#DAA640]/40 text-white hover:bg-[#DAA640] hover:text-[#020E28] transition-all"
                         >
                           <span className="text-xs font-bold uppercase tracking-wider">
-                            View Prototype →
+                            Launch Live Sandbox →
                           </span>
                         </Button>
                       ) : (
@@ -586,9 +587,10 @@ export function Portfolio({ limit }: { limit?: number }) {
                           size="sm"
                           variant="outline"
                           onClick={() => setRequestSchemaModal(item)}
+                          className="border-[#DAA640]/40 text-white hover:bg-[#DAA640] hover:text-[#020E28] transition-all"
                         >
                           <span className="text-xs font-bold uppercase tracking-wider">
-                            View Project →
+                            View Blueprint →
                           </span>
                         </Button>
                       )}
@@ -597,39 +599,39 @@ export function Portfolio({ limit }: { limit?: number }) {
                 </div>
 
                 {/* Mobile Bottom Bar — always visible, hidden on desktop */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-black/80 border-t border-accent-gold/30 backdrop-blur-sm min-w-0 max-w-full">
+                <div className="absolute bottom-0 left-0 right-0 z-20 flex md:hidden items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-[#020E28]/90 border-t border-[#DAA640]/30 backdrop-blur-sm min-w-0 max-w-full">
                   <div className="min-w-0 flex-1 pr-2">
                     <div className="flex items-center gap-1.5 mb-0.5 min-w-0 flex-wrap">
-                      <p className="text-[10px] uppercase tracking-widest text-accent-gold font-semibold leading-none truncate max-w-full">
+                      <p className="text-[10px] uppercase tracking-widest text-[#DAA640] font-semibold leading-none truncate max-w-full">
                         {item.category} {item.metric ? `· ${item.metric}` : ''}
                       </p>
                       {item.href && !item.underConstruction ? (
-                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded-full font-mono">
-                          Prototype
+                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 rounded-full font-mono">
+                          Live Sandbox
                         </span>
                       ) : (
-                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 rounded-full font-mono">
-                          Concept
+                        <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-[#DAA640] bg-[#DAA640]/10 border border-[#DAA640]/30 px-1.5 py-0.5 rounded-full font-mono">
+                          Case Study
                         </span>
                       )}
                     </div>
-                    <h3 className="font-serif text-xs sm:text-sm font-bold text-white truncate">
+                    <h3 className="font-sans text-xs sm:text-sm font-bold text-white truncate">
                       {item.title}
                     </h3>
                   </div>
                   {item.href && !item.underConstruction ? (
                     <button
-                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#020E28] bg-[#DAA640] px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
                       onClick={() => setPreviewPrototype(item)}
                     >
-                      View →
+                      Test Sandbox →
                     </button>
                   ) : (
                     <button
-                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-bg-primary bg-accent-gold px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#020E28] bg-[#DAA640] px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
                       onClick={() => setRequestSchemaModal(item)}
                     >
-                      View →
+                      View Blueprint →
                     </button>
                   )}
                 </div>

@@ -1,83 +1,68 @@
-# Implementation Folder Guide
+# Implementation Master Directory & Architecture Guide
+**Mercian Wealth — High-Trust UK Engineering & Automation Studio**
 
-This directory holds the active implementation plans, branding specifications, pricing models, and system component guides for the LocalEngine AI application.
-
-> [!IMPORTANT]
-> **Active Implementation Plan**: See [implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/implementation_plan.md) for the active 6-service overhaul plan (Web Design, 24/7 Lead Capture, Bookings & Upfront Deposits, Secure CRM Database, Email Automations, and WhatsApp Phone Alerts), Stickman Character Suite integration, and the 3-tap interactive simulator.
+This directory holds the active implementation plans, branding specifications, pricing models, and system component guides for the Mercian Wealth platform.
 
 ---
 
-## Active Business & Pricing Specifications
+## Active Master Plans
 
-1. **6 Core Pillars Offered**:
-   - **Custom Mobile Web Design**: Sub-second mobile storefronts.
-   - **24/7 Lead Capture**: Custom enquiry & order builders taking specs around the clock.
-   - **Automated Bookings**: Calendar slot locking + 50% upfront deposit collection.
-   - **Secure Cloud CRM**: Centralized customer records & lead management database.
-   - **Email Automations**: Instant confirmation receipts & order updates.
-   - **WhatsApp Phone Alerts**: Instant notification of incoming leads & paid deposits.
+1. **[BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md)**
+   * Strategic blueprint detailing the shift from generic AI SaaS tropes to bespoke, human-engineered editorial studio positioning.
+   * Covers tangible UK operational copy, anti-agency founder positioning, transparent pricing weapons, and live interactive tooling.
 
-2. **Transparent Pricing Models**:
-   - **One-Time Build (£495)**: Complete custom storefront & lead capture build (zero contract).
-   - **Flat Monthly Retainer (£195/mo)**: Full storefront, order engine, hosting, and active WhatsApp alerts.
-   - **Performance % Share (5% Revenue Share)**: Small setup deposit + % share of website sales for 100% skin-in-the-game security alignment.
+2. **[FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md)**
+   * Complete sitewide rollout specifications for the canonical Navy + Gold palette (`#020E28`, `#DAA640`, `#EBB755`, `#07153B`).
+   * Documents the resolution of the four P1 audit items (unified scarcity counter, verified case studies, interactive sandbox badging, ROI calculator mobile overflow fix).
 
-3. **Vendor Privacy Rule**:
-   - Technical vendor/tool names (*Supabase, Stripe, Make.com, Zapier, Twilio, Next.js*) are **never mentioned on public website copy**. Implementation details are shared exclusively with prospects during discovery calls.
+3. **[UNIFIED_NAVY_GOLD_MASTER_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/UNIFIED_NAVY_GOLD_MASTER_PLAN.md)**
+   * Exact hex code extraction from `public/MercianWealthLogo.jpeg` and mathematical WCAG AA/AAA contrast ratios (8.06:1 to 10.43:1).
+
+4. **[COMPETITOR_UPGRADE_AND_POSITIONING_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/COMPETITOR_UPGRADE_AND_POSITIONING_PLAN.md)**
+   * Forensic teardown of `nascent.org.uk` weaknesses and our competitive differentiation roadmap.
 
 ---
 
-## Directory Structure
+## Directory Organization
 
-### 1. [Website](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website)
-Contains documentation and implementation plans related to the public-facing marketing website, pricing page, booking flow, and forms.
-*   [SITE_DESIGN_UX_IMPROVEMENTS.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/SITE_DESIGN_UX_IMPROVEMENTS.md)
-*   [CALENDLY_IFRAME_MIGRATION_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/CALENDLY_IFRAME_MIGRATION_PLAN.md)
-*   [CALENDLY_INTEGRATION_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/CALENDLY_INTEGRATION_PLAN.md)
-*   [booking_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/booking_implementation_plan.md)
-*   [form_update_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/form_update_implementation_plan.md)
-*   [portfolio-maintenance-intercept-modal.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/portfolio-maintenance-intercept-modal.md)
-*   [concierge-fallback-error-handling.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/concierge-fallback-error-handling.md)
-*   [machiavellian_repositioning_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/machiavellian_repositioning_plan.md)
-*   [multi_page_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/multi_page_implementation_plan.md)
-*   [process_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/process_implementation_plan.md)
-*   [social_media_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/social_media_plan.md)
-*   [terms_and_privacy_redesign_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/terms_and_privacy_redesign_plan.md)
-*   [PORTFOLIO_INTEGRATION_BRAINSTORM.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/PORTFOLIO_INTEGRATION_BRAINSTORM.md)
+```
+Implementation/
+├── Website/                                # Public marketing website, pricing, booking, and forms
+│   ├── BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md
+│   ├── FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md
+│   ├── CALENDLY_IFRAME_MIGRATION_PLAN.md
+│   ├── CALENDLY_INTEGRATION_PLAN.md
+│   ├── PORTFOLIO_INTEGRATION_BRAINSTORM.md
+│   ├── booking_implementation_plan.md
+│   ├── form_update_implementation_plan.md
+│   ├── machiavellian_repositioning_plan.md
+│   ├── multi_page_implementation_plan.md
+│   ├── portfolio-prototype-preview-modal.md
+│   ├── process_implementation_plan.md
+│   ├── terms_and_privacy_redesign_plan.md
+│   └── uk_phone_validation_implementation_plan.md
+├── Admin dashboard/                        # Administration portal & lead dispatch tracking
+│   ├── admin_dashboard_fixes_2026-06-29.md
+│   └── admin_dashboard_redesign_plan.md
+├── Client dashboard/                       # Client onboarding portal & asset vaults
+│   ├── IMPLEMENTATION_CLIENT.md
+│   ├── PORTAL_TOUR_ENHANCEMENT_PLAN.md
+│   ├── client_dashboard_refinement_plan.md
+│   └── client_dashboard_ux_refinement_plan.md
+├── User dashboard/                         # End-user self-service portal
+│   └── user_dashboard_refinement_plan.md
+└── General/                                # Core architecture, audits, and security
+    ├── POST_COMMIT_AUDIT.md
+    └── unblock_client_plan.md
+```
 
-### 2. [Admin dashboard](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Admin%20dashboard)
-Contains documentation and implementation plans related to the administration panels, lead tracking, and content management.
-*   [admin_dashboard_fixes_2026-06-29.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Admin%20dashboard/admin_dashboard_fixes_2026-06-29.md)
-*   [admin_dashboard_redesign_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Admin%20dashboard/admin_dashboard_redesign_plan.md)
+---
 
-### 3. [Client dashboard](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Client%20dashboard)
-Contains documentation and plans for client portals, asset uploads (vault), stage sign-offs, and onboarding walkthroughs.
-*   [IMPLEMENTATION_CLIENT.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Client%20dashboard/IMPLEMENTATION_CLIENT.md)
-*   [PORTAL_TOUR_ENHANCEMENT_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Client%20dashboard/PORTAL_TOUR_ENHANCEMENT_PLAN.md)
-*   [client_dashboard_refinement_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Client%20dashboard/client_dashboard_refinement_plan.md)
-*   [client_dashboard_ux_refinement_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Client%20dashboard/client_dashboard_ux_refinement_plan.md)
+## Canonical Brand Tokens
 
-### 4. [User dashboard](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/User%20dashboard)
-Contains documentation and plans for standard user dashboards, including booking details and general profiles.
-*   [IMPLEMENTATION_USER.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/User%20dashboard/IMPLEMENTATION_USER.md)
-
-### 5. [General](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General)
-Contains cross-cutting database schemas, auth strategies, global styling/branding guides, n8n webhook pipelines, error tracking setup (Sentry), and comprehensive integrity audits.
-*   [DYNAMIC_PRICING_MANAGEMENT_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/DYNAMIC_PRICING_MANAGEMENT_PLAN.md)
-*   [unsend_and_notifications_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/unsend_and_notifications_plan.md)
-*   [dashboards_and_backend_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/dashboards_and_backend_plan.md)
-*   [dashboard_redesign_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/dashboard_redesign_plan.md)
-*   [backend_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/backend_implementation_plan.md)
-*   [PHASE_1_AUTH_PROFILES.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/PHASE_1_AUTH_PROFILES.md)
-*   [N8N_WEBHOOK_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/N8N_WEBHOOK_PLAN.md)
-*   [operations_infrastructure_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/operations_infrastructure_plan.md)
-*   [branding_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/branding_implementation_plan.md)
-*   [IMPLEMENTATION_PLAN_REBRANDING.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/IMPLEMENTATION_PLAN_REBRANDING.md)
-*   [SENTRY_GUIDE.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/SENTRY_GUIDE.md)
-*   [IMPLEMENTATION_METADATA.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/IMPLEMENTATION_METADATA.md)
-*   [POST_COMMIT_AUDIT.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/POST_COMMIT_AUDIT.md)
-*   [post_implementation_integrity_audit_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/post_implementation_integrity_audit_plan.md)
-*   [improvements_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/improvements_implementation_plan.md)
-*   [responsiveness_implementation_plan.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/responsiveness_implementation_plan.md)
-*   [site_improvements_and_revenue_blueprint.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/site_improvements_and_revenue_blueprint.md)
-*   [SUGGESTIONS.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/General/SUGGESTIONS.md)
+* **Canvas Navy**: `#020E28` (Exact logo background)
+* **Surface Navy**: `#07153B` (Cards & containers)
+* **Elevated Navy**: `#0C1D4D` (Higher elevation containers)
+* **Primary Gold**: `#DAA640` (MW monogram, primary CTAs)
+* **Warm Gold Highlight**: `#EBB755` (Text reading highlight, 10.43:1 WCAG AAA)
+* **Hairline Border**: `rgba(218, 166, 64, 0.20)`

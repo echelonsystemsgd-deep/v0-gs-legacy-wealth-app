@@ -219,7 +219,6 @@ export function Navbar() {
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-20 items-center justify-between">
-            {/* Logo - Crest + Wordmark Combo */}
               <Link
                 href="/"
                 onClick={(e) => {
@@ -228,10 +227,10 @@ export function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" })
                   }
                 }}
-                className="flex items-center gap-3 cursor-pointer group"
+                className="flex items-center gap-3 cursor-pointer group shrink-0"
                 aria-label="Mercian Wealth Homepage"
               >
-                <div className={`relative transition-all duration-300 ${isScrolled ? "h-10 w-10" : "h-11 w-11 sm:h-12 sm:w-12"} shrink-0 rounded-xl overflow-hidden shadow-md shadow-amber-500/10 border border-amber-400/30`}>
+                <div className={`relative transition-all duration-300 ${isScrolled ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10 sm:h-11 sm:w-11"} shrink-0 rounded-xl overflow-hidden shadow-md shadow-[#DAA640]/10 border border-[#DAA640]/30`}>
                   <BrandLogo
                     variant="logo"
                     alt="Mercian Wealth"
@@ -240,9 +239,9 @@ export function Navbar() {
                     priority
                   />
                 </div>
-                <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
-                  <span className="text-[#38BDF8]">Mercian</span>
-                  <span className="text-[#F59E0B]">Wealth</span>
+                <span className="font-sans text-base sm:text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5 select-none">
+                  <span className="text-white">Mercian</span>
+                  <span className="text-[#DAA640]">Wealth</span>
                 </span>
               </Link>
 

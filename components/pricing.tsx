@@ -154,19 +154,19 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
       : "Enterprise Partner"
 
   return (
-    <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden bg-[#0B0F17]">
-      <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-[#D9A74A]/5 blur-[120px] pointer-events-none" />
-      <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-[#D9A74A]/5 blur-[120px] pointer-events-none" />
+    <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden bg-[#020E28]">
+      <div className="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-[#DAA640]/5 blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-40 right-1/4 w-96 h-96 rounded-full bg-[#DAA640]/5 blur-[120px] pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 z-10">
         
         {/* Section Header (if isHomepage) */}
         {isHomepage && (
           <div className="text-center mb-10 lg:mb-12 max-w-3xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D9A74A] font-mono">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#DAA640] font-mono">
               [ {SITE_COPY.homepage.modelHint.eyebrow} ]
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 mb-4 leading-tight">
+            <h2 className="font-sans text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-3 mb-4 leading-tight">
               {SITE_COPY.homepage.modelHint.headline}
             </h2>
             <p className="font-sans text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
@@ -177,18 +177,18 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
 
         {/* Billing Switcher Header (3 Tabs) */}
         <div className="flex justify-center mb-12 lg:mb-16 relative z-20">
-          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 bg-slate-900/80 p-1 sm:p-1.5 rounded-full border border-slate-800 relative shadow-lg max-w-full min-w-0">
+          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 bg-[#07153B] p-1 sm:p-1.5 rounded-full border border-[#DAA640]/25 relative shadow-lg max-w-full min-w-0">
             <button
               suppressHydrationWarning
               onClick={() => setBillingCycle("oneTime")}
               className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
-                billingCycle === "oneTime" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
+                billingCycle === "oneTime" ? "text-[#020E28] font-bold" : "text-slate-300 hover:text-white"
               }`}
             >
               {billingCycle === "oneTime" && (
                 <motion.div
                   layoutId="pricingBillingBg"
-                  className="absolute inset-0 rounded-full bg-[#D9A74A] z-[-1]"
+                  className="absolute inset-0 rounded-full bg-[#DAA640] z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -198,13 +198,13 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               suppressHydrationWarning
               onClick={() => setBillingCycle("monthly")}
               className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
-                billingCycle === "monthly" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
+                billingCycle === "monthly" ? "text-[#020E28] font-bold" : "text-slate-300 hover:text-white"
               }`}
             >
               {billingCycle === "monthly" && (
                 <motion.div
                   layoutId="pricingBillingBg"
-                  className="absolute inset-0 rounded-full bg-[#D9A74A] z-[-1]"
+                  className="absolute inset-0 rounded-full bg-[#DAA640] z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -214,13 +214,13 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
               suppressHydrationWarning
               onClick={() => setBillingCycle("revenueShare")}
               className={`px-3 sm:px-7 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 relative z-10 cursor-pointer ${
-                billingCycle === "revenueShare" ? "text-slate-950 font-bold" : "text-slate-400 hover:text-white"
+                billingCycle === "revenueShare" ? "text-[#020E28] font-bold" : "text-slate-300 hover:text-white"
               }`}
             >
               {billingCycle === "revenueShare" && (
                 <motion.div
                   layoutId="pricingBillingBg"
-                  className="absolute inset-0 rounded-full bg-[#D9A74A] z-[-1]"
+                  className="absolute inset-0 rounded-full bg-[#DAA640] z-[-1]"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                 />
               )}
@@ -242,8 +242,8 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                 className={`flex flex-col h-full ${tier.featured ? "lg:scale-105 z-10" : ""} ${index === 2 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto w-full lg:max-w-none" : ""} min-w-0 max-w-full`}
               >
                 <div
-                  className={`relative h-full bg-[#1E293B]/70 backdrop-blur-md border rounded-2xl transition-all duration-300 flex flex-col justify-between min-w-0 max-w-full overflow-hidden ${
-                    tier.featured ? "border-[#D9A74A] shadow-[0_0_30px_rgba(217,167,74,0.2)]" : "border-slate-800"
+                  className={`relative h-full bg-[#07153B] backdrop-blur-md border rounded-2xl transition-all duration-300 flex flex-col justify-between min-w-0 max-w-full overflow-hidden ${
+                    tier.featured ? "border-[#DAA640] shadow-[0_0_30px_rgba(218,166,64,0.2)]" : "border-slate-800"
                   }`}
                 >
                   <CardContent className="p-5 sm:p-6 lg:p-8 flex flex-col h-full justify-between space-y-6 sm:space-y-8 min-w-0 max-w-full">
@@ -251,16 +251,16 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       {/* Header */}
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="font-serif text-2xl font-bold text-white mb-1">
+                          <h3 className="font-sans text-xl sm:text-2xl font-bold text-white mb-1">
                             {tier.name}
                           </h3>
-                          <p className="text-[10px] text-[#D9A74A] font-bold uppercase tracking-wider font-mono">
+                          <p className="text-[10px] text-[#DAA640] font-bold uppercase tracking-wider font-mono">
                             {billingCycle === "oneTime" ? "System Build" : billingCycle === "monthly" ? "Growth Retainer" : "Performance Share"}
                           </p>
                         </div>
 
                         {tier.featured && (
-                          <span className="bg-[#D9A74A] text-slate-950 px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full font-mono">
+                          <span className="bg-[#DAA640] text-[#020E28] px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider rounded-full font-mono">
                             Most Popular
                           </span>
                         )}
@@ -275,16 +275,16 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       <div className="mb-6 border-y border-slate-700/60 py-4">
                         <div className="flex items-baseline gap-1">
                           <span className="text-sm text-slate-400">From</span>
-                          <span className="text-4xl font-bold font-serif text-white">
+                          <span className="text-3xl sm:text-4xl font-bold font-sans text-white">
                             £{tier.price}
                           </span>
                         </div>
-                        <span className="text-[10px] text-[#D9A74A] uppercase tracking-wider font-semibold block mt-1 font-mono">
+                        <span className="text-[10px] text-[#DAA640] uppercase tracking-wider font-semibold block mt-1 font-mono">
                           {tier.interval}
                         </span>
                         {(tier as any).milestoneBreakdown && (
-                          <div className="mt-2.5 p-2 rounded-lg bg-slate-900/80 border border-slate-800 text-[11px] text-slate-300 leading-relaxed flex items-center gap-2 font-mono">
-                            <span className="text-[#D9A74A] font-bold shrink-0">⚡</span>
+                          <div className="mt-2.5 p-2 rounded-lg bg-[#020E28] border border-slate-800 text-[11px] text-slate-300 leading-relaxed flex items-center gap-2 font-mono">
+                            <span className="text-[#DAA640] font-bold shrink-0">⚡</span>
                             <span>{(tier as any).milestoneBreakdown}</span>
                           </div>
                         )}
@@ -294,7 +294,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                       <div className="space-y-3">
                         {tier.features.map((feature: string, i: number) => (
                           <div key={i} className="flex items-start gap-2.5">
-                            <span className="text-[#D9A74A] text-sm shrink-0 mt-0.5">✦</span>
+                            <span className="text-[#DAA640] text-sm shrink-0 mt-0.5 font-bold">✦</span>
                             <span className="text-xs text-slate-200 leading-normal font-medium">
                               {feature}
                             </span>
@@ -307,10 +307,10 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                     <Button
                       asChild
                       size="lg"
-                      className={`w-full py-5 text-xs font-semibold mt-6 ${
+                      className={`w-full py-5 text-xs font-bold mt-6 rounded-xl transition-all ${
                         tier.featured
-                          ? "bg-[#D9A74A] text-slate-950 hover:bg-[#E5A93C]"
-                          : "border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800"
+                          ? "bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-[#020E28] hover:from-[#EBB755] hover:to-[#DAA640]"
+                          : "border border-[#DAA640]/30 bg-[#020E28] text-white hover:bg-[#DAA640] hover:text-[#020E28]"
                       }`}
                     >
                       <Link href="/book">
