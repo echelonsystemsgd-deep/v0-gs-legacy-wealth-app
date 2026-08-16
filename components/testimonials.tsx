@@ -1,13 +1,67 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Star, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SITE_COPY } from "@/lib/site-copy"
+import { createClient } from "@/lib/supabase/client"
+
+interface TestimonialRecord {
+  id?: string
+  client_name: string
+  company: string | null
+  testimonial: string
+  badge?: string | null
+  profile_image?: string | null
+}
+
+const STATIC_FALLBACK_TESTIMONIALS: TestimonialRecord[] = [
+  {
+    client_name: "Sarah M., Founder",
+    company: "The Artisan Patisserie Group · London",
+    testimonial: "We used to lose 4–5 bespoke orders every weekend due to missed calls and delayed replies. Mercian deployed an automated 24/7 storefront with WhatsApp notifications. We now capture 50% non-refundable deposits upfront before any job hits our calendar.",
+    badge: "+38% Revenue Lift",
+  },
+  {
+    client_name: "Marcus T., Managing Director",
+    company: "Gourmet Events & Hospitality · Berkshire",
+    testimonial: "The automated quote engine and instant phone dispatch completely eliminated our late-night quote chasing. Setup was completed in 6 business days and paid for itself within the first 3 weeks of operations.",
+    badge: "14.5 Hrs Saved / Wk",
+  },
+]
 
 export function Testimonials() {
   const data = SITE_COPY.homepage.testimonials
+  const [testimonials, setTestimonials] = useState<TestimonialRecord[]>(STATIC_FALLBACK_TESTIMONIALS)
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchLiveTestimonials = async () => {
+      try {
+        const supabase = createClient()
+        const { data: liveData, error } = await supabase
+          .from("testimonials")
+          .select("id, client_name, company, testimonial, badge, profile_image")
+          .eq("is_archived", false)
+          .order("is_featured", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(4)
+
+        if (!error && liveData && liveData.length >= 2 && isMounted) {
+          setTestimonials(liveData)
+        }
+      } catch (err) {
+        // Graceful fallback to static array
+      }
+    }
+
+    fetchLiveTestimonials()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <section id="telemetry" className="relative py-20 lg:py-28 overflow-hidden bg-[#020E28]">
@@ -27,73 +81,47 @@ export function Testimonials() {
           </div>
         </div>
 
-        {/* Client Testimonial Cards Grid (Named Roles & Specific Businesses) */}
+        {/* Client Testimonial Cards Grid */}
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-14 text-left">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="p-6 rounded-2xl border border-[#DAA640]/25 bg-[#07153B] space-y-4 shadow-xl relative flex flex-col justify-between"
-          >
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-[#DAA640]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className="fill-[#DAA640] stroke-none" />
-                  ))}
+          {testimonials.map((item, idx) => (
+            <motion.div
+              key={item.id || idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="p-6 rounded-2xl border border-[#DAA640]/25 bg-[#07153B] space-y-4 shadow-xl relative flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1 text-[#DAA640]">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={14} className="fill-[#DAA640] stroke-none" />
+                    ))}
+                  </div>
+                  {item.badge && (
+                    <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                      {item.badge}
+                    </span>
+                  )}
                 </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
-                  +38% Revenue Lift
-                </span>
+                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
+                  "{item.testimonial}"
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
-                "We used to lose 4–5 bespoke orders every weekend due to missed calls and delayed replies. Mercian deployed an automated 24/7 storefront with WhatsApp notifications. We now capture 50% non-refundable deposits upfront before any job hits our calendar."
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-white">Sarah M., Founder</p>
-                <p className="text-[11px] text-slate-400 font-mono">The Artisan Patisserie Group · London</p>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] font-mono text-[#DAA640]">
-                <ShieldCheck size={14} /> Verified Client
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="p-6 rounded-2xl border border-[#DAA640]/25 bg-[#07153B] space-y-4 shadow-xl relative flex flex-col justify-between"
-          >
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-[#DAA640]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className="fill-[#DAA640] stroke-none" />
-                  ))}
+              <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-white">{item.client_name}</p>
+                  {item.company && (
+                    <p className="text-[11px] text-slate-400 font-mono">{item.company}</p>
+                  )}
                 </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
-                  14.5 Hrs Saved / Wk
-                </span>
+                <div className="flex items-center gap-1 text-[10px] font-mono text-[#DAA640]">
+                  <ShieldCheck size={14} /> Verified Client
+                </div>
               </div>
-              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
-                "The automated quote engine and instant phone dispatch completely eliminated our late-night quote chasing. Setup was completed in 6 business days and paid for itself within the first 3 weeks of operations."
-              </p>
-            </div>
-            <div className="pt-3 border-t border-slate-700/60 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-white">Marcus T., Managing Director</p>
-                <p className="text-[11px] text-slate-400 font-mono">Gourmet Events & Hospitality · Berkshire</p>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] font-mono text-[#DAA640]">
-                <ShieldCheck size={14} /> Verified Client
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Partnership & Growth Cohort Card */}
@@ -161,4 +189,3 @@ export function Testimonials() {
     </section>
   )
 }
-

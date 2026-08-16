@@ -474,7 +474,7 @@ export function Portfolio({ limit }: { limit?: number }) {
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
             title: d.project_name,
-            category: d.industry,
+            category: d.badge_type || d.industry || 'Interactive Sandbox',
             gradient: d.gradient || 'from-blue-500/20 to-indigo-500/20',
             href: d.website_link,
             image: d.cover_image,
@@ -484,7 +484,7 @@ export function Portfolio({ limit }: { limit?: number }) {
           setItems(mapped)
         }
       } catch (err: any) {
-        console.error('Failed to load portfolio items, using default assets:', err?.message || err)
+        console.warn('Live portfolio items unavailable, using built-in showcase assets:', err?.message || err)
       }
     }
     loadPortfolio()

@@ -539,7 +539,34 @@ input[type="range"]::-moz-range-thumb:active {
   animation: wave-pulse-4 0.7s ease-in-out infinite;
 }
 
-/* Hide scrollbars while preserving native scrolling functionality */
+/* Sleek Custom Scrollbars (Admin, Client & Public) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(2, 14, 40, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(218, 166, 64, 0.28);
+  border-radius: 9999px;
+  border: 1px solid rgba(218, 166, 64, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(218, 166, 64, 0.6);
+  box-shadow: 0 0 10px rgba(218, 166, 64, 0.3);
+}
+
+/* Firefox standard scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(218, 166, 64, 0.3) rgba(2, 14, 40, 0.4);
+}
+
+/* Hide scrollbars utility class */
 .no-scrollbar::-webkit-scrollbar,
 .scrollbar-none::-webkit-scrollbar {
   display: none;

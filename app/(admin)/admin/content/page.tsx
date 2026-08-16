@@ -3,37 +3,36 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Save, Loader2, RefreshCw, AlertTriangle, Check, Layers, FileJson, Sparkles, CheckCircle2, DollarSign, Plus, X, Star } from 'lucide-react'
+import { SITE_COPY } from '@/lib/site-copy'
 import type { PricingTier } from '@/lib/pricing'
 
 type SectionKey = 'hero' | 'cta' | 'process' | 'faq' | 'footer' | 'pricing_setup' | 'pricing_retainer'
 
 const DEFAULT_SECTIONS: Record<SectionKey, any> = {
   hero: {
-    badge: 'NEXT-GEN AI AGENCY',
-    title: 'We Architect High-End Digital Assets',
-    subtitle: 'Premium web design, elite AI integrations, and lead generation systems tailored for legacy businesses.',
-    primary_cta: 'Secure a Strategy Call',
-    secondary_cta: 'Explore Our Services',
+    badge: SITE_COPY.homepage.hero.eyebrow,
+    title: SITE_COPY.homepage.hero.headline,
+    subtitle: SITE_COPY.homepage.hero.subheadline,
+    primary_cta: SITE_COPY.homepage.hero.primaryCtaText,
+    secondary_cta: SITE_COPY.homepage.hero.secondaryCtaText,
   },
   cta: {
-    title: 'Ready to Elevate Your Digital Footprint?',
-    subtitle: 'Let\'s build a bespoke digital presence or AI chatbot system that operates 24/7 to scale your business.',
-    button_text: 'Secure Your Strategy Session',
+    title: SITE_COPY.homepage.cta.headline,
+    subtitle: SITE_COPY.homepage.cta.subheadline,
+    button_text: SITE_COPY.homepage.cta.buttonText,
   },
   process: {
-    steps: [
-      { step: '01', title: 'Strategy & Architecture', desc: 'Deep dive into your workflow and map out the blueprint.' },
-      { step: '02', title: 'High-Fidelity Design', desc: 'Crafting the visual layout matching premium luxury standards.' },
-      { step: '03', title: 'Engineering & Integration', desc: 'Building responsive frontends and programming custom AI features.' },
-      { step: '04', title: 'Deployment & Scaling', desc: 'Going live, optimising speed, and establishing database pipelines.' },
-    ]
+    steps: SITE_COPY.processPage.steps.map((s) => ({
+      step: s.number,
+      title: s.title,
+      desc: s.details || s.sub,
+    })),
   },
   faq: {
-    items: [
-      { q: 'How long does a standard web project take?', a: 'Typically 3 to 6 weeks depending on complex integrations like custom AI agents or dashboard logins.' },
-      { q: 'Can you integrate custom AI chatbots with our existing system?', a: 'Yes. We build custom workflows that interface with CRM databases, calendar booking systems, and live agent handoffs.' },
-      { q: 'Do you charge a recurring fee?', a: 'No. We build custom bespoke setups where you own the intellectual property. Any optional maintenance packages are quoted separately.' },
-    ]
+    items: SITE_COPY.homepage.faq.faqs.map((f) => ({
+      q: f.question,
+      a: f.answer,
+    })),
   },
   footer: {
     copyright: '© 2026 Mercian Wealth. All Rights Reserved.',
@@ -43,16 +42,14 @@ const DEFAULT_SECTIONS: Record<SectionKey, any> = {
     twitter_url: 'https://twitter.com',
     linkedin_url: 'https://www.linkedin.com/in/gs-legacy-wealth/',
   },
-  pricing_setup: [
-    { id: 'authority-suite', name: 'Authority Suite', price: '2,750', interval: '£687.50 deposit to initiate', milestoneBreakdown: '4 milestone stages of 25% (£687.50) linked to build progress', description: 'A luxury digital front-office that projects absolute authority.', features: ['Bespoke Next.js Authority Platform (5 Pages)', 'Calendly Scheduling Integration', 'Stripe Payment Gateway Integration', 'Core SEO Blueprint & Schema Setup', 'Supercharged Speed Profile (95+ Mobile)', '30 Days Dedicated Post-Launch Support'], cta: 'Request Alignment', featured: false, tag: 'Authority Suite' },
-    { id: 'operations-machine', name: 'Operations Machine', price: '5,500', interval: '£1,375 deposit to initiate', milestoneBreakdown: '4 milestone stages of 25% (£1,375) linked to build progress', description: 'Your complete digital systems layer.', features: ['Everything in Authority Suite (up to 10 Pages)', 'Custom Backend Admin Dashboard', 'Custom Secure Client Portal Integration', 'Autonomic Lead & CRM Automations', 'Automated Stripe Billing & Invoices', '90 Days Dedicated Post-Launch Support'], cta: 'Initiate Audit', featured: true, tag: 'Operations Machine' },
-    { id: 'revenue-engine', name: 'Revenue Engine', price: '9,800', interval: '£2,450 deposit to initiate', milestoneBreakdown: '4 milestone stages of 25% (£2,450) linked to build progress', description: 'The ultimate growth and automation infrastructure.', features: ['Everything in Operations Machine (Unlimited Pages)', 'Bespoke Cold Email Outreach System', 'Custom-Trained AI Agent Concierge', 'Full Brand Identity Suite (Logos, Guidelines)', 'Priority VIP Developer Slack Support', 'Weekly Growth & Scaling Roadmaps'], cta: 'Initiate Audit', featured: false, tag: 'Revenue Engine' },
-  ],
-  pricing_retainer: [
-    { id: 'authority-suite', name: 'Pilot Support', price: '499', interval: 'billed monthly', milestoneBreakdown: '', description: 'Continuous hosting, top-tier performance audits, and priority developer hours.', features: ['Premium Dedicated Ultra-Fast CDN Hosting', 'Weekly Security & Speed Audits', '3 Hours Design & Copywriting Updates/mo', 'Monthly Traffic & SEO Analytics Report', '24/7 Critical System Monitoring', 'Same-Day Urgent Edits Turnaround'], cta: 'Request Alignment', featured: false, tag: 'Authority Suite' },
-    { id: 'operations-machine', name: 'Co-Pilot Growth', price: '1,290', interval: 'billed monthly', milestoneBreakdown: '', description: 'Custom scaling campaigns, search engine dominance, and continuous autonomic AI system tuning.', features: ['Everything in Pilot Support', 'Continuous AI Agent Re-training & Updates', '1 Custom High-Converting Landing Page/mo', 'Advanced SEO Content & Competitor Strategy', 'Weekly Lead Funnel Optimisation', '10 Dedicated Developer/Designer Hours/mo'], cta: 'Initiate Audit', featured: true, tag: 'Operations Machine' },
-    { id: 'revenue-engine', name: 'Enterprise Autonomic Partner', price: '2,850', interval: 'billed monthly', milestoneBreakdown: '', description: 'Your complete external fractional Chief Technology & Marketing Team.', features: ['Everything in Co-Pilot Growth', 'Weekly High-Level Growth Consulting Call', 'Unlimited Minor System & UI Adjustments', 'New AI Workflow Builds & Automations', 'Bespoke Cold Email/Marketing System setups', 'Direct Slack Hotline to Core Founders'], cta: 'Initiate Audit', featured: false, tag: 'Revenue Engine' },
-  ],
+  pricing_setup: SITE_COPY.pricingPage.setupTiers.map((t, idx) => ({
+    id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
+    ...t,
+  })),
+  pricing_retainer: SITE_COPY.pricingPage.retainerTiers.map((t, idx) => ({
+    id: t.tag?.toLowerCase().replace(/\s+/g, '-') || `tier-${idx}`,
+    ...t,
+  })),
 }
 
 export default function ContentPage() {

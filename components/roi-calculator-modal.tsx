@@ -284,7 +284,7 @@ export function ROICalculatorModal({ isOpen, onClose }: ROICalculatorModalProps)
                     className="w-full font-bold"
                     onClick={onClose}
                   >
-                    <Link href={`/book?tier=${recommendedTier}`}>
+                    <Link href={`/book?tier=${encodeURIComponent(recommendedTier)}&roi_revenue=${revenue}&roi_hours=${manualHours}&roi_value=${totalValueUnlocked}`}>
                       <span>Apply for Vetted Integration</span>
                     </Link>
                   </Button>

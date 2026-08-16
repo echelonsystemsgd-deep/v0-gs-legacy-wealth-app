@@ -147,7 +147,7 @@ export function InteractiveRoiCalculator() {
                 size="lg"
                 className="w-full py-5 sm:py-6 text-sm sm:text-base font-bold bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] hover:from-[#EBB755] hover:to-[#DAA640] text-[#020E28] shadow-[0_0_25px_rgba(218,166,64,0.3)] transition-all border-0 rounded-xl"
               >
-                <Link href="/book" className="flex items-center justify-center gap-2">
+                <Link href={`/book?roi_revenue=${monthlyRevenue}&roi_hours=${weeklyHours}&roi_value=${totalAnnualValue}`} className="flex items-center justify-center gap-2">
                   <span>Book 15-Min Quick Audit</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
                 </Link>

@@ -417,14 +417,22 @@ function BookingFlowInner() {
       scrollTop()
       return
     }
-    setQualSubmitting(true)
+    // Extract optional ROI parameters from URL
+    const roiRevenue = searchParams?.get("roi_revenue")
+    const roiHours = searchParams?.get("roi_hours")
+    const roiValue = searchParams?.get("roi_value")
+
     const notes = [
       `Service Interested: ${qual.serviceInterested}`,
       `Biggest Challenge: ${qual.biggestChallenge}`,
       `Monthly Revenue: ${qual.monthlyRevenue}`,
       `Start Timeline: ${qual.startTimeline}`,
       `Desired Outcome: ${qual.desiredOutcome}`,
-    ].join("\n")
+      roiRevenue ? `[ROI Calculator] Monthly Revenue: £${roiRevenue}` : null,
+      roiHours ? `[ROI Calculator] Manual Hours: ${roiHours} hrs/wk` : null,
+      roiValue ? `[ROI Calculator] Projected Value: £${roiValue}` : null,
+    ].filter(Boolean).join("\n")
+
     try {
       const res = await fetch("/api/forms/submit", {
         method: "POST",
@@ -439,6 +447,9 @@ function BookingFlowInner() {
           linkedin_url: identity.linkedinUrl || null,
           notes,
           service_interested: qual.serviceInterested,
+          roi_monthly_rev: roiRevenue || null,
+          roi_annual_savings: roiValue || null,
+          roi_missed_calls: roiHours ? `${roiHours} hrs manual labor` : null,
         }),
       })
       if (!res.ok) {

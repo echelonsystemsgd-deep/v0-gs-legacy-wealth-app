@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar, CheckCircle2, ScrollText
+  User, Shield, UserX, UserCheck, Save, Loader2, Key, Check, AlertCircle, Upload, Settings, Calendar, CheckCircle2, ScrollText, Sparkles, Flame, Megaphone
 } from 'lucide-react'
 
 type Profile = {
@@ -13,7 +13,7 @@ type Profile = {
 
 export default function SettingsPage() {
   const supabase = createClient()
-  const [activeTab, setActiveTab] = useState<'profile' | 'team' | 'system' | 'logs'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'team' | 'system' | 'cohort' | 'logs'>('profile')
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [currentUser, setCurrentUser] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -31,6 +31,14 @@ export default function SettingsPage() {
   // System Config States
   const [calendlyUrl, setCalendlyUrl] = useState('')
   const [leadThreshold, setLeadThreshold] = useState('10')
+
+  // Cohort & Scarcity CMS States
+  const [cohortQuota, setCohortQuota] = useState('2')
+  const [cohortOverride, setCohortOverride] = useState('')
+  const [cohortStatus, setCohortStatus] = useState<'open' | 'closing_soon' | 'waitlist_only'>('open')
+  const [bannerActive, setBannerActive] = useState(true)
+  const [bannerText, setBannerText] = useState('Custom AI Automations & Digital Storefronts — Test Live Order Demo')
+  const [bannerLink, setBannerLink] = useState('/local')
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
 
@@ -62,10 +70,22 @@ export default function SettingsPage() {
     }
 
     // Fetch system configs if available
-    const { data: contentData } = await supabase.from('website_content').select('*').eq('section_key', 'system_config').single()
-    if (contentData) {
+    const { data: contentData } = await supabase.from('website_content').select('*').eq('section_key', 'system_config').maybeSingle()
+    if (contentData && contentData.content) {
       setCalendlyUrl(contentData.content.calendly_url ?? '')
       setLeadThreshold(contentData.content.lead_threshold ?? '10')
+    }
+
+    // Fetch cohort scarcity CMS settings
+    const { data: cohortData } = await supabase.from('website_content').select('*').eq('section_key', 'cohort_scarcity_settings').maybeSingle()
+    if (cohortData && cohortData.content) {
+      const c = cohortData.content
+      if (c.total_quota !== undefined) setCohortQuota(String(c.total_quota))
+      if (c.manual_override_slots !== undefined && c.manual_override_slots !== null) setCohortOverride(String(c.manual_override_slots))
+      if (c.cohort_status) setCohortStatus(c.cohort_status)
+      if (typeof c.banner_active === 'boolean') setBannerActive(c.banner_active)
+      if (c.banner_text) setBannerText(c.banner_text)
+      if (c.banner_link) setBannerLink(c.banner_link)
     }
 
     setLoading(false)
@@ -162,6 +182,43 @@ export default function SettingsPage() {
     }
   }
 
+  const handleUpdateCohort = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    const { data: { user } } = await supabase.auth.getUser()
+
+    const overrideValue = cohortOverride.trim() === '' ? null : Number(cohortOverride)
+    const quotaValue = Number(cohortQuota) || 2
+
+    const payload = {
+      total_quota: quotaValue,
+      manual_override_slots: overrideValue,
+      cohort_status: cohortStatus,
+      banner_active: bannerActive,
+      banner_text: bannerText,
+      banner_link: bannerLink,
+    }
+
+    const { error } = await supabase
+      .from('website_content')
+      .upsert(
+        {
+          section_key: 'cohort_scarcity_settings',
+          content: payload,
+          updated_at: new Date().toISOString(),
+          updated_by: user?.id || null,
+        },
+        { onConflict: 'section_key' }
+      )
+
+    setSaving(false)
+    if (error) {
+      showToast(`Cohort settings save failed: ${error.message}`)
+    } else {
+      showToast('Cohort scarcity and broadcast settings saved.')
+    }
+  }
+
   const toggleUserRole = async (profile: Profile) => {
     if (profile.id === currentUser?.id) {
       showToast('You cannot change your own role.')
@@ -209,7 +266,7 @@ export default function SettingsPage() {
             <Settings size={12} /> System Console Panel
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Settings</h1>
-          <p className="text-sm text-muted-foreground">Configure your personal profile, team permissions, and third-party tools.</p>
+          <p className="text-sm text-muted-foreground">Configure your personal profile, team permissions, cohort scarcity, and sitewide telemetry.</p>
         </div>
       </div>
 
@@ -224,6 +281,16 @@ export default function SettingsPage() {
           }`}
         >
           <User size={14} /> Personal Profile
+        </button>
+        <button
+          onClick={() => setActiveTab('cohort')}
+          className={`px-5 py-3 border-b-2 text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
+            activeTab === 'cohort'
+              ? 'border-gold text-gold bg-gold/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          <Flame size={14} /> Cohort Scarcity & Broadcast
         </button>
         <button
           onClick={() => setActiveTab('team')}
@@ -243,7 +310,7 @@ export default function SettingsPage() {
               : 'border-transparent text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Settings size={14} /> Integrations & Systems
+          <Settings size={14} /> Integrations
         </button>
         <button
           onClick={() => setActiveTab('logs')}
@@ -318,10 +385,125 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
                   >
                     {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                     Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {activeTab === 'cohort' && (
+            <div className="glass rounded-2xl border border-gold/10 p-6 max-w-2xl space-y-6">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-gold">
+                  <Flame size={14} /> Telemetry & Scarcity Controls
+                </div>
+                <h2 className="font-serif text-xl font-bold text-foreground">Cohort Scarcity & Sitewide Announcement</h2>
+                <p className="text-xs text-muted-foreground">Directly update scarcity counts displayed on the homepage hero, pricing tiers, and announcement bar.</p>
+              </div>
+
+              <form onSubmit={handleUpdateCohort} className="space-y-5">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground block">
+                      Total Monthly Quota
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="20"
+                      required
+                      value={cohortQuota}
+                      onChange={(e) => setCohortQuota(e.target.value)}
+                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all font-mono"
+                    />
+                    <p className="text-[10px] text-muted-foreground">Default is 2 partners per month.</p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground block">
+                      Manual Slots Override (Optional)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="20"
+                      placeholder="Leave blank for auto CRM count"
+                      value={cohortOverride}
+                      onChange={(e) => setCohortOverride(e.target.value)}
+                      className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all font-mono"
+                    />
+                    <p className="text-[10px] text-muted-foreground">Forces remaining slots counter (e.g. 1 or 0).</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground block">
+                    Cohort Status
+                  </label>
+                  <select
+                    value={cohortStatus}
+                    onChange={(e: any) => setCohortStatus(e.target.value)}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                  >
+                    <option value="open">Open (Active Intake)</option>
+                    <option value="closing_soon">Closing Soon (Final Slot)</option>
+                    <option value="waitlist_only">Waitlist Only (Cohort Filled)</option>
+                  </select>
+                </div>
+
+                <div className="pt-4 border-t border-gold/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-foreground">Sitewide Announcement Bar</p>
+                      <p className="text-[11px] text-muted-foreground">Top header promotional banner across all public pages.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={bannerActive}
+                        onChange={(e) => setBannerActive(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-background after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
+                    </label>
+                  </div>
+
+                  {bannerActive && (
+                    <>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground block">Banner Headline</label>
+                        <input
+                          value={bannerText}
+                          onChange={(e) => setBannerText(e.target.value)}
+                          className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground block">Target Link Destination</label>
+                        <input
+                          value={bannerLink}
+                          onChange={(e) => setBannerLink(e.target.value)}
+                          placeholder="/local or /book"
+                          className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all font-mono"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+                  >
+                    {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                    Save Telemetry & Scarcity
                   </button>
                 </div>
               </form>
@@ -500,7 +682,7 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-50 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
                   >
                     {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                     Save Configurations

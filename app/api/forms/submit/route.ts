@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { Resend } from 'resend'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 // Initialize Resend
 const resendApiKey = process.env.RESEND_API_KEY
@@ -14,8 +15,46 @@ const getLogoUrl = () => {
 
 export async function POST(request: Request) {
   try {
+    // 0. Extract client IP and enforce rate limiting (max 10 requests per 2 minutes)
+    const forwardedFor = request.headers.get('x-forwarded-for')
+    const realIp = request.headers.get('x-real-ip')
+    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : realIp || '127.0.0.1'
+
+    const rateLimit = checkRateLimit(clientIp, { limit: 10, windowMs: 2 * 60 * 1000 })
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: 'Too many submissions. Please wait a moment before trying again.' },
+        { status: 429 }
+      )
+    }
+
     const payload = await request.json()
-    const { source, name, email, business_name, phone, website, notes, linkedin_url, service_interested } = payload
+    const { 
+      source, 
+      name, 
+      email, 
+      business_name, 
+      phone, 
+      website, 
+      notes, 
+      linkedin_url, 
+      service_interested,
+      // Honeypot fields (should be empty for legitimate users)
+      _hp_company,
+      hp_title,
+      website_url_hp,
+      // Optional ROI calculator telemetry
+      roi_leakage,
+      roi_annual_savings,
+      roi_missed_calls,
+      roi_monthly_rev
+    } = payload
+
+    // Silent trap for bot submissions
+    if (_hp_company || hp_title || website_url_hp) {
+      console.warn(`[API/Submit] Honeypot triggered from IP: ${clientIp}. Silently dropping submission.`)
+      return NextResponse.json({ success: true, lead: null, filtered: true })
+    }
 
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
@@ -23,6 +62,13 @@ export async function POST(request: Request) {
 
     if (!source) {
       return NextResponse.json({ error: 'Form source identifier is required' }, { status: 400 })
+    }
+
+    // Build consolidated notes including ROI calculator telemetry if present
+    let consolidatedNotes = notes || ''
+    if (roi_leakage || roi_annual_savings || roi_monthly_rev) {
+      const roiSummary = `\n[ROI Calculator Telemetry]\nMonthly Rev: ${roi_monthly_rev || 'N/A'}\nMissed Opportunities/Calls: ${roi_missed_calls || 'N/A'}\nEst. Monthly Leakage: £${roi_leakage || 0}\nEst. Annual Savings: £${roi_annual_savings || 0}`
+      consolidatedNotes = consolidatedNotes ? `${consolidatedNotes}\n${roiSummary}` : roiSummary.trim()
     }
 
     // 1. Persist submission in Supabase (Non-blocking fallback if DB is not configured or fails)
@@ -52,7 +98,7 @@ export async function POST(request: Request) {
                 website: website || existingLead.website,
                 phone: phone || existingLead.phone,
                 linkedin_url: linkedin_url || existingLead.linkedin_url,
-                notes: notes || existingLead.notes,
+                notes: consolidatedNotes || existingLead.notes,
                 service_interested: service_interested || existingLead.service_interested,
                 status: 'New',
                 source: 'booking_form',
@@ -74,7 +120,7 @@ export async function POST(request: Request) {
                 phone: phone || null,
                 linkedin_url: linkedin_url || null,
                 website: website || null,
-                notes: notes || 'Booking request qualification',
+                notes: consolidatedNotes || 'Booking request qualification',
                 service_interested: service_interested || null,
                 status: 'New',
                 source: 'booking_form',
@@ -92,7 +138,7 @@ export async function POST(request: Request) {
             email: email,
             business_name: business_name || 'N/A (Contact Form)',
             phone: phone || null,
-            notes: notes || 'Contact Form Submission',
+            notes: consolidatedNotes || 'Contact Form Submission',
             status: 'New',
             source: 'contact_form',
           }).select().single()
@@ -106,7 +152,7 @@ export async function POST(request: Request) {
             email: email,
             business_name: 'N/A (Portfolio Waitlist)',
             website: website || null, // Stores the portfolio item URL
-            notes: notes || 'Waitlist registration for under-construction site',
+            notes: consolidatedNotes || 'Waitlist registration for under-construction site',
             status: 'New',
             source: 'portfolio_waitlist',
           }).select().single()
@@ -120,7 +166,7 @@ export async function POST(request: Request) {
             email: email,
             business_name: business_name || 'N/A (Fast-Track Loom Audit)',
             website: website || null, // Stores the target website URL to audit
-            notes: notes || 'Request for a 5-minute Loom video audit of existing site.',
+            notes: consolidatedNotes || 'Request for a 5-minute Loom video audit of existing site.',
             status: 'New',
             source: 'fast_track_audit',
           }).select().single()
@@ -135,7 +181,7 @@ export async function POST(request: Request) {
             business_name: business_name || 'N/A (Local Business Form)',
             phone: phone || null,
             service_interested: service_interested || null,
-            notes: notes || 'Local Business Form Submission',
+            notes: consolidatedNotes || 'Local Business Form Submission',
             status: 'New',
             source: 'local_business_form',
             lead_type: 'local_business',
@@ -228,7 +274,7 @@ export async function POST(request: Request) {
 
           <div style="background-color: #101B3B; padding: 20px; border-left: 3px solid #D4AF37; border-radius: 4px; margin-bottom: 30px;">
             <h4 style="color: #D4AF37; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message / Inquiry Details</h4>
-            <p style="margin: 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; color: #F0EDE6;">${notes || 'No message details provided.'}</p>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; color: #F0EDE6;">${consolidatedNotes || 'No message details provided.'}</p>
           </div>
 
           <div style="text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 20px;">

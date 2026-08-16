@@ -1,10 +1,27 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
   try {
+    const forwardedFor = request.headers.get('x-forwarded-for')
+    const realIp = request.headers.get('x-real-ip')
+    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : realIp || '127.0.0.1'
+
+    const rateLimit = checkRateLimit(clientIp, { limit: 12, windowMs: 2 * 60 * 1000 })
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: 'Too many qualification attempts. Please wait a moment.' },
+        { status: 429 }
+      )
+    }
+
     const payload = await request.json()
-    const { email, has_website, monthly_revenue, primary_interest } = payload
+    const { email, has_website, monthly_revenue, primary_interest, _hp_company, hp_title } = payload
+
+    if (_hp_company || hp_title) {
+      return NextResponse.json({ success: true, dbSaved: false, n8nDispatched: false, leadId: null })
+    }
 
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })

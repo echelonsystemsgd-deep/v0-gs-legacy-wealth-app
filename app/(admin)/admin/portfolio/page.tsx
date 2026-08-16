@@ -3,16 +3,86 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  Plus, Edit2, Archive, ArchiveRestore, Star, Loader2, ImageIcon, ExternalLink, X, Save, CheckCircle2,
+  Plus, Edit2, Archive, ArchiveRestore, Star, Loader2, ImageIcon, ExternalLink, X, Save, CheckCircle2, Sparkles, RefreshCw
 } from 'lucide-react'
 
 type PortfolioItem = {
-  id: string; project_name: string; client_name: string | null; description: string | null
-  industry: string | null; website_link: string | null; cover_image: string
-  is_featured: boolean; is_archived: boolean; created_at: string
+  id: string
+  project_name: string
+  client_name: string | null
+  description: string | null
+  industry: string | null
+  website_link: string | null
+  cover_image: string
+  metric: string | null
+  under_construction: boolean
+  badge_type?: string | null
+  is_featured: boolean
+  is_archived: boolean
+  created_at: string
 }
 
-const EMPTY_FORM = { project_name: '', client_name: '', description: '', industry: '', website_link: '' }
+const DEFAULT_FRONTEND_PROJECTS = [
+  {
+    project_name: "Stamp Valuation App",
+    client_name: "Philatelic Valuation Engine",
+    description: "High-speed AI computer vision scanner identifying and evaluating rare stamps against historical auction archives.",
+    industry: "AI Web App · Prototype",
+    website_link: "https://v0-stamp-valuation-app.vercel.app",
+    cover_image: "/stamp-app-preview.png",
+    metric: "Target Latency: < 1s",
+    under_construction: false,
+    badge_type: "Interactive Sandbox",
+    is_featured: true,
+  },
+  {
+    project_name: "Elite Fitness Studio",
+    client_name: "High-Performance Training Group",
+    description: "Automated booking engine and membership tiering system with 24/7 lead triage.",
+    industry: "AI Website · Concept Build",
+    website_link: null,
+    cover_image: "/placeholder.jpg",
+    metric: "Target 90%+ Booking Flow",
+    under_construction: true,
+    badge_type: "Concept Prototype",
+    is_featured: true,
+  },
+  {
+    project_name: "Sterling Direct Purchases",
+    client_name: "Commercial Acquisitions Ltd",
+    description: "Autonomous property acquisition qualifier, instant cash offer estimate engine, and CRM dispatch pipeline.",
+    industry: "Lead System · Prototype",
+    website_link: "https://real-estate-application-build.vercel.app/",
+    cover_image: "/sterling-direct-purchases-preview.png",
+    metric: "Pipeline Architecture",
+    under_construction: false,
+    badge_type: "Interactive Sandbox",
+    is_featured: true,
+  },
+  {
+    project_name: "Strategic Growth Co.",
+    client_name: "Enterprise Growth Advisory",
+    description: "Executive conversion landing page with live interactive ROI modeling and automated calendar qualification.",
+    industry: "Landing Page · Concept Build",
+    website_link: null,
+    cover_image: "/placeholder.jpg",
+    metric: "Growth Analytics Framework",
+    under_construction: true,
+    badge_type: "Concept Prototype",
+    is_featured: true,
+  },
+]
+
+const EMPTY_FORM = {
+  project_name: '',
+  client_name: '',
+  description: '',
+  industry: '',
+  website_link: '',
+  metric: '',
+  under_construction: false,
+  badge_type: 'Interactive Sandbox',
+}
 
 export default function PortfolioPage() {
   const supabase = createClient()
@@ -24,24 +94,65 @@ export default function PortfolioPage() {
   const [form, setForm] = useState({ ...EMPTY_FORM })
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [saving, setSaving] = useState(false)
+  const [seeding, setSeeding] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000) }
 
   const fetch = useCallback(async () => {
     setLoading(true)
-    const { data } = await supabase.from('portfolio_items').select('*').eq('is_archived', showArchived).order('created_at', { ascending: false })
+    const { data } = await supabase
+      .from('portfolio_items')
+      .select('*')
+      .eq('is_archived', showArchived)
+      .order('is_featured', { ascending: false })
+      .order('created_at', { ascending: false })
     setItems(data ?? [])
     setLoading(false)
-  }, [showArchived])
+  }, [showArchived, supabase])
 
   useEffect(() => { fetch() }, [fetch])
+
+  const handleSeedDefaults = async () => {
+    setSeeding(true)
+    try {
+      for (const p of DEFAULT_FRONTEND_PROJECTS) {
+        await supabase.from('portfolio_items').insert({
+          project_name: p.project_name,
+          client_name: p.client_name,
+          description: p.description,
+          industry: p.industry,
+          website_link: p.website_link,
+          cover_image: p.cover_image,
+          metric: p.metric,
+          under_construction: p.under_construction,
+          badge_type: p.badge_type,
+          is_featured: p.is_featured,
+          is_archived: false,
+        })
+      }
+      showToast('Frontend showcase projects imported successfully.')
+      fetch()
+    } catch (err: any) {
+      showToast(`Import failed: ${err.message}`)
+    } finally {
+      setSeeding(false)
+    }
+  }
 
   const openCreate = () => { setForm({ ...EMPTY_FORM }); setCoverFile(null); setEditing(null); setModal('create') }
   const openEdit = (item: PortfolioItem) => {
     setEditing(item)
-    setForm({ project_name: item.project_name, client_name: item.client_name ?? '', description: item.description ?? '', industry: item.industry ?? '', website_link: item.website_link ?? '' })
+    setForm({
+      project_name: item.project_name,
+      client_name: item.client_name ?? '',
+      description: item.description ?? '',
+      industry: item.industry ?? '',
+      website_link: item.website_link ?? '',
+      metric: item.metric ?? '',
+      under_construction: !!item.under_construction,
+      badge_type: item.badge_type ?? 'Interactive Sandbox',
+    })
     setCoverFile(null)
     setModal('edit')
   }
@@ -59,13 +170,28 @@ export default function PortfolioPage() {
       cover_image = publicUrl
     }
 
-    if (!cover_image && !editing) { showToast('Please select a cover image.'); setSaving(false); return }
+    if (!cover_image && !editing) {
+      cover_image = '/placeholder.jpg'
+    }
+
+    const payload = {
+      project_name: form.project_name,
+      client_name: form.client_name || null,
+      description: form.description || null,
+      industry: form.industry || null,
+      website_link: form.website_link || null,
+      metric: form.metric || null,
+      under_construction: form.under_construction,
+      badge_type: form.badge_type,
+      cover_image: cover_image || '/placeholder.jpg',
+    }
 
     if (editing) {
-      await supabase.from('portfolio_items').update({ ...form, cover_image }).eq('id', editing.id)
+      await supabase.from('portfolio_items').update(payload).eq('id', editing.id)
     } else {
-      await supabase.from('portfolio_items').insert({ ...form, cover_image })
+      await supabase.from('portfolio_items').insert(payload)
     }
+
     setSaving(false)
     setModal(null)
     fetch()
@@ -97,11 +223,20 @@ export default function PortfolioPage() {
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-gold/80 uppercase">
             <ImageIcon size={12} /> CMS Showcase Content
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Portfolio</h1>
-          <p className="text-sm text-muted-foreground">Manage your public case studies and projects.</p>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-1">Portfolio & Case Studies</h1>
+          <p className="text-sm text-muted-foreground">Manage your public case studies, sandbox badges, and target metrics.</p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap self-end sm:self-center">
+          <button
+            onClick={handleSeedDefaults}
+            disabled={seeding}
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gold/20 bg-gold/5 text-gold text-xs font-bold hover:bg-gold/10 transition-all cursor-pointer disabled:opacity-50"
+            title="Import the 4 live frontend projects into database"
+          >
+            {seeding ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+            Sync Frontend Projects
+          </button>
           <button
             onClick={() => setShowArchived((v) => !v)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
@@ -116,7 +251,7 @@ export default function PortfolioPage() {
             onClick={openCreate}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_24px_rgba(212,175,55,0.4)] transition-all cursor-pointer"
           >
-            <Plus size={14} /> Add Item
+            <Plus size={14} /> Add Project
           </button>
         </div>
       </div>
@@ -126,10 +261,22 @@ export default function PortfolioPage() {
           {[...Array(6)].map((_, i) => <div key={i} className="h-56 rounded-2xl bg-card/50 animate-pulse" />)}
         </div>
       ) : items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <ImageIcon size={40} className="text-gold/20 mb-3" />
-          <p className="font-serif text-xl text-foreground">No portfolio items</p>
-          <p className="text-sm text-muted-foreground mt-1">Add your first project to showcase your work.</p>
+        <div className="glass rounded-2xl border border-gold/10 p-8 sm:p-12 flex flex-col items-center justify-center text-center space-y-4">
+          <ImageIcon size={44} className="text-gold/30 mb-1" />
+          <div className="space-y-1">
+            <p className="font-serif text-xl font-bold text-foreground">No Database Projects Found</p>
+            <p className="text-xs text-muted-foreground max-w-md">
+              The public site is currently rendering the 4 built-in showcase builds (Stamp Valuation, Elite Fitness, Sterling Direct, Strategic Growth). Click below to import them into your database for direct editing.
+            </p>
+          </div>
+          <button
+            onClick={handleSeedDefaults}
+            disabled={seeding}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-xs font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all cursor-pointer"
+          >
+            {seeding ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+            Import 4 Frontend Showcase Projects
+          </button>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -137,36 +284,51 @@ export default function PortfolioPage() {
             <div 
               key={item.id} 
               onClick={() => openEdit(item)}
-              className="glass rounded-2xl border border-gold/10 overflow-hidden group hover:border-gold/20 transition-all cursor-pointer hover:bg-gold/[0.01]"
+              className="glass rounded-2xl border border-gold/10 overflow-hidden group hover:border-gold/25 transition-all cursor-pointer hover:bg-gold/[0.01]"
             >
               <div className="relative h-44 bg-secondary/50">
-                {item.cover_image ? (
+                {item.cover_image && item.cover_image !== '/placeholder.jpg' ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={item.cover_image} alt={item.project_name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon size={32} className="text-muted-foreground/30" />
+                  <div className="w-full h-full flex items-center justify-center bg-[#07153B]">
+                    <div className="text-center p-4">
+                      <ImageIcon size={28} className="text-gold/40 mx-auto mb-1.5" />
+                      <span className="text-xs font-bold text-gold/80 block">{item.project_name}</span>
+                      <span className="text-[10px] text-muted-foreground font-mono">{item.badge_type || 'Interactive Build'}</span>
+                    </div>
                   </div>
                 )}
-                {item.is_featured && (
-                  <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-gold/90 text-background text-xxs font-bold flex items-center gap-1">
-                    <Star size={9} className="fill-current" /> Featured
-                  </div>
-                )}
+                <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap">
+                  {item.is_featured && (
+                    <div className="px-2 py-0.5 rounded-full bg-gold/90 text-background text-xxs font-bold flex items-center gap-1">
+                      <Star size={9} className="fill-current" /> Featured
+                    </div>
+                  )}
+                  {item.under_construction ? (
+                    <div className="px-2 py-0.5 rounded-full bg-amber-500/90 text-background text-xxs font-bold">
+                      Concept
+                    </div>
+                  ) : (
+                    <div className="px-2 py-0.5 rounded-full bg-emerald-500/90 text-background text-xxs font-bold">
+                      Live
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="p-4 space-y-3">
                 <div>
                   <p className="font-semibold text-foreground line-clamp-1">{item.project_name}</p>
-                  <p className="text-xs text-muted-foreground">{item.client_name ?? '—'} {item.industry ? `· ${item.industry}` : ''}</p>
+                  <p className="text-xs text-muted-foreground">{item.industry ?? 'General Build'} {item.metric ? `· ${item.metric}` : ''}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => openEdit(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground hover:border-gold/25 transition-all">
+                  <button onClick={() => openEdit(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground hover:border-gold/25 transition-all cursor-pointer">
                     <Edit2 size={11} /> Edit
                   </button>
-                  <button onClick={() => toggleFeatured(item)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all ${item.is_featured ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-white/5 border-gold/15 text-muted-foreground hover:text-foreground'}`}>
+                  <button onClick={() => toggleFeatured(item)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs transition-all cursor-pointer ${item.is_featured ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-white/5 border-gold/15 text-muted-foreground hover:text-foreground'}`}>
                     <Star size={11} className={item.is_featured ? 'fill-gold' : ''} /> {item.is_featured ? 'Unfeature' : 'Feature'}
                   </button>
-                  <button onClick={() => toggleArchive(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all">
+                  <button onClick={() => toggleArchive(item)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-gold/15 text-xs text-muted-foreground hover:text-foreground transition-all cursor-pointer">
                     {item.is_archived ? <ArchiveRestore size={11} /> : <Archive size={11} />}
                     {item.is_archived ? 'Restore' : 'Archive'}
                   </button>
@@ -191,31 +353,62 @@ export default function PortfolioPage() {
               <button onClick={() => setModal(null)} className="text-muted-foreground hover:text-foreground text-sm cursor-pointer"><X size={16} /></button>
             </div>
             <form onSubmit={handleSave} className="space-y-4">
-              {[
-                { id: 'project_name', label: 'Project Name', required: true },
-                { id: 'client_name', label: 'Client Name' },
-                { id: 'industry', label: 'Industry' },
-                { id: 'website_link', label: 'Live Website URL' },
-              ].map(({ id, label, required }) => (
-                <div key={id} className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</label>
-                  <input required={required} value={(form as any)[id]} onChange={(e) => setForm((p) => ({ ...p, [id]: e.target.value }))}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Project Title *</label>
+                <input required value={form.project_name} onChange={(e) => setForm((p) => ({ ...p, project_name: e.target.value }))}
+                  placeholder="e.g. Stamp Valuation App"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Category / Tag</label>
+                  <input value={form.industry} onChange={(e) => setForm((p) => ({ ...p, industry: e.target.value }))}
+                    placeholder="e.g. AI Web App · Prototype"
                     className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all" />
                 </div>
-              ))}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Description</label>
-                <textarea rows={3} value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
-                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-none" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Badge Style</label>
+                  <select value={form.badge_type} onChange={(e) => setForm((p) => ({ ...p, badge_type: e.target.value }))}
+                    className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all">
+                    <option value="Interactive Sandbox">Interactive Sandbox</option>
+                    <option value="Live Client Deployment">Live Client Deployment</option>
+                    <option value="Concept Prototype">Concept Prototype</option>
+                  </select>
+                </div>
               </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Key Metric / KPI</label>
+                <input value={form.metric} onChange={(e) => setForm((p) => ({ ...p, metric: e.target.value }))}
+                  placeholder="e.g. Target Latency: < 1s or Pipeline Architecture"
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all" />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Live App URL</label>
+                <input value={form.website_link} onChange={(e) => setForm((p) => ({ ...p, website_link: e.target.value }))}
+                  placeholder="https://..."
+                  className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all font-mono" />
+              </div>
+
+              <div className="flex items-center gap-2 pt-1">
+                <input type="checkbox" id="under_construction" checked={form.under_construction} onChange={(e) => setForm((p) => ({ ...p, under_construction: e.target.checked }))}
+                  className="w-4 h-4 text-gold border-gold/30 rounded focus:ring-gold/20" />
+                <label htmlFor="under_construction" className="text-xs text-foreground cursor-pointer">
+                  Mark as Concept Build (Opens waitlist request modal instead of live app)
+                </label>
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Cover Image {editing && '(leave blank to keep current)'}</label>
                 <input type="file" accept="image/*" onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
                   className="w-full text-sm text-muted-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border file:border-gold/25 file:bg-gold/5 file:text-xs file:font-semibold file:text-gold hover:file:bg-gold/10 transition-all cursor-pointer" />
               </div>
+
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setModal(null)} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all">Cancel</button>
-                <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-60 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all">
+                <button type="button" onClick={() => setModal(null)} className="px-4 py-2 rounded-xl border border-gold/15 text-sm text-muted-foreground hover:text-foreground transition-all cursor-pointer">Cancel</button>
+                <button type="submit" disabled={saving} className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-gold to-gold-light text-background text-sm font-bold disabled:opacity-60 hover:shadow-[0_0_16px_rgba(212,175,55,0.3)] transition-all cursor-pointer">
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                   {modal === 'edit' ? 'Save Changes' : 'Add to Portfolio'}
                 </button>
