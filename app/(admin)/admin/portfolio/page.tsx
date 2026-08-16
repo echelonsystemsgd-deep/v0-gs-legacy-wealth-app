@@ -101,13 +101,56 @@ export default function PortfolioPage() {
 
   const fetch = useCallback(async () => {
     setLoading(true)
-    const { data } = await supabase
-      .from('portfolio_items')
-      .select('*')
-      .eq('is_archived', showArchived)
-      .order('is_featured', { ascending: false })
-      .order('created_at', { ascending: false })
-    setItems(data ?? [])
+    try {
+      const { data } = await supabase
+        .from('portfolio_items')
+        .select('*')
+        .eq('is_archived', showArchived)
+        .order('is_featured', { ascending: false })
+        .order('created_at', { ascending: false })
+
+      if (data && data.length > 0) {
+        setItems(data)
+      } else if (!showArchived) {
+        // Automatically populate with current live frontend showcase projects
+        const fallbackItems: PortfolioItem[] = DEFAULT_FRONTEND_PROJECTS.map((p, idx) => ({
+          id: `default-${idx}`,
+          project_name: p.project_name,
+          client_name: p.client_name,
+          description: p.description,
+          industry: p.industry,
+          website_link: p.website_link,
+          cover_image: p.cover_image,
+          metric: p.metric,
+          under_construction: p.under_construction,
+          badge_type: p.badge_type,
+          is_featured: p.is_featured,
+          is_archived: false,
+          created_at: new Date().toISOString(),
+        }))
+        setItems(fallbackItems)
+      } else {
+        setItems([])
+      }
+    } catch {
+      if (!showArchived) {
+        setItems(DEFAULT_FRONTEND_PROJECTS.map((p, idx) => ({
+          id: `default-${idx}`,
+          project_name: p.project_name,
+          client_name: p.client_name,
+          description: p.description,
+          industry: p.industry,
+          website_link: p.website_link,
+          cover_image: p.cover_image,
+          metric: p.metric,
+          under_construction: p.under_construction,
+          badge_type: p.badge_type,
+          is_featured: p.is_featured,
+          is_archived: false,
+          created_at: new Date().toISOString(),
+        })))
+      }
+    }
     setLoading(false)
   }, [showArchived, supabase])
 
@@ -131,7 +174,7 @@ export default function PortfolioPage() {
           is_archived: false,
         })
       }
-      showToast('Frontend showcase projects imported successfully.')
+      showToast('Frontend showcase projects imported into database.')
       fetch()
     } catch (err: any) {
       showToast(`Import failed: ${err.message}`)
@@ -186,7 +229,7 @@ export default function PortfolioPage() {
       cover_image: cover_image || '/placeholder.jpg',
     }
 
-    if (editing) {
+    if (editing && !editing.id.startsWith('default-')) {
       await supabase.from('portfolio_items').update(payload).eq('id', editing.id)
     } else {
       await supabase.from('portfolio_items').insert(payload)

@@ -68,14 +68,18 @@ export default function ContentPage() {
   const fetchSection = useCallback(async (key: SectionKey) => {
     setLoading(true)
     setJsonError(null)
+    const dbKey = key === 'pricing_setup' ? 'pricing_setup_tiers'
+      : key === 'pricing_retainer' ? 'pricing_retainer_tiers'
+      : key
+
     const { data, error } = await supabase
       .from('website_content')
       .select('*')
-      .eq('section_key', key)
-      .single()
+      .eq('section_key', dbKey)
+      .maybeSingle()
 
-    if (error || !data) {
-      // Use defaults if not in DB yet
+    if (error || !data || !data.content) {
+      // Use live defaults if not in DB yet
       setSectionData(DEFAULT_SECTIONS[key])
       setRawJson(JSON.stringify(DEFAULT_SECTIONS[key], null, 2))
     } else {

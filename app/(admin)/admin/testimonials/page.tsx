@@ -56,14 +56,48 @@ export default function TestimonialsPage() {
 
   const fetch = useCallback(async () => {
     setLoading(true)
-    const { data } = await supabase
-      .from('testimonials')
-      .select('*')
-      .eq('is_archived', showArchived)
-      .order('is_featured', { ascending: false })
-      .order('created_at', { ascending: false })
+    try {
+      const { data } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_archived', showArchived)
+        .order('is_featured', { ascending: false })
+        .order('created_at', { ascending: false })
 
-    setItems(data ?? [])
+      if (data && data.length > 0) {
+        setItems(data)
+      } else if (!showArchived) {
+        // Automatically populate with current live frontend testimonials
+        const fallbackItems: Testimonial[] = DEFAULT_FRONTEND_TESTIMONIALS.map((t, idx) => ({
+          id: `default-${idx}`,
+          client_name: t.client_name,
+          company: t.company,
+          testimonial: t.testimonial,
+          badge: t.badge,
+          profile_image: null,
+          is_featured: t.is_featured,
+          is_archived: false,
+          created_at: new Date().toISOString(),
+        }))
+        setItems(fallbackItems)
+      } else {
+        setItems([])
+      }
+    } catch {
+      if (!showArchived) {
+        setItems(DEFAULT_FRONTEND_TESTIMONIALS.map((t, idx) => ({
+          id: `default-${idx}`,
+          client_name: t.client_name,
+          company: t.company,
+          testimonial: t.testimonial,
+          badge: t.badge,
+          profile_image: null,
+          is_featured: t.is_featured,
+          is_archived: false,
+          created_at: new Date().toISOString(),
+        })))
+      }
+    }
     setLoading(false)
   }, [showArchived, supabase])
 
@@ -82,7 +116,7 @@ export default function TestimonialsPage() {
           is_archived: false,
         })
       }
-      showToast('Frontend testimonials imported successfully.')
+      showToast('Frontend testimonials imported into database.')
       fetch()
     } catch (err: any) {
       showToast(`Import failed: ${err.message}`)
@@ -123,7 +157,7 @@ export default function TestimonialsPage() {
       profile_image,
     }
 
-    if (editing) {
+    if (editing && !editing.id.startsWith('default-')) {
       await supabase.from('testimonials').update(payload).eq('id', editing.id)
     } else {
       await supabase.from('testimonials').insert(payload)
