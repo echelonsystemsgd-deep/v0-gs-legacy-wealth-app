@@ -89,78 +89,70 @@ export function ProjectTelemetry({ project }: ProjectProps) {
 
   // Render Contract Selection Screen if not enrolled
   const serviceTypeLower = (project.service_type || '').toLowerCase()
-  const isAuthority = serviceTypeLower.includes('catalyst') || serviceTypeLower.includes('authority') || project.one_time_fee === 1850 || project.one_time_fee === 2750 || project.one_time_fee === 3500 || project.retainer_amount === 395 || project.retainer_amount === 499
-  const isOperations = serviceTypeLower.includes('leverage') || serviceTypeLower.includes('operations') || project.one_time_fee === 3850 || project.one_time_fee === 5500 || project.one_time_fee === 5800 || project.retainer_amount === 750 || project.retainer_amount === 1290 || project.retainer_amount === 1450
-  const isRevenue = serviceTypeLower.includes('enterprise') || serviceTypeLower.includes('revenue') || project.one_time_fee === 7500 || project.one_time_fee === 9800 || project.retainer_amount === 1450 || project.retainer_amount === 2850 || project.retainer_amount === 2950
+  const isAuthority = serviceTypeLower.includes('essential') || serviceTypeLower.includes('catalyst') || serviceTypeLower.includes('authority') || project.one_time_fee === 495 || project.retainer_amount === 99
+  const isOperations = serviceTypeLower.includes('pro') || serviceTypeLower.includes('order') || serviceTypeLower.includes('leverage') || serviceTypeLower.includes('operations') || project.one_time_fee === 895 || project.retainer_amount === 195
+  const isRevenue = serviceTypeLower.includes('custom') || serviceTypeLower.includes('partner') || serviceTypeLower.includes('enterprise') || serviceTypeLower.includes('revenue') || project.one_time_fee === 1495 || project.retainer_amount === 395
 
   const retainerPerks = isRevenue
     ? [
-        "Everything in Leverage Growth",
-        "Weekly High-Level Growth Consulting Call",
-        "Unlimited Minor System & UI Adjustments",
-        "New AI Workflow Builds & Automations",
-        "100% White-Labeled & Unbranded Enterprise Infrastructure",
-        "Bespoke Cold Email/Marketing System setups",
-        "Direct Slack Hotline to Core Founders"
+        "Everything in Growth & Maintenance",
+        "Bi-Weekly Growth Strategy & Optimization Calls",
+        "Unlimited Minor UI & Content Edits",
+        "New Automation & Multi-Service System Updates",
+        "Custom Marketing Campaign & Special Offer Builds",
+        "Direct Founder Phone Hotline & Emergency Support"
       ]
     : isOperations
     ? [
         "Everything in Launch Support",
-        "Continuous AI Agent Re-training & Updates",
-        "1 Custom High-Converting Landing Page/mo",
-        "Advanced SEO Content & Competitor Strategy",
-        "Optional \"Built by Mercian Wealth\" Seal or Complimentary Removal",
-        "10 Dedicated Developer/Designer Hours/mo",
-        "Priority 4-Hour Urgent SLA Response"
+        "Active WhatsApp Notification Webhook Maintenance",
+        "Deposit Engine & Calendar Integration Updates",
+        "Unlimited Content & Price Updates",
+        "Automated 5-Star Google Review Engine Optimization",
+        "Priority Support SLA (<4 Hours Response)"
       ]
-    : isAuthority
-    ? [
-        "Premium Dedicated Ultra-Fast CDN Hosting",
-        "Weekly Security & Speed Audits",
-        "3 Hours Design & Copywriting Updates/mo",
-        "Monthly Traffic & SEO Analytics Report",
-        "Discreet \"Built by Mercian Wealth\" Digital Seal Included",
-        "24/7 Critical System Monitoring",
-        "Same-Day Urgent Edits Turnaround"
-      ]
-    : [];
+    : [
+        "Managed Mobile Hosting & SSL Security",
+        "Weekly Speed & Security Audits",
+        "Complimentary Content & Price Edits",
+        "Monthly Booking & Lead Activity Reports",
+        "24/7 System Uptime Monitoring",
+        "Fast Urgent Edit Turnaround"
+      ];
 
   const setupPerks = isRevenue
     ? [
-        "Everything in System Leverage (Unlimited Pages)",
-        "Automated Cold Outreach Infrastructure",
-        "Custom-Trained AI Agent Concierge",
-        "Full Corporate Brand Identity Suite",
-        "100% White-Labeled & Proprietary Delivery (Zero Agency Branding)",
-        "Direct Slack Hotline to Principal Founders",
-        "Weekly Systems Scaling Strategy Roadmaps"
+        "Everything in Pro Order Builder (Unlimited Pages)",
+        "Multi-Service Architecture & Multi-Staff Booking",
+        "Custom Online Quote & Price Calculators",
+        "Advanced Multi-Location CRM Synchronization",
+        "100% Code Ownership & Zero Lock-in",
+        "90 Days Technical Support & Staff Training",
+        "Direct Founder Phone Hotline"
       ]
     : isOperations
     ? [
-        "Everything in Launch Catalyst (up to 10 Pages)",
-        "Custom Relational Database Integration (Supabase)",
-        "Autonomous Pipeline Routing & CRM Orchestration",
-        "Custom Secure Client Portal Integration",
-        "Automated Stripe Billing & Invoice Engine",
-        "Optional \"Built by Mercian Wealth\" Digital Seal or Complimentary White-Labeling",
-        "90 Days Dedicated Post-Launch Support"
+        "Everything in Essential Storefront (Up to 8 Pages)",
+        "24/7 Online Booking & Upfront Stripe Deposit Capture",
+        "Sub-60s WhatsApp & Mobile Phone Alerts",
+        "Automated 5-Star Google Review Collection Engine",
+        "Secure Customer Booking Database (CRM)",
+        "60 Days Dedicated Post-Launch Support"
       ]
-    : isAuthority
-    ? [
-        "Bespoke Next.js Authority Platform (5 Pages)",
-        "Autonomous Lead Capture & Calendly Setup",
-        "Core SEO Blueprint & Schema Setup",
-        "Supercharged Speed Profile (98+ Mobile)",
-        "Discreet \"Built by Mercian Wealth\" Digital Seal (White-Label upgrade available)",
-        "30 Days Dedicated Post-Launch Support"
-      ]
-    : [];
+    : [
+        "3–5 Page Custom Mobile Storefront",
+        "Sub-1-Second Mobile Load Speed Optimization",
+        "Local Google Search SEO & Schema Setup",
+        "24/7 Mobile Lead Capture System",
+        "100% Code Ownership & Zero Recurring Contracts",
+        "30 Days Included Technical Support"
+      ];
 
   const pryPerks = [
-    "Unlimited System builds & updates at zero upfront cost",
-    "Active CRM & Lead Capture maintenance for life",
-    "Sub-60s Triage & Lead Routing automation",
-    "Continuous AI fine-tuning & conversion optimization"
+    "Full custom mobile storefront build at zero upfront cost",
+    "Active WhatsApp alerts, booking CRM & deposit collection for life",
+    "Continuous speed optimization & Google review engine updates",
+    "Transparent performance alignment based on website revenue"
   ]
 
   if (!hasContract) {

@@ -4,9 +4,9 @@
 ---
 
 ## 1. Executive Vision & Philosophy
-The objective is to establish **Mercian Wealth** as the premier AI automation and custom web engineering studio for local UK businesses, deliberately avoiding the generic "AI-generated SaaS template" syndrome that saturates the market.
+The objective is to establish **Mercian Wealth** as the premier automation and custom web engineering partner for local UK businesses, deliberately avoiding both the generic "AI-generated SaaS template" syndrome and traditional static brochure agencies that saturate the market.
 
-While competitors like **nascent.org.uk** attempt an understated studio aesthetic but suffer from hidden pricing, broken accordion SSR hydration, and thin single-service social proof, Mercian Wealth will combine **bespoke editorial elegance** with **tangible interactive tooling and transparent mechanics**.
+Mercian Wealth combines **bespoke editorial elegance** with **tangible interactive tooling, 24/7 upfront deposit collection, and transparent pricing mechanics**.
 
 ---
 
@@ -14,7 +14,7 @@ While competitors like **nascent.org.uk** attempt an understated studio aestheti
 
 ```
 ┌──────────────────────────────┬───────────────────────────────┬──────────────────────────────────────────┐
-│ CORE PILLAR                  │ GENERIC "AI TEMPLATE" HALLMARK│ MERCIAN WEALTH BESPOKE STUDIO DIRECTION  │
+│ CORE PILLAR                  │ GENERIC "AI TEMPLATE" HALLMARK│ MERCIAN WEALTH LOCAL AUTOMATION DIRECTION│
 ├──────────────────────────────┼───────────────────────────────┼──────────────────────────────────────────┤
 │ Copywriting & Tone           │ Sci-fi jargon, abstract nodes │ Tangible UK trade friction & money flows │
 │ Visual & Lighting System     │ Glowing neon purple/cyan blobs│ Solid deep navy (#020E28), hairline gold │
@@ -53,8 +53,8 @@ While competitors like **nascent.org.uk** attempt an understated studio aestheti
   * Founder diagnostic calendar booking
 
 ### Pillar 5: Transparent Pricing as a Competitive Weapon
-* **Nascent’s Flaw**: 100% hidden pricing requiring back-and-forth email friction.
-* **Mercian Wealth Advantage**: Published transparent starting tiers (One-Time Setup from £1,450 / Monthly Growth Retainer from £395/mo) with complete feature matrices.
+* **The Conventional Agency Flaw**: Hidden pricing requiring endless back-and-forth email friction.
+* **Mercian Wealth Advantage**: Published transparent starting tiers (One-Time Setup from £495 / Monthly Growth Retainer from £99–£195/mo) with complete feature matrices.
 
 ---
 

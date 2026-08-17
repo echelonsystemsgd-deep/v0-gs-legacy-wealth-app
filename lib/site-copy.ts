@@ -606,11 +606,11 @@ export const SITE_COPY = {
     ],
   },
 
-  // Pricing / Testimonials Page Copy
+  // Testimonials / Cohort Status Page Copy
   testimonialsPage: {
-    headerTitle: "Pricing Models &",
-    headerHighlight: "Options",
-    headerSubtitle: "Transparent options: One-Time Build or Flat Monthly Retainer.",
+    headerTitle: "Real Results &",
+    headerHighlight: "Verified Outcomes",
+    headerSubtitle: "How local bakeries, trades, and service businesses capture deposits and save 10+ hours a week on autopilot.",
   },
 
   // Booking Page Copy (`/book`)

@@ -7,19 +7,19 @@ This directory holds the active implementation plans, branding specifications, p
 
 ## Active Master Plans
 
-1. **[BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md)**
-   * Strategic blueprint detailing the shift from generic AI SaaS tropes to bespoke, human-engineered editorial studio positioning.
+1. **[OPTION_2_LOCAL_BUSINESS_AUTOMATION_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/OPTION_2_LOCAL_BUSINESS_AUTOMATION_PLAN.md)**
+   * Master execution plan for Option 2: High-Volume Local Business & Trade Automation Engine.
+   * Standardizes £495–£1,495 setup, £99–£395/mo retainers, 24/7 mobile order builder, WhatsApp alerts, and Google review engines.
+
+2. **[BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/BESPOKE_STUDIO_ANTI_AI_POSITIONING_PLAN.md)**
+   * Strategic blueprint detailing the shift from generic AI SaaS tropes to tangible UK trade and operator mechanics.
    * Covers tangible UK operational copy, anti-agency founder positioning, transparent pricing weapons, and live interactive tooling.
 
-2. **[FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md)**
+3. **[FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/Website/FULL_SITE_NAVY_GOLD_ROLLOUT_PLAN.md)**
    * Complete sitewide rollout specifications for the canonical Navy + Gold palette (`#020E28`, `#DAA640`, `#EBB755`, `#07153B`).
-   * Documents the resolution of the four P1 audit items (unified scarcity counter, verified case studies, interactive sandbox badging, ROI calculator mobile overflow fix).
 
-3. **[UNIFIED_NAVY_GOLD_MASTER_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/UNIFIED_NAVY_GOLD_MASTER_PLAN.md)**
+4. **[UNIFIED_NAVY_GOLD_MASTER_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/UNIFIED_NAVY_GOLD_MASTER_PLAN.md)**
    * Exact hex code extraction from `public/MercianWealthLogo.jpeg` and mathematical WCAG AA/AAA contrast ratios (8.06:1 to 10.43:1).
-
-4. **[COMPETITOR_UPGRADE_AND_POSITIONING_PLAN.md](file:///c:/Users/Deepg/OneDrive/Desktop/The%20Real%20World/Campuses/AI%20Automation/New%20Lessons/CODING/v0-gs-legacy-wealth-app/Implementation/COMPETITOR_UPGRADE_AND_POSITIONING_PLAN.md)**
-   * Forensic teardown of `nascent.org.uk` weaknesses and our competitive differentiation roadmap.
 
 ---
 

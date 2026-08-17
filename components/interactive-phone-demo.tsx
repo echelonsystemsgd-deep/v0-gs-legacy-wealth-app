@@ -56,10 +56,10 @@ export function InteractivePhoneDemo() {
   }
 
   return (
-    <section id="demo" suppressHydrationWarning className="relative py-24 bg-[#090D16] overflow-hidden border-t border-slate-800/60">
+    <section suppressHydrationWarning className="relative py-24 bg-[#020E28] overflow-hidden border-t border-[#DAA640]/15">
       {/* Background Radial Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#DAA640]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-[#EBB755]/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">

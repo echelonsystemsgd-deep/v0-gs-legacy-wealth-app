@@ -81,7 +81,23 @@ export function Hero() {
             size="lg"
             className="w-full sm:w-auto px-5 sm:px-7 py-5 sm:py-7 text-xs sm:text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl text-center"
           >
-            <Link href="/#demo" className="flex items-center justify-center gap-2 text-center">
+            <Link
+              href="/#demo"
+              onClick={(e) => {
+                if (typeof window !== "undefined" && window.location.pathname === "/") {
+                  e.preventDefault()
+                  const el = document.getElementById("demo")
+                  if (el) {
+                    const headerOffset = 90
+                    const elementPosition = el.getBoundingClientRect().top
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+                    window.scrollTo({ top: Math.max(0, offsetPosition), behavior: "smooth" })
+                    window.history.pushState(null, "", "/#demo")
+                  }
+                }
+              }}
+              className="flex items-center justify-center gap-2 text-center"
+            >
               <span>{data.secondaryCtaText}</span>
             </Link>
           </Button>

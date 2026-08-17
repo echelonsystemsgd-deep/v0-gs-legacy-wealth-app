@@ -1035,13 +1035,13 @@ export default function DashboardClientContainer({
                   <h3 className="text-lg font-serif font-bold text-foreground flex items-center gap-2">
                     <Zap size={16} className="text-gold" /> Authority Vault
                   </h3>
-                  <p className="text-xs text-muted-foreground">Case studies from Mercian Wealth AI-powered systems.</p>
+                  <p className="text-xs text-muted-foreground">Case studies from Mercian Wealth automated systems.</p>
                 </div>
 
                 {[
-                  { title: 'Sovereign AI Agent Core', desc: 'Automates 94% of standard incoming leads with custom voice/text models matching brand voice.', roi: '+42% Booking Rate', accent: 'text-gold' },
-                  { title: 'Premium UX Digital Asset', desc: 'Engineered high-end fluid web designs and visual authority for capital funds, improving investor trust.', roi: '2.4× Engagement Lift', accent: 'text-blue-400' },
-                  { title: 'Legacy CRM & Predictive Pipeline', desc: 'Synced AI algorithms into lead systems to score prospects and auto-generate executive briefings.', roi: '89% Deal Close Prediction', accent: 'text-green-400' },
+                  { title: 'Automated Storefront & Deposit Engine', desc: 'Captures 24/7 custom orders and collects 50% non-refundable deposits upfront via Stripe before jobs are reserved.', roi: '+38% Revenue Lift', accent: 'text-gold' },
+                  { title: 'Sub-60s WhatsApp Notification Webhook', desc: 'Instantly delivers complete order specs, customer details, and payment confirmations straight to the owner\'s mobile.', roi: '14.5 Hrs Saved / Wk', accent: 'text-blue-400' },
+                  { title: 'Automated 5-Star Google Review Dispatch', desc: 'Dispatches post-job review request links via SMS/WhatsApp with private feedback filters to build local Google search authority.', roi: '5.0★ Local Rank', accent: 'text-green-400' },
                 ].map((study) => (
                   <div key={study.title} className="p-5 glass rounded-xl border border-gold/10 hover:border-gold/20 transition-all group">
                     <div className="flex justify-between items-start gap-4">

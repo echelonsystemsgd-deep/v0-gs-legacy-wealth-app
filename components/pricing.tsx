@@ -4,131 +4,60 @@ import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { CardContent } from "@/components/ui/card"
-import { Crown, Calculator, ChevronDown, Clock, Zap, ShieldCheck, ArrowRight, Sparkles, Check } from "lucide-react"
+import { ChevronDown, CheckCircle2, ShieldCheck, ArrowRight, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
 import type { PricingTier } from "@/lib/pricing"
 import { SITE_COPY } from "@/lib/site-copy"
-import { LOCAL_PRICING_TIERS } from "@/components/local/local-pricing"
-
-// Helper component to smoothly animate output values when dragging sliders
-function RollingNumber({ value, prefix = "", suffix = "" }: { value: number; prefix?: string; suffix?: string }) {
-  const [displayValue, setDisplayValue] = useState(value)
-
-  useEffect(() => {
-    let start = displayValue
-    const end = value
-    if (start === end) return
-
-    const range = end - start
-    const duration = 250 // Fast 250ms roll animation for slider changes
-    const stepTime = 15
-    const steps = Math.ceil(duration / stepTime)
-    const increment = range / steps
-    let currentStep = 0
-
-    const timer = setInterval(() => {
-      currentStep++
-      start += increment
-      if (currentStep >= steps) {
-        setDisplayValue(end)
-        clearInterval(timer)
-      } else {
-        setDisplayValue(Math.round(start))
-      }
-    }, stepTime)
-
-    return () => clearInterval(timer)
-  }, [value])
-
-  return <span>{prefix}{displayValue.toLocaleString()}{suffix}</span>
-}
-
-const setupTiers = SITE_COPY.pricingPage.setupTiers
-const retainerTiers = SITE_COPY.pricingPage.retainerTiers
 
 const comparisonCategories = [
   {
-    category: "Core Design & Strategy",
+    category: "Core Storefront & Design",
     items: [
-      { name: "Custom Design", authoritySuite: "Bespoke Next.js Art-Direction", operationsMachine: "Bespoke Art-Direction + Custom UI", revenueEngine: "Elite Art-Direction + Product Branding" },
-      { name: "Page Limit", authoritySuite: "Up to 5 Custom Pages", operationsMachine: "Up to 10 Custom Pages", revenueEngine: "Unlimited Custom Pages" },
-      { name: "Custom Copywriting", authoritySuite: "Conversion-Focused Copywriting", operationsMachine: "Persuasive Copywriting & Micro-copy", revenueEngine: "Complete Authority Brand Copywriting" },
-      { name: "Mobile Optimisation", authoritySuite: "✓ Full (95+ Mobile PageSpeed)", operationsMachine: "✓ Full + Dynamic Web App UI", revenueEngine: "✓ Elite Fluid Design" },
+      { name: "Custom Mobile Design", essential: "3–5 Page Custom Mobile Storefront", pro: "5–8 Page Custom Order Builder", custom: "Unlimited Multi-Service Storefront" },
+      { name: "Sub-1s Mobile PageSpeed", essential: "✓ Guaranteed Sub-1s Load", pro: "✓ Guaranteed Sub-1s + Dynamic UI", custom: "✓ Max Speed + Multi-Location Architecture" },
+      { name: "Local Google SEO", essential: "Core Local SEO & Schema Setup", pro: "Advanced Local Schema & Map Pack", custom: "Comprehensive Search Dominance Blueprint" },
+      { name: "Conversion Copywriting", essential: "Conversion-Focused Local Copy", pro: "Persuasive Menu & Service Copy", custom: "Complete Bespoke Brand Copywriting" },
     ]
   },
   {
-    category: "AI & Smart Systems",
+    category: "24/7 Booking & Deposit Engine",
     items: [
-      { name: "AI Chat Concierge", authoritySuite: "—", operationsMachine: "—", revenueEngine: "✓ Custom-Trained AI Agent Concierge" },
-      { name: "CRM Integration", authoritySuite: "Calendly intake routing", operationsMachine: "✓ Autonomic Lead & CRM Automations", revenueEngine: "✓ Enterprise Custom Pipeline Automations" },
-      { name: "Calendar & Booking Sync", authoritySuite: "✓ Calendly integration", operationsMachine: "✓ Automated intake routing & syncing", revenueEngine: "✓ VIP scheduling with custom routing" },
-      { name: "Client & Admin Portals", authoritySuite: "—", operationsMachine: "✓ Secure Client & Admin Dashboards", revenueEngine: "✓ White-labeled multi-portal dashboards" },
-      { name: "Custom Automation Workflows", authoritySuite: "—", operationsMachine: "✓ Automated Billing & Invoices (Stripe)", revenueEngine: "✓ Custom CRM + Outbound Cold Outreach" },
+      { name: "24/7 Online Order Builder", essential: "✓ 24/7 Mobile Lead Capture Form", pro: "✓ Interactive 3-Tap Order Builder", custom: "✓ Advanced Multi-Service Quote Engine" },
+      { name: "Upfront Stripe Deposit Capture", essential: "— (Lead Capture Only)", pro: "✓ 50% Non-Refundable Card & Apple Pay", custom: "✓ Custom Split & Full Deposit Rules" },
+      { name: "Calendar Slot Locking", essential: "—", pro: "✓ Automatic Date & Slot Locking", custom: "✓ Multi-Staff & Multi-Location Calendar Sync" },
+      { name: "Automated Receipts & Invoices", essential: "Standard Email Notification", pro: "✓ Instant Branded Receipt & Invoice", custom: "✓ Multi-Location Invoicing & Accounting Sync" },
     ]
   },
   {
-    category: "SEO & Growth",
+    category: "Instant Alerts & 5-Star Reviews",
     items: [
-      { name: "SEO Optimisation", authoritySuite: "Core SEO Blueprint & Schema Setup", operationsMachine: "Advanced Strategy, Local & Global Schema", revenueEngine: "Comprehensive Search Engine Dominance Plan" },
-      { name: "Speed & Performance", authoritySuite: "95+ Guaranteed", operationsMachine: "95+ Guaranteed + Caching System", revenueEngine: "98+ Max Speed Guarantee" },
-      { name: "Brand Identity Suite", authoritySuite: "Logo placement & layout palette", operationsMachine: "Cohesive brand UI kit", revenueEngine: "✓ Full Identity Suite (Logos, Slide Decks)" },
+      { name: "Instant WhatsApp Phone Alerts", essential: "— (Email Alerts Only)", pro: "✓ Sub-60s WhatsApp & Phone Alerts", custom: "✓ Multi-Staff WhatsApp Lead Dispatch" },
+      { name: "Customer Booking Database (CRM)", essential: "Basic Lead Export", pro: "✓ Secure Customer & Booking Database", custom: "✓ Advanced CRM + Automated Retargeting" },
+      { name: "Automated 5-Star Google Review Engine", essential: "—", pro: "✓ Smart Post-Job Follow-Up (+Private Filter)", custom: "✓ Multi-Channel Automated Review Engine" },
     ]
   },
   {
-    category: "Support & Iterations",
+    category: "Support & Guarantees",
     items: [
-      { name: "Post-Launch Support", authoritySuite: "30 Days Support", operationsMachine: "90 Days Support", revenueEngine: "90 Days + Dedicated Support Channel" },
-      { name: "Revision Policy", authoritySuite: "3 Rounds (Design Phase)", operationsMachine: "Unlimited (Prior to Build)", revenueEngine: "Bespoke Ongoing Adjustments" },
-      { name: "Turnaround / Support Channel", authoritySuite: "Email Support (24h)", operationsMachine: "Dedicated Portal Support (24h)", revenueEngine: "Priority VIP Developer Slack (4h response)" },
+      { name: "Build & Launch Timeline", essential: "7 Business Days", pro: "7 Business Days", custom: "14 Business Days" },
+      { name: "Included Post-Launch Support", essential: "30 Days Support", pro: "60 Days Priority Support", custom: "90 Days Dedicated VIP Support" },
+      { name: "100% Code Ownership", essential: "✓ Full Ownership (Zero Lock-In)", pro: "✓ Full Ownership (Zero Lock-In)", custom: "✓ Full Ownership (Zero Lock-In)" },
+      { name: "Support Response Channel", essential: "Standard Email Support", pro: "Priority Support Desk (<4h)", custom: "Direct Founder Phone Hotline" },
     ]
   }
 ]
 
 interface PricingProps {
   isHomepage?: boolean
-  /** Optional: live tiers fetched server-side from Supabase. Falls back to hardcoded arrays if omitted. */
   setupTiers?: PricingTier[]
   retainerTiers?: PricingTier[]
   revenueShareTiers?: PricingTier[]
 }
 
 export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retainerTiers: propRetainerTiers, revenueShareTiers: propRevenueShareTiers }: PricingProps) {
-  const searchParams = useSearchParams()
   const [billingCycle, setBillingCycle] = useState<"oneTime" | "monthly" | "revenueShare">("oneTime")
-  const [activeAudience, setActiveAudience] = useState<"enterprise" | "local">("enterprise")
-  const [revenue, setRevenue] = useState(25000)
-  const [manualHours, setManualHours] = useState(15)
   const [isMatrixOpen, setIsMatrixOpen] = useState(false)
-  const [activeMobileTier, setActiveMobileTier] = useState<"authoritySuite" | "operationsMachine" | "revenueEngine">("operationsMachine")
-
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const param = searchParams?.get("audience")
-        const referrer = document.referrer || ""
-        const sessionVal = sessionStorage.getItem("mercian_audience")
-
-        if (param === "local" || referrer.includes("/local") || sessionVal === "local") {
-          setActiveAudience("local")
-          sessionStorage.removeItem("mercian_audience")
-        } else if (param === "enterprise") {
-          setActiveAudience("enterprise")
-        }
-      }
-    } catch {}
-  }, [searchParams])
-
-  const handleAudienceChange = (audience: "enterprise" | "local") => {
-    setActiveAudience(audience)
-    try {
-      if (typeof window !== "undefined") {
-        const url = new URL(window.location.href)
-        url.searchParams.set("audience", audience)
-        window.history.replaceState({}, "", url.toString())
-      }
-    } catch {}
-  }
+  const [activeMobileTier, setActiveMobileTier] = useState<"essential" | "pro" | "custom">("pro")
 
   const oneTimeTiers = (SITE_COPY.pricingPage as any).oneTimeTiers || []
   const monthlyTiers = (SITE_COPY.pricingPage as any).monthlyTiers || []
@@ -140,19 +69,6 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
       : billingCycle === "monthly"
       ? (propRetainerTiers && propRetainerTiers.length > 0 ? propRetainerTiers : monthlyTiers)
       : (propRevenueShareTiers && propRevenueShareTiers.length > 0 ? propRevenueShareTiers : revenueShareTiers)
-
-  // Calculators
-  const annualHoursSaved = Math.round(manualHours * 0.75 * 52)
-  const timeValue = annualHoursSaved * 75
-  const projectedRevenueGrowth = Math.round(revenue * 0.15 * 12)
-  const totalValueUnlocked = timeValue + projectedRevenueGrowth
-
-  const recommendedTier = 
-    revenue < 15000 
-      ? "Launch Catalyst" 
-      : revenue >= 15000 && revenue < 50000 
-      ? "System Leverage" 
-      : "Enterprise Partner"
 
   return (
     <section id="pricing" className="relative py-20 lg:py-28 overflow-hidden bg-[#020E28]">
@@ -230,7 +146,7 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
           </div>
         </div>
 
-        {/* Pricing Cards Grid (Rendered ONCE) */}
+        {/* Pricing Cards Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 items-stretch min-w-0 max-w-full">
           <AnimatePresence mode="wait">
             {activeTiers.map((tier: any, index: number) => (
@@ -328,15 +244,15 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
         {/* Homepage subtle link or Standalone Detailed Matrix */}
         {isHomepage ? (
           <div className="pt-8 border-t border-slate-800 text-center flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-slate-400">
-            <span className="font-mono text-[11px] text-[#D9A74A]">
-              ✦ Target bandwidth savings estimated per pipeline automation
+            <span className="font-mono text-[11px] text-[#DAA640]">
+              ✦ 100% Code Ownership & Zero Recurring Lock-In Contracts
             </span>
             <span className="hidden sm:inline text-white/20">•</span>
             <Link
               href="/pricing"
-              className="font-mono text-[11px] text-slate-300 hover:text-[#D9A74A] transition-colors underline underline-offset-4"
+              className="font-mono text-[11px] text-slate-300 hover:text-[#DAA640] transition-colors underline underline-offset-4"
             >
-              Calculate Projected Bandwidth ROI on Dedicated Pricing Page →
+              View Full Feature-by-Feature Comparison Matrix →
             </Link>
           </div>
         ) : (
@@ -345,14 +261,14 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
             <div className="text-center">
               <button
                 onClick={() => setIsMatrixOpen(!isMatrixOpen)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#D9A74A]/30 bg-slate-900/80 text-xs font-bold uppercase tracking-wider text-white hover:text-[#D9A74A] hover:border-[#D9A74A] transition-all duration-300 shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#DAA640]/30 bg-[#07153B] text-xs font-bold uppercase tracking-wider text-white hover:text-[#DAA640] hover:border-[#DAA640] transition-all duration-300 shadow-lg cursor-pointer"
               >
                 <span>{isMatrixOpen ? "Hide Detailed Feature Comparison" : "Compare Features in Detail"}</span>
                 <motion.div
                   animate={{ rotate: isMatrixOpen ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ChevronDown size={14} className="text-[#D9A74A]" />
+                  <ChevronDown size={14} className="text-[#DAA640]" />
                 </motion.div>
               </button>
             </div>
@@ -368,50 +284,50 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                   <div className="relative group">
                     {/* Mobile Tab Switcher */}
                     <div className="md:hidden space-y-4">
-                      <div className="flex bg-slate-900 p-1.5 rounded-xl border border-slate-800 text-xs font-semibold text-center">
+                      <div className="flex bg-[#07153B] p-1.5 rounded-xl border border-slate-800 text-xs font-semibold text-center">
                         <button
-                          onClick={() => setActiveMobileTier("authoritySuite")}
+                          onClick={() => setActiveMobileTier("essential")}
                           className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
-                            activeMobileTier === "authoritySuite"
-                              ? "bg-[#D9A74A] text-slate-950 font-bold"
+                            activeMobileTier === "essential"
+                              ? "bg-[#DAA640] text-[#020E28] font-bold"
                               : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Essential Storefront
+                          Essential
                         </button>
                         <button
-                          onClick={() => setActiveMobileTier("operationsMachine")}
+                          onClick={() => setActiveMobileTier("pro")}
                           className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
-                            activeMobileTier === "operationsMachine"
-                              ? "bg-[#D9A74A] text-slate-950 font-bold"
-                              : "text-[#D9A74A] font-medium"
+                            activeMobileTier === "pro"
+                              ? "bg-[#DAA640] text-[#020E28] font-bold"
+                              : "text-[#DAA640] font-medium"
                           }`}
                         >
-                          Pro Order Builder
+                          Pro Builder
                         </button>
                         <button
-                          onClick={() => setActiveMobileTier("revenueEngine")}
+                          onClick={() => setActiveMobileTier("custom")}
                           className={`flex-1 py-2.5 px-2 rounded-lg transition-all ${
-                            activeMobileTier === "revenueEngine"
-                              ? "bg-[#D9A74A] text-slate-950 font-bold"
+                            activeMobileTier === "custom"
+                              ? "bg-[#DAA640] text-[#020E28] font-bold"
                               : "text-slate-400 hover:text-white"
                           }`}
                         >
-                          Autonomic Scale
+                          Full Custom
                         </button>
                       </div>
 
-                      <div className="bg-[#1E293B]/80 border border-slate-800 rounded-2xl p-5 space-y-6 shadow-xl">
+                      <div className="bg-[#07153B] border border-slate-800 rounded-2xl p-5 space-y-6 shadow-xl">
                         {comparisonCategories.map((cat, idx) => (
                           <div key={idx} className="space-y-3">
-                            <div className="text-xs font-mono font-bold uppercase tracking-widest text-[#D9A74A] border-b border-slate-700/60 pb-2 flex items-center justify-between">
+                            <div className="text-xs font-mono font-bold uppercase tracking-widest text-[#DAA640] border-b border-slate-700/60 pb-2 flex items-center justify-between">
                               <span>{cat.category}</span>
                             </div>
                             <div className="space-y-2.5">
                               {cat.items.map((item, itemIdx) => (
-                                <div key={itemIdx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs p-3 rounded-xl bg-slate-900/60 border border-slate-800 gap-1.5">
+                                <div key={itemIdx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs p-3 rounded-xl bg-[#020E28] border border-slate-800 gap-1.5">
                                   <span className="font-medium text-slate-200">{item.name}</span>
-                                  <span className="text-[#D9A74A] font-semibold leading-relaxed">
+                                  <span className="text-[#DAA640] font-semibold leading-relaxed">
                                     {item[activeMobileTier]}
                                   </span>
                                 </div>
@@ -423,30 +339,30 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
                     </div>
 
                     {/* Desktop Matrix Table */}
-                    <div className="hidden md:block overflow-x-auto rounded-2xl border border-slate-800 bg-[#1E293B]/70 shadow-2xl">
+                    <div className="hidden md:block overflow-x-auto rounded-2xl border border-[#DAA640]/25 bg-[#07153B] shadow-2xl">
                       <table className="w-full text-left text-xs border-collapse">
                         <thead>
-                          <tr className="border-b border-slate-800 bg-slate-900/80 text-white">
-                            <th className="p-4 sm:p-5 font-serif text-sm">Feature Comparison</th>
-                            <th className="p-4 sm:p-5 font-mono text-[11px] text-slate-300 text-center">Essential Storefront</th>
-                            <th className="p-4 sm:p-5 font-mono text-[11px] text-[#D9A74A] text-center bg-[#D9A74A]/10">Pro Order Builder</th>
-                            <th className="p-4 sm:p-5 font-mono text-[11px] text-slate-300 text-center">Autonomic Scale</th>
+                          <tr className="border-b border-slate-800 bg-[#020E28] text-white">
+                            <th className="p-4 sm:p-5 font-sans font-bold text-sm">Feature Comparison</th>
+                            <th className="p-4 sm:p-5 font-mono text-[11px] text-slate-300 text-center">Essential Storefront (£495)</th>
+                            <th className="p-4 sm:p-5 font-mono text-[11px] text-[#DAA640] text-center bg-[#DAA640]/10 font-bold">Pro Order Builder (£895)</th>
+                            <th className="p-4 sm:p-5 font-mono text-[11px] text-slate-300 text-center">Full Custom Build (£1,495)</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800 text-slate-300">
+                        <tbody className="divide-y divide-slate-800/80 text-slate-300">
                           {comparisonCategories.map((cat, idx) => (
                             <React.Fragment key={idx}>
-                              <tr className="bg-slate-900/40">
-                                <td colSpan={4} className="p-3 px-5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#D9A74A]">
+                              <tr className="bg-[#020E28]/60">
+                                <td colSpan={4} className="p-3 px-5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#DAA640]">
                                   {cat.category}
                                 </td>
                               </tr>
                               {cat.items.map((item, itemIdx) => (
                                 <tr key={itemIdx} className="hover:bg-slate-800/40 transition-colors">
                                   <td className="p-4 font-medium text-slate-200">{item.name}</td>
-                                  <td className="p-4 text-center">{item.authoritySuite}</td>
-                                  <td className="p-4 text-center font-semibold text-[#D9A74A] bg-[#D9A74A]/5">{item.operationsMachine}</td>
-                                  <td className="p-4 text-center">{item.revenueEngine}</td>
+                                  <td className="p-4 text-center">{item.essential}</td>
+                                  <td className="p-4 text-center font-semibold text-[#DAA640] bg-[#DAA640]/5">{item.pro}</td>
+                                  <td className="p-4 text-center">{item.custom}</td>
                                 </tr>
                               ))}
                             </React.Fragment>
@@ -464,3 +380,4 @@ export function Pricing({ isHomepage = false, setupTiers: propSetupTiers, retain
     </section>
   )
 }
+

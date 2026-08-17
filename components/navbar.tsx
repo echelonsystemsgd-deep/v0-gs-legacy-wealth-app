@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Menu, X, User, LogOut, LayoutDashboard, Globe, ChevronRight, ArrowRight } from "lucide-react"
+import { Menu, X, User, LogOut, LayoutDashboard, Globe, ChevronRight, ArrowRight, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import { BrandLogo } from "@/components/brand-logo"
 import { usePathname, useRouter } from "next/navigation"
@@ -45,6 +45,7 @@ export function Navbar() {
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
+    if (href.startsWith("/#")) return false
     return pathname.startsWith(href)
   }
 
@@ -69,6 +70,64 @@ export function Navbar() {
       document.body.classList.remove("mobile-menu-open")
     }
   }, [isMobileMenuOpen])
+
+  // Universal Hash-Scroll Handler (Accounts for dynamic client component hydration)
+  const scrollToHashElement = useCallback((hashId: string) => {
+    const cleanId = hashId.replace(/^#/, "")
+    if (!cleanId) return
+
+    let attempts = 0
+    const tryScroll = () => {
+      const el = document.getElementById(cleanId)
+      if (el) {
+        const headerOffset = 90
+        const elementPosition = el.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+        window.scrollTo({
+          top: Math.max(0, offsetPosition),
+          behavior: "smooth"
+        })
+      } else if (attempts < 12) {
+        attempts++
+        setTimeout(tryScroll, 80)
+      }
+    }
+
+    // Small delay to allow react rendering/routing cycle to settle
+    setTimeout(tryScroll, 50)
+  }, [])
+
+  // Listen for hash changes and initial page loads with hash
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      scrollToHashElement(window.location.hash)
+    }
+  }, [pathname, scrollToHashElement])
+
+  // Universal Click Handler for Desktop & Mobile Nav Links
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsMobileMenuOpen(false)
+
+    // Case 1: Clicking Home when already on Home
+    if (href === "/" && pathname === "/") {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
+    }
+
+    // Case 2: In-Page or Cross-Page Anchor Link (e.g. /#demo)
+    if (href.startsWith("/#") || href.startsWith("#")) {
+      const hash = href.replace(/^\/?#/, "")
+      if (pathname === "/") {
+        e.preventDefault()
+        scrollToHashElement(hash)
+        window.history.pushState(null, "", `/#${hash}`)
+      } else {
+        // Navigating from another page to /#hash
+        // Let Next.js Link navigate to /, then our pathname useEffect will scroll to the hash
+      }
+    }
+  }
 
   const resolveAvatarUrl = async (pathOrUrl: string | null) => {
     if (!pathOrUrl) return ""
@@ -172,7 +231,6 @@ export function Navbar() {
       if (projectRef) {
         localStorage.removeItem(`sb-${projectRef}-auth-token`)
       }
-      // Also remove any generic auth keys
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
           localStorage.removeItem(key)
@@ -186,7 +244,8 @@ export function Navbar() {
   }
 
   // Logo click: smooth scroll to top on /, navigate home from other pages
-  const handleLogoClick = useCallback((e: React.MouseEvent) => {
+  const handleLogoClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    setIsMobileMenuOpen(false)
     if (pathname === '/') {
       e.preventDefault()
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -210,24 +269,6 @@ export function Navbar() {
     return "Mercian Wealth Member"
   }
 
-  // Outside click handler for mobile menu drawer
-  useEffect(() => {
-    if (!isMobileMenuOpen) return
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        mobileMenuRef.current &&
-        !mobileMenuRef.current.contains(e.target as Node) &&
-        !(e.target as HTMLElement).closest('button[aria-label="Toggle menu"]')
-      ) {
-        setIsMobileMenuOpen(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [isMobileMenuOpen])
-
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col font-sans">
       <LiveTelemetryTicker />
@@ -240,7 +281,7 @@ export function Navbar() {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo — scrolls to top on homepage, navigates home from other pages */}
+            {/* Logo */}
             <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group shrink-0">
               <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-[#DAA640]/30 shadow-md">
                 <BrandLogo variant="logo" alt="Mercian Wealth" fill className="object-cover transition-transform group-hover:scale-105 duration-300" priority />
@@ -259,6 +300,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className={`px-3 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
                       active
                         ? "text-[#DAA640] bg-[#DAA640]/10 font-bold"
@@ -289,7 +331,7 @@ export function Navbar() {
                     <DropdownMenuLabel className="font-normal px-2 py-1.5">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-bold truncate text-white">{getFullName()}</p>
-                        <p className="text-xs text-slate-400 truncate">{user.email || "director@mercianwealth.com"}</p>
+                        <p className="text-xs text-slate-400 truncate">{user.email || "partner@mercianwealth.com"}</p>
                         {profile?.role && (
                           <span className="inline-flex items-center w-fit px-2 py-0.5 mt-1 rounded-full bg-[#DAA640]/10 border border-[#DAA640]/20 text-[9px] font-bold text-[#DAA640] uppercase tracking-wider font-mono">
                             {profile.role}
@@ -298,81 +340,76 @@ export function Navbar() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-[#DAA640]/15" />
-                    {profile?.role === "admin" ? (
-                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
-                        <Link href="/admin" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                          <LayoutDashboard size={14} />
-                          Admin Panel
-                        </Link>
-                      </DropdownMenuItem>
-                    ) : profile?.role === "client" ? (
-                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
-                        <Link href="/client" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                          <LayoutDashboard size={14} />
-                          Client Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                    ) : (
-                      <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
-                        <Link href="/dashboard" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                          <LayoutDashboard size={14} />
-                          Dashboard
+                    
+                    {/* Role-based dashboard links */}
+                    {profile?.role === "admin" && (
+                      <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#DAA640]/15 focus:text-white rounded-xl">
+                        <Link href="/admin" className="flex items-center gap-2">
+                          <LayoutDashboard size={14} className="text-[#DAA640]" />
+                          <span>Admin Control Center</span>
                         </Link>
                       </DropdownMenuItem>
                     )}
-                    <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
-                      <Link href="/profile" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <User size={14} />
-                        Profile Settings
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="focus:bg-[#DAA640]/15 focus:text-[#DAA640] cursor-pointer rounded-lg">
-                      <Link href="/" className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <Globe size={14} />
-                        Public Website
+
+                    {profile?.role === "client" && (
+                      <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#DAA640]/15 focus:text-white rounded-xl">
+                        <Link href="/client" className="flex items-center gap-2">
+                          <LayoutDashboard size={14} className="text-[#DAA640]" />
+                          <span>Client Portal</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+
+                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#DAA640]/15 focus:text-white rounded-xl">
+                      <Link href="/dashboard" className="flex items-center gap-2">
+                        <Globe size={14} className="text-[#DAA640]" />
+                        <span>Systems Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator className="bg-[#DAA640]/15" />
-                    <DropdownMenuItem onClick={handleSignOut} className="focus:bg-red-500/10 focus:text-red-400 cursor-pointer text-red-400 rounded-lg">
-                      <div className="flex w-full items-center gap-2 px-2 py-1.5 text-sm">
-                        <LogOut size={14} />
-                        Log Out
-                      </div>
+                    
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="text-red-400 focus:bg-red-500/10 focus:text-red-300 cursor-pointer rounded-xl"
+                    >
+                      <LogOut size={14} className="mr-2" />
+                      <span>Sign Out</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <>
+                <div className="flex items-center gap-3">
                   <Link
                     href="/login"
-                    className="text-xs xl:text-sm font-semibold text-slate-300 hover:text-[#DAA640] transition-colors duration-200 px-2 py-1.5"
+                    className="text-xs font-semibold text-slate-300 hover:text-white transition-colors px-2 py-1"
                   >
-                    Login
+                    Client Login
                   </Link>
+
                   <Button
                     asChild
                     size="sm"
-                    className="px-4 xl:px-5 py-2 font-bold bg-[#DAA640] text-[#020E28] hover:bg-[#EBB755] shadow-md text-xs xl:text-sm whitespace-nowrap rounded-xl transition-all"
+                    className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-[#020E28] hover:from-[#EBB755] hover:to-[#DAA640] font-bold text-xs shadow-[0_0_20px_rgba(218,166,64,0.25)] rounded-xl px-4 py-2 transition-all duration-300"
                   >
                     <Link href="/book">
-                      <span className="hidden xl:inline">{SITE_COPY.navbar.ctaText}</span>
-                      <span className="xl:hidden">Book Free Audit</span>
+                      <span>{SITE_COPY.navbar.ctaText}</span>
                     </Link>
                   </Button>
-                </>
+                </div>
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden mobile-only text-white p-2"
-              aria-label="Toggle menu"
-              suppressHydrationWarning
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Mobile Menu Toggle Button */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-white hover:text-[#DAA640] p-2 rounded-xl bg-white/5 border border-[#DAA640]/25 transition-colors cursor-pointer"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X size={22} className="text-[#DAA640]" /> : <Menu size={22} className="text-[#DAA640]" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -386,38 +423,38 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 h-[100dvh] bg-[#090D16]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
+            className="fixed inset-0 h-[100dvh] bg-[#020E28]/98 backdrop-blur-3xl z-[120] lg:hidden overflow-y-auto overflow-x-hidden flex flex-col justify-between min-w-0 max-w-full"
           >
             {/* Background Ambient Glow */}
             <div 
               className="absolute inset-0 pointer-events-none z-0 opacity-40 max-w-full"
               style={{
-                background: "radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.14) 0%, rgba(9, 13, 22, 0) 75%)"
+                background: "radial-gradient(circle at 50% 20%, rgba(218, 166, 64, 0.12) 0%, rgba(2, 14, 40, 0) 75%)"
               }}
             />
 
             {/* Mobile Drawer Top Header Bar */}
-            <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-accent-gold/20 bg-[#090410]/90 backdrop-blur-md shrink-0 min-w-0 max-w-full">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2.5">
-                <div className="relative h-8 w-8 shrink-0">
+            <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#DAA640]/20 bg-[#020E28]/95 backdrop-blur-md shrink-0 min-w-0 max-w-full">
+              <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5">
+                <div className="relative h-8 w-8 shrink-0 rounded-lg overflow-hidden border border-[#DAA640]/30">
                   <BrandLogo
                     variant="logo"
                     alt="Mercian Wealth"
                     fill
-                    className="object-contain"
+                    className="object-cover"
                   />
                 </div>
                 <span className="font-sans text-base font-extrabold text-white flex items-center gap-1">
-                  <span className="text-[#38BDF8]">Mercian</span>
-                  <span className="text-[#F59E0B]">Wealth</span>
+                  <span>Mercian</span>
+                  <span className="text-[#DAA640]">Wealth</span>
                 </span>
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-accent-gold p-2 rounded-full bg-white/5 border border-accent-gold/30 transition-all cursor-pointer shrink-0"
+                className="text-white hover:text-[#DAA640] p-2 rounded-full bg-white/5 border border-[#DAA640]/30 transition-all cursor-pointer shrink-0"
                 aria-label="Close menu"
               >
-                <X size={20} className="text-accent-gold" />
+                <X size={20} className="text-[#DAA640]" />
               </button>
             </div>
 
@@ -425,15 +462,15 @@ export function Navbar() {
             <div className="relative z-10 flex-1 px-4 sm:px-6 pt-6 pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] space-y-6 flex flex-col justify-between min-w-0 max-w-full">
               
               {/* Telemetry Status Pill */}
-              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-accent-gold/5 border border-accent-gold/20 font-mono text-[10px] sm:text-xs">
-                <span className="flex items-center gap-2 text-accent-gold font-bold uppercase tracking-wider">
+              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-[#07153B] border border-[#DAA640]/25 font-mono text-[10px] sm:text-xs">
+                <span className="flex items-center gap-2 text-[#DAA640] font-bold uppercase tracking-wider">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                   </span>
-                  COHORT INTAKE ACTIVE
+                  LOCAL TERRITORY LOCKOUT
                 </span>
-                <span className="text-white/40 uppercase tracking-widest font-medium">Q3 PIPELINE</span>
+                <span className="text-slate-400 uppercase tracking-widest font-medium">1 PER POSTCODE</span>
               </div>
 
               {/* Styled Navigation Links */}
@@ -444,27 +481,20 @@ export function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        if (link.href === "/#demo" && pathname === "/") {
-                          setTimeout(() => {
-                            document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
-                          }, 100)
-                        }
-                      }}
+                      onClick={(e) => handleNavClick(e, link.href)}
                       className={`flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200 group ${
                         active
-                          ? "bg-accent-gold/10 border-accent-gold/40 text-accent-gold font-bold shadow-[0_0_15px_rgba(212,175,55,0.1)]"
-                          : "bg-white/[0.02] border-white/5 text-white/80 hover:text-white hover:bg-white/[0.05] hover:border-white/15"
+                          ? "bg-[#DAA640]/15 border-[#DAA640]/40 text-[#DAA640] font-bold shadow-[0_0_15px_rgba(218,166,64,0.15)]"
+                          : "bg-[#07153B]/50 border-slate-800 text-slate-200 hover:text-white hover:bg-[#07153B] hover:border-[#DAA640]/30"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className={`font-mono text-xs ${active ? "text-accent-gold" : "text-white/30"}`}>
+                        <span className={`font-mono text-xs ${active ? "text-[#DAA640]" : "text-slate-500"}`}>
                           0{idx + 1}.
                         </span>
-                        <span className="font-serif text-lg font-bold tracking-tight">{link.label}</span>
+                        <span className="font-sans text-base font-bold tracking-tight">{link.label}</span>
                       </div>
-                      <ChevronRight size={16} className={`transition-transform duration-200 ${active ? "text-accent-gold translate-x-1" : "text-white/30 group-hover:text-white group-hover:translate-x-1"}`} />
+                      <ChevronRight size={16} className={`transition-transform duration-200 ${active ? "text-[#DAA640] translate-x-1" : "text-slate-500 group-hover:text-white group-hover:translate-x-1"}`} />
                     </Link>
                   )
                 })}
@@ -473,18 +503,18 @@ export function Navbar() {
               {/* Login / Dashboard Access Box */}
               <div className="pt-2">
                 {user ? (
-                  <div className="p-4 rounded-xl border border-accent-gold/25 bg-black/40 space-y-3">
+                  <div className="p-4 rounded-xl border border-[#DAA640]/25 bg-[#07153B] space-y-3">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
-                        <Avatar className="h-10 w-10 border border-accent-gold/30 shrink-0">
+                        <Avatar className="h-10 w-10 border border-[#DAA640]/30 shrink-0">
                           <AvatarImage src={profile?.avatar_url || ""} alt={getFullName()} className="object-cover" />
-                          <AvatarFallback className="bg-gradient-to-br from-accent-gold/20 to-purple-500/20 text-accent-gold font-bold font-serif text-xs">
+                          <AvatarFallback className="bg-[#020E28] text-[#DAA640] font-bold font-mono text-xs">
                             {getInitials()}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col min-w-0 text-left">
-                          <span className="text-xs font-bold text-white font-serif truncate">{getFullName()}</span>
-                          <span className="text-[10px] text-text-secondary truncate">{user?.email || "info@mercianwealth.com"}</span>
+                          <span className="text-xs font-bold text-white truncate">{getFullName()}</span>
+                          <span className="text-[10px] text-slate-400 truncate">{user?.email || "partner@mercianwealth.com"}</span>
                         </div>
                       </div>
                       <button
@@ -496,14 +526,13 @@ export function Navbar() {
                         title="Sign Out"
                       >
                         <LogOut size={14} />
-                        <span>Sign Out</span>
                       </button>
                     </div>
 
                     <Link
                       href={profile?.role === "admin" ? "/admin" : profile?.role === "client" ? "/client" : "/dashboard"}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center justify-between w-full p-2.5 rounded-lg bg-accent-gold/10 border border-accent-gold/20 text-xs font-bold text-accent-gold hover:bg-accent-gold/20 transition-all"
+                      className="flex items-center justify-between w-full p-2.5 rounded-lg bg-[#DAA640]/10 border border-[#DAA640]/20 text-xs font-bold text-[#DAA640] hover:bg-[#DAA640]/20 transition-all"
                     >
                       <div className="flex items-center gap-2">
                         <LayoutDashboard size={14} />
@@ -516,10 +545,10 @@ export function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-white/10 bg-white/[0.03] text-sm text-white/80 hover:text-accent-gold hover:border-accent-gold/30 transition-all font-medium"
+                    className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-[#07153B]/70 text-sm text-slate-200 hover:text-[#DAA640] hover:border-[#DAA640]/30 transition-all font-medium"
                   >
                     <span>Login / Client Portal Access</span>
-                    <ChevronRight size={16} className="text-white/40" />
+                    <ChevronRight size={16} className="text-slate-400" />
                   </Link>
                 )}
               </div>
@@ -528,7 +557,7 @@ export function Navbar() {
               <div>
                 <Button
                   asChild
-                  className="w-full py-6 text-sm font-bold bg-accent-gold text-bg-primary hover:bg-accent-gold/90 shadow-[0_0_25px_rgba(212,175,55,0.25)] rounded-xl transition-all"
+                  className="w-full py-6 text-sm font-bold bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-[#020E28] hover:from-[#EBB755] hover:to-[#DAA640] shadow-[0_0_25px_rgba(218,166,64,0.25)] rounded-xl transition-all"
                 >
                   <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2">
                     <span>{SITE_COPY.navbar.ctaText}</span>
@@ -538,8 +567,8 @@ export function Navbar() {
               </div>
 
               {/* Footer Row */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between shrink-0">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-wider">
+              <div className="pt-4 border-t border-slate-800 flex items-center justify-between shrink-0">
+                <span className="font-mono text-[10px] text-slate-400 uppercase tracking-wider">
                   © 2026 Mercian Wealth
                 </span>
                 <SocialMediaLinks />

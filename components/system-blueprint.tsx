@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
-import { Cpu, Database, GitMerge, ShieldCheck, Zap, Activity } from "lucide-react"
+import { Smartphone, CreditCard, MessageSquare, Star, ShieldCheck, Activity, CheckCircle2 } from "lucide-react"
 
 interface NodeSpec {
   id: string
@@ -17,44 +17,44 @@ interface NodeSpec {
 
 const nodes: NodeSpec[] = [
   {
-    id: "ingestion",
-    title: "1. Autonomic Ingestion",
-    subtitle: "Webhooks, API Gateways & Edge Forms",
-    icon: Zap,
-    latency: "< 45ms",
-    throughput: "10,000 req/min",
-    mechanism: "Zero-latency edge webhook routing with instant payload validation & duplicate protection.",
-    specs: ["Global Edge Dispatch", "AES-256 Encryption", "Instant Fallback Buffers"]
+    id: "storefront",
+    title: "1. Instant Mobile Storefront",
+    subtitle: "Sub-1s Mobile Load Speed & 3-Tap UI",
+    icon: Smartphone,
+    latency: "< 1.0s",
+    throughput: "100% Mobile Ready",
+    mechanism: "High-speed, custom-designed mobile storefront engineered so local customers view your offerings, select specs, and book in seconds without bouncing away.",
+    specs: ["Sub-1s Mobile Speed", "Google Local SEO", "3-Tap Fast Checkout"]
   },
   {
-    id: "qualification",
-    title: "2. AI Qualification Engine",
-    subtitle: "Multi-Model Intent Analysis & Scoring",
-    icon: Cpu,
-    latency: "< 350ms",
-    throughput: "Real-time AI ICP Match",
-    mechanism: "Semantic intent parsing against ICP metrics to score high-ticket opportunity value instantly.",
-    specs: ["Custom LLM Prompt Pipelines", "High-Ticket ICP Classifier", "Dynamic Intent Extraction"]
+    id: "deposit",
+    title: "2. 24/7 Upfront Deposit Capture",
+    subtitle: "Stripe, Apple Pay & Google Pay",
+    icon: CreditCard,
+    latency: "Instant",
+    throughput: "50% Upfront Paid",
+    mechanism: "Secures non-refundable deposits automatically before dates are locked into your calendar. Eliminates unpaid no-shows and late-night bank transfer chasing.",
+    specs: ["Card & Apple Pay", "Zero Unpaid No-Shows", "Instant Order Receipt"]
   },
   {
-    id: "orchestration",
-    title: "3. Pipeline Orchestration",
-    subtitle: "CRM Sync & Calendar Dispatch",
-    icon: GitMerge,
-    latency: "< 120ms",
-    throughput: "Zero-Collision Booking",
-    mechanism: "Automated booking validation and CRM pipeline state mutation without human delay.",
-    specs: ["Salesforce & HubSpot Connectors", "Calendly/Custom API Dispatch", "Auto-Assignment Rules"]
+    id: "dispatch",
+    title: "3. Sub-60s WhatsApp & Phone Alerts",
+    subtitle: "Direct Order Ping to Your Smartphone",
+    icon: MessageSquare,
+    latency: "< 60s",
+    throughput: "Instant Dispatch",
+    mechanism: "Full customer details, custom order specifications, and confirmed deposit amounts arrive straight on your phone the second an order is completed.",
+    specs: ["Instant WhatsApp Alert", "Calendar Auto-Sync", "Zero Lost Enquiries"]
   },
   {
-    id: "telemetry",
-    title: "4. Live Telemetry & Nurture",
-    subtitle: "Autonomic Follow-up & Slack Alerts",
-    icon: Database,
-    latency: "Continuous",
-    throughput: "24/7 Monitoring",
-    mechanism: "Instant Slack/SMS alerts to sales reps + automated drip Sequences for instant lead retention.",
-    specs: ["Instant Team #alerts", "Smart Re-engagement Triggers", "Conversion Latency Logs"]
+    id: "reviews",
+    title: "4. Automated 5-Star Review Engine",
+    subtitle: "Post-Service Google Review Collection",
+    icon: Star,
+    latency: "Automated",
+    throughput: "5.0★ Local Rank",
+    mechanism: "Dispatches a friendly automated review link directly to satisfied customers after their job is completed, steadily building your Google rankings on autopilot.",
+    specs: ["1-Tap Review Link", "Private Feedback Filter", "Dominates Local Search"]
   }
 ]
 
@@ -136,13 +136,13 @@ export function SystemBlueprint() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 min-w-0">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#DAA640]">
-            [ ARCHITECTURAL BLUEPRINT ]
+            [ THE 24/7 ORDER & REVENUE ENGINE ]
           </span>
           <h2 className="font-sans text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mt-3">
-            The <span className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-white bg-clip-text text-transparent">Autonomic Protocol</span> Node Graph
+            How Your System Runs <span className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-white bg-clip-text text-transparent">On Autopilot</span>
           </h2>
           <p className="font-sans text-sm sm:text-base text-slate-300 leading-relaxed mt-4">
-            The system cycles autonomously — each node executes in sequence, just as it does in production. Tap any node to inspect it directly.
+            Watch each stage execute automatically from customer inquiry to paid deposit and phone dispatch. Tap any stage to inspect the mechanics.
           </p>
         </div>
 
@@ -203,7 +203,7 @@ export function SystemBlueprint() {
             <div className="flex items-center gap-2 px-1 pt-1">
               <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaused ? "bg-slate-600" : "bg-[#DAA640] animate-pulse"}`} />
               <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
-                {isPaused ? "Paused — resuming in a moment" : "Autonomic sequence running"}
+                {isPaused ? "Paused — resuming in a moment" : "Live automation sequence cycling"}
               </span>
             </div>
           </div>
@@ -224,11 +224,11 @@ export function SystemBlueprint() {
                   <div className="flex items-center gap-3">
                     <Activity size={20} className="text-[#DAA640] animate-pulse" />
                     <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#DAA640]">
-                      ACTIVE NODE SPECIFICATION
+                      STAGE SPECIFICATION
                     </span>
                   </div>
                   <span className="font-mono text-xs text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
-                    ● ONLINE
+                    ● ACTIVE
                   </span>
                 </div>
 
@@ -241,18 +241,18 @@ export function SystemBlueprint() {
                 {/* Telemetry Metrics */}
                 <div className="grid grid-cols-2 gap-4 bg-[#020E28] border border-slate-700/60 p-4 rounded-xl font-mono text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase block">Execution Latency</span>
+                    <span className="text-[10px] text-slate-400 uppercase block">Response Speed</span>
                     <span className="text-[#DAA640] font-bold text-base mt-0.5 block">{activeNode.latency}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase block">Throughput Capacity</span>
+                    <span className="text-[10px] text-slate-400 uppercase block">System Capability</span>
                     <span className="text-[#DAA640] font-bold text-base mt-0.5 block">{activeNode.throughput}</span>
                   </div>
                 </div>
 
                 {/* Core Mechanism */}
                 <div>
-                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Core Mechanism</h4>
+                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">How It Works</h4>
                   <p className="text-sm text-slate-200 leading-relaxed font-medium">
                     {activeNode.mechanism}
                   </p>
@@ -260,11 +260,11 @@ export function SystemBlueprint() {
 
                 {/* Sub-Specs List */}
                 <div className="border-t border-slate-700/60 pt-4">
-                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-3">Enterprise Standards</h4>
+                  <h4 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-3">Key Features Included</h4>
                   <div className="grid sm:grid-cols-3 gap-2">
                     {activeNode.specs.map((spec, i) => (
                       <div key={i} className="p-2.5 bg-[#020E28] border border-slate-800 rounded-lg flex items-center gap-2">
-                        <ShieldCheck size={14} className="text-[#DAA640] shrink-0" />
+                        <CheckCircle2 size={14} className="text-[#DAA640] shrink-0" />
                         <span className="text-[11px] font-sans text-slate-200 font-medium">{spec}</span>
                       </div>
                     ))}
