@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
     if (supabaseAdmin) {
       try {
-        if (source === 'booking_form') {
+        if (source === 'booking_form' || source === 'booking_lead') {
           // Check if lead already exists by email (take latest)
           const { data: existingLead, error: selectError } = await supabaseAdmin
             .from('leads')
@@ -250,7 +250,7 @@ export async function POST(request: Request) {
       let customerSubject = "Inquiry Received — Mercian Wealth"
       let customerEmailHtml = ""
 
-      if (source === 'booking_form') {
+      if (source === 'booking_form' || source === 'booking_lead') {
         customerSubject = "Strategy Call Details Confirmed — Mercian Wealth"
         customerEmailHtml = generateBookingConfirmedEmail({
           name: name || 'Client Partner',

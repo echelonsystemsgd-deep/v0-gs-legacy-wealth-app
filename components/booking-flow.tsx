@@ -14,13 +14,12 @@ import {
 // ---------------------------------------------------------------------------
 // Calendly config
 // ---------------------------------------------------------------------------
-const CALENDLY_URL =
-  process.env.NEXT_PUBLIC_CALENDLY_URL ?? "https://calendly.com/mercianwealthgs/30min"
+const CALENDLY_URL = "https://calendly.com/mercianwealthgs/30min"
 
 const CALENDLY_PARAMS = new URLSearchParams({
-  background_color: (process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR ?? "0a0a0a").replace('#', '').toLowerCase(),
-  text_color:       (process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR ?? "f0ede6").replace('#', '').toLowerCase(),
-  primary_color:    (process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR ?? "c9a227").replace('#', '').toLowerCase(),
+  background_color: "0a0a0a",
+  text_color:       "f0ede6",
+  primary_color:    "daa640",
   hide_landing_page_details: "1",
   hide_gdpr_banner: "1",
 })
@@ -384,19 +383,19 @@ function BookingFlowInner() {
     }
     setIdentitySubmitting(true)
     try {
-      await fetch("/api/audit", {
+      await fetch("/api/forms/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          source: "booking_lead",
           name: identity.fullName,
           email: identity.email,
           phone: formatUkPhonePayload(identity.phone),
           business_name: identity.companyName,
+          website: identity.websiteUrl || null,
           linkedin_url: identity.linkedinUrl || null,
-          industry: "General",
-          tier: "General Lead",
           gdpr_consent: identity.gdprConsent,
-          source_page: typeof window !== "undefined" ? window.location.pathname : "/book",
+          notes: "Step 1 Completed — Proceeding to Qualification & Calendar",
         }),
       })
     } catch {
@@ -469,25 +468,20 @@ function BookingFlowInner() {
   // ── Calendly URL builder ──────────────────────────────────────────────────
   const buildCalendlyUrl = useCallback(() => {
     const params = new URLSearchParams()
-    params.set("background_color", (process.env.NEXT_PUBLIC_CALENDLY_BG_COLOR || "1a1a1a").replace('#', '').toLowerCase())
-    params.set("text_color", (process.env.NEXT_PUBLIC_CALENDLY_TEXT_COLOR || "f0ede6").replace('#', '').toLowerCase())
-    params.set("primary_color", (process.env.NEXT_PUBLIC_CALENDLY_PRIMARY_COLOR || "c5a059").replace('#', '').toLowerCase())
+    params.set("background_color", "0a0a0a")
+    params.set("text_color", "f0ede6")
+    params.set("primary_color", "daa640")
     params.set("hide_landing_page_details", "1")
     params.set("hide_gdpr_banner", "1")
     if (identity.fullName) params.set("name", identity.fullName)
     if (identity.email) params.set("email", identity.email)
-    if (identity.phone.trim()) params.set("phone_number", formatUkPhonePayload(identity.phone))
-    if (identity.websiteUrl) params.set("a1", identity.websiteUrl)
-    if (qual.biggestChallenge) params.set("a2", qual.biggestChallenge)
-    if (qual.monthlyRevenue) params.set("a3", qual.monthlyRevenue)
-    if (qual.startTimeline) params.set("a4", qual.startTimeline)
-    return `${CALENDLY_URL}?${params.toString()}`
-  }, [identity, qual])
+    return `https://calendly.com/mercianwealthgs/30min?${params.toString()}`
+  }, [identity.fullName, identity.email])
 
   // ── Calendly postMessage listener ─────────────────────────────────────────
   useEffect(() => {
     const handler = (e: MessageEvent) => {
-      if (e.origin !== "https://calendly.com" || !e.data?.event) return
+      if (!e.origin?.includes("calendly.com") || !e.data?.event) return
       if (e.data.event === "calendly.page_height") {
         const h = e.data.payload?.height
         if (h) {
