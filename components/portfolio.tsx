@@ -22,114 +22,69 @@ type PortfolioItem = {
 const DEFAULT_PORTFOLIO: PortfolioItem[] = [
   {
     title: "Stamp Valuation App",
-    category: "AI Web App · Prototype",
+    category: "AI Computer Vision · Case Study",
     gradient: "from-blue-500/20 to-cyan-500/20",
-    href: "https://v0-stamp-valuation-app.vercel.app",
+    href: null,
     image: "/stamp-app-preview.png",
-    underConstruction: false,
+    underConstruction: true,
     metric: "Target Latency: < 1s",
   },
   {
-    title: "Elite Fitness Studio",
-    category: "AI Website · Concept Build",
+    title: "Caker St. London Bakery",
+    category: "E-Commerce & Ordering · Case Study",
+    gradient: "from-rose-500/20 to-amber-500/20",
+    href: null,
+    image: "/caker-st-preview.png",
+    underConstruction: true,
+    metric: "Interactive Cake Concierge",
+  },
+  {
+    title: "Grand Wedding Cakes",
+    category: "Luxury Bridal Atelier · Case Study",
     gradient: "from-amber-500/20 to-orange-500/20",
+    href: null,
+    image: "/grand-wedding-cakes-preview.png",
     underConstruction: true,
-    metric: "Target 90%+ Booking Flow",
-  },
-  {
-    title: "Sterling Direct Purchases",
-    category: "Lead System · Prototype",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-    href: "https://real-estate-application-build.vercel.app/",
-    image: "/sterling-direct-purchases-preview.png",
-    underConstruction: false,
-    metric: "Pipeline Architecture",
-  },
-  {
-    title: "Strategic Growth Co.",
-    category: "Landing Page · Concept Build",
-    gradient: "from-blue-500/20 to-indigo-500/20",
-    underConstruction: true,
-    metric: "Growth Analytics Framework",
+    metric: "Tier Architecture & White-Glove Setup",
   },
 ]
 
 function PremiumMockup({ item }: { item: PortfolioItem }) {
-  if (item.title === "Elite Fitness Studio") {
+  if (item.title === "Caker St. London Bakery" || item.title.includes("Caker St")) {
     return (
-      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
+      <div className="absolute inset-2 sm:inset-4 bg-[#140608] rounded-xl border border-rose-950/60 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#1f0a0d] border-b border-rose-900/30 shrink-0">
           <div className="flex gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
           </div>
-          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
-            elitefitness.com/dashboard
+          <div className="h-3.5 bg-rose-950/50 border border-rose-900/30 rounded-full px-3 text-[7px] text-amber-200/60 flex items-center justify-center font-mono">
+            caker-st-prototype.vercel.app
           </div>
           <div className="w-4" />
         </div>
-        <div className="flex-1 p-3 flex flex-col gap-2 justify-between">
+        <div className="flex-1 p-3 flex flex-col justify-between bg-gradient-to-b from-[#1a070a] to-[#0d0304]">
           <div className="flex justify-between items-center">
-            <span className="text-[9px] font-bold text-amber-500 uppercase tracking-widest font-serif">ELITE FITNESS</span>
-            <div className="w-6 h-3 bg-amber-500/20 border border-amber-500/30 rounded-full" />
-          </div>
-          <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-white leading-tight">Sculpt Your Ultimate Physique</h4>
-            <p className="text-[7px] text-white/50 leading-relaxed max-w-[80%]">High-intensity training programs for high-performers.</p>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">Build Status</span>
-              <span className="text-[9px] font-bold text-amber-500">Concept</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-black tracking-tight text-white font-serif">CAKER ST.</span>
+              <span className="text-[6px] font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-1.5 py-0.5 rounded-full">LONDON</span>
             </div>
-            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">Target Flow</span>
-              <span className="text-[9px] font-bold text-amber-500">90%+</span>
-            </div>
-            <div className="bg-bg-secondary border border-white/5 rounded p-1.5 text-center">
-              <span className="text-[7px] text-white/40 block font-mono">System Target</span>
-              <span className="text-[9px] font-bold text-amber-500">99.9%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (item.title === "Sterling Direct Purchases") {
-    return (
-      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
-          <div className="flex gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-          </div>
-          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
-            sterlingdirectpurchases.co.uk
-          </div>
-          <div className="w-4" />
-        </div>
-        <div className="flex-1 p-3 flex flex-col justify-between">
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest font-serif">STERLING</span>
             <div className="flex items-center gap-1">
-              <span className="text-[6px] text-emerald-500/80 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full font-mono">PURCHASES</span>
-              <span className="text-[6px] text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-full font-mono">PROTOTYPE</span>
+              <span className="text-[6px] text-emerald-400 font-bold">★ 4.9 Trustpilot</span>
             </div>
           </div>
           <div className="space-y-1">
-            <h4 className="text-[11px] font-bold text-white leading-tight">Direct Property Acquisitions</h4>
-            <p className="text-[7px] text-white/50 leading-relaxed max-w-[85%]">Guaranteed fast cash purchases for UK residential property.</p>
+            <h4 className="text-[11px] font-bold text-white leading-tight">Artisan Celebration Cakes Delivered Across England</h4>
+            <p className="text-[7px] text-rose-200/70 leading-relaxed max-w-[90%]">Handcrafted character, birthday & wedding cakes. 100% Eggless & Halal options with chilled UK delivery.</p>
           </div>
-          <div className="bg-bg-secondary border border-white/5 rounded p-2 flex justify-between items-center">
-            <div>
-              <span className="text-[6px] text-white/40 block font-mono">TIMELINE SPEED</span>
-              <span className="text-[9px] font-bold text-[#f5f5f7]">14-Day Completion</span>
+          <div className="bg-[#240c11] border border-rose-900/40 rounded p-2 flex justify-between items-center">
+            <div className="space-y-0.5">
+              <span className="text-[6px] text-amber-400/90 block font-mono font-bold">INTERACTIVE CONCIERGE</span>
+              <span className="text-[8px] font-bold text-white">Find Your Dream Cake in 30s</span>
             </div>
-            <div className="w-8 h-3.5 bg-emerald-500/20 border border-emerald-500/40 rounded flex items-center justify-center">
-              <span className="text-[6px] text-emerald-400 font-bold font-mono">GET OFFER</span>
+            <div className="h-4 px-2 bg-amber-400 text-slate-950 rounded flex items-center justify-center font-bold text-[7px]">
+              Shop Cakes →
             </div>
           </div>
         </div>
@@ -137,38 +92,44 @@ function PremiumMockup({ item }: { item: PortfolioItem }) {
     )
   }
 
-  if (item.title === "Strategic Growth Co.") {
+  if (item.title === "Grand Wedding Cakes" || item.title.includes("Grand Wedding")) {
     return (
-      <div className="absolute inset-2 sm:inset-4 bg-bg-tertiary rounded-xl border border-white/5 overflow-hidden shadow-2xl flex flex-col font-sans">
-        <div className="flex items-center justify-between px-3 py-2 bg-bg-secondary border-b border-white/5 shrink-0">
+      <div className="absolute inset-2 sm:inset-4 bg-[#0d0f14] rounded-xl border border-amber-900/30 overflow-hidden shadow-2xl flex flex-col font-sans">
+        <div className="flex items-center justify-between px-3 py-2 bg-[#141824] border-b border-amber-900/20 shrink-0">
           <div className="flex gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-400/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
           </div>
-          <div className="h-3.5 bg-white/5 rounded-full px-4 text-[7px] text-white/30 flex items-center justify-center font-mono">
-            strategicgrowth.co/dashboard
+          <div className="h-3.5 bg-white/5 border border-white/10 rounded-full px-3 text-[7px] text-amber-200/60 flex items-center justify-center font-mono">
+            grand-wedding-cakes-prototype.vercel.app
           </div>
           <div className="w-4" />
         </div>
-        <div className="flex-1 p-3 flex flex-col justify-between">
+        <div className="flex-1 p-3 flex flex-col justify-between bg-gradient-to-b from-[#161a29] to-[#0d101a]">
           <div className="flex justify-between items-center">
-            <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest font-mono">STRATEGIC</span>
-            <div className="flex gap-1">
-              <div className="w-1.5 h-1.5 bg-blue-500/20 rounded-full" />
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-serif font-semibold tracking-wider text-amber-200">GRAND WEDDING CAKES</span>
             </div>
+            <span className="text-[6px] uppercase tracking-widest text-[#DAA640] border border-[#DAA640]/30 bg-[#DAA640]/10 px-1.5 py-0.5 rounded-full font-mono">LUXURY ATELIER</span>
           </div>
           <div className="space-y-1">
-            <span className="text-[6px] text-blue-400 block font-bold tracking-wider font-mono">ANNUAL METRICS</span>
-            <h4 className="text-[11px] font-bold text-white leading-tight">Growth Analytics Framework</h4>
+            <h4 className="text-[11px] font-serif font-medium text-white leading-tight">Grand Cakes For Your Greatest Celebration</h4>
+            <p className="text-[7px] text-white/60 leading-relaxed max-w-[88%]">Bespoke multi-tier luxury wedding cakes handcrafted in London with couture sugar florals & white-glove styling.</p>
           </div>
-          <div className="h-10 flex items-end gap-1 px-1 bg-white/5 rounded border border-white/5 py-1">
-            <div className="bg-blue-500/20 w-full h-[30%] rounded-sm" />
-            <div className="bg-blue-500/40 w-full h-[55%] rounded-sm" />
-            <div className="bg-blue-500/60 w-full h-[45%] rounded-sm" />
-            <div className="bg-blue-500/80 w-full h-[70%] rounded-sm" />
-            <div className="bg-blue-500 w-full h-[95%] rounded-sm" />
+          <div className="grid grid-cols-3 gap-1">
+            <div className="bg-[#1c2236] border border-white/5 rounded p-1 text-center">
+              <span className="text-[6px] text-white/40 block font-mono">Drop Off</span>
+              <span className="text-[8px] font-serif font-bold text-amber-300">From £450</span>
+            </div>
+            <div className="bg-[#1c2236] border border-[#DAA640]/30 rounded p-1 text-center bg-[#DAA640]/5">
+              <span className="text-[6px] text-[#DAA640] block font-mono font-bold">Silver Tier</span>
+              <span className="text-[8px] font-serif font-bold text-white">From £750</span>
+            </div>
+            <div className="bg-[#1c2236] border border-white/5 rounded p-1 text-center">
+              <span className="text-[6px] text-white/40 block font-mono">Gold Tier</span>
+              <span className="text-[8px] font-serif font-bold text-amber-300">From £1k</span>
+            </div>
           </div>
         </div>
       </div>
