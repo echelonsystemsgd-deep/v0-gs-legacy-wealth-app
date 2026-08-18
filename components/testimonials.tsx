@@ -49,7 +49,7 @@ export function Testimonials() {
           .order("created_at", { ascending: false })
           .limit(4)
 
-        if (!error && liveData && liveData.length >= 2 && isMounted) {
+        if (!error && liveData && liveData.length > 0 && isMounted) {
           setTestimonials(liveData)
         }
       } catch (err) {

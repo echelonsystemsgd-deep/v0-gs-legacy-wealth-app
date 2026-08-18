@@ -333,8 +333,6 @@ function RequestSystemSchemaModal({ item, onClose }: { item: PortfolioItem; onCl
 function PrototypePreviewModal({ item, onClose }: { item: PortfolioItem; onClose: () => void }) {
   const [loading, setLoading] = useState(true)
 
-  if (!item.href) return null
-
   return (
     <AnimatePresence>
       <motion.div
@@ -377,6 +375,17 @@ function PrototypePreviewModal({ item, onClose }: { item: PortfolioItem; onClose
             </div>
 
             <div className="flex items-center gap-2">
+              {item.href && (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-accent-gold hover:underline flex items-center gap-1 mr-2 font-mono"
+                >
+                  <span>Open External</span>
+                  <ArrowRight size={12} />
+                </a>
+              )}
               <button
                 onClick={onClose}
                 className="text-white/40 hover:text-white hover:bg-white/10 transition-colors rounded-full p-1.5 cursor-pointer"
@@ -388,27 +397,61 @@ function PrototypePreviewModal({ item, onClose }: { item: PortfolioItem; onClose
           </div>
 
           {/* Prototype Banner */}
-          <div className="bg-amber-500/10 border-b border-amber-500/10 text-amber-400 py-2 px-4 text-center text-[10px] md:text-xs font-semibold font-sans flex items-center justify-center gap-1.5 tracking-wider uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+          <div className="bg-emerald-500/10 border-b border-emerald-500/20 text-emerald-400 py-2 px-4 text-center text-[10px] md:text-xs font-semibold font-sans flex items-center justify-center gap-1.5 tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span>Interactive Demo · Sandbox Preview Mode</span>
           </div>
 
-          {/* Interactive Frame Box */}
-          <div className="flex-1 relative bg-black/40">
-            {loading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-tertiary z-20 transition-opacity duration-300">
-                <Loader2 className="w-8 h-8 text-accent-gold animate-spin" />
-                <p className="text-xs text-muted-foreground font-mono">
-                  Loading prototype viewport...
-                </p>
+          {/* Interactive Frame or Showcase Box */}
+          <div className="flex-1 relative bg-black/40 overflow-hidden">
+            {item.href ? (
+              <>
+                {loading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-tertiary z-20 transition-opacity duration-300">
+                    <Loader2 className="w-8 h-8 text-accent-gold animate-spin" />
+                    <p className="text-xs text-muted-foreground font-mono">
+                      Loading prototype viewport...
+                    </p>
+                  </div>
+                )}
+                <iframe
+                  src={item.href}
+                  className="w-full h-full border-none bg-white"
+                  onLoad={() => setLoading(false)}
+                  sandbox="allow-same-origin allow-scripts allow-forms"
+                />
+              </>
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-6">
+                {item.image && (
+                  <div className="relative w-full max-w-lg aspect-video rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="max-w-md space-y-2">
+                  <h3 className="text-xl font-serif font-bold text-white">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground font-mono">{item.category}</p>
+                  {item.metric && (
+                    <p className="text-xs font-bold text-accent-gold font-mono uppercase">
+                      Telemetry: {item.metric}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  asChild
+                  className="bg-accent-gold text-bg-primary font-bold hover:bg-accent-gold/90"
+                >
+                  <Link href="/contact">
+                    Book Live Bespoke Walkthrough →
+                  </Link>
+                </Button>
               </div>
             )}
-            <iframe
-              src={item.href}
-              className="w-full h-full border-none bg-white"
-              onLoad={() => setLoading(false)}
-              sandbox="allow-same-origin allow-scripts allow-forms"
-            />
           </div>
         </motion.div>
       </motion.div>
@@ -428,19 +471,21 @@ export function Portfolio({ limit }: { limit?: number }) {
         const { data, error } = await supabase
           .from('portfolio_items')
           .select('*')
-          .order('project_name', { ascending: true })
+          .eq('is_archived', false)
+          .order('is_featured', { ascending: false })
+          .order('created_at', { ascending: false })
 
         if (error) throw error
 
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
             title: d.project_name,
-            category: d.badge_type || d.industry || 'Interactive Sandbox',
+            category: d.badge_type || d.industry || (d.under_construction ? 'Architecture Case Study' : 'Interactive Sandbox'),
             gradient: d.gradient || 'from-blue-500/20 to-indigo-500/20',
-            href: d.website_link,
+            href: d.website_link || d.live_demo_url || null,
             image: d.cover_image,
-            underConstruction: !!d.under_construction,
-            metric: d.metric,
+            underConstruction: Boolean(d.under_construction),
+            metric: d.metric || d.case_study_metrics || null,
           }))
           setItems(mapped)
         }
@@ -513,7 +558,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <p className="text-xs uppercase tracking-widest text-[#DAA640] font-semibold">
                         {item.category}
                       </p>
-                      {item.href && !item.underConstruction ? (
+                      {!item.underConstruction ? (
                         <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-mono">
                           Live Interactive Sandbox
                         </span>
@@ -532,12 +577,12 @@ export function Portfolio({ limit }: { limit?: number }) {
                       </p>
                     )}
                     <div className="pt-2">
-                      {item.href && !item.underConstruction ? (
+                      {!item.underConstruction ? (
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => setPreviewPrototype(item)}
-                          className="border-[#DAA640]/40 text-white hover:bg-[#DAA640] hover:text-[#020E28] transition-all"
+                          className="border-emerald-500/40 text-emerald-300 hover:bg-emerald-500 hover:text-[#020E28] transition-all"
                         >
                           <span className="text-xs font-bold uppercase tracking-wider">
                             Launch Live Sandbox →
@@ -566,7 +611,7 @@ export function Portfolio({ limit }: { limit?: number }) {
                       <p className="text-[10px] uppercase tracking-widest text-[#DAA640] font-semibold leading-none truncate max-w-full">
                         {item.category} {item.metric ? `· ${item.metric}` : ''}
                       </p>
-                      {item.href && !item.underConstruction ? (
+                      {!item.underConstruction ? (
                         <span className="shrink-0 text-[8px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 rounded-full font-mono">
                           Live Sandbox
                         </span>
@@ -580,9 +625,9 @@ export function Portfolio({ limit }: { limit?: number }) {
                       {item.title}
                     </h3>
                   </div>
-                  {item.href && !item.underConstruction ? (
+                  {!item.underConstruction ? (
                     <button
-                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#020E28] bg-[#DAA640] px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
+                      className="shrink-0 ml-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#020E28] bg-emerald-400 px-3 py-1.5 rounded-lg active:opacity-80 transition-opacity cursor-pointer"
                       onClick={() => setPreviewPrototype(item)}
                     >
                       Test Sandbox →

@@ -417,17 +417,17 @@ export default function PortfolioPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Live App URL</label>
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Live App URL / Interactive Demo Link</label>
                 <input value={form.website_link} onChange={(e) => setForm((p) => ({ ...p, website_link: e.target.value }))}
-                  placeholder="https://..."
+                  placeholder="https://... or /local (leave blank for built-in sandbox showcase)"
                   className="w-full bg-background/60 border border-gold/15 hover:border-gold/25 rounded-xl px-4 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-gold/20 transition-all font-mono" />
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 pt-1 p-3 rounded-xl bg-gold/5 border border-gold/15">
                 <input type="checkbox" id="under_construction" checked={form.under_construction} onChange={(e) => setForm((p) => ({ ...p, under_construction: e.target.checked }))}
-                  className="w-4 h-4 text-gold border-gold/30 rounded focus:ring-gold/20" />
+                  className="w-4 h-4 text-gold border-gold/30 rounded focus:ring-gold/20 cursor-pointer" />
                 <label htmlFor="under_construction" className="text-xs text-foreground cursor-pointer">
-                  Mark as Concept Build (Opens waitlist request modal instead of live app)
+                  <strong>Blueprint / Concept Mode:</strong> Checked = "Architecture Case Study" (lead request modal). Unchecked = "Live Interactive Sandbox" (live testing mode).
                 </label>
               </div>
 
