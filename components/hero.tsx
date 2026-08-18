@@ -11,7 +11,7 @@ export function Hero() {
   const data = SITE_COPY.homepage.hero
 
   return (
-    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-36 sm:pt-40 pb-20 overflow-hidden bg-[#020E28]">
+    <section id="home" className="relative min-h-[85vh] flex items-center justify-center pt-28 sm:pt-36 lg:pt-40 pb-16 sm:pb-20 overflow-hidden bg-[#020E28]">
       {/* Ambient Brand Watermark Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[750px] sm:h-[750px] opacity-15 pointer-events-none z-0 rounded-full overflow-hidden blur-[1px]">
         <BrandLogo variant="watermark" fill className="object-cover rounded-full" priority />
@@ -24,15 +24,15 @@ export function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center gap-2.5 mb-6 text-center max-w-full px-2"
+          className="flex flex-col items-center justify-center gap-1.5 mb-4 sm:mb-6 text-center max-w-full px-2"
         >
-          <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-[#DAA640] bg-[#DAA640]/10 border border-[#DAA640]/25 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-center max-w-full">
+          <span className="font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-[#DAA640] bg-[#DAA640]/10 border border-[#DAA640]/25 px-2.5 sm:px-4 py-0.5 sm:py-1.5 rounded-full text-center max-w-full">
             [ {data.eyebrow} ]
           </span>
 
           {/* Quantified Proof Metric Badge */}
-          <div className="inline-flex items-center gap-2 text-[10px] sm:text-sm font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 sm:px-3.5 py-1 rounded-full mt-1 max-w-full text-center">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-sm font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full max-w-full text-center">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             <span className="leading-snug">{data.proofBadge}</span>
           </div>
         </motion.div>
@@ -42,7 +42,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="font-sans text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.15] text-balance mb-5 sm:mb-6 max-w-5xl tracking-tight px-1 break-words"
+          className="font-sans text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-[1.2] sm:leading-[1.15] text-balance mb-4 sm:mb-6 max-w-5xl tracking-tight px-1 break-words"
         >
           {data.headline}
         </motion.h1>
@@ -62,12 +62,12 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-10 sm:mb-12 w-full justify-center min-w-0 max-w-full"
+          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-8 sm:mb-12 w-full justify-center min-w-0 max-w-full"
         >
           <Button
             asChild
             size="lg"
-            className="w-full sm:w-auto px-5 sm:px-8 py-5 sm:py-7 text-xs sm:text-base md:text-lg font-bold bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-slate-950 hover:from-[#EBB755] hover:to-[#DAA640] transition-all duration-300 shadow-[0_0_30px_rgba(218,166,64,0.35)] border-0 rounded-xl"
+            className="w-full sm:w-auto px-5 sm:px-8 py-4 sm:py-6 text-xs sm:text-base md:text-lg font-bold bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-slate-950 hover:from-[#EBB755] hover:to-[#DAA640] transition-all duration-300 shadow-[0_0_30px_rgba(218,166,64,0.35)] border-0 rounded-xl"
           >
             <Link href="/book" className="flex items-center justify-center gap-2 sm:gap-3 text-center">
               <span>{data.primaryCtaText}</span>
@@ -79,7 +79,7 @@ export function Hero() {
             asChild
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto px-5 sm:px-7 py-5 sm:py-7 text-xs sm:text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl text-center"
+            className="w-full sm:w-auto px-5 sm:px-7 py-4 sm:py-6 text-xs sm:text-base font-semibold border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl text-center"
           >
             <Link
               href="/#demo"

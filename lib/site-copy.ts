@@ -10,40 +10,40 @@ export const SITE_COPY = {
   // Global Meta Info
   metadata: {
     layout: {
-      defaultTitle: "Mercian Wealth | AI Websites & Automated Storefronts for UK Local Businesses",
-      titleTemplate: "%s | Mercian Wealth",
+      defaultTitle: "Mercian Wealth · AI Websites & Systems",
+      titleTemplate: "%s · Mercian Wealth",
       description: "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls. From £495."
     },
     home: {
-      title: "Mercian Wealth | AI Websites & Automated Storefronts for UK Local Businesses",
+      title: "Mercian Wealth · AI Websites & Systems",
       description: "Automated storefronts, instant WhatsApp alerts & 24/7 deposit capture for bakeries, caterers & local UK businesses. Stop losing bookings to missed calls. From £495.",
     },
     services: {
-      title: "Automated Systems & Services | Mercian Wealth",
+      title: "Services · Mercian Wealth",
       description: "Mobile storefronts, 24/7 instant booking, deposit capture, phone notifications, and automated 5-star review collection.",
     },
     process: {
-      title: "7-Day Launch Protocol | Mercian Wealth",
+      title: "Process · Mercian Wealth",
       description: "From our first 15-minute diagnostic call to live automated deposit collection in 7 days. Zero operational hassle.",
     },
     portfolio: {
-      title: "Interactive Prototypes & Case Studies | Mercian Wealth",
+      title: "Portfolio · Mercian Wealth",
       description: "Test drive live interactive sandbox builds and explore custom web automation architectures engineered for UK businesses.",
     },
     pricing: {
-      title: "Transparent Pricing & Retainer Models | Mercian Wealth",
+      title: "Pricing · Mercian Wealth",
       description: "Simple, transparent pricing with zero hidden fees. One upfront setup fee, flat monthly growth retainer, or revenue share.",
     },
     testimonials: {
-      title: "Client Case Studies & Verified Deliverables | Mercian Wealth",
+      title: "Case Studies · Mercian Wealth",
       description: "Verified performance metrics, client case studies, and quantifiable operational outcomes from automated storefront implementations across the UK.",
     },
     contact: {
-      title: "Contact Our Engineering Team | Mercian Wealth",
+      title: "Contact · Mercian Wealth",
       description: "Stop letting missed calls and manual admin hold your business back. Request your free 15-minute diagnostic audit today.",
     },
     book: {
-      title: "Book Your Free 15-Minute Audit | Mercian Wealth",
+      title: "Book Audit · Mercian Wealth",
       description: "Pick a 15-minute slot with our founder to find out exactly where your business is losing leads and time.",
     },
   },

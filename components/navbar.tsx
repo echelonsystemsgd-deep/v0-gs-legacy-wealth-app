@@ -275,25 +275,25 @@ export function Navbar() {
       <header
         className={`w-full transition-all duration-300 ${
           isScrolled
-            ? "bg-[#020E28]/95 backdrop-blur-md border-b border-[#DAA640]/20 shadow-2xl py-3"
-            : "bg-[#020E28]/80 backdrop-blur-sm border-b border-[#DAA640]/10 py-4"
+            ? "bg-[#020E28]/95 backdrop-blur-md border-b border-[#DAA640]/20 shadow-2xl py-2.5 sm:py-3"
+            : "bg-[#020E28]/80 backdrop-blur-sm border-b border-[#DAA640]/10 py-3 sm:py-3.5"
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group shrink-0">
-              <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden border border-[#DAA640]/30 shadow-md">
+            <Link href="/" onClick={handleLogoClick} className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+              <div className="relative h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-xl overflow-hidden border border-[#DAA640]/30 shadow-md">
                 <BrandLogo variant="logo" alt="Mercian Wealth" fill className="object-cover transition-transform group-hover:scale-105 duration-300" priority />
               </div>
-              <span className="font-sans text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+              <span className="font-sans text-base sm:text-lg lg:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
                 <span>Mercian</span>
                 <span className="text-[#DAA640]">Wealth</span>
               </span>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2.5">
               {navLinks.map((link) => {
                 const active = isActive(link.href)
                 return (
@@ -301,7 +301,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-3 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
+                    className={`px-2.5 xl:px-3 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
                       active
                         ? "text-[#DAA640] bg-[#DAA640]/10 font-bold"
                         : "text-slate-300 hover:text-white hover:bg-white/5"
@@ -314,7 +314,7 @@ export function Navbar() {
             </nav>
 
             {/* CTA Button / User Profile Dropdown */}
-            <div className="hidden lg:flex lg:items-center lg:gap-3 xl:gap-5">
+            <div className="hidden lg:flex lg:items-center lg:gap-2.5 xl:gap-4">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -379,10 +379,10 @@ export function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 xl:gap-3.5">
                   <Link
                     href="/login"
-                    className="text-xs font-semibold text-slate-300 hover:text-white transition-colors px-2 py-1"
+                    className="text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition-colors px-2 py-1 whitespace-nowrap"
                   >
                     Client Login
                   </Link>
@@ -390,10 +390,11 @@ export function Navbar() {
                   <Button
                     asChild
                     size="sm"
-                    className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-[#020E28] hover:from-[#EBB755] hover:to-[#DAA640] font-bold text-xs shadow-[0_0_20px_rgba(218,166,64,0.25)] rounded-xl px-4 py-2 transition-all duration-300"
+                    className="bg-gradient-to-r from-[#DAA640] via-[#EBB755] to-[#B88528] text-[#020E28] hover:from-[#EBB755] hover:to-[#DAA640] font-bold text-xs shadow-[0_0_20px_rgba(218,166,64,0.25)] rounded-xl px-3.5 xl:px-4 py-2 transition-all duration-300 whitespace-nowrap"
                   >
                     <Link href="/book">
-                      <span>{SITE_COPY.navbar.ctaText}</span>
+                      <span className="hidden xl:inline">{SITE_COPY.navbar.ctaText}</span>
+                      <span className="inline xl:hidden">Book Free Audit</span>
                     </Link>
                   </Button>
                 </div>

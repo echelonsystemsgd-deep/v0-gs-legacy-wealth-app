@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Login — Client & Admin Portal',
+  title: 'Client Login · Mercian Wealth',
   description: 'Sign in to your Mercian Wealth client dashboard or administrator control panel.'
 }
 
