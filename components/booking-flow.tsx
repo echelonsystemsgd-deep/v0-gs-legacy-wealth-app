@@ -497,12 +497,32 @@ function BookingFlowInner() {
         }
       }
       if (e.data.event === "calendly.event_scheduled") {
-        toast.success("Your call is booked! Check your email for confirmation.", { duration: 6000, id: "calendly-booked" })
+        toast.success("Your call is booked! We have sent your strategy session confirmation.", { duration: 8000, id: "calendly-booked" })
+        
+        // Dispatch our custom luxury booking confirmation from hello@mercianwealth.com
+        fetch("/api/forms/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: "booking_form",
+            name: identity.fullName || "Valued Client",
+            email: identity.email,
+            phone: formatUkPhonePayload(identity.phone),
+            business_name: identity.companyName || "N/A",
+            website: identity.websiteUrl || null,
+            service_interested: qual.serviceInterested || "1-on-1 AI Automation Strategy Session",
+            meeting_date: "Date Selected in Calendly",
+            meeting_time: "Confirmed Time Slot (GMT / UK Time)",
+            notes: `Confirmed Strategy Call via Calendly.\nService: ${qual.serviceInterested}\nChallenge: ${qual.biggestChallenge}\nMonthly Rev: ${qual.monthlyRevenue}\nDesired Outcome: ${qual.desiredOutcome}`
+          })
+        }).catch((err) => {
+          console.warn("Calendly event_scheduled post-dispatch warning:", err)
+        })
       }
     }
     window.addEventListener("message", handler)
     return () => window.removeEventListener("message", handler)
-  }, [])
+  }, [identity, qual])
 
   // ── Stage 3: start fallback timer ─────────────────────────────────────────
   useEffect(() => {

@@ -222,7 +222,7 @@ export async function POST(request: Request) {
     if (!resend) {
       console.warn('RESEND_API_KEY is not set. Skipping email alerts.')
     } else {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <onboarding@resend.dev>'
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <hello@mercianwealth.com>'
       const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC'
       const cleanSource = source.replace(/_/g, ' ').toUpperCase()
 
@@ -278,9 +278,8 @@ export async function POST(request: Request) {
         customerEmailHtml = generateCustomerConfirmationEmail(emailPayload)
       }
 
-      // Dispatch emails asynchronously
+      // 1. Notify Owner (Separately insulated)
       try {
-        // 1. Notify Owner (replying to this email replies directly to the client)
         await resend.emails.send({
           from: fromEmail,
           to: process.env.ADMIN_NOTIFY_EMAIL || 'mercianwealthgs@gmail.com',
@@ -288,8 +287,12 @@ export async function POST(request: Request) {
           subject: `✨ [New Lead] ${name || email} via ${cleanSource}`,
           html: ownerEmailHtml,
         })
+      } catch (ownerEmailError: any) {
+        console.error('Failed to send Owner lead alert email:', ownerEmailError.message || ownerEmailError)
+      }
 
-        // 2. Confirm to Customer (replying to this email replies directly to your inbox)
+      // 2. Confirm to Customer (Separately insulated)
+      try {
         await resend.emails.send({
           from: fromEmail,
           to: email,
@@ -297,9 +300,8 @@ export async function POST(request: Request) {
           subject: customerSubject,
           html: customerEmailHtml,
         })
-      } catch (emailError: any) {
-        // Log error but do NOT crash the response, since the database insert succeeded
-        console.error('Failed to send Resend emails:', emailError.message || emailError)
+      } catch (customerEmailError: any) {
+        console.error('Failed to send Customer confirmation email:', customerEmailError.message || customerEmailError)
       }
     }
 
