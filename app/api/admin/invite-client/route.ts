@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { Resend } from 'resend'
+import { generateClientInviteEmail } from '@/lib/email-templates'
+
+const resendApiKey = process.env.RESEND_API_KEY
+const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 export async function POST(request: Request) {
   try {
@@ -93,7 +98,30 @@ export async function POST(request: Request) {
       if (roleError) throw roleError
     }
 
-    return NextResponse.json({ success: true, message: `Invitation dispatched for role ${role}.`, user: inviteData.user })
+    // 3. Dispatch luxury client portal invite email via Resend
+    if (resend) {
+      try {
+        const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <onboarding@resend.dev>'
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mercianwealth.com'
+        const inviteHtml = generateClientInviteEmail({
+          name: fullName || 'Client Partner',
+          email,
+          companyName: company || null,
+          loginUrl: `${siteUrl}/login`,
+        })
+
+        await resend.emails.send({
+          from: fromEmail,
+          to: email,
+          subject: 'Your Client Portal Access is Active — Mercian Wealth',
+          html: inviteHtml,
+        })
+      } catch (emailErr: any) {
+        console.error('Failed to send Resend client invite email:', emailErr.message || emailErr)
+      }
+    }
+
+    return NextResponse.json({ success: true, message: `Invitation dispatched for role ${role}.`, user: inviteData?.user })
   } catch (err: any) {
     console.error('Client onboarding failed:', err)
     return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 })

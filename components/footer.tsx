@@ -1,10 +1,8 @@
 "use client"
 
 import { BrandLogo } from "@/components/brand-logo"
-
 import Link from "next/link"
-import Image from "next/image"
-import { Mail, Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
+import { Phone, Instagram, Linkedin, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useWebsiteContent } from "@/hooks/use-website-content"
 import { CopyEmailButton } from "@/components/copy-email-button"
@@ -35,7 +33,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* 4-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
           
           {/* Column 1: Logo & Tagline */}
           <div className="space-y-4 flex flex-col items-start">
@@ -132,24 +130,48 @@ export function Footer() {
             <p className="font-sans text-xs text-slate-300 leading-relaxed">
               {data.ctaDescription}
             </p>
-              <Button 
-                asChild
-                variant="outline"
-                className="px-4 py-2 text-xs border-[#DAA640]/40 text-white hover:bg-[#DAA640] hover:text-[#020E28] transition-all rounded-lg"
-              >
-                <Link href="/book" className="inline-flex items-center gap-2">
-                  <span>{data.ctaButtonText}</span>
-                  <ArrowRight size={12} />
-                </Link>
-              </Button>
+            <Button 
+              asChild
+              variant="outline"
+              className="px-4 py-2 text-xs border-[#DAA640]/40 text-white hover:bg-[#DAA640] hover:text-[#020E28] transition-all rounded-lg"
+            >
+              <Link href="/book" className="inline-flex items-center gap-2">
+                <span>{data.ctaButtonText}</span>
+                <ArrowRight size={12} />
+              </Link>
+            </Button>
           </div>
 
+        </div>
+
+        {/* UK Compliance & Trust Band */}
+        <div className="my-10 py-5 px-4 sm:px-6 rounded-2xl bg-[#07153B]/70 border border-[#DAA640]/20 flex flex-wrap items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[#DAA640]/10 text-[#DAA640] border border-[#DAA640]/30 shrink-0">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <div>
+              <span className="font-bold text-white block">UK & EU GDPR Compliant Systems</span>
+              <span className="text-slate-400 text-[11px]">Strict data residency with zero AI model training on your confidential business data.</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-slate-300 font-mono text-[11px]">
+            <span className="inline-flex items-center gap-1.5 bg-slate-800/80 px-3 py-1 rounded-full border border-slate-700">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              UK Support Hours: 08:00 - 18:00 GMT
+            </span>
+            <span className="hidden sm:inline-block text-slate-500">•</span>
+            <span className="text-slate-400">United Kingdom</span>
+          </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#DAA640]/15 text-center md:flex md:justify-between md:items-center text-xs text-slate-400">
           <p>
-            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved.
+            © {new Date().getFullYear()} Mercian Wealth. All Rights Reserved. Engineered in the United Kingdom.
           </p>
           <div className="flex justify-center gap-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-[#DAA640] transition-colors">

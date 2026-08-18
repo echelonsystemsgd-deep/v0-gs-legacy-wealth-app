@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { Resend } from 'resend'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { 
+  generateOwnerLeadEmail, 
+  generateCustomerConfirmationEmail,
+  generateBookingConfirmedEmail,
+  generateLoomAuditEmail
+} from '@/lib/email-templates'
 
 // Initialize Resend
 const resendApiKey = process.env.RESEND_API_KEY
@@ -79,11 +85,13 @@ export async function POST(request: Request) {
     if (supabaseAdmin) {
       try {
         if (source === 'booking_form') {
-          // Check if lead already exists by email
+          // Check if lead already exists by email (take latest)
           const { data: existingLead, error: selectError } = await supabaseAdmin
             .from('leads')
             .select('*')
             .eq('email', email)
+            .order('created_at', { ascending: false })
+            .limit(1)
             .maybeSingle()
 
           if (selectError) {
@@ -216,140 +224,76 @@ export async function POST(request: Request) {
     } else {
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <onboarding@resend.dev>'
       const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC'
-      const cleanSource = source.replace('_', ' ').toUpperCase()
+      const cleanSource = source.replace(/_/g, ' ').toUpperCase()
 
-      // Email A: Notification to business owner (mercianwealthgs@gmail.com)
-      const ownerEmailHtml = `
-        <div style="background-color: #0A1128; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37; border-radius: 8px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #D4AF37; font-family: sans-serif; font-size: 24px; margin: 0 0 10px 0; letter-spacing: 1.5px; font-weight: bold;">MERCIAN WEALTH</h2>
-            <p style="color: #A0AEC0; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0;">New Inbound Lead Submission</p>
-          </div>
-          
-          <div style="border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 20px; margin-bottom: 25px;">
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; width: 140px; font-weight: bold;">Form Source:</td>
-                <td style="padding: 8px 0; color: #D4AF37; font-size: 14px; font-weight: bold;">${cleanSource}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Name:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;">${name || 'Not Provided'}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Email Address:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px; font-family: monospace;">${email}</td>
-              </tr>
-              ${business_name ? `
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Business/Brand:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;">${business_name}</td>
-              </tr>` : ''}
-              ${phone ? `
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Phone Number:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px; font-family: monospace;">${phone}</td>
-              </tr>` : ''}
-              ${service_interested ? `
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Service Interest:</td>
-                <td style="padding: 8px 0; color: #D4AF37; font-size: 14px;">${service_interested}</td>
-              </tr>` : ''}
-              ${linkedin_url ? `
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">LinkedIn URL:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;"><a href="${linkedin_url}" style="color: #D4AF37; text-decoration: underline;">${linkedin_url}</a></td>
-              </tr>` : ''}
-              ${website ? `
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Website URL:</td>
-                <td style="padding: 8px 0; color: #FFFFFF; font-size: 14px;"><a href="${website}" style="color: #D4AF37; text-decoration: underline;">${website}</a></td>
-              </tr>` : ''}
-              <tr>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px; font-weight: bold;">Timestamp:</td>
-                <td style="padding: 8px 0; color: #A0AEC0; font-size: 13px;">${timestamp}</td>
-              </tr>
-            </table>
-          </div>
-
-          <div style="background-color: #101B3B; padding: 20px; border-left: 3px solid #D4AF37; border-radius: 4px; margin-bottom: 30px;">
-            <h4 style="color: #D4AF37; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message / Inquiry Details</h4>
-            <p style="margin: 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; color: #F0EDE6;">${consolidatedNotes || 'No message details provided.'}</p>
-          </div>
-
-          <div style="text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 20px;">
-            <a href="https://supabase.com/dashboard/project/ladebhmyywkcqtyazxxk/editor" style="display: inline-block; background-color: #D4AF37; color: #0A1128; font-weight: bold; text-decoration: none; padding: 12px 24px; border: 1px solid #F5D77F; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">View in CRM Dashboard</a>
-          </div>
-        </div>
-      `
-
-      // Email B: Confirmation to the Customer (Lead)
-      let customerGreeting = name ? `Dear ${name.split(' ')[0]}` : 'Hello'
-      let customerSubject = "Inquiry Received — Mercian Wealth"
-      let customerBodyHeader = "We have received your details."
-      let customerBodyText = "A member of our team is conducting an initial assessment of your requirements and will contact you directly within 12 hours."
-      let actionButtonText = "Book Strategy Call"
-      let actionButtonUrl = "https://mercianwealth.com/book"
-
-      if (source === 'booking_form') {
-        customerSubject = "Details Confirmed — Mercian Wealth"
-        customerBodyHeader = "Your qualification details are secured."
-        customerBodyText = "Thank you for completing the strategy call qualifier. If you did not finish booking your session in the calendar, please click the button below to reserve a slot."
-        actionButtonText = "Choose Call Slot"
-      } else if (source === 'portfolio_waitlist') {
-        customerSubject = "Waitlist Registered — Mercian Wealth"
-        customerBodyHeader = "You are in the queue."
-        customerBodyText = "We have recorded your email request for early access. You will receive an immediate notification as soon as the platform goes live."
-        actionButtonText = "Explore Our Systems"
-        actionButtonUrl = "https://mercianwealth.com/portfolio"
-      } else if (source === 'fast_track_audit') {
-        customerSubject = "Fast-Track Audit Request Secured — Mercian Wealth"
-        customerBodyHeader = "Your Loom audit request is scheduled."
-        customerBodyText = `Thank you for requesting a 5-minute speed, SEO, and operational leverage review of your site: ${website || 'your brand'}. An engineering lead will record and transmit your video audit link within 12 hours.`
-        actionButtonText = "Book Full Systems Consultation"
-        actionButtonUrl = "https://mercianwealth.com/book"
+      const emailPayload = {
+        source,
+        name,
+        email,
+        business_name,
+        phone,
+        website,
+        notes: consolidatedNotes,
+        linkedin_url,
+        service_interested,
+        roi_monthly_rev,
+        roi_missed_calls,
+        roi_annual_savings,
+        timestamp,
+        crmUrl: 'https://supabase.com/dashboard/project/ladebhmyywkcqtyazxxk/editor'
       }
 
-      const customerEmailHtml = `
-        <div style="background-color: #0A1128; color: #F0EDE6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: left; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37; border-radius: 8px;">
-          <div style="text-align: center; margin-bottom: 35px;">
-            <img src="${getLogoUrl()}" alt="Mercian Wealth Logo" style="height: 60px; margin-bottom: 15px; display: inline-block; border-radius: 4px;" />
-            <h2 style="color: #D4AF37; font-family: sans-serif; font-size: 26px; margin: 0 0 5px 0; font-weight: bold; letter-spacing: 1.5px;">MERCIAN WEALTH</h2>
-            <p style="color: #A0AEC0; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; margin: 0;">Bespoke Digital Systems & Automation</p>
-          </div>
+      // Email A: Notification to business owner (mercianwealthgs@gmail.com)
+      const ownerEmailHtml = generateOwnerLeadEmail(emailPayload)
 
-          <div style="border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 30px; margin-bottom: 30px;">
-            <p style="font-size: 16px; font-weight: bold; color: #FFFFFF; margin: 0 0 15px 0;">${customerGreeting},</p>
-            <p style="font-size: 15px; line-height: 1.7; color: #F0EDE6; margin: 0 0 20px 0;">${customerBodyHeader} ${customerBodyText}</p>
-            <p style="font-size: 14px; line-height: 1.7; color: #A0AEC0; margin: 0 0 30px 0;">We work with a limited client cohort each month to guarantee founder-level engineering and direct attention for every deployment.</p>
-            
-            <div style="text-align: center; margin: 35px 0;">
-              <a href="${actionButtonUrl}" style="display: inline-block; background-color: #D4AF37; color: #0A1128; font-weight: bold; text-decoration: none; padding: 14px 28px; border: 1px solid #F5D77F; border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px;">${actionButtonText}</a>
-            </div>
-          </div>
+      // Email B: Confirmation to Customer (Lead)
+      let customerSubject = "Inquiry Received — Mercian Wealth"
+      let customerEmailHtml = ""
 
-          <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 25px; text-align: center; font-size: 12px; color: #A0AEC0;">
-            <p style="margin: 0 0 8px 0; font-weight: bold; color: #D4AF37;">MERCIAN WEALTH</p>
-            <p style="margin: 0 0 15px 0; font-style: italic;">Engineered for High-Performance Growth.</p>
-            <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.5);">If you have any questions, reply directly to this email or reach us on WhatsApp.</p>
-          </div>
-        </div>
-      `
+      if (source === 'booking_form') {
+        customerSubject = "Strategy Call Details Confirmed — Mercian Wealth"
+        customerEmailHtml = generateBookingConfirmedEmail({
+          name: name || 'Client Partner',
+          email,
+          businessName: business_name || null,
+          meetingDate: payload.meeting_date || 'Date Selected in Calendar',
+          meetingTime: payload.meeting_time || 'Selected Time Slot (GMT)',
+          meetingLink: payload.meeting_link || 'https://meet.google.com/new',
+          timezone: 'GMT / UK Time',
+          phone,
+          notes: consolidatedNotes
+        })
+      } else if (source === 'fast_track_audit') {
+        customerSubject = "Fast-Track Technical Audit Scheduled — Mercian Wealth"
+        customerEmailHtml = generateLoomAuditEmail({
+          name: name || 'Client Partner',
+          email,
+          websiteUrl: website || 'your brand website',
+          loomVideoUrl: 'https://mercianwealth.com/book',
+        })
+      } else {
+        if (source === 'portfolio_waitlist') {
+          customerSubject = "Early Access Waitlist Registered — Mercian Wealth"
+        }
+        customerEmailHtml = generateCustomerConfirmationEmail(emailPayload)
+      }
 
       // Dispatch emails asynchronously
       try {
-        // 1. Notify Owner
+        // 1. Notify Owner (replying to this email replies directly to the client)
         await resend.emails.send({
           from: fromEmail,
           to: process.env.ADMIN_NOTIFY_EMAIL || 'mercianwealthgs@gmail.com',
+          replyTo: email,
           subject: `✨ [New Lead] ${name || email} via ${cleanSource}`,
           html: ownerEmailHtml,
         })
 
-        // 2. Confirm to Customer (only if domain is verified/configured, or if sandbox email fits)
+        // 2. Confirm to Customer (replying to this email replies directly to your inbox)
         await resend.emails.send({
           from: fromEmail,
           to: email,
+          replyTo: process.env.ADMIN_NOTIFY_EMAIL || 'mercianwealthgs@gmail.com',
           subject: customerSubject,
           html: customerEmailHtml,
         })
