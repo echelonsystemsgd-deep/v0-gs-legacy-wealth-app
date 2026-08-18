@@ -343,7 +343,7 @@ export function generateCustomerConfirmationEmail(payload: LeadEmailPayload): st
  */
 export function generateBookingConfirmedEmail(payload: BookingEmailPayload): string {
   const firstName = payload.name ? escapeHtml(payload.name.split(' ')[0]) : 'there'
-  const meetingUrl = payload.meetingLink || 'https://meet.google.com/new'
+  const meetingUrl = payload.meetingLink || 'https://calendly.com/mercianwealthgs/30min'
   const safeDate = escapeHtml(payload.meetingDate)
   const safeTime = escapeHtml(payload.meetingTime)
 

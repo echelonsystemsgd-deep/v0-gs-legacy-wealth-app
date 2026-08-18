@@ -258,7 +258,7 @@ export async function POST(request: Request) {
           businessName: business_name || null,
           meetingDate: payload.meeting_date || 'Date Selected in Calendar',
           meetingTime: payload.meeting_time || 'Selected Time Slot (GMT)',
-          meetingLink: payload.meeting_link || 'https://meet.google.com/new',
+          meetingLink: payload.meeting_link || 'https://calendly.com/mercianwealthgs/30min',
           timezone: 'GMT / UK Time',
           phone,
           notes: consolidatedNotes
