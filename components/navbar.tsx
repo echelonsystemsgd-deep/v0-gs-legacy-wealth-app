@@ -24,7 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/#demo", label: "Interactive Demo" },
+  { href: "/#demo", label: "Demo" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/process", label: "Process" },
   { href: "/pricing", label: "Pricing" },
@@ -293,7 +293,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2.5">
+            <nav className="hidden lg:flex items-center gap-1.5 xl:gap-4">
               {navLinks.map((link) => {
                 const active = isActive(link.href)
                 return (
@@ -301,7 +301,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-2.5 xl:px-3 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
+                    className={`whitespace-nowrap px-2.5 xl:px-3.5 py-1.5 text-xs xl:text-sm font-semibold rounded-lg transition-all duration-200 ${
                       active
                         ? "text-[#DAA640] bg-[#DAA640]/10 font-bold"
                         : "text-slate-300 hover:text-white hover:bg-white/5"
