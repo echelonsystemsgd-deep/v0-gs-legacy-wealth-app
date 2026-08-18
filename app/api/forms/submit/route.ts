@@ -9,9 +9,11 @@ import {
   generateLoomAuditEmail
 } from '@/lib/email-templates'
 
-// Initialize Resend
-const resendApiKey = process.env.RESEND_API_KEY
-const resend = resendApiKey ? new Resend(resendApiKey) : null
+// Helper to get Resend instance
+const getResendClient = () => {
+  const apiKey = process.env.RESEND_API_KEY
+  return apiKey ? new Resend(apiKey) : null
+}
 
 // Get absolute logo URL for branded emails
 const getLogoUrl = () => {
@@ -219,9 +221,8 @@ export async function POST(request: Request) {
     }
 
     // 2. Email Notifications (Transactional via Resend)
-    if (!resend) {
-      console.warn('RESEND_API_KEY is not set. Skipping email alerts.')
-    } else {
+    const resend = getResendClient()
+    if (resend) {
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'Mercian Wealth <hello@mercianwealth.com>'
       const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'UTC' }) + ' UTC'
       const cleanSource = source.replace(/_/g, ' ').toUpperCase()

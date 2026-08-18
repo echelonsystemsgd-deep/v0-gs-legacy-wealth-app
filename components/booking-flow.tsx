@@ -481,19 +481,34 @@ function BookingFlowInner() {
   // ── Calendly postMessage listener ─────────────────────────────────────────
   useEffect(() => {
     const handler = (e: MessageEvent) => {
-      if (!e.origin?.includes("calendly.com") || !e.data?.event) return
-      if (e.data.event === "calendly.page_height") {
-        const h = e.data.payload?.height
-        if (h) {
-          setCalendlyHeight(`${h}px`)
-          setCalendlyLoaded(true)
-          if (fallbackTimerRef.current) { clearTimeout(fallbackTimerRef.current); fallbackTimerRef.current = null }
+      let eventName = ""
+      let payloadData: any = null
+
+      if (typeof e.data === "object" && e.data !== null) {
+        eventName = e.data.event || ""
+        payloadData = e.data.payload || null
+      } else if (typeof e.data === "string") {
+        try {
+          const parsed = JSON.parse(e.data)
+          eventName = parsed.event || ""
+          payloadData = parsed.payload || null
+        } catch {
+          if (e.data.includes("event_scheduled")) {
+            eventName = "calendly.event_scheduled"
+          }
         }
       }
-      if (e.data.event === "calendly.event_scheduled") {
-        toast.success("Your call is booked! We have sent your strategy session confirmation.", { duration: 8000, id: "calendly-booked" })
+
+      if (eventName === "calendly.page_height" && payloadData?.height) {
+        setCalendlyHeight(`${payloadData.height}px`)
+        setCalendlyLoaded(true)
+        if (fallbackTimerRef.current) { clearTimeout(fallbackTimerRef.current); fallbackTimerRef.current = null }
+      }
+
+      if (eventName === "calendly.event_scheduled" || eventName === "event_scheduled") {
+        toast.success("Your strategy call is officially booked! Check your email for confirmation.", { duration: 8000, id: "calendly-booked" })
         
-        // Dispatch our custom luxury booking confirmation from hello@mercianwealth.com
+        // Dispatch custom luxury booking confirmation from hello@mercianwealth.com and owner lead alert
         fetch("/api/forms/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -505,9 +520,10 @@ function BookingFlowInner() {
             business_name: identity.companyName || "N/A",
             website: identity.websiteUrl || null,
             service_interested: qual.serviceInterested || "1-on-1 AI Automation Strategy Session",
-            meeting_date: "Date Selected in Calendly",
-            meeting_time: "Confirmed Time Slot (GMT / UK Time)",
-            notes: `Confirmed Strategy Call via Calendly.\nService: ${qual.serviceInterested}\nChallenge: ${qual.biggestChallenge}\nMonthly Rev: ${qual.monthlyRevenue}\nDesired Outcome: ${qual.desiredOutcome}`
+            meeting_date: "Confirmed in Calendly Calendar",
+            meeting_time: "Scheduled Slot (GMT / UK Time)",
+            meeting_link: "https://calendly.com/mercianwealthgs/30min",
+            notes: `Confirmed Strategy Call via Calendly Widget.\nService: ${qual.serviceInterested}\nChallenge: ${qual.biggestChallenge}\nMonthly Rev: ${qual.monthlyRevenue}\nDesired Outcome: ${qual.desiredOutcome}`
           })
         }).catch((err) => {
           console.warn("Calendly event_scheduled post-dispatch warning:", err)
